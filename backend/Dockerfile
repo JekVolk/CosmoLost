@@ -1,0 +1,17 @@
+FROM ghcr.io/astral-sh/uv:python3.14-alpine
+
+WORKDIR /app
+
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+COPY . .
+RUN uv sync --frozen --no-dev
+
+EXPOSE 8000
+
+# CMD ["uv", "run", "gunicorn", "myproject.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["uv", "run", "python3", "runserver", "0.0.0.0:8000"]

@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 
@@ -37,6 +37,24 @@ class CelestialBodyAdmin(ModelAdmin):
     search_fields = ('id', 'name')
     list_filter = ('coordinate_system_type',)
     warn_unsaved_form = True
+    actions = ['sync_selected_bodies']
+
+    @admin.action(description=_('Sync hardware for selected celestial bodies from NASA'))
+    def sync_selected_bodies(self, request, queryset):
+        from loader.tasks import sync_nasa_catalog_task
+        total_new = 0
+        total_updated = 0
+        for body in queryset:
+            task_result = sync_nasa_catalog_task.enqueue(target_body=body.id)
+            if task_result.return_value:
+                total_new += task_result.return_value.get('artifacts_new', 0)
+                total_updated += task_result.return_value.get('artifacts_updated', 0)
+
+        self.message_user(
+            request,
+            _(f"NASA Ingest completed via django_tasks: {total_new} new, {total_updated} updated artifacts."),
+            level=messages.SUCCESS,
+        )
 
 
 @admin.register(Mission)
@@ -72,6 +90,39 @@ class ArtifactAdmin(ModelAdmin):
     list_filter_submit = True
     warn_unsaved_form = True
     inlines = [ArtifactMediaInline, TraverseWaypointInline, ScientificDiscoveryInline]
+    actions = ['sync_selected_artifacts', 'force_full_sync']
+
+    @admin.action(description=_('Sync selected artifacts with NASA APIs'))
+    def sync_selected_artifacts(self, request, queryset):
+        from loader.tasks import sync_nasa_catalog_task
+        bodies = set(queryset.values_list('celestial_body_id', flat=True))
+        total_arts_new = 0
+        total_arts_updated = 0
+        for body_id in bodies:
+            task_result = sync_nasa_catalog_task.enqueue(target_body=body_id)
+            if task_result.return_value:
+                total_arts_new += task_result.return_value.get('artifacts_new', 0)
+                total_arts_updated += task_result.return_value.get('artifacts_updated', 0)
+
+        self.message_user(
+            request,
+            _(f"NASA Ingest via django_tasks completed: {total_arts_new} new, {total_arts_updated} updated artifacts."),
+            level=messages.SUCCESS,
+        )
+
+    @admin.action(description=_('Force full NASA Ingest (All celestial bodies & missions)'))
+    def force_full_sync(self, request, queryset):
+        from loader.tasks import sync_nasa_catalog_task
+        task_result = sync_nasa_catalog_task.enqueue(force=True)
+        ret = task_result.return_value or {}
+        self.message_user(
+            request,
+            _(
+                f"Full NASA Ingest via django_tasks: {ret.get('artifacts_new', 0)} new, {ret.get('artifacts_updated', 0)} updated. "
+                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}."
+            ),
+            level=messages.SUCCESS,
+        )
 
 
 @admin.register(TraverseWaypoint)

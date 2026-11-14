@@ -11,6 +11,19 @@ from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load local .env file into os.environ if present
+_env_path = BASE_DIR / '.env'
+if _env_path.exists():
+    with open(_env_path, encoding='utf-8') as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith('#') and '=' in _line:
+                _k, _v = _line.split('=', 1)
+                os.environ.setdefault(_k.strip(), _v.strip())
+
+# Silenced system checks (urls.W005 is expected due to intentional alias routes for API compatibility)
+SILENCED_SYSTEM_CHECKS = ['urls.W005']
+
 # Security & environment settings
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
@@ -21,7 +34,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,testserver').split(',')
     if host.strip()
 ]
 
@@ -84,12 +97,26 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+USE_SQLITE = os.environ.get('USE_SQLITE', 'True') == 'True'
+
+if USE_SQLITE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT'),
+        }
+    }
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
@@ -147,10 +174,13 @@ MAILERS = {
 }
 
 # Django Tasks configuration
-# Configured with ImmediateBackend by default for synchronous background-compatible execution
+# Configured via DJANGO_TASKS_BACKEND (ImmediateBackend for local/sync execution)
 TASKS = {
     'default': {
-        'BACKEND': 'django_tasks.backends.immediate.ImmediateBackend',
+        'BACKEND': os.environ.get(
+            'DJANGO_TASKS_BACKEND',
+            'django_tasks.backends.immediate.ImmediateBackend',
+        ),
     }
 }
 
