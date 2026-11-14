@@ -1,4 +1,10 @@
-import { type McpServer, type McpTransport, useMcpStore } from '@/entities/mcp';
+import {
+  type McpServer,
+  type McpTransport,
+  useMcpPingMutation,
+  useMcpStore,
+  useMcpToolExecutionMutation,
+} from '@/entities/mcp';
 import { type McpToolDefinition, mcpRegistry, useDiagnosticsStore } from '@/shared';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -11,20 +17,18 @@ export function useMcpManager() {
     toggleServer,
     addServer,
     removeServer,
-    updateServerStatus,
-    recordCallLog,
     clearLogs,
     resetToDefaults,
   } = useMcpStore();
 
+  const pingMutation = useMcpPingMutation();
+  const executeMutation = useMcpToolExecutionMutation();
   const { addError } = useDiagnosticsStore();
 
   const [tools, setTools] = useState<McpToolDefinition[]>([]);
   const [selectedTool, setSelectedTool] = useState<McpToolDefinition | null>(null);
   const [toolArgs, setToolArgs] = useState<string>('{}');
   const [executionResult, setExecutionResult] = useState<string | null>(null);
-  const [isExecuting, setIsExecuting] = useState(false);
-  const [isPinging, setIsPinging] = useState(false);
 
   const activeServer = servers.find((s) => s.id === selectedServerId) || servers[0];
 
@@ -47,25 +51,18 @@ export function useMcpManager() {
   }, [activeServer, loadTools]);
 
   const handleTestPing = async (serverId: string) => {
-    setIsPinging(true);
+    const target = servers.find((s) => s.id === serverId);
+    if (!target) return;
     try {
-      const target = servers.find((s) => s.id === serverId);
-      const latency = await mcpRegistry.testConnection(serverId, target?.endpoint);
-      updateServerStatus(serverId, 'connected', latency, tools.length);
+      await pingMutation.mutateAsync(target);
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Ping failure';
-      updateServerStatus(serverId, 'error');
       addError('MCP Ping', msg);
-    } finally {
-      setIsPinging(false);
     }
   };
 
   const handleExecuteTool = async () => {
     if (!selectedTool || !activeServer) return;
-
-    setIsExecuting(true);
-    const start = performance.now();
 
     let parsedArgs: Record<string, unknown> = {};
     try {
@@ -76,37 +73,20 @@ export function useMcpManager() {
       setExecutionResult(
         `Invalid JSON Arguments: ${error instanceof Error ? error.message : 'Parse error'}`,
       );
-      setIsExecuting(false);
       return;
     }
 
     try {
-      const res = await mcpRegistry.executeTool(activeServer.id, selectedTool.name, parsedArgs);
-      const durationMs = Math.round((performance.now() - start) * 100) / 100;
-      const textResponse = res.content.map((c) => c.text).join('\n');
-
-      setExecutionResult(textResponse);
-      recordCallLog({
-        serverId: activeServer.id,
+      const result = await executeMutation.mutateAsync({
+        server: activeServer,
         toolName: selectedTool.name,
-        durationMs,
-        status: res.isError ? 'error' : 'success',
-        response: textResponse,
+        args: parsedArgs,
       });
+      setExecutionResult(result.response);
     } catch (error) {
-      const durationMs = Math.round((performance.now() - start) * 100) / 100;
       const errText = error instanceof Error ? error.message : 'Execution failed';
       setExecutionResult(`Execution Error: ${errText}`);
-      recordCallLog({
-        serverId: activeServer.id,
-        toolName: selectedTool.name,
-        durationMs,
-        status: 'error',
-        response: errText,
-      });
       addError('MCP Tool Call', errText);
-    } finally {
-      setIsExecuting(false);
     }
   };
 
@@ -130,8 +110,8 @@ export function useMcpManager() {
     toolArgs,
     executionResult,
     logs,
-    isExecuting,
-    isPinging,
+    isExecuting: executeMutation.isPending,
+    isPinging: pingMutation.isPending,
     setSelectedServer,
     setSelectedTool,
     setToolArgs,

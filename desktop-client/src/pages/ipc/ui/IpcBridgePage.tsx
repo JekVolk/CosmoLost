@@ -1,61 +1,12 @@
-import { type PingResponse, type SystemInfo, tauriCommands } from '@/shared/api/tauri';
 import { Badge, Box, Button, Card, HStack, Heading, Text, VStack } from '@/shared/ui';
 import { Activity, Clock, Play, Terminal, Zap } from 'lucide-react';
 import type React from 'react';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-interface IpcLogEntry {
-  command: string;
-  timestamp: string;
-  durationMs: number;
-  response: string;
-}
+import { useIpcBridge } from '../model/use-ipc-bridge';
 
 export const IpcBridgePage: React.FC = () => {
   const { t } = useTranslation();
-  const [logs, setLogs] = useState<IpcLogEntry[]>([]);
-  const [isPending, setIsPending] = useState<boolean>(false);
-
-  const handleTestPing = async () => {
-    setIsPending(true);
-    const start = performance.now();
-    try {
-      const res: PingResponse = await tauriCommands.ping('Hello from React Frontend');
-      const durationMs = Math.round((performance.now() - start) * 100) / 100;
-      setLogs((prev) => [
-        {
-          command: 'ping("Hello from React Frontend")',
-          timestamp: new Date().toLocaleTimeString(),
-          durationMs,
-          response: JSON.stringify(res, null, 2),
-        },
-        ...prev.slice(0, 8),
-      ]);
-    } finally {
-      setIsPending(false);
-    }
-  };
-
-  const handleTestSystemInfo = async () => {
-    setIsPending(true);
-    const start = performance.now();
-    try {
-      const res: SystemInfo = await tauriCommands.getSystemInfo();
-      const durationMs = Math.round((performance.now() - start) * 100) / 100;
-      setLogs((prev) => [
-        {
-          command: 'get_system_info()',
-          timestamp: new Date().toLocaleTimeString(),
-          durationMs,
-          response: JSON.stringify(res, null, 2),
-        },
-        ...prev.slice(0, 8),
-      ]);
-    } finally {
-      setIsPending(false);
-    }
-  };
+  const { logs, isPending, handleTestPing, handleTestSystemInfo, clearLogs } = useIpcBridge();
 
   return (
     <Box p="6">
@@ -120,7 +71,7 @@ export const IpcBridgePage: React.FC = () => {
                 variant="ghost"
                 size="sm"
                 color="fg.muted"
-                onClick={() => setLogs([])}
+                onClick={clearLogs}
                 disabled={logs.length === 0}
               >
                 Clear Logs
