@@ -52,6 +52,19 @@ export const tauriWindowApi = {
       }
     }
   },
+  show: async (): Promise<void> => {
+    try {
+      const appWindow = getCurrentWindow();
+      await appWindow.show();
+      await appWindow.setFocus();
+    } catch {
+      try {
+        await invoke('show_main_window');
+      } catch {
+        // Fallback for non-Tauri / browser environments
+      }
+    }
+  },
 };
 
 export const tauriCommands = {

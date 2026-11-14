@@ -1,5 +1,5 @@
 import { useSettingsStore } from '@/entities/settings';
-import { tauriCommands } from '@/shared/api';
+import { tauriCommands, tauriWindowApi } from '@/shared/api';
 import { useDiagnosticsStore } from '@/shared/lib/diagnostics/diagnostics-store';
 import { desktopMcpBridge } from '@/shared/lib/mcp';
 import { Box, Flex, Heading, Text, VStack } from '@/shared/ui';
@@ -43,9 +43,11 @@ export const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ childr
         .addError('Network', 'Application has gone offline', undefined, { online: false });
     };
 
-    // 5. Desktop hotkey guards (prevent accidental browser refresh in production desktop mode)
+    // 5. Intelligent reload & hotkey policy
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 'F5' || (e.ctrlKey && e.key.toLowerCase() === 'r')) && !import.meta.env.DEV) {
+      const isDev = import.meta.env.DEV || useSettingsStore.getState().settings.developerMode;
+      // Prevent accidental browser reload only in production mode when developerMode is disabled
+      if (!isDev && (e.key === 'F5' || (e.ctrlKey && e.key.toLowerCase() === 'r'))) {
         e.preventDefault();
       }
     };
@@ -75,6 +77,13 @@ export const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ childr
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  // Reveal native window smoothly once stores are hydrated and UI is mounted
+  useEffect(() => {
+    if (isHydrated || isReady) {
+      tauriWindowApi.show();
+    }
+  }, [isHydrated, isReady]);
 
   // Sleek desktop splash screen during initial storage rehydration
   if (!isHydrated && !isReady) {

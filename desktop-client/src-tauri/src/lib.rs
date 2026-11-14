@@ -38,12 +38,19 @@ fn ping(message: String) -> PingResponse {
     }
 }
 
+#[tauri::command]
+async fn show_main_window(window: tauri::Window) -> Result<(), String> {
+    window.show().map_err(|e| e.to_string())?;
+    let _ = window.set_focus();
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_store::Builder::default().build())
-        .invoke_handler(tauri::generate_handler![get_system_info, ping])
+        .invoke_handler(tauri::generate_handler![get_system_info, ping, show_main_window])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
