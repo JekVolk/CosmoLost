@@ -12,4 +12,6 @@ export {
   VStack,
   Badge,
   Separator,
+  Input,
+  Textarea,
 } from '@chakra-ui/react';

@@ -5,7 +5,9 @@ import type { SystemInfoModel } from './types';
 
 export const SYSTEM_INFO_QUERY_KEY = ['system-info'] as const;
 
-export function useSystemInfoQuery() {
+export function useSystemInfoQuery(options?: {
+  refetchInterval?: number | false;
+}) {
   const setCachedMetrics = useSystemInfoStore((state) => state.setCachedMetrics);
 
   return useQuery<SystemInfoModel, Error>({
@@ -16,5 +18,6 @@ export function useSystemInfoQuery() {
       return data;
     },
     staleTime: 1000 * 60, // 1 minute
+    refetchInterval: options?.refetchInterval,
   });
 }

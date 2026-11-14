@@ -1,9 +1,34 @@
+import { SettingsSummaryCard } from '@/entities/settings';
+import {
+  SettingsImportExportCard,
+  SettingsPreferencesCard,
+  useSettingsActions,
+} from '@/features/settings-management';
 import { APP_CONFIG } from '@/shared/config';
 import { Badge, Box, Card, HStack, Heading, Separator, Text, VStack } from '@/shared/ui';
 import { Check, Command, Monitor, Shield } from 'lucide-react';
 import type React from 'react';
 
 export const SettingsPage: React.FC = () => {
+  const {
+    settings,
+    isHydrated,
+    isTauriNative,
+    importText,
+    feedback,
+    setImportText,
+    setAccentColor,
+    toggleAutoRefresh,
+    setRefreshInterval,
+    toggleCompactMode,
+    toggleSound,
+    toggleDeveloperMode,
+    handleExport,
+    handleImport,
+    handleFileUpload,
+    handleReset,
+  } = useSettingsActions();
+
   return (
     <Box p="6">
       <VStack align="stretch" gap="5">
@@ -17,10 +42,41 @@ export const SettingsPage: React.FC = () => {
             </Badge>
           </HStack>
           <Text color="fg.muted" fontSize="md">
-            Application preferences, environment parameters, and desktop shortcuts.
+            Application preferences, native Tauri store persistence, and configuration
+            import/export.
           </Text>
         </Box>
 
+        {/* Store Engine Overview */}
+        <SettingsSummaryCard
+          settings={settings}
+          isHydrated={isHydrated}
+          isTauriNative={isTauriNative}
+        />
+
+        {/* Preferences & Accent Customization */}
+        <SettingsPreferencesCard
+          settings={settings}
+          onAccentChange={setAccentColor}
+          onToggleAutoRefresh={toggleAutoRefresh}
+          onIntervalChange={setRefreshInterval}
+          onToggleCompact={toggleCompactMode}
+          onToggleSound={toggleSound}
+          onToggleDevMode={toggleDeveloperMode}
+          onReset={handleReset}
+        />
+
+        {/* Native Store JSON Import & Export */}
+        <SettingsImportExportCard
+          importText={importText}
+          feedback={feedback}
+          onImportTextChange={setImportText}
+          onExport={handleExport}
+          onImport={handleImport}
+          onFileUpload={handleFileUpload}
+        />
+
+        {/* System & Architecture Specifications */}
         <Card.Root
           p="5"
           bg="bg.panel"
@@ -54,24 +110,27 @@ export const SettingsPage: React.FC = () => {
                   <Badge colorPalette="purple" variant="surface">
                     React 19
                   </Badge>
+                  <Badge colorPalette="green" variant="surface">
+                    tauri-plugin-store
+                  </Badge>
                 </HStack>
               </HStack>
               <Separator borderColor="border.subtle" />
               <HStack justify="space-between">
                 <Text color="fg.muted">Styling Engine:</Text>
-                <Badge colorPalette="blue" variant="surface">
-                  Chakra UI v3 (Dark Mode)
+                <Badge colorPalette={settings.accentColor} variant="surface">
+                  Chakra UI v3 (Dynamic {settings.accentColor} Dark Mode)
                 </Badge>
               </HStack>
               <Separator borderColor="border.subtle" />
               <HStack justify="space-between">
-                <Text color="fg.muted">State Management:</Text>
+                <Text color="fg.muted">State Management & Persistence:</Text>
                 <HStack gap="2">
                   <Badge colorPalette="orange" variant="surface">
                     React Query v5
                   </Badge>
                   <Badge colorPalette="cyan" variant="surface">
-                    Zustand v5
+                    Zustand v5 (Persist)
                   </Badge>
                 </HStack>
               </HStack>
@@ -114,6 +173,10 @@ export const SettingsPage: React.FC = () => {
                   <Text color="fg.muted">IPC Bridge Tester:</Text>
                   <Badge variant="outline">Alt + 3</Badge>
                 </HStack>
+                <HStack justify="space-between">
+                  <Text color="fg.muted">Settings Screen:</Text>
+                  <Badge variant="outline">Alt + 4</Badge>
+                </HStack>
               </VStack>
             </Card.Body>
           </Card.Root>
@@ -138,15 +201,19 @@ export const SettingsPage: React.FC = () => {
               <VStack align="stretch" gap="2.5" fontSize="sm" color="fg.muted">
                 <HStack gap="2">
                   <Check size={16} color="#22c55e" />
+                  <Text>Offline Tauri Native Storage active</Text>
+                </HStack>
+                <HStack gap="2">
+                  <Check size={16} color="#22c55e" />
+                  <Text>JSON Import/Export with validation</Text>
+                </HStack>
+                <HStack gap="2">
+                  <Check size={16} color="#22c55e" />
                   <Text>Biome Linter & Formatter active</Text>
                 </HStack>
                 <HStack gap="2">
                   <Check size={16} color="#22c55e" />
                   <Text>FSD Cross-Import Boundaries checked</Text>
-                </HStack>
-                <HStack gap="2">
-                  <Check size={16} color="#22c55e" />
-                  <Text>Strict TypeScript compiler mode</Text>
                 </HStack>
               </VStack>
             </Card.Body>
