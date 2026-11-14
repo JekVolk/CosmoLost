@@ -14,7 +14,7 @@ interface TaskListTableProps {
 }
 
 export const TaskListTable: React.FC<TaskListTableProps> = ({
-  tasks,
+  tasks = [],
   onTriggerNow,
   onToggleTask,
   onRemoveTask,
@@ -30,7 +30,7 @@ export const TaskListTable: React.FC<TaskListTableProps> = ({
           <HStack gap="2">
             <Clock size={18} color="#38bdf8" />
             <Heading size="sm" color="fg">
-              Scheduled Routine Registry ({tasks.length})
+              Scheduled Routine Registry ({tasks?.length ?? 0})
             </Heading>
           </HStack>
           <Button size="xs" variant="ghost" colorPalette="red" onClick={onReset}>
@@ -42,7 +42,7 @@ export const TaskListTable: React.FC<TaskListTableProps> = ({
 
       <Card.Body p="0">
         <VStack align="stretch" gap="3">
-          {tasks.map((task) => (
+          {(tasks ?? []).map((task) => (
             <Box
               key={task.id}
               p="3.5"

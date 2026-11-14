@@ -32,13 +32,29 @@ export const workspaceBundleService = {
     project?: ProjectProfile;
     settings: DesktopSettings;
     tasks: ScheduledTask[];
+    includeSecrets?: boolean;
   }): string {
+    // Security: By default, sanitize secret tokens to prevent accidental data leaks
+    const safeSettings: DesktopSettings = params.includeSecrets
+      ? params.settings
+      : {
+          ...params.settings,
+          claudeApiKey: '',
+          openaiApiKey: '',
+          telegramBotToken: '',
+          youtubeAuthCode: '',
+          youtubeRefreshToken: '',
+          geminiApiKey: '',
+          sunoApiKey: '',
+          runwayApiKey: '',
+        };
+
     const payload: WorkspaceBundle = {
       version: 1,
       app: 'CosmoLost Desktop Client',
       exportedAt: new Date().toISOString(),
       project: params.project ?? this.createDefaultProject(),
-      settings: params.settings,
+      settings: safeSettings,
       tasks: params.tasks,
     };
 
@@ -47,6 +63,26 @@ export const workspaceBundleService = {
   },
 
   validateBundle(rawJson: string): ValidateBundleResult {
+    // Security: Prototype pollution detection
+    if (
+      rawJson.includes('"__proto__"') ||
+      rawJson.includes('"constructor"') ||
+      rawJson.includes('"prototype"')
+    ) {
+      return {
+        isValid: false,
+        syntaxError: 'Security Violation: Potential prototype pollution detected in JSON',
+        detectedType: 'unknown',
+        errors: [
+          {
+            field: 'security',
+            message: 'Malicious prototype pollution keys prohibited',
+            code: 'SECURITY_VIOLATION',
+          },
+        ],
+      };
+    }
+
     let parsed: unknown;
     try {
       parsed = JSON.parse(rawJson);

@@ -1,6 +1,7 @@
 import { Badge, Box, Button, Card, Flex, HStack, Heading, Text, VStack } from '@chakra-ui/react';
 import { AlertTriangle, Copy, Home, RotateCcw } from 'lucide-react';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { useDiagnosticsStore } from '../../lib/diagnostics/diagnostics-store';
 
 interface Props {
   children: ReactNode;
@@ -31,6 +32,13 @@ export class DesktopErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     this.setState({ errorInfo });
     console.error('[DesktopErrorBoundary] Uncaught application error:', error, errorInfo);
+    try {
+      useDiagnosticsStore.getState().addError('UI Error Boundary', error.message, error.stack, {
+        componentStack: errorInfo.componentStack,
+      });
+    } catch {
+      // ignore
+    }
   }
 
   handleReload = (): void => {
