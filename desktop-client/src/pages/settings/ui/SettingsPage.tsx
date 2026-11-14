@@ -1,5 +1,6 @@
 import { SettingsSummaryCard } from '@/entities/settings';
 import {
+  DiagnosticsAuditDrawerCard,
   SettingsImportExportCard,
   SettingsPreferencesCard,
   useSettingsActions,
@@ -17,8 +18,10 @@ export const SettingsPage: React.FC = () => {
     isHydrated,
     isTauriNative,
     importText,
+    importMode,
+    validationResult,
     feedback,
-    setImportText,
+    setImportMode,
     setAccentColor,
     setThemeMode,
     setLanguage,
@@ -27,8 +30,10 @@ export const SettingsPage: React.FC = () => {
     toggleCompactMode,
     toggleSound,
     toggleDeveloperMode,
-    handleExport,
-    handleImport,
+    handleExportWorkspace,
+    handleExportSettingsOnly,
+    handleValidateText,
+    handleApplyImport,
     handleFileUpload,
     handleReset,
   } = useSettingsActions();
@@ -71,15 +76,22 @@ export const SettingsPage: React.FC = () => {
           onReset={handleReset}
         />
 
-        {/* Native Store JSON Import & Export */}
+        {/* Native Store JSON Import & Export with Overwrite / Merge & Projects */}
         <SettingsImportExportCard
           importText={importText}
+          importMode={importMode}
+          validationResult={validationResult}
           feedback={feedback}
-          onImportTextChange={setImportText}
-          onExport={handleExport}
-          onImport={handleImport}
+          onImportModeChange={setImportMode}
+          onImportTextChange={handleValidateText}
+          onExportWorkspace={handleExportWorkspace}
+          onExportSettingsOnly={handleExportSettingsOnly}
+          onApplyImport={handleApplyImport}
           onFileUpload={handleFileUpload}
         />
+
+        {/* Error Diagnostics & Audit Trail */}
+        <DiagnosticsAuditDrawerCard />
 
         {/* System & Architecture Specifications */}
         <Card.Root
@@ -179,8 +191,12 @@ export const SettingsPage: React.FC = () => {
                   <Badge variant="outline">Alt + 3</Badge>
                 </HStack>
                 <HStack justify="space-between">
-                  <Text color="fg.muted">{t('nav.settings')}:</Text>
+                  <Text color="fg.muted">{t('nav.scheduler')}:</Text>
                   <Badge variant="outline">Alt + 4</Badge>
+                </HStack>
+                <HStack justify="space-between">
+                  <Text color="fg.muted">{t('nav.settings')}:</Text>
+                  <Badge variant="outline">Alt + 5</Badge>
                 </HStack>
               </VStack>
             </Card.Body>
@@ -206,19 +222,19 @@ export const SettingsPage: React.FC = () => {
               <VStack align="stretch" gap="2.5" fontSize="sm" color="fg.muted">
                 <HStack gap="2">
                   <Check size={16} color="#22c55e" />
+                  <Text>Full Workspace Import/Export</Text>
+                </HStack>
+                <HStack gap="2">
+                  <Check size={16} color="#22c55e" />
+                  <Text>Overwrite / Merge Import Modes</Text>
+                </HStack>
+                <HStack gap="2">
+                  <Check size={16} color="#22c55e" />
                   <Text>Zod Strict Schema Validation</Text>
                 </HStack>
                 <HStack gap="2">
                   <Check size={16} color="#22c55e" />
-                  <Text>i18next Internationalization (EN / UK)</Text>
-                </HStack>
-                <HStack gap="2">
-                  <Check size={16} color="#22c55e" />
-                  <Text>Dark / Light / System Appearance</Text>
-                </HStack>
-                <HStack gap="2">
-                  <Check size={16} color="#22c55e" />
-                  <Text>FSD Cross-Import Boundaries checked</Text>
+                  <Text>Live Diagnostic Error Interceptor</Text>
                 </HStack>
               </VStack>
             </Card.Body>

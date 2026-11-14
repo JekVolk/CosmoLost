@@ -1,3 +1,4 @@
+import { useSchedulerStore } from '@/entities/scheduler';
 import {
   type AccentColor,
   type Language,
@@ -5,9 +6,14 @@ import {
   settingsRepository,
   useSettingsStore,
 } from '@/entities/settings';
+import { useDiagnosticsStore } from '@/shared';
 import { isTauri } from '@tauri-apps/api/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { type ValidateBundleResult, workspaceBundleService } from '../api/workspace-bundle-service';
+import type { ProjectProfile } from './workspace-bundle-schema';
+
+export type ImportMode = 'overwrite' | 'merge';
 
 export function useSettingsActions() {
   const { t } = useTranslation();
@@ -26,7 +32,16 @@ export function useSettingsActions() {
     resetSettings,
   } = useSettingsStore();
 
+  const schedulerStore = useSchedulerStore();
+  const { addError } = useDiagnosticsStore();
+
+  const [project, setProject] = useState<ProjectProfile>(() =>
+    workspaceBundleService.createDefaultProject(),
+  );
   const [importText, setImportText] = useState('');
+  const [importMode, setImportMode] = useState<ImportMode>('overwrite');
+  const [validationResult, setValidationResult] = useState<ValidateBundleResult | null>(null);
+
   const [feedback, setFeedback] = useState<{
     type: 'success' | 'error' | null;
     message: string;
@@ -34,7 +49,36 @@ export function useSettingsActions() {
 
   const isTauriNative = isTauri();
 
-  const handleExport = async () => {
+  const handleExportWorkspace = async () => {
+    try {
+      const jsonStr = workspaceBundleService.exportBundle({
+        project,
+        settings,
+        tasks: schedulerStore.tasks,
+      });
+
+      workspaceBundleService.downloadFile(
+        jsonStr,
+        `cosmolost-${project.name.toLowerCase().replace(/\s+/g, '-')}-bundle.json`,
+      );
+
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(jsonStr);
+      }
+
+      updateSettings({ lastExportedAt: new Date().toISOString() });
+      setFeedback({
+        type: 'success',
+        message: 'Full Workspace & Project Bundle (.json) exported & copied to clipboard!',
+      });
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Unknown export error';
+      addError('Workspace Export', msg);
+      setFeedback({ type: 'error', message: `Export failed: ${msg}` });
+    }
+  };
+
+  const handleExportSettingsOnly = async () => {
     try {
       const jsonStr = settingsRepository.exportToJson(settings);
       settingsRepository.downloadAsFile(jsonStr);
@@ -49,35 +93,90 @@ export function useSettingsActions() {
         message: t('settings.exportSuccess'),
       });
     } catch (error) {
-      setFeedback({
-        type: 'error',
-        message: `Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      });
+      const msg = error instanceof Error ? error.message : 'Unknown export error';
+      addError('Settings Export', msg);
+      setFeedback({ type: 'error', message: `Export failed: ${msg}` });
     }
   };
 
-  const handleImport = () => {
+  const handleValidateText = (text: string) => {
+    setImportText(text);
+    if (!text.trim()) {
+      setValidationResult(null);
+      return;
+    }
+
+    const result = workspaceBundleService.validateBundle(text);
+    setValidationResult(result);
+  };
+
+  const handleApplyImport = () => {
     if (!importText.trim()) {
       setFeedback({
         type: 'error',
-        message: 'Please paste valid JSON configuration first.',
+        message: 'Please paste or upload JSON configuration before applying.',
       });
       return;
     }
 
-    try {
-      const parsed = settingsRepository.importFromJson(importText);
-      updateSettings(parsed);
-      setFeedback({
-        type: 'success',
-        message: t('settings.importSuccess'),
+    const validation = workspaceBundleService.validateBundle(importText);
+    setValidationResult(validation);
+
+    if (!validation.isValid || !validation.bundle) {
+      const issues = validation.errors.map((e) => `${e.field}: ${e.message}`).join('; ');
+      const errorMsg = `Validation failed: ${validation.syntaxError || issues}`;
+      addError('Import Validation', errorMsg, undefined, {
+        errors: validation.errors,
       });
-      setImportText('');
-    } catch (error) {
       setFeedback({
         type: 'error',
-        message: error instanceof Error ? error.message : 'Failed to import settings.',
+        message: errorMsg,
       });
+      return;
+    }
+
+    const { bundle } = validation;
+
+    try {
+      // Apply settings
+      updateSettings(bundle.settings);
+
+      // Apply project metadata
+      if (bundle.project) {
+        setProject(bundle.project);
+      }
+
+      // Apply tasks according to importMode (Overwrite vs Merge)
+      if (bundle.tasks && bundle.tasks.length > 0) {
+        if (importMode === 'overwrite') {
+          // Overwrite mode: clear and set imported tasks
+          useSchedulerStore.setState({ tasks: bundle.tasks });
+        } else {
+          // Merge mode: append or update matching
+          const currentTasks = useSchedulerStore.getState().tasks;
+          const merged = [...currentTasks];
+          for (const incoming of bundle.tasks) {
+            const index = merged.findIndex((t) => t.id === incoming.id);
+            if (index >= 0) {
+              merged[index] = incoming;
+            } else {
+              merged.push(incoming);
+            }
+          }
+          useSchedulerStore.setState({ tasks: merged });
+        }
+      }
+
+      setFeedback({
+        type: 'success',
+        message: `Successfully imported [${bundle.project?.name || 'Project'}] with mode "${importMode.toUpperCase()}"!`,
+      });
+      setImportText('');
+      setValidationResult(null);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Failed to apply import';
+      addError('Apply Import', msg);
+      setFeedback({ type: 'error', message: msg });
     }
   };
 
@@ -89,21 +188,7 @@ export function useSettingsActions() {
     reader.onload = (e) => {
       const text = e.target?.result as string;
       if (text) {
-        setImportText(text);
-        try {
-          const parsed = settingsRepository.importFromJson(text);
-          updateSettings(parsed);
-          setFeedback({
-            type: 'success',
-            message: `Loaded & validated from ${file.name}: ${t('settings.importSuccess')}`,
-          });
-          setImportText('');
-        } catch (error) {
-          setFeedback({
-            type: 'error',
-            message: error instanceof Error ? error.message : 'Invalid JSON file content.',
-          });
-        }
+        handleValidateText(text);
       }
     };
     reader.readAsText(file);
@@ -111,6 +196,8 @@ export function useSettingsActions() {
 
   const handleReset = () => {
     resetSettings();
+    schedulerStore.resetToDefaults();
+    setProject(workspaceBundleService.createDefaultProject());
     setFeedback({
       type: 'success',
       message: t('settings.resetSuccess'),
@@ -119,11 +206,16 @@ export function useSettingsActions() {
 
   return {
     settings,
+    project,
+    tasks: schedulerStore.tasks,
     isHydrated,
     isTauriNative,
     importText,
+    importMode,
+    validationResult,
     feedback,
-    setImportText,
+    setImportMode,
+    setProject,
     clearFeedback: () => setFeedback({ type: null, message: '' }),
     setAccentColor: (color: AccentColor) => setAccentColor(color),
     setThemeMode: (mode: ThemeMode) => setThemeMode(mode),
@@ -133,8 +225,10 @@ export function useSettingsActions() {
     toggleCompactMode,
     toggleSound,
     toggleDeveloperMode,
-    handleExport,
-    handleImport,
+    handleExportWorkspace,
+    handleExportSettingsOnly,
+    handleValidateText,
+    handleApplyImport,
     handleFileUpload,
     handleReset,
   };

@@ -1,3 +1,4 @@
+export * from './diagnostics';
 export * from './hooks/useHotkeys';
 export * from './i18n';
 export * from './scheduler';
