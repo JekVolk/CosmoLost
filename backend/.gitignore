@@ -24,3 +24,13 @@ loader_sync_state.json
 .vscode/
 .idea/
 *.swp
+
+# Specific local documentation and specification files
+openapi (1).yaml
+openapi.yaml
+OPENAPI_EDITOR_API.md
+OPENAPI_PORTAL_API.md
+TASK_API_PORTAL_AND_EDITOR_GUIDE (1).md
+TASK_API_PORTAL_AND_EDITOR_GUIDE.md
+
+

@@ -236,3 +236,34 @@ class AdminRegistrationTests(TestCase):
                 admin_obj = admin.site._registry.get(model)
                 self.assertIsNotNone(admin_obj, f"{model.__name__} is not registered in admin.site")
                 self.assertIsInstance(admin_obj, ModelAdmin, f"{model.__name__} admin is not an Unfold ModelAdmin")
+
+    def test_all_admin_endpoints_return_200_for_superuser(self):
+        """Verify dashboard, changelist, and add views return 200 for authenticated superuser."""
+        from django.contrib.auth import get_user_model
+        from django.test import Client
+        from django.urls import reverse
+
+        User = get_user_model()
+        superuser = User.objects.create_superuser(
+            username='admin_tester',
+            email='admin_tester@cosmolost.local',
+            password='TestPassword123!',
+        )
+        client = Client()
+        client.login(username='admin_tester', password='TestPassword123!')
+
+        # Dashboard / Index
+        response = client.get(reverse('admin:index'))
+        self.assertEqual(response.status_code, 200)
+
+        # Check all registered models
+        for model in admin.site._registry.keys():
+            app_label = model._meta.app_label
+            model_name = model._meta.model_name
+            with self.subTest(model=f"{app_label}.{model_name}"):
+                cl_url = reverse(f'admin:{app_label}_{model_name}_changelist')
+                add_url = reverse(f'admin:{app_label}_{model_name}_add')
+                r_cl = client.get(cl_url)
+                r_add = client.get(add_url)
+                self.assertEqual(r_cl.status_code, 200)
+                self.assertEqual(r_add.status_code, 200)

@@ -1,0 +1,12 @@
+{
+  "name": "cosmolost",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CosmoLost - NASA Space Apps Challenge (Abandoned but Not Forgotten)",
+  "scripts": {
+    "dev": "npm run dev --prefix web-client",
+    "build": "npm run build --prefix web-client",
+    "preview": "npm run preview --prefix web-client"
+  }
+}
+

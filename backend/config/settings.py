@@ -21,6 +21,9 @@ if _env_path.exists():
                 _k, _v = _line.split('=', 1)
                 os.environ.setdefault(_k.strip(), _v.strip())
 
+# Silenced system checks (urls.W005 is expected due to intentional alias routes for API compatibility)
+SILENCED_SYSTEM_CHECKS = ['urls.W005']
+
 # Security & environment settings
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
@@ -31,7 +34,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,testserver').split(',')
     if host.strip()
 ]
 
