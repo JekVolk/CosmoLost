@@ -10,3 +10,9 @@ desktop-client/.env
 desktop-client/node_modules/
 desktop-client/dist/
 desktop-client/src-tauri/target/
+
+# Local documents and handbooks
+*.pdf
+CosmoLost_Engineering_Handbook (1).pdf
+CosmoLost_Engineering_Handbook*.pdf
+

@@ -5,6 +5,9 @@ Django settings for CosmoLost backend project.
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,6 +28,12 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    # Admin theme (must precede django.contrib.admin)
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
+    'unfold.contrib.inlines',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,4 +152,100 @@ TASKS = {
     'default': {
         'BACKEND': 'django_tasks.backends.immediate.ImmediateBackend',
     }
+}
+
+# Django Unfold theme configuration
+UNFOLD = {
+    "SITE_TITLE": "CosmoLost Admin",
+    "SITE_HEADER": "CosmoLost",
+    "SITE_SUBHEADER": _("Platform Operations & Management"),
+    "SITE_SYMBOL": "rocket_launch",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": False,
+    "SHOW_BACK_BUTTON": True,
+    "BORDER_RADIUS": "8px",
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": _("Overview"),
+                "separator": False,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                ],
+            },
+            {
+                "title": _("Planetary Core"),
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": _("Celestial Bodies"),
+                        "icon": "public",
+                        "link": reverse_lazy("admin:core_celestialbody_changelist"),
+                    },
+                    {
+                        "title": _("Missions"),
+                        "icon": "rocket_launch",
+                        "link": reverse_lazy("admin:core_mission_changelist"),
+                    },
+                    {
+                        "title": _("Artifacts"),
+                        "icon": "satellite_alt",
+                        "link": reverse_lazy("admin:core_artifact_changelist"),
+                    },
+                    {
+                        "title": _("Waypoints"),
+                        "icon": "route",
+                        "link": reverse_lazy("admin:core_traversewaypoint_changelist"),
+                    },
+                    {
+                        "title": _("Scientific Discoveries"),
+                        "icon": "science",
+                        "link": reverse_lazy("admin:core_scientificdiscovery_changelist"),
+                    },
+                    {
+                        "title": _("Artifact Media"),
+                        "icon": "photo_library",
+                        "link": reverse_lazy("admin:core_artifactmedia_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Community & Publications"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Community Publications"),
+                        "icon": "video_library",
+                        "link": reverse_lazy("admin:core_communitypublication_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Authentication & Authorization"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Users"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:users_user_changelist"),
+                    },
+                    {
+                        "title": _("Groups"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
 }
