@@ -1,4 +1,5 @@
 import {
+  LocalMcpBridgeCard,
   McpCallLogViewer,
   McpServerListCard,
   McpToolRunnerCard,
@@ -82,6 +83,9 @@ export const McpHubPage: React.FC = () => {
 
         {/* Audit Call Logs */}
         <McpCallLogViewer logs={logs} onClearLogs={clearLogs} />
+
+        {/* Local Desktop MCP Bridge & Stdio Server Guide */}
+        <LocalMcpBridgeCard />
       </VStack>
     </Box>
   );
