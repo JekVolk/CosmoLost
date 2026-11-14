@@ -1,31 +1,29 @@
-# Головний Реєстр та Навігатор Специфікації (00_INDEX.md)
+# Головний Реєстр та Навігатор Специфікації CosmoLost (00_INDEX.md)
 
-Цей документ є центральним навігаційним хабом модульної специфікації. Усі розділи структуровано за рівнями згідно з правилами [`.agents/rules/spec_rules.md`](../.agents/rules/spec_rules.md).
+Цей документ є центральним навігаційним хабом модульної специфікації платформи **CosmoLost** (команда «Space Ліхтар» для NASA Space Apps Challenge 2026). Усі розділи структуровано за рівнями згідно з правилами [`.agents/rules/spec_rules.md`](../.agents/rules/spec_rules.md).
 
 ---
 
 ## 1. Карта Розділів Специфікації
 
 | Розділ | Шлях | Опис | Статус |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- | :---: |
 | **00. Метадані та Аудит** | [`00_VERSION.md`](../00_VERSION.md) | Реєстр версій, статус релізів та журнал змін (SemVer 2.0.0) | `ACTIVE` |
-| **01. Дослідження (Research)** | [`spec/research/RESEARCH_PLAN.md`](./research/RESEARCH_PLAN.md) | **План досліджень (теми, що шукаємо), конкуренти [COMP-*], ринок [MKT-*], кастдеви [CUST-*]** | `ACTIVE` |
-| **02. Концепція та Ядро** | `spec/02_core/` | Паспорт продукту, цілі, ціннісна пропозиція (Value Prop), глосарій термінів `[TERM-*]` | `DRAFT` |
-| **03. Аудиторія та Ролі** | `spec/03_users/` | Ролі системи `[ROLE-*]`, матриця прав доступу, персони користувачів | `PLANNED` |
-| **04. Функціональні Модулі** | `spec/04_features/` | Сценарії використання, фічі `[FEAT-*]`, Jobs-To-Be-Done | `PLANNED` |
-| **05. Доменна Модель** | `spec/05_domain/` | Сутності `[ENT-*]`, поля та валідації `[FIELD-*]`, атомарні операції `[OP-*]` | `PLANNED` |
-| **06. Архітектура та Інтеграції**| `spec/06_architecture/`| C4 діаграми, ERD моделей даних, контракти API, хуки `[HOOK-*]` | `PLANNED` |
-| **07. Якість та Ризики** | `spec/07_quality_and_risks/`| NFR вимоги, вектори шахрайства `[FRAUD-*]`, тест-кейси `[QA-*]` | `PLANNED` |
+| **01. Дослідження (Research)** | [`spec/research/RESEARCH_PLAN.md`](./research/RESEARCH_PLAN.md) | Операційний план досліджень (`RES-01` .. `RES-09`), шаблони інтеграцій та конкуренти | `ACTIVE` |
+| **02. Концепція та Ядро** | [`spec/02_core/`](./02_core/) | [Паспорт продукту](./02_core/01_PASSPORT.md), візія, проблема, РЕСП та [Глосарій термінів](./02_core/02_GLOSSARY.md) `[TERM-*]` | `APPROVED` |
+| **03. Аудиторія та Ролі** | [`spec/03_users/`](./03_users/) | [Ролі системи](./03_users/01_ROLES.md) `[ROLE-*]` та [Матриця прав доступу](./03_users/02_PERMISSIONS_MATRIX.md) | `APPROVED` |
+| **04. Функціональні Модулі** | [`spec/04_features/`](./04_features/) | [Карта фіч та JTBD](./04_features/01_FEATURES_MAP.md), [Реєстр Use Cases](./04_features/02_USE_CASES.md), специфікації [3D-мапи](./04_features/FEAT-01_interactive_map.md), [картки артефакту](./04_features/FEAT-02_artifact_details.md), [«Фабрики контенту»](./04_features/FEAT-03_content_factory.md), [публікації](./04_features/FEAT-04_social_publishing.md), [FastMCP](./04_features/FEAT-05_mcp_rag_gateway.md) та [адмінки](./04_features/FEAT-06_admin_ingestion.md) | `APPROVED` |
+| **05. Доменна Модель** | [`spec/05_domain/`](./05_domain/) | [Реєстр сутностей](./05_domain/01_ENTITIES.md) `[ENT-*]`, [валідації полів](./05_domain/02_FIELDS_AND_VALIDATIONS.md) `[FIELD-*]` та [атомарні операції](./05_domain/03_OPERATIONS.md) `[OP-*]` | `APPROVED` |
+| **06. Архітектура та Інтеграції**| [`spec/06_architecture/`](./06_architecture/)| [C4 діаграми](./06_architecture/01_C4_SYSTEM_CONTEXT.md), [ERD моделі БД](./06_architecture/02_DATA_MODEL_ERD.md), [контракти API та FastMCP](./06_architecture/03_API_CONTRACTS.md), [діаграми послідовності](./06_architecture/04_SEQUENCES.md) | `APPROVED` |
+| **07. Якість та Ризики** | [`spec/07_quality_and_risks/`](./07_quality_and_risks/)| [NFR вимоги](./07_quality_and_risks/01_NFR.md), [реєстр ризиків](./07_quality_and_risks/02_RISKS_AND_FRAUD.md) `[RISK-*]` та [приймальні тест-кейси](./07_quality_and_risks/03_QA_TEST_CASES.md) `[QA-*]` | `APPROVED` |
 
 ---
 
-## 2. Розділ Досліджень (spec/research/)
+## 2. Оперативні посилання для розробників та команди
 
-Розділ досліджень є фундаментом для прийняття продуктових рішень:
-* **План досліджень**: [`spec/research/RESEARCH_PLAN.md`](./research/RESEARCH_PLAN.md)
-* **Дослідження зовнішніх інтеграцій**: [`spec/research/integrations/`](./research/integrations/)
-* **Аналіз конкурентів та РЕСП**: [`spec/research/competitors/`](./research/competitors/)
-* **Ринок та монетизація**: [`spec/research/market/`](./research/market/)
-* **Інтерв'ю з користувачами**: [`spec/research/interviews/`](./research/interviews/)
-* **UX/UI Бенчмарки**: [`spec/research/benchmarks/`](./research/benchmarks/)
-* **Матеріали та скріншоти**: [`spec/research/materials/`](./research/materials/)
+* **Бекенд-інженерам**: Дивіться [ERD діаграму](./06_architecture/02_DATA_MODEL_ERD.md), [Контракти REST API](./06_architecture/03_API_CONTRACTS.md) та [Атомарні операції OP-*](./05_domain/03_OPERATIONS.md).
+* **Фронтенд-розробникам (Вебпортал)**: Дивіться [FEAT-01 3D-мапа](./04_features/FEAT-01_interactive_map.md) та [FEAT-02 Картка артефакту](./04_features/FEAT-02_artifact_details.md).
+* **Десктоп-розробникам («Фабрика контенту»)**: Дивіться [FEAT-03 Фабрика контенту](./04_features/FEAT-03_content_factory.md), [FEAT-04 Дистрибуція](./04_features/FEAT-04_social_publishing.md) та [Діаграму послідовності монтажу](./06_architecture/04_SEQUENCES.md).
+* **ШІ-інтеграторам**: Дивіться [FEAT-05 Шлюз FastMCP](./04_features/FEAT-05_mcp_rag_gateway.md) та схеми виклику тулзів.
+* **QA-інженерам**: Дивіться [Реєстр тест-кейсів QA-*](./07_quality_and_risks/03_QA_TEST_CASES.md).
+* **Усій команді, журі та партнерам (Повний автономний PDF-довідник)**: Завантажуйте концентрований [CosmoLost_Engineering_Handbook.pdf](../CosmoLost_Engineering_Handbook.pdf) (v0.5.5 APPROVED) — містить вбудовані C4-архітектуру, об'єктну модель (UML Class Model), реляційну базу даних (ERD), фотоархів артефактів NASA з демонстрацією Pillow-box Safe Zones та рольові Use Cases для дизайнера, веба, бекенда і десктопа.
