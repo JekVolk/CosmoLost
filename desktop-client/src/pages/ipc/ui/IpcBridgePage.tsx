@@ -3,6 +3,7 @@ import { Badge, Box, Button, Card, HStack, Heading, Text, VStack } from '@/share
 import { Activity, Clock, Play, Terminal, Zap } from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface IpcLogEntry {
   command: string;
@@ -12,6 +13,7 @@ interface IpcLogEntry {
 }
 
 export const IpcBridgePage: React.FC = () => {
+  const { t } = useTranslation();
   const [logs, setLogs] = useState<IpcLogEntry[]>([]);
   const [isPending, setIsPending] = useState<boolean>(false);
 
@@ -61,15 +63,14 @@ export const IpcBridgePage: React.FC = () => {
         <Box>
           <HStack gap="3" mb="2" align="center">
             <Heading size="2xl" color="fg">
-              Tauri IPC Bridge Tester
+              {t('ipc.title')}
             </Heading>
             <Badge colorPalette="teal" size="md" variant="subtle">
               Rust ⟷ React
             </Badge>
           </HStack>
           <Text color="fg.muted" fontSize="md">
-            Execute native Tauri commands and test IPC message passing with live latency
-            measurement.
+            {t('ipc.subtitle')}
           </Text>
         </Box>
 
@@ -89,7 +90,7 @@ export const IpcBridgePage: React.FC = () => {
                 </Heading>
               </HStack>
               <Badge colorPalette="green" variant="surface">
-                IPC Ready
+                {t('common.ready')}
               </Badge>
             </HStack>
           </Card.Header>
@@ -103,7 +104,7 @@ export const IpcBridgePage: React.FC = () => {
                 loading={isPending}
               >
                 <Play size={14} />
-                Send Ping (Echo)
+                {t('ipc.sendPing')}
               </Button>
               <Button
                 colorPalette="blue"

@@ -1,3 +1,4 @@
+import '@/shared/lib/i18n';
 import type React from 'react';
 import { AppThemeProvider } from './chakra-provider';
 import { AppQueryProvider } from './query-provider';

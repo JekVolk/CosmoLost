@@ -2,15 +2,18 @@ import { SystemInfoWidget } from '@/features/system-info';
 import { Badge, Box, Card, HStack, Heading, Stack, Text, VStack } from '@/shared/ui';
 import { Layers, ShieldCheck } from 'lucide-react';
 import type React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const HomePage: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <Box p="6">
       <VStack align="stretch" gap="5">
         <Box>
           <HStack gap="3" mb="2" align="center">
             <Heading size="2xl" color="fg">
-              CosmoLost Desktop Client
+              {t('overview.title')}
             </Heading>
             <Badge colorPalette="purple" size="md" variant="subtle">
               FSD v2.1
@@ -20,8 +23,7 @@ export const HomePage: React.FC = () => {
             </Badge>
           </HStack>
           <Text color="fg.muted" fontSize="md">
-            Production-ready desktop architecture configured with Feature-Sliced Design, Chakra UI,
-            and strict TypeScript.
+            {t('overview.subtitle')}
           </Text>
         </Box>
 
@@ -75,13 +77,13 @@ export const HomePage: React.FC = () => {
                   <Text color="purple.400" fontWeight="medium">
                     5. entities
                   </Text>
-                  <Text color="fg.muted">Domain models & Repositories (SystemInfo, Session)</Text>
+                  <Text color="fg.muted">Domain models & Repositories (Settings, SystemInfo)</Text>
                 </HStack>
                 <HStack justify="space-between">
                   <Text color="purple.400" fontWeight="medium">
                     6. shared
                   </Text>
-                  <Text color="fg.muted">UI kit, Tauri bridge, config, lib</Text>
+                  <Text color="fg.muted">UI kit, Tauri bridge, config, lib, i18n</Text>
                 </HStack>
               </VStack>
             </Card.Body>
@@ -100,14 +102,13 @@ export const HomePage: React.FC = () => {
             <HStack gap="2" align="center">
               <ShieldCheck size={18} color="#22c55e" />
               <Heading size="sm" color="fg">
-                Desktop Performance & Safety
+                {t('overview.performanceSafety')}
               </Heading>
             </HStack>
           </Card.Header>
           <Card.Body p="0">
             <Text fontSize="sm" color="fg.muted" lineHeight="tall">
-              Native OS window controls are isolated via <code>shared/api/tauri</code>. Hotkeys and
-              window listeners automatically detach on unmount to eliminate memory leaks.
+              {t('overview.safetyDesc')}
             </Text>
           </Card.Body>
         </Card.Root>

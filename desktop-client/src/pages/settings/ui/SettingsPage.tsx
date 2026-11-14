@@ -8,8 +8,10 @@ import { APP_CONFIG } from '@/shared/config';
 import { Badge, Box, Card, HStack, Heading, Separator, Text, VStack } from '@/shared/ui';
 import { Check, Command, Monitor, Shield } from 'lucide-react';
 import type React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const SettingsPage: React.FC = () => {
+  const { t } = useTranslation();
   const {
     settings,
     isHydrated,
@@ -18,6 +20,8 @@ export const SettingsPage: React.FC = () => {
     feedback,
     setImportText,
     setAccentColor,
+    setThemeMode,
+    setLanguage,
     toggleAutoRefresh,
     setRefreshInterval,
     toggleCompactMode,
@@ -35,15 +39,14 @@ export const SettingsPage: React.FC = () => {
         <Box>
           <HStack gap="3" mb="2" align="center">
             <Heading size="2xl" color="fg">
-              Desktop Settings & Environment
+              {t('settings.title')}
             </Heading>
             <Badge colorPalette="gray" size="md" variant="subtle">
               v{APP_CONFIG.version}
             </Badge>
           </HStack>
           <Text color="fg.muted" fontSize="md">
-            Application preferences, native Tauri store persistence, and configuration
-            import/export.
+            {t('settings.subtitle')}
           </Text>
         </Box>
 
@@ -58,6 +61,8 @@ export const SettingsPage: React.FC = () => {
         <SettingsPreferencesCard
           settings={settings}
           onAccentChange={setAccentColor}
+          onThemeModeChange={setThemeMode}
+          onLanguageChange={setLanguage}
           onToggleAutoRefresh={toggleAutoRefresh}
           onIntervalChange={setRefreshInterval}
           onToggleCompact={toggleCompactMode}
@@ -88,7 +93,7 @@ export const SettingsPage: React.FC = () => {
             <HStack gap="2" align="center">
               <Monitor size={18} color="#38bdf8" />
               <Heading size="sm" color="fg">
-                Desktop Client Specifications
+                {t('settings.clientSpecs')}
               </Heading>
             </HStack>
           </Card.Header>
@@ -119,18 +124,18 @@ export const SettingsPage: React.FC = () => {
               <HStack justify="space-between">
                 <Text color="fg.muted">Styling Engine:</Text>
                 <Badge colorPalette={settings.accentColor} variant="surface">
-                  Chakra UI v3 (Dynamic {settings.accentColor} Dark Mode)
+                  Chakra UI v3 ({settings.themeMode.toUpperCase()} + {settings.accentColor})
                 </Badge>
               </HStack>
               <Separator borderColor="border.subtle" />
               <HStack justify="space-between">
-                <Text color="fg.muted">State Management & Persistence:</Text>
+                <Text color="fg.muted">Validation & Localization:</Text>
                 <HStack gap="2">
-                  <Badge colorPalette="orange" variant="surface">
-                    React Query v5
-                  </Badge>
                   <Badge colorPalette="cyan" variant="surface">
-                    Zustand v5 (Persist)
+                    Zod v3/v4 Schema
+                  </Badge>
+                  <Badge colorPalette="yellow" variant="surface">
+                    i18next (EN / UK)
                   </Badge>
                 </HStack>
               </HStack>
@@ -151,7 +156,7 @@ export const SettingsPage: React.FC = () => {
               <HStack gap="2" align="center">
                 <Command size={18} color="#a855f7" />
                 <Heading size="sm" color="fg">
-                  Desktop Shortcuts
+                  {t('settings.shortcuts')}
                 </Heading>
               </HStack>
             </Card.Header>
@@ -162,19 +167,19 @@ export const SettingsPage: React.FC = () => {
                   <Badge variant="outline">F5 / Ctrl + R</Badge>
                 </HStack>
                 <HStack justify="space-between">
-                  <Text color="fg.muted">Overview Screen:</Text>
+                  <Text color="fg.muted">{t('nav.overview')}:</Text>
                   <Badge variant="outline">Alt + 1</Badge>
                 </HStack>
                 <HStack justify="space-between">
-                  <Text color="fg.muted">FSD Architecture:</Text>
+                  <Text color="fg.muted">{t('nav.fsd')}:</Text>
                   <Badge variant="outline">Alt + 2</Badge>
                 </HStack>
                 <HStack justify="space-between">
-                  <Text color="fg.muted">IPC Bridge Tester:</Text>
+                  <Text color="fg.muted">{t('nav.ipc')}:</Text>
                   <Badge variant="outline">Alt + 3</Badge>
                 </HStack>
                 <HStack justify="space-between">
-                  <Text color="fg.muted">Settings Screen:</Text>
+                  <Text color="fg.muted">{t('nav.settings')}:</Text>
                   <Badge variant="outline">Alt + 4</Badge>
                 </HStack>
               </VStack>
@@ -193,7 +198,7 @@ export const SettingsPage: React.FC = () => {
               <HStack gap="2" align="center">
                 <Shield size={18} color="#22c55e" />
                 <Heading size="sm" color="fg">
-                  Code Health & Quality
+                  {t('settings.codeHealth')}
                 </Heading>
               </HStack>
             </Card.Header>
@@ -201,15 +206,15 @@ export const SettingsPage: React.FC = () => {
               <VStack align="stretch" gap="2.5" fontSize="sm" color="fg.muted">
                 <HStack gap="2">
                   <Check size={16} color="#22c55e" />
-                  <Text>Offline Tauri Native Storage active</Text>
+                  <Text>Zod Strict Schema Validation</Text>
                 </HStack>
                 <HStack gap="2">
                   <Check size={16} color="#22c55e" />
-                  <Text>JSON Import/Export with validation</Text>
+                  <Text>i18next Internationalization (EN / UK)</Text>
                 </HStack>
                 <HStack gap="2">
                   <Check size={16} color="#22c55e" />
-                  <Text>Biome Linter & Formatter active</Text>
+                  <Text>Dark / Light / System Appearance</Text>
                 </HStack>
                 <HStack gap="2">
                   <Check size={16} color="#22c55e" />

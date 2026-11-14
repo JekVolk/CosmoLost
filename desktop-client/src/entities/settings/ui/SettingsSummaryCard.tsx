@@ -1,4 +1,5 @@
 import { Badge, Box, Flex, HStack, Text, VStack } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import type { DesktopSettings } from '../model/types';
 
 interface SettingsSummaryCardProps {
@@ -12,12 +13,14 @@ export function SettingsSummaryCard({
   isHydrated,
   isTauriNative,
 }: SettingsSummaryCardProps) {
+  const { t } = useTranslation();
+
   return (
     <Box p="5" borderRadius="xl" bg="bg.panel" borderWidth="1px" borderColor="border.subtle">
       <Flex justify="space-between" align="center" mb="4">
         <HStack gap="2">
           <Text fontWeight="semibold" fontSize="md" color="fg">
-            Tauri Store Engine Status
+            {t('settings.storeEngineStatus')}
           </Text>
           <Badge colorPalette={isHydrated ? 'green' : 'yellow'} variant="subtle" size="sm">
             {isHydrated ? 'hydrated' : 'syncing'}
@@ -30,32 +33,48 @@ export function SettingsSummaryCard({
 
       <VStack align="stretch" gap="3" fontSize="sm">
         <Flex justify="space-between" borderBottomWidth="1px" borderColor="border.subtle" pb="2">
-          <Text color="fg.muted">Storage target file</Text>
+          <Text color="fg.muted">{t('settings.storageTarget')}</Text>
           <Text fontFamily="mono" color="fg">
             cosmolost-settings.json
           </Text>
         </Flex>
 
         <Flex justify="space-between" borderBottomWidth="1px" borderColor="border.subtle" pb="2">
-          <Text color="fg.muted">Active Accent Palette</Text>
+          <Text color="fg.muted">{t('settings.themeMode')}</Text>
+          <Badge colorPalette={settings.accentColor} variant="outline">
+            {settings.themeMode.toUpperCase()}
+          </Badge>
+        </Flex>
+
+        <Flex justify="space-between" borderBottomWidth="1px" borderColor="border.subtle" pb="2">
+          <Text color="fg.muted">{t('settings.language')}</Text>
+          <Badge variant="surface">
+            {settings.language === 'uk' ? 'Українська (UK)' : 'English (EN)'}
+          </Badge>
+        </Flex>
+
+        <Flex justify="space-between" borderBottomWidth="1px" borderColor="border.subtle" pb="2">
+          <Text color="fg.muted">{t('settings.activeAccent')}</Text>
           <Badge colorPalette={settings.accentColor} variant="surface">
             {settings.accentColor}
           </Badge>
         </Flex>
 
         <Flex justify="space-between" borderBottomWidth="1px" borderColor="border.subtle" pb="2">
-          <Text color="fg.muted">Metrics Auto-Refresh</Text>
+          <Text color="fg.muted">{t('settings.autoRefresh')}</Text>
           <Text color="fg">
-            {settings.autoRefreshMetrics ? `Every ${settings.refreshIntervalSec}s` : 'Disabled'}
+            {settings.autoRefreshMetrics
+              ? `${t('common.enabled')} (${settings.refreshIntervalSec}s)`
+              : t('common.disabled')}
           </Text>
         </Flex>
 
         <Flex justify="space-between">
-          <Text color="fg.muted">Last Exported</Text>
+          <Text color="fg.muted">{t('settings.lastExported')}</Text>
           <Text color="fg" fontSize="xs">
             {settings.lastExportedAt
               ? new Date(settings.lastExportedAt).toLocaleString()
-              : 'Never exported'}
+              : t('settings.neverExported')}
           </Text>
         </Flex>
       </VStack>

@@ -1,4 +1,4 @@
-import type { AccentColor, DesktopSettings } from '@/entities/settings';
+import type { AccentColor, DesktopSettings, Language, ThemeMode } from '@/entities/settings';
 import {
   Badge,
   Box,
@@ -11,8 +11,19 @@ import {
   Text,
   VStack,
 } from '@/shared/ui';
-import { Palette, RefreshCw, RotateCcw, Sliders } from 'lucide-react';
+import {
+  Globe,
+  Languages,
+  Moon,
+  Palette,
+  RefreshCw,
+  RotateCcw,
+  Sliders,
+  Sun,
+  SunMoon,
+} from 'lucide-react';
 import type React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ACCENT_OPTIONS: { id: AccentColor; label: string; hex: string }[] = [
   { id: 'blue', label: 'Blue', hex: '#3b82f6' },
@@ -28,6 +39,8 @@ const INTERVAL_OPTIONS = [3, 5, 10, 30];
 interface SettingsPreferencesCardProps {
   settings: DesktopSettings;
   onAccentChange: (accent: AccentColor) => void;
+  onThemeModeChange: (mode: ThemeMode) => void;
+  onLanguageChange: (lang: Language) => void;
   onToggleAutoRefresh: () => void;
   onIntervalChange: (seconds: number) => void;
   onToggleCompact: () => void;
@@ -39,6 +52,8 @@ interface SettingsPreferencesCardProps {
 export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = ({
   settings,
   onAccentChange,
+  onThemeModeChange,
+  onLanguageChange,
   onToggleAutoRefresh,
   onIntervalChange,
   onToggleCompact,
@@ -46,6 +61,8 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
   onToggleDevMode,
   onReset,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Card.Root p="5" bg="bg.panel" borderWidth="1px" borderColor="border.subtle" borderRadius="xl">
       <Card.Header p="0" mb="4">
@@ -53,26 +70,107 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
           <HStack gap="2" align="center">
             <Palette size={18} color="#38bdf8" />
             <Heading size="sm" color="fg">
-              Application & Theme Preferences
+              {t('settings.themePreferences')}
             </Heading>
           </HStack>
           <Button size="xs" variant="ghost" colorPalette="red" onClick={onReset}>
             <RotateCcw size={14} />
-            Reset Defaults
+            {t('common.resetDefaults')}
           </Button>
         </HStack>
       </Card.Header>
 
       <Card.Body p="0">
         <VStack align="stretch" gap="4">
+          {/* Theme Appearance Mode */}
+          <Box>
+            <Flex justify="space-between" align="center" mb="2">
+              <HStack gap="2">
+                <SunMoon size={16} />
+                <Text fontSize="sm" fontWeight="medium" color="fg">
+                  {t('settings.themeMode')}
+                </Text>
+              </HStack>
+              <Badge colorPalette={settings.accentColor} variant="subtle" size="sm">
+                {settings.themeMode.toUpperCase()}
+              </Badge>
+            </Flex>
+            <HStack gap="2">
+              <Button
+                size="sm"
+                variant={settings.themeMode === 'dark' ? 'solid' : 'outline'}
+                colorPalette={settings.accentColor}
+                onClick={() => onThemeModeChange('dark')}
+              >
+                <Moon size={14} />
+                {t('settings.themeDark')}
+              </Button>
+              <Button
+                size="sm"
+                variant={settings.themeMode === 'light' ? 'solid' : 'outline'}
+                colorPalette={settings.accentColor}
+                onClick={() => onThemeModeChange('light')}
+              >
+                <Sun size={14} />
+                {t('settings.themeLight')}
+              </Button>
+              <Button
+                size="sm"
+                variant={settings.themeMode === 'system' ? 'solid' : 'outline'}
+                colorPalette={settings.accentColor}
+                onClick={() => onThemeModeChange('system')}
+              >
+                <Globe size={14} />
+                {t('settings.themeSystem')}
+              </Button>
+            </HStack>
+          </Box>
+
+          <Separator borderColor="border.subtle" />
+
+          {/* Language Selection */}
+          <Box>
+            <Flex justify="space-between" align="center" mb="2">
+              <HStack gap="2">
+                <Languages size={16} />
+                <Text fontSize="sm" fontWeight="medium" color="fg">
+                  {t('settings.language')}
+                </Text>
+              </HStack>
+              <Badge variant="surface" size="sm">
+                {settings.language === 'uk' ? 'UA' : 'EN'}
+              </Badge>
+            </Flex>
+            <HStack gap="2">
+              <Button
+                size="sm"
+                variant={settings.language === 'en' ? 'solid' : 'outline'}
+                colorPalette={settings.accentColor}
+                onClick={() => onLanguageChange('en')}
+              >
+                🇺🇸 {t('settings.langEn')}
+              </Button>
+              <Button
+                size="sm"
+                variant={settings.language === 'uk' ? 'solid' : 'outline'}
+                colorPalette={settings.accentColor}
+                onClick={() => onLanguageChange('uk')}
+              >
+                🇺🇦 {t('settings.langUk')}
+              </Button>
+            </HStack>
+          </Box>
+
+          <Separator borderColor="border.subtle" />
+
           {/* Accent Color Selection */}
           <Box>
             <Flex justify="space-between" align="center" mb="2">
               <Text fontSize="sm" fontWeight="medium" color="fg">
-                Accent Theme Color
+                {t('settings.accentColor')}
               </Text>
               <Badge colorPalette={settings.accentColor} variant="solid" size="sm">
-                Active: {settings.accentColor}
+                {settings.accentColor}
               </Badge>
             </Flex>
             <HStack gap="2" wrap="wrap">
@@ -109,7 +207,7 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
               <HStack gap="2">
                 <RefreshCw size={16} />
                 <Text fontSize="sm" fontWeight="medium" color="fg">
-                  System Metrics Auto-Refresh
+                  {t('settings.autoRefresh')}
                 </Text>
               </HStack>
               <Button
@@ -118,14 +216,14 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
                 colorPalette={settings.autoRefreshMetrics ? 'green' : 'gray'}
                 onClick={onToggleAutoRefresh}
               >
-                {settings.autoRefreshMetrics ? 'Enabled' : 'Disabled'}
+                {settings.autoRefreshMetrics ? t('common.enabled') : t('common.disabled')}
               </Button>
             </Flex>
 
             {settings.autoRefreshMetrics && (
               <HStack gap="2" mt="2">
                 <Text fontSize="xs" color="fg.muted">
-                  Interval:
+                  {t('settings.interval')}:
                 </Text>
                 {INTERVAL_OPTIONS.map((sec) => (
                   <Button
@@ -149,7 +247,7 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
             <HStack gap="2" mb="3">
               <Sliders size={16} />
               <Text fontSize="sm" fontWeight="medium" color="fg">
-                Desktop Display & Audio
+                {t('settings.displayAudio')}
               </Text>
             </HStack>
 
@@ -160,7 +258,8 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
                 colorPalette={settings.accentColor}
                 onClick={onToggleCompact}
               >
-                Compact Navigation: {settings.compactMode ? 'ON' : 'OFF'}
+                {t('settings.compactMode')}:{' '}
+                {settings.compactMode ? t('common.on') : t('common.off')}
               </Button>
               <Button
                 size="sm"
@@ -168,7 +267,8 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
                 colorPalette={settings.accentColor}
                 onClick={onToggleSound}
               >
-                Audio Feedback: {settings.soundEnabled ? 'ON' : 'OFF'}
+                {t('settings.audioFeedback')}:{' '}
+                {settings.soundEnabled ? t('common.on') : t('common.off')}
               </Button>
               <Button
                 size="sm"
@@ -176,7 +276,7 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
                 colorPalette={settings.accentColor}
                 onClick={onToggleDevMode}
               >
-                Dev IPC Logs: {settings.developerMode ? 'ON' : 'OFF'}
+                {t('settings.devLogs')}: {settings.developerMode ? t('common.on') : t('common.off')}
               </Button>
             </HStack>
           </Box>

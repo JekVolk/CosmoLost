@@ -1,12 +1,22 @@
-import { type AccentColor, settingsRepository, useSettingsStore } from '@/entities/settings';
+import {
+  type AccentColor,
+  type Language,
+  type ThemeMode,
+  settingsRepository,
+  useSettingsStore,
+} from '@/entities/settings';
 import { isTauri } from '@tauri-apps/api/core';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export function useSettingsActions() {
+  const { t } = useTranslation();
   const {
     settings,
     isHydrated,
     setAccentColor,
+    setThemeMode,
+    setLanguage,
     setAutoRefresh,
     setRefreshInterval,
     toggleCompactMode,
@@ -36,7 +46,7 @@ export function useSettingsActions() {
       updateSettings({ lastExportedAt: new Date().toISOString() });
       setFeedback({
         type: 'success',
-        message: 'Settings exported to file & copied to clipboard!',
+        message: t('settings.exportSuccess'),
       });
     } catch (error) {
       setFeedback({
@@ -60,7 +70,7 @@ export function useSettingsActions() {
       updateSettings(parsed);
       setFeedback({
         type: 'success',
-        message: 'Settings successfully imported and persisted to store!',
+        message: t('settings.importSuccess'),
       });
       setImportText('');
     } catch (error) {
@@ -85,7 +95,7 @@ export function useSettingsActions() {
           updateSettings(parsed);
           setFeedback({
             type: 'success',
-            message: `Loaded & imported configuration from ${file.name}!`,
+            message: `Loaded & validated from ${file.name}: ${t('settings.importSuccess')}`,
           });
           setImportText('');
         } catch (error) {
@@ -103,7 +113,7 @@ export function useSettingsActions() {
     resetSettings();
     setFeedback({
       type: 'success',
-      message: 'All settings have been reset to factory defaults.',
+      message: t('settings.resetSuccess'),
     });
   };
 
@@ -116,6 +126,8 @@ export function useSettingsActions() {
     setImportText,
     clearFeedback: () => setFeedback({ type: null, message: '' }),
     setAccentColor: (color: AccentColor) => setAccentColor(color),
+    setThemeMode: (mode: ThemeMode) => setThemeMode(mode),
+    setLanguage: (lang: Language) => setLanguage(lang),
     toggleAutoRefresh: () => setAutoRefresh(!settings.autoRefreshMetrics),
     setRefreshInterval: (sec: number) => setRefreshInterval(sec),
     toggleCompactMode,

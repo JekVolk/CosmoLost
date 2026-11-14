@@ -1,8 +1,8 @@
-import { tauriStorage } from '@/shared';
+import { i18n, tauriStorage } from '@/shared';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { DEFAULT_SETTINGS } from './defaults';
-import type { AccentColor, DesktopSettings, SettingsState } from './types';
+import type { AccentColor, DesktopSettings, Language, SettingsState, ThemeMode } from './types';
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
@@ -14,6 +14,18 @@ export const useSettingsStore = create<SettingsState>()(
         set((state) => ({
           settings: { ...state.settings, accentColor },
         })),
+
+      setThemeMode: (themeMode: ThemeMode) =>
+        set((state) => ({
+          settings: { ...state.settings, themeMode },
+        })),
+
+      setLanguage: (language: Language) => {
+        i18n.changeLanguage(language);
+        set((state) => ({
+          settings: { ...state.settings, language },
+        }));
+      },
 
       setAutoRefresh: (autoRefreshMetrics: boolean) =>
         set((state) => ({
@@ -49,15 +61,21 @@ export const useSettingsStore = create<SettingsState>()(
           },
         })),
 
-      updateSettings: (partial: Partial<DesktopSettings>) =>
+      updateSettings: (partial: Partial<DesktopSettings>) => {
+        if (partial.language) {
+          i18n.changeLanguage(partial.language);
+        }
         set((state) => ({
           settings: { ...state.settings, ...partial },
-        })),
+        }));
+      },
 
-      resetSettings: () =>
+      resetSettings: () => {
+        i18n.changeLanguage(DEFAULT_SETTINGS.language);
         set(() => ({
           settings: DEFAULT_SETTINGS,
-        })),
+        }));
+      },
 
       setHydrated: (isHydrated: boolean) => set({ isHydrated }),
     }),
@@ -66,7 +84,12 @@ export const useSettingsStore = create<SettingsState>()(
       storage: createJSONStorage(() => tauriStorage),
       partialize: (state) => ({ settings: state.settings }),
       onRehydrateStorage: () => (state) => {
-        state?.setHydrated(true);
+        if (state) {
+          state.setHydrated(true);
+          if (state.settings?.language) {
+            i18n.changeLanguage(state.settings.language);
+          }
+        }
       },
     },
   ),

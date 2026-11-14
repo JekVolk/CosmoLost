@@ -1,26 +1,19 @@
-export type AccentColor = 'blue' | 'purple' | 'teal' | 'green' | 'orange' | 'cyan';
+import type {
+  AccentColor,
+  DesktopSettings,
+  Language,
+  SettingsExportData,
+  ThemeMode,
+} from './schema';
 
-export interface DesktopSettings {
-  accentColor: AccentColor;
-  autoRefreshMetrics: boolean;
-  refreshIntervalSec: number;
-  compactMode: boolean;
-  soundEnabled: boolean;
-  developerMode: boolean;
-  lastExportedAt: string | null;
-}
-
-export interface SettingsExportData {
-  version: 1;
-  app: 'CosmoLost Desktop Client';
-  exportedAt: string;
-  settings: DesktopSettings;
-}
+export type { AccentColor, ThemeMode, Language, DesktopSettings, SettingsExportData };
 
 export interface SettingsState {
   settings: DesktopSettings;
   isHydrated: boolean;
   setAccentColor: (accentColor: AccentColor) => void;
+  setThemeMode: (themeMode: ThemeMode) => void;
+  setLanguage: (language: Language) => void;
   setAutoRefresh: (enabled: boolean) => void;
   setRefreshInterval: (seconds: number) => void;
   toggleCompactMode: () => void;

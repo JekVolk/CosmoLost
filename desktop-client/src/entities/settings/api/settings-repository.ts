@@ -1,75 +1,56 @@
-import { DEFAULT_SETTINGS } from '../model/defaults';
-import type { AccentColor, DesktopSettings, SettingsExportData } from '../model/types';
-
-const ALLOWED_ACCENTS: AccentColor[] = ['blue', 'purple', 'teal', 'green', 'orange', 'cyan'];
+import { DesktopSettingsSchema, SettingsExportDataSchema } from '../model/schema';
+import type { DesktopSettings, SettingsExportData } from '../model/types';
 
 export const settingsRepository = {
   exportToJson(settings: DesktopSettings): string {
+    const validatedSettings = DesktopSettingsSchema.parse(settings);
+
     const payload: SettingsExportData = {
       version: 1,
       app: 'CosmoLost Desktop Client',
       exportedAt: new Date().toISOString(),
       settings: {
-        ...settings,
+        ...validatedSettings,
         lastExportedAt: new Date().toISOString(),
       },
     };
+
     return JSON.stringify(payload, null, 2);
   },
 
   importFromJson(rawJson: string): DesktopSettings {
+    let parsed: unknown;
     try {
-      const parsed = JSON.parse(rawJson) as Partial<SettingsExportData> & Partial<DesktopSettings>;
-
-      const candidate: Partial<DesktopSettings> =
-        parsed.settings && typeof parsed.settings === 'object' ? parsed.settings : parsed;
-
-      const accentColor: AccentColor =
-        typeof candidate.accentColor === 'string' &&
-        ALLOWED_ACCENTS.includes(candidate.accentColor as AccentColor)
-          ? (candidate.accentColor as AccentColor)
-          : DEFAULT_SETTINGS.accentColor;
-
-      const autoRefreshMetrics =
-        typeof candidate.autoRefreshMetrics === 'boolean'
-          ? candidate.autoRefreshMetrics
-          : DEFAULT_SETTINGS.autoRefreshMetrics;
-
-      const rawInterval = Number(candidate.refreshIntervalSec);
-      const refreshIntervalSec =
-        Number.isFinite(rawInterval) && rawInterval >= 1 && rawInterval <= 60
-          ? rawInterval
-          : DEFAULT_SETTINGS.refreshIntervalSec;
-
-      const compactMode =
-        typeof candidate.compactMode === 'boolean'
-          ? candidate.compactMode
-          : DEFAULT_SETTINGS.compactMode;
-
-      const soundEnabled =
-        typeof candidate.soundEnabled === 'boolean'
-          ? candidate.soundEnabled
-          : DEFAULT_SETTINGS.soundEnabled;
-
-      const developerMode =
-        typeof candidate.developerMode === 'boolean'
-          ? candidate.developerMode
-          : DEFAULT_SETTINGS.developerMode;
-
-      return {
-        accentColor,
-        autoRefreshMetrics,
-        refreshIntervalSec,
-        compactMode,
-        soundEnabled,
-        developerMode,
-        lastExportedAt: candidate.lastExportedAt ?? null,
-      };
+      parsed = JSON.parse(rawJson);
     } catch (error) {
       throw new Error(
-        `Invalid settings JSON format: ${error instanceof Error ? error.message : 'Unknown parse error'}`,
+        `Invalid JSON syntax: ${error instanceof Error ? error.message : 'Parse error'}`,
       );
     }
+
+    // Try parsing as full SettingsExportDataSchema first
+    const exportResult = SettingsExportDataSchema.safeParse(parsed);
+    if (exportResult.success) {
+      return exportResult.data.settings;
+    }
+
+    // Try parsing as raw DesktopSettingsSchema if user pasted raw settings object
+    const candidate =
+      parsed && typeof parsed === 'object' && 'settings' in parsed
+        ? (parsed as { settings: unknown }).settings
+        : parsed;
+
+    const directResult = DesktopSettingsSchema.safeParse(candidate);
+    if (directResult.success) {
+      return directResult.data;
+    }
+
+    // Combine error issues from Zod
+    const issues = directResult.error.issues
+      .map((issue) => `${issue.path.join('.') || 'root'}: ${issue.message}`)
+      .join('; ');
+
+    throw new Error(`Zod schema validation failed: ${issues}`);
   },
 
   downloadAsFile(jsonContent: string, filename = 'cosmolost-settings.json'): void {

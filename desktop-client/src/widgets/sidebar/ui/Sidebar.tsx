@@ -3,9 +3,11 @@ import { ROUTES } from '@/shared/config';
 import { Box, Button, Text, VStack } from '@/shared/ui';
 import { Home, Layers, Settings, Terminal } from 'lucide-react';
 import type React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export const Sidebar: React.FC = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { accentColor, compactMode } = useSettingsStore((state) => state.settings);
@@ -39,7 +41,7 @@ export const Sidebar: React.FC = () => {
             textTransform="uppercase"
             letterSpacing="wider"
           >
-            Navigation
+            {t('nav.title')}
           </Text>
         )}
         <Button
@@ -49,10 +51,10 @@ export const Sidebar: React.FC = () => {
           justifyContent={compactMode ? 'center' : 'flex-start'}
           px={compactMode ? '2' : '3'}
           onClick={() => navigate(ROUTES.OVERVIEW)}
-          title="Overview"
+          title={t('nav.overview')}
         >
           <Home size={16} />
-          {!compactMode && 'Overview'}
+          {!compactMode && t('nav.overview')}
         </Button>
         <Button
           variant={isFsd ? 'solid' : 'ghost'}
@@ -61,10 +63,10 @@ export const Sidebar: React.FC = () => {
           justifyContent={compactMode ? 'center' : 'flex-start'}
           px={compactMode ? '2' : '3'}
           onClick={() => navigate(ROUTES.FSD)}
-          title="FSD Architecture"
+          title={t('nav.fsd')}
         >
           <Layers size={16} />
-          {!compactMode && 'FSD Architecture'}
+          {!compactMode && t('nav.fsd')}
         </Button>
         <Button
           variant={isIpc ? 'solid' : 'ghost'}
@@ -73,10 +75,10 @@ export const Sidebar: React.FC = () => {
           justifyContent={compactMode ? 'center' : 'flex-start'}
           px={compactMode ? '2' : '3'}
           onClick={() => navigate(ROUTES.IPC)}
-          title="IPC Bridge"
+          title={t('nav.ipc')}
         >
           <Terminal size={16} />
-          {!compactMode && 'IPC Bridge'}
+          {!compactMode && t('nav.ipc')}
         </Button>
       </VStack>
 
@@ -88,10 +90,10 @@ export const Sidebar: React.FC = () => {
           justifyContent={compactMode ? 'center' : 'flex-start'}
           px={compactMode ? '2' : '3'}
           onClick={() => navigate(ROUTES.SETTINGS)}
-          title="Settings"
+          title={t('nav.settings')}
         >
           <Settings size={16} />
-          {!compactMode && 'Settings'}
+          {!compactMode && t('nav.settings')}
         </Button>
       </VStack>
     </Box>

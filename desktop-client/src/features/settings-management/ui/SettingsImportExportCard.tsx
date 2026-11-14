@@ -11,9 +11,19 @@ import {
   Textarea,
   VStack,
 } from '@/shared/ui';
-import { CheckCircle, Copy, Download, FileUp, HardDrive, Upload, XCircle } from 'lucide-react';
+import {
+  CheckCircle,
+  Copy,
+  Download,
+  FileUp,
+  HardDrive,
+  ShieldCheck,
+  Upload,
+  XCircle,
+} from 'lucide-react';
 import type React from 'react';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SettingsImportExportCardProps {
   importText: string;
@@ -35,24 +45,32 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
   onImport,
   onFileUpload,
 }) => {
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <Card.Root p="5" bg="bg.panel" borderWidth="1px" borderColor="border.subtle" borderRadius="xl">
       <Card.Header p="0" mb="4">
-        <HStack gap="2" align="center">
-          <HardDrive size={18} color="#22c55e" />
-          <Heading size="sm" color="fg">
-            Native Store Import & Export
-          </Heading>
+        <HStack justify="space-between" align="center">
+          <HStack gap="2" align="center">
+            <HardDrive size={18} color="#22c55e" />
+            <Heading size="sm" color="fg">
+              {t('settings.nativeStoreImportExport')}
+            </Heading>
+          </HStack>
+          <HStack gap="1.5">
+            <ShieldCheck size={16} color="#38bdf8" />
+            <Badge colorPalette="cyan" variant="surface" size="xs">
+              Zod Schema Validated
+            </Badge>
+          </HStack>
         </HStack>
       </Card.Header>
 
       <Card.Body p="0">
         <VStack align="stretch" gap="4">
           <Text fontSize="sm" color="fg.muted">
-            Export all client settings as portable JSON or restore your configuration from an
-            existing backup file.
+            {t('settings.importExportDesc')}
           </Text>
 
           {/* Feedback message banner */}
@@ -81,7 +99,7 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
           <Box>
             <HStack justify="space-between" align="center" mb="2">
               <Text fontSize="sm" fontWeight="medium" color="fg">
-                Export Configuration
+                {t('settings.exportConfig')}
               </Text>
               <Badge variant="subtle" colorPalette="green" size="sm">
                 JSON v1.0
@@ -90,11 +108,11 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
             <HStack gap="3">
               <Button size="sm" variant="solid" colorPalette="green" onClick={onExport}>
                 <Download size={14} />
-                Download JSON File
+                {t('settings.downloadJson')}
               </Button>
               <Button size="sm" variant="outline" colorPalette="gray" onClick={onExport}>
                 <Copy size={14} />
-                Copy to Clipboard
+                {t('settings.copyClipboard')}
               </Button>
             </HStack>
           </Box>
@@ -105,7 +123,7 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
           <Box>
             <Flex justify="space-between" align="center" mb="2">
               <Text fontSize="sm" fontWeight="medium" color="fg">
-                Import / Restore Configuration
+                {t('settings.importRestore')}
               </Text>
               <Button
                 size="xs"
@@ -114,7 +132,7 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
                 onClick={() => fileInputRef.current?.click()}
               >
                 <FileUp size={14} />
-                Upload .json file
+                {t('settings.uploadJson')}
               </Button>
               <input
                 ref={fileInputRef}
@@ -126,7 +144,7 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
             </Flex>
 
             <Textarea
-              placeholder='Paste exported JSON here... e.g. {"settings": {"accentColor": "teal", ...}}'
+              placeholder={t('settings.pastePlaceholder')}
               value={importText}
               onChange={(e) => onImportTextChange(e.target.value)}
               rows={3}
@@ -145,7 +163,7 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
                 disabled={!importText.trim()}
               >
                 <Upload size={14} />
-                Validate & Apply Settings
+                {t('settings.validateApply')}
               </Button>
             </HStack>
           </Box>
