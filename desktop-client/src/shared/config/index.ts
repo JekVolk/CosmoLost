@@ -1,3 +1,5 @@
+export * from './routes';
+
 export const APP_CONFIG = {
   appName: 'CosmoLost Desktop',
   version: '0.1.0',

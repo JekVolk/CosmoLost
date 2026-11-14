@@ -1,16 +1,19 @@
-import { type TabId, useNavigationStore } from '@/entities/navigation';
 import { useSettingsStore } from '@/entities/settings';
+import { ROUTES } from '@/shared/config';
 import { Box, Button, Text, VStack } from '@/shared/ui';
 import { Home, Layers, Settings, Terminal } from 'lucide-react';
 import type React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab } = useNavigationStore();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { accentColor, compactMode } = useSettingsStore((state) => state.settings);
 
-  const handleTabChange = (tab: TabId) => {
-    setActiveTab(tab);
-  };
+  const isOverview = location.pathname === ROUTES.OVERVIEW || location.pathname === ROUTES.ROOT;
+  const isFsd = location.pathname === ROUTES.FSD;
+  const isIpc = location.pathname === ROUTES.IPC;
+  const isSettings = location.pathname === ROUTES.SETTINGS;
 
   return (
     <Box
@@ -40,36 +43,36 @@ export const Sidebar: React.FC = () => {
           </Text>
         )}
         <Button
-          variant={activeTab === 'overview' ? 'solid' : 'ghost'}
+          variant={isOverview ? 'solid' : 'ghost'}
           colorPalette={accentColor}
           size="sm"
           justifyContent={compactMode ? 'center' : 'flex-start'}
           px={compactMode ? '2' : '3'}
-          onClick={() => handleTabChange('overview')}
+          onClick={() => navigate(ROUTES.OVERVIEW)}
           title="Overview"
         >
           <Home size={16} />
           {!compactMode && 'Overview'}
         </Button>
         <Button
-          variant={activeTab === 'fsd' ? 'solid' : 'ghost'}
+          variant={isFsd ? 'solid' : 'ghost'}
           colorPalette={accentColor}
           size="sm"
           justifyContent={compactMode ? 'center' : 'flex-start'}
           px={compactMode ? '2' : '3'}
-          onClick={() => handleTabChange('fsd')}
+          onClick={() => navigate(ROUTES.FSD)}
           title="FSD Architecture"
         >
           <Layers size={16} />
           {!compactMode && 'FSD Architecture'}
         </Button>
         <Button
-          variant={activeTab === 'ipc' ? 'solid' : 'ghost'}
+          variant={isIpc ? 'solid' : 'ghost'}
           colorPalette={accentColor}
           size="sm"
           justifyContent={compactMode ? 'center' : 'flex-start'}
           px={compactMode ? '2' : '3'}
-          onClick={() => handleTabChange('ipc')}
+          onClick={() => navigate(ROUTES.IPC)}
           title="IPC Bridge"
         >
           <Terminal size={16} />
@@ -79,12 +82,12 @@ export const Sidebar: React.FC = () => {
 
       <VStack align="stretch" gap="1">
         <Button
-          variant={activeTab === 'settings' ? 'solid' : 'ghost'}
+          variant={isSettings ? 'solid' : 'ghost'}
           colorPalette={accentColor}
           size="sm"
           justifyContent={compactMode ? 'center' : 'flex-start'}
           px={compactMode ? '2' : '3'}
-          onClick={() => handleTabChange('settings')}
+          onClick={() => navigate(ROUTES.SETTINGS)}
           title="Settings"
         >
           <Settings size={16} />

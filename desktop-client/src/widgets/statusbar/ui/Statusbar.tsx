@@ -1,12 +1,15 @@
-import { useNavigationStore } from '@/entities/navigation';
 import { useSettingsStore } from '@/entities/settings';
 import { Badge, Box, Flex, HStack, Text } from '@/shared/ui';
 import { Activity, CheckCircle2, Database, Shield } from 'lucide-react';
 import type React from 'react';
+import { useLocation } from 'react-router-dom';
 
 export const Statusbar: React.FC = () => {
-  const { activeTab } = useNavigationStore();
+  const location = useLocation();
   const { settings, isHydrated } = useSettingsStore();
+
+  const currentRouteName =
+    location.pathname === '/' ? '/OVERVIEW' : location.pathname.toUpperCase();
 
   return (
     <Flex
@@ -37,7 +40,7 @@ export const Statusbar: React.FC = () => {
         <Box width="1px" height="12px" bg="border.subtle" />
         <HStack gap="1.5">
           <Activity size={12} color="#38bdf8" />
-          <Text fontSize="2xs">Active: {activeTab.toUpperCase()}</Text>
+          <Text fontSize="2xs">Route: {currentRouteName}</Text>
         </HStack>
       </HStack>
 
