@@ -15,3 +15,6 @@ export {
   Input,
   Textarea,
 } from '@chakra-ui/react';
+
+export * from './error-boundary/DesktopErrorBoundary';
+export * from './fallback/RouteSuspense';

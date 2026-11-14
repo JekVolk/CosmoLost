@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // @ts-expect-error process is a nodejs global
@@ -7,8 +7,29 @@ const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-
-  // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-chakra': ['@chakra-ui/react', '@emotion/react'],
+          'vendor-tauri': [
+            '@tauri-apps/api',
+            '@tauri-apps/plugin-store',
+            '@tauri-apps/plugin-opener',
+          ],
+          'vendor-tools': [
+            '@tanstack/react-query',
+            'zod',
+            'i18next',
+            'react-i18next',
+            'zustand',
+          ],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
   clearScreen: false,
   server: {
     port: 1420,
@@ -22,7 +43,6 @@ export default defineConfig({
         }
       : undefined,
     watch: {
-      // 3. tell vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],
     },
   },

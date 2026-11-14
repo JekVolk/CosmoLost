@@ -1,6 +1,7 @@
 import { type ScheduledTask, type TaskType, useSchedulerStore } from '@/entities/scheduler';
-import { schedulerService, tauriCommands } from '@/shared';
+import { schedulerService } from '@/shared';
 import { useCallback, useEffect, useRef } from 'react';
+import { taskExecutorRegistry } from './task-executors';
 
 export function useSchedulerEngine() {
   const {
@@ -20,30 +21,10 @@ export function useSchedulerEngine() {
   const tasksRef = useRef<ScheduledTask[]>(tasks);
   tasksRef.current = tasks;
 
-  // Define task execution handlers based on type
-  const executeTaskType = useCallback(async (task: ScheduledTask): Promise<string> => {
-    switch (task.type) {
-      case 'ping': {
-        const res = await tauriCommands.ping(`Automated tick for ${task.name}`);
-        return `Echo: "${res.echo}" [roundtrip: ${res.roundtrip_status}]`;
-      }
-      case 'system-info': {
-        const info = await tauriCommands.getSystemInfo();
-        return `OS: ${info.os_name} (${info.arch}), App: v${info.app_version}`;
-      }
-      case 'cache-clean': {
-        await new Promise((resolve) => setTimeout(resolve, 80));
-        return 'Cache swept: 0 orphaned pointers, memory clean';
-      }
-      case 'custom': {
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        return `Custom periodic action executed at ${new Date().toLocaleTimeString()}`;
-      }
-      default: {
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        return `Custom periodic action executed at ${new Date().toLocaleTimeString()}`;
-      }
-    }
+  // Single responsibility: coordinate task execution via Strategy Registry (OCP)
+  const executeTask = useCallback(async (task: ScheduledTask): Promise<string> => {
+    const executor = taskExecutorRegistry.get(task.type);
+    return await executor.execute(task);
   }, []);
 
   // Sync scheduled tasks with schedulerService
@@ -56,7 +37,7 @@ export function useSchedulerEngine() {
           task.id,
           task.intervalSec,
           async () => {
-            return await executeTaskType(task);
+            return await executeTask(task);
           },
           false,
         );
@@ -64,7 +45,7 @@ export function useSchedulerEngine() {
         schedulerService.stop(task.id);
       }
     }
-  }, [tasks, isHydrated, executeTaskType]);
+  }, [tasks, isHydrated, executeTask]);
 
   // Hook into event listeners
   useEffect(() => {
@@ -103,12 +84,12 @@ export function useSchedulerEngine() {
       if (!task) return;
 
       schedulerService.register(taskId, async () => {
-        return await executeTaskType(task);
+        return await executeTask(task);
       });
 
       await schedulerService.runTask(taskId);
     },
-    [executeTaskType],
+    [executeTask],
   );
 
   const handleCreateTask = useCallback(

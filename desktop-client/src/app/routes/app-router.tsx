@@ -1,12 +1,31 @@
-import { FsdArchitecturePage } from '@/pages/fsd';
-import { HomePage } from '@/pages/home';
-import { IpcBridgePage } from '@/pages/ipc';
-import { NotFoundPage } from '@/pages/not-found';
-import { SchedulerPage } from '@/pages/scheduler';
-import { SettingsPage } from '@/pages/settings';
 import { ROUTES } from '@/shared/config';
+import { RouteSuspense } from '@/shared/ui';
+import React, { Suspense } from 'react';
 import { Navigate, createHashRouter } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
+
+const HomePage = React.lazy(() => import('@/pages/home').then((m) => ({ default: m.HomePage })));
+const FsdArchitecturePage = React.lazy(() =>
+  import('@/pages/fsd').then((m) => ({ default: m.FsdArchitecturePage })),
+);
+const IpcBridgePage = React.lazy(() =>
+  import('@/pages/ipc').then((m) => ({ default: m.IpcBridgePage })),
+);
+const SchedulerPage = React.lazy(() =>
+  import('@/pages/scheduler').then((m) => ({ default: m.SchedulerPage })),
+);
+const SettingsPage = React.lazy(() =>
+  import('@/pages/settings').then((m) => ({ default: m.SettingsPage })),
+);
+const NotFoundPage = React.lazy(() =>
+  import('@/pages/not-found').then((m) => ({ default: m.NotFoundPage })),
+);
+
+const withSuspense = (Component: React.ComponentType) => (
+  <Suspense fallback={<RouteSuspense />}>
+    <Component />
+  </Suspense>
+);
 
 export const appRouter = createHashRouter([
   {
@@ -19,27 +38,27 @@ export const appRouter = createHashRouter([
       },
       {
         path: ROUTES.OVERVIEW,
-        element: <HomePage />,
+        element: withSuspense(HomePage),
       },
       {
         path: ROUTES.FSD,
-        element: <FsdArchitecturePage />,
+        element: withSuspense(FsdArchitecturePage),
       },
       {
         path: ROUTES.IPC,
-        element: <IpcBridgePage />,
+        element: withSuspense(IpcBridgePage),
       },
       {
         path: ROUTES.SCHEDULER,
-        element: <SchedulerPage />,
+        element: withSuspense(SchedulerPage),
       },
       {
         path: ROUTES.SETTINGS,
-        element: <SettingsPage />,
+        element: withSuspense(SettingsPage),
       },
       {
         path: '*',
-        element: <NotFoundPage />,
+        element: withSuspense(NotFoundPage),
       },
     ],
   },
