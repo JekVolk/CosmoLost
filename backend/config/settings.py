@@ -11,6 +11,10 @@ from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Silenced system checks (urls.W005 is expected due to intentional alias routes for API compatibility)
+SILENCED_SYSTEM_CHECKS = ['urls.W005']
+
+
 # Security & environment settings
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
@@ -21,7 +25,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,testserver').split(',')
     if host.strip()
 ]
 
