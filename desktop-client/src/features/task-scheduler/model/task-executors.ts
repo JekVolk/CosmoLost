@@ -1,5 +1,5 @@
 import type { ScheduledTask, TaskType } from '@/entities/scheduler';
-import { tauriCommands } from '@/shared';
+import { mcpRegistry, tauriCommands } from '@/shared';
 
 export interface TaskExecutorStrategy {
   execute(task: ScheduledTask): Promise<string>;
@@ -26,6 +26,18 @@ export class CacheCleanTaskExecutor implements TaskExecutorStrategy {
   }
 }
 
+export class McpToolTaskExecutor implements TaskExecutorStrategy {
+  async execute(task: ScheduledTask): Promise<string> {
+    const res = await mcpRegistry.executeTool('tauri', 'ping', {
+      message: `MCP Scheduler tick for [${task.name}]`,
+    });
+    if (res.isError) {
+      throw new Error(res.content[0]?.text || 'MCP execution failed');
+    }
+    return `MCP response: ${res.content[0]?.text.slice(0, 80)}`;
+  }
+}
+
 export class CustomTaskExecutor implements TaskExecutorStrategy {
   async execute(task: ScheduledTask): Promise<string> {
     await new Promise((resolve) => setTimeout(resolve, 50));
@@ -34,7 +46,7 @@ export class CustomTaskExecutor implements TaskExecutorStrategy {
 }
 
 export class TaskExecutorRegistry {
-  private executors = new Map<TaskType, TaskExecutorStrategy>();
+  private executors = new Map<TaskType | string, TaskExecutorStrategy>();
   private defaultExecutor: TaskExecutorStrategy = new CustomTaskExecutor();
 
   constructor() {
@@ -42,13 +54,14 @@ export class TaskExecutorRegistry {
     this.register('system-info', new SystemInfoTaskExecutor());
     this.register('cache-clean', new CacheCleanTaskExecutor());
     this.register('custom', this.defaultExecutor);
+    this.register('mcp', new McpToolTaskExecutor());
   }
 
-  register(type: TaskType, executor: TaskExecutorStrategy): void {
+  register(type: TaskType | string, executor: TaskExecutorStrategy): void {
     this.executors.set(type, executor);
   }
 
-  get(type: TaskType): TaskExecutorStrategy {
+  get(type: TaskType | string): TaskExecutorStrategy {
     return this.executors.get(type) ?? this.defaultExecutor;
   }
 }

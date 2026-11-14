@@ -4,6 +4,7 @@ export const ROUTES = {
   FSD: '/fsd',
   IPC: '/ipc',
   SCHEDULER: '/scheduler',
+  MCP: '/mcp',
   SETTINGS: '/settings',
 } as const;
 

@@ -22,6 +22,7 @@ export const en = {
     fsd: 'FSD Architecture',
     ipc: 'IPC Bridge',
     scheduler: 'Task Scheduler',
+    mcp: 'MCP Hub',
     settings: 'Settings',
   },
   statusbar: {

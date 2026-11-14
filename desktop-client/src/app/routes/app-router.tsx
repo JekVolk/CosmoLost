@@ -14,6 +14,7 @@ const IpcBridgePage = React.lazy(() =>
 const SchedulerPage = React.lazy(() =>
   import('@/pages/scheduler').then((m) => ({ default: m.SchedulerPage })),
 );
+const McpHubPage = React.lazy(() => import('@/pages/mcp').then((m) => ({ default: m.McpHubPage })));
 const SettingsPage = React.lazy(() =>
   import('@/pages/settings').then((m) => ({ default: m.SettingsPage })),
 );
@@ -51,6 +52,10 @@ export const appRouter = createHashRouter([
       {
         path: ROUTES.SCHEDULER,
         element: withSuspense(SchedulerPage),
+      },
+      {
+        path: ROUTES.MCP,
+        element: withSuspense(McpHubPage),
       },
       {
         path: ROUTES.SETTINGS,

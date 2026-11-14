@@ -1,7 +1,7 @@
 import { useSettingsStore } from '@/entities/settings';
 import { ROUTES } from '@/shared/config';
 import { Box, Button, Text, VStack } from '@/shared/ui';
-import { CalendarClock, Home, Layers, Settings, Terminal } from 'lucide-react';
+import { Bot, CalendarClock, Home, Layers, Settings, Terminal } from 'lucide-react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -16,6 +16,7 @@ export const Sidebar: React.FC = () => {
   const isFsd = location.pathname === ROUTES.FSD;
   const isIpc = location.pathname === ROUTES.IPC;
   const isScheduler = location.pathname === ROUTES.SCHEDULER;
+  const isMcp = location.pathname === ROUTES.MCP;
   const isSettings = location.pathname === ROUTES.SETTINGS;
 
   return (
@@ -92,6 +93,18 @@ export const Sidebar: React.FC = () => {
         >
           <CalendarClock size={16} />
           {!compactMode && t('nav.scheduler')}
+        </Button>
+        <Button
+          variant={isMcp ? 'solid' : 'ghost'}
+          colorPalette={accentColor}
+          size="sm"
+          justifyContent={compactMode ? 'center' : 'flex-start'}
+          px={compactMode ? '2' : '3'}
+          onClick={() => navigate(ROUTES.MCP)}
+          title="MCP Hub"
+        >
+          <Bot size={16} />
+          {!compactMode && 'MCP Hub'}
         </Button>
       </VStack>
 

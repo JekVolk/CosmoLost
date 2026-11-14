@@ -24,6 +24,7 @@ export const uk: Translations = {
     fsd: 'FSD Архітектура',
     ipc: 'IPC Міст',
     scheduler: 'Планувальник завдань',
+    mcp: 'Хаб MCP',
     settings: 'Налаштування',
   },
   statusbar: {
