@@ -3,6 +3,10 @@ dist/
 dist-ssr/
 *.local
 .agents/scratch/
+.env
+.env.local
+.env.*.local
+desktop-client/.env
 desktop-client/node_modules/
 desktop-client/dist/
 desktop-client/src-tauri/target/

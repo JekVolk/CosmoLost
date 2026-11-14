@@ -12,6 +12,8 @@
     "android:init": "tauri android init",
     "android:dev": "tauri android dev",
     "android:build": "tauri android build",
+    "init:env": "node -e \"const fs=require('fs'); if(!fs.existsSync('.env') && fs.existsSync('.env.example')){ fs.copyFileSync('.env.example', '.env'); console.log('✔ .env created from .env.example'); }\"",
+    "init:check": "pnpm init:env && pnpm check && pnpm typecheck",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint src",
     "format": "biome format --write src",
