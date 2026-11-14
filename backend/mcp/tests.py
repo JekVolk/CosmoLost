@@ -463,3 +463,63 @@ def test_fastmcp_client_protocol_integration(mcp_test_data):
             assert res_chrono.structured_content['final_sol_or_step'] == 500
 
     asyncio.run(run_client_calls())
+
+
+# =============================================================================
+# Hacker / Chaos Security Tests (Penetration & Resiliency Vectors)
+# =============================================================================
+@pytest.mark.django_db
+def test_hacker_null_byte_injection(mcp_test_data):
+    """Vector: Null byte (\x00) injection in string inputs to crash C/SQLite driver."""
+    res_search = search_artifacts(query="Apollo\x00DROP TABLE", celestial_body="moon\x00malicious")
+    assert isinstance(res_search, list)
+
+    res_details = get_artifact_details("perseverance-rover\x00--")
+    assert isinstance(res_details, dict)
+
+    res_manifest = get_mission_manifest("apollo-11\x00")
+    assert isinstance(res_manifest, dict)
+
+
+@pytest.mark.django_db
+def test_hacker_integer_overflow_pagination(mcp_test_data):
+    """Vector: Massive integer (10**60) or negative bounds to cause Python/SQL overflow."""
+    # Overflow integer
+    res_overflow = search_artifacts(limit=10**50, offset=10**50)
+    assert isinstance(res_overflow, list)
+    assert len(res_overflow) == 0  # Offset beyond rows, safe empty list
+
+    # Negative bounds
+    res_negative = search_artifacts(limit=-999999, offset=-999999)
+    assert isinstance(res_negative, list)
+
+    # String type confusion
+    res_string = search_artifacts(limit="DROP TABLE", offset="INVALID")
+    assert isinstance(res_string, list)
+
+
+@pytest.mark.django_db
+def test_hacker_query_length_bomb_and_traversal(mcp_test_data):
+    """Vector: 10,000+ character string bomb and directory traversal patterns in slugs."""
+    huge_string = "A" * 15000
+    res_bomb = search_artifacts(query=huge_string)
+    assert isinstance(res_bomb, list)
+
+    # Path traversal and script tags in artifact_id
+    res_traversal = get_artifact_details("../../../etc/passwd<script>alert(1)</script>")
+    assert "error" in res_traversal
+    assert "not found" in res_traversal["error"]
+
+    # SQL injection attempt
+    res_sqli = get_artifact_details("' OR '1'='1' --")
+    assert "error" in res_sqli
+
+
+def test_hacker_sol_number_overflow():
+    """Vector: Astronomical sol numbers or negative sol numbers to cause datetime overflow."""
+    import datetime
+    landing = datetime.date(2021, 2, 18)
+    assert sol_to_earth_date(landing, 10**30) is None
+    assert sol_to_earth_date(landing, -99999999) is None
+    assert sol_to_earth_date(landing, "not_an_int") is None
+
