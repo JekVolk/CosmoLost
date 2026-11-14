@@ -53,9 +53,22 @@ def search_artifacts(
     limit: int = 20,
     offset: int = 0,
 ) -> list[dict]:
-    """
-    Search space artifacts on Moon and Mars using official NASA catalogs.
-    Returns list of matching equipment with normalized coordinates, type, and status.
+    """Search and filter lunar and Martian surface hardware in the verified NASA catalog.
+
+    Use this tool when the user asks to find, list, or search for equipment, rovers,
+    landers, reflectors, or instruments on planetary surfaces.
+
+    Args:
+        query: Keyword matching hardware name (e.g. 'Perseverance', 'Eagle'), location (e.g. 'Jezero', 'Tranquillitatis'), or failure cause.
+        celestial_body: Target planetary body slug, either 'moon' or 'mars'.
+        artifact_type: Hardware category ('ROVER', 'HELICOPTER', 'LANDER', 'DESCENT_STAGE', 'IMPACT_STAGE', 'INSTRUMENT', 'RETRO_REFLECTOR', 'SAMPLE_TUBE', 'ENTRY_DEBRIS').
+        operational_status: Status filter ('ACTIVE', 'PASSIVE_ACTIVE', 'DORMANT', 'SLEEPING', 'DEACTIVATED', 'DESTROYED').
+        is_featured: If True, restricts results to high-significance curated highlights.
+        limit: Maximum items to return (1-100, default 20).
+        offset: Starting index for pagination (default 0).
+
+    Returns:
+        List of matching artifacts with normalized coordinates, type, mission name, and operational status.
     """
     qs = Artifact.objects.select_related('mission', 'celestial_body')
 
@@ -118,9 +131,16 @@ def search_artifacts(
 # =============================================================================
 @mcp.tool()
 def get_artifact_details(artifact_id: str) -> dict:
-    """
-    Retrieve comprehensive verified technical passport, coordinates, lifetime dates,
-    cause of deactivation, and first-person storytelling script (en-US).
+    """Retrieve comprehensive verified engineering passport, coordinates, and monologue for a specific artifact.
+
+    Use this tool when you have an artifact ID and need its exact landing coordinates, mass,
+    lifetime dates, primary failure cause, 3D model asset URL, or first-person storytelling script.
+
+    Args:
+        artifact_id: Unique artifact identifier slug (e.g. 'perseverance-rover', 'apollo-11-lrrr', 'opportunity-rover').
+
+    Returns:
+        Dictionary containing verified technical specifications, coordinates, elevation, mass, Sol dates, and monologue.
     """
     art_id = artifact_id.strip() if artifact_id else ""
     if not art_id:
@@ -165,8 +185,16 @@ def get_artifact_details(artifact_id: str) -> dict:
 # =============================================================================
 @mcp.tool()
 def get_mission_manifest(mission_id: str) -> dict:
-    """
-    List all hardware items, stages, instruments, and debris left on the surface by a specific NASA mission.
+    """Fetch the complete equipment and debris manifest deposited on planetary surfaces by a specific space mission.
+
+    Use this tool when investigating a specific mission (e.g. Apollo 11, Mars 2020) to discover
+    all stages, landers, rovers, tools, and hardware left behind.
+
+    Args:
+        mission_id: Unique mission identifier slug (e.g. 'apollo-11', 'mars-2020', 'mer-b-opportunity').
+
+    Returns:
+        Dictionary with mission details, launch/landing dates, summary, total count, and hardware list.
     """
     m_id = mission_id.strip() if mission_id else ""
     if not m_id:
@@ -206,8 +234,16 @@ def get_mission_manifest(mission_id: str) -> dict:
 # =============================================================================
 @mcp.tool()
 def get_last_sol_chronology(artifact_id: str) -> dict:
-    """
-    Fetch final telemetry packet (power Wh, dust tau, tilt, temperature) and last known status transmission.
+    """Retrieve final recorded telemetry packet and last status transmission before mission conclusion.
+
+    Use this tool when asking about the end of a mission, final Sol coordinates, cumulative
+    odometry distance, solar power levels (Wh), atmospheric dust opacity (tau), tilt, or final log.
+
+    Args:
+        artifact_id: Unique artifact slug with recorded traverse waypoints (e.g. 'opportunity-rover', 'perseverance-rover').
+
+    Returns:
+        Dictionary with final sol number, estimated Earth calendar date, coordinates, odometry, telemetry snapshot, and story snippet.
     """
     art_id = artifact_id.strip() if artifact_id else ""
     if not art_id:
@@ -255,8 +291,16 @@ def get_last_sol_chronology(artifact_id: str) -> dict:
 # =============================================================================
 @mcp.tool()
 def get_science_discoveries(artifact_id: str) -> list[dict]:
-    """
-    Get scientific instruments onboard and peer-reviewed discoveries with both rigorous facts and kid-friendly analogies.
+    """Retrieve peer-reviewed scientific breakthroughs and onboard scientific instruments for an artifact.
+
+    Use this tool when asking what scientific discoveries an artifact made (e.g., Martian blueberries,
+    ancient water evidence, organic molecules) or what instruments it carried (SHERLOC, APXS, Mastcam).
+
+    Args:
+        artifact_id: Unique artifact slug (e.g. 'perseverance-rover', 'opportunity-rover').
+
+    Returns:
+        List of scientific discoveries with instrument acronym, full name, discovery title, kid-friendly explanation, and PDS fact.
     """
     art_id = artifact_id.strip() if artifact_id else ""
     if not art_id:
@@ -283,8 +327,16 @@ def get_science_discoveries(artifact_id: str) -> list[dict]:
 # =============================================================================
 @mcp.tool()
 def get_verified_citations(artifact_id: str) -> dict:
-    """
-    Retrieve official NSSDCA catalog ID, NASA PDS citation statements, and mandatory copyright attribution.
+    """Retrieve official NASA/ESA catalog designators, PDS citation statements, and mandatory copyright lines.
+
+    Use this tool when needing official citations, NSSDCA ID, canonical archive URLs, or
+    attribution lines to verify facts, avoid hallucinations, or cite data in research.
+
+    Args:
+        artifact_id: Unique artifact slug (e.g. 'apollo-11-lrrr', 'perseverance-rover').
+
+    Returns:
+        Dictionary containing NSSDCA catalog ID, space agency, mandatory credit string, canonical URL, and PDS node.
     """
     art_id = artifact_id.strip() if artifact_id else ""
     if not art_id:
@@ -319,8 +371,16 @@ def get_verified_citations(artifact_id: str) -> dict:
 # =============================================================================
 @mcp.tool()
 def get_3d_and_media_assets(artifact_id: str) -> dict:
-    """
-    Fetch direct open URLs for interactive 3D .glb models and NASA archival high-resolution photos.
+    """Retrieve open CDN URLs for interactive 3D .glb models and NASA archival high-resolution photography.
+
+    Use this tool when needing visual media, 3D model URLs for interactive rendering, or
+    official NASA Photojournal codes (PIA IDs) and captions.
+
+    Args:
+        artifact_id: Unique artifact slug (e.g. 'perseverance-rover', 'opportunity-rover').
+
+    Returns:
+        Dictionary with 3D model URL (.glb), photos count, and list of media files with categories, PIA IDs, and credits.
     """
     art_id = artifact_id.strip() if artifact_id else ""
     if not art_id:
@@ -356,8 +416,16 @@ def get_3d_and_media_assets(artifact_id: str) -> dict:
 # =============================================================================
 @mcp.tool()
 def list_active_passive_artifacts(celestial_body: str = "") -> list[dict]:
-    """
-    Discover hardware items still operational or useful today without batteries (e.g. laser retroreflectors, sample depot tubes).
+    """Discover surface hardware still operating or scientifically useful today without battery power.
+
+    Use this tool when asking what items left on the Moon or Mars are still functional today
+    (e.g. retroreflectors reflecting observatory laser beams, sealed sample container tubes).
+
+    Args:
+        celestial_body: Optional planetary body slug filter ('moon' or 'mars').
+
+    Returns:
+        List of passive active equipment with artifact ID, name, body, type, location, and dynamic scientific role.
     """
     qs = Artifact.objects.filter(operational_status='PASSIVE_ACTIVE')
     c_body = celestial_body.strip().lower() if celestial_body else ""
@@ -392,9 +460,13 @@ def list_active_passive_artifacts(celestial_body: str = "") -> list[dict]:
 # =============================================================================
 @mcp.tool()
 def list_celestial_bodies() -> list[dict]:
-    """
-    List all supported celestial bodies (e.g. Moon, Mars) with physical parameters
-    and official cartographic coordinate systems.
+    """List all supported planetary bodies with physical characteristics and cartographic coordinate systems.
+
+    Use this tool for initial catalog exploration, finding supported planets/moons,
+    or checking surface gravity, radius, and total landed artifact counts.
+
+    Returns:
+        List of celestial bodies (Moon, Mars) with physical radius (km), gravity (m/s^2), and coordinate system type.
     """
     bodies = CelestialBody.objects.all().order_by('name')
     return [
@@ -415,9 +487,17 @@ def list_celestial_bodies() -> list[dict]:
 # =============================================================================
 @mcp.tool()
 def list_missions(agency: str = "", celestial_body: str = "") -> list[dict]:
-    """
-    List space exploration missions with hardware on Moon or Mars surfaces.
-    Allows filtering by space agency (NASA, ESA, etc.) or celestial body.
+    """List space exploration missions represented in the catalog with hardware counts and landing dates.
+
+    Use this tool when asking what missions exist in the database, finding missions by agency
+    (NASA, ESA, CNSA), or checking historical launch/landing timelines.
+
+    Args:
+        agency: Optional space agency name filter (e.g. 'NASA', 'ESA').
+        celestial_body: Optional planetary body slug filter ('moon' or 'mars').
+
+    Returns:
+        List of space missions with NSSDCA ID, name, agency, dates, summary, and hardware count.
     """
     qs = Mission.objects.prefetch_related('artifacts').all().order_by('name')
     if agency:
