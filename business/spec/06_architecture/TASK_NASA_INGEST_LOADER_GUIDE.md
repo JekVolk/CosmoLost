@@ -1,26 +1,27 @@
 # Постановка Задачі та Покроковий Гід: NASA Data Loader & Ingest Worker (Clean Architecture)
 
 > **Для кого цей документ**: Бекенд-розробник / Data Engineer (покроково «розжовано як для школяра/новачка»).  
-> **Ціль**: Розробити надійний сервіс імпорту та синхронізації даних NASA (`backend/loader/`), побудований за принципами Clean Layered Architecture (Клієнти ➔ DTO ➔ Репозиторій ➔ Django ORM).  
-> **Ключові фічі**:
+> **Ціль**: Розробити надійний, високопродуктивний сервіс імпорту та синхронізації даних NASA (`backend/loader/`), побудований за принципами **Clean Layered Architecture** (Клієнти ➔ Мапери ➔ DTO ➔ Репозиторій ➔ Django ORM).  
+> **Ключові інженерні вимоги**:
 > 1. **Багатотокенний пул (NASA Token Pool)** з автоматичною ротацією ключів при вичерпанні ліміту (HTTP 429 / 403) та експоненційним бекофом.
-> 2. **Розділення на шари (Clean Architecture)**: доменні DTO (чистий Python) ➔ Репозиторій ➔ БД. Жодної прямої залежності логіки NASA від моделей Django!
+> 2. **Розділення на шари (Clean Architecture)**: чисті доменні DTO (чистий Python) ➔ Репозиторій ➔ БД. Жодної прямої залежності зовнішнього API NASA від моделей Django!
 > 3. **Трекінг змін та дельта-оновлення (State Tracking & Delta Sync)**: обчислення хешів (SHA-256), фіксація що саме завантажено, що додано нове, а що оновлено.
-> 4. **Суворе дотримання 8 таблиць БД**: жодних нових моделей Django! Збереження даних виключно в існуючі моделі `backend/core/models.py`.
-> 5. **Автоматичне оновлення раз на годину**: підтримка автономного daemon-режиму (`python manage.py run_ingest --daemon --interval 3600`), сумісність із контейнером `cosmolost-ingest-worker` та альтернативний Celery Task.
+> 4. **Суворе дотримання 8 таблиць БД**: жодних нових моделей Django! Збереження даних виключно в наявні моделі `backend/core/models.py`.
+> 5. **Автоматичне оновлення раз на годину**: підтримка автономного daemon-режиму (`python manage.py run_ingest --daemon --interval 3600`), повна сумісність із контейнером `cosmolost-ingest-worker` та Celery Task.
+> 6. **100% захист від збоїв на хакатоні**: наявність автономного seed-каталогу артефактів Місяця та Марса (30+ апаратів) на випадок блекауту API NASA.
 
 ---
 
 ## 🧭 1. Архітектурна Концепція та Шари (Clean Layered Architecture)
 
-Щоб код не перетворився на «спагеті», коли запити до NASA напряму пишуть у базу даних, модуль `loader` ділиться на **4 строго ізольовані шари**:
+Щоб код не перетворився на некерований моноліт, коли неструктуровані JSON-відповіді NASA напряму пишуться в таблиці бази даних, модуль `loader` ділиться на **5 строго ізольованих шарів**:
 
 ```mermaid
 flowchart TD
     subgraph External["Зовнішній Світ (NASA APIs & Datasets)"]
-        NASA_APIs["api.nasa.gov<br>(APOD, Mars Rover Photos, InSight)"]
-        NASA_Images["images-api.nasa.gov<br>(Photojournal PIA Archive)"]
-        NASA_PDS["NASA PDS / Horizons / Static Seeds<br>(Координати, телеметрія MMGIS)"]
+        NASA_APIs["api.nasa.gov<br>(APOD, Mars Rover Photos, InSight, Manifests)"]
+        NASA_Images["images-api.nasa.gov<br>(Photojournal PIA Archive Search)"]
+        NASA_PDS["NASA PDS / Horizons / Curated Seeds<br>(Координати, телеметрія MMGIS)"]
     end
 
     subgraph InfrastructureLayer["1. Шар Інфраструктури (Infrastructure Layer)"]
@@ -30,17 +31,19 @@ flowchart TD
         TokenPool --> NASAClient
     end
 
-    subgraph DomainLayer["2. Доменний Шар (Domain & DTO Layer)"]
-        DTOs["Чисті DTO (Data Transfer Objects)<br>- CelestialBodyDTO<br>- MissionDTO<br>- ArtifactDTO<br>- WaypointDTO<br>- DiscoveryDTO<br>- MediaDTO"]
-        Normalizer["Валідація та нормалізація координат<br>(IAU 2000 Mars -180..180, парсинг дат)"]
-        DTOs --> Normalizer
+    subgraph MappingLayer["2. Шар Мапінгу та Нормалізації (Mapping Layer)"]
+        Mappers["NASAJsonMapper<br>- Нормалізація координат (IAU 2000 Mars)<br>- Конвертація Sol/Earth Date<br>- Фільтрація статусів та типів апаратів"]
     end
 
-    subgraph ServiceLayer["3. Сервісний Шар / Оркестратор (Service Layer)"]
+    subgraph DomainLayer["3. Доменний Шар (Domain & DTO Layer)"]
+        DTOs["Чисті DTO (Data Transfer Objects)<br>- CelestialBodyDTO<br>- MissionDTO<br>- ArtifactDTO<br>- WaypointDTO<br>- DiscoveryDTO<br>- MediaDTO<br>- SyncStatsDTO"]
+    end
+
+    subgraph ServiceLayer["4. Сервісний Шар / Оркестратор (Service Layer)"]
         Pipeline["NASAIngestPipeline<br>(Оркестрація кроків, дельта-аналіз,<br>калькуляція нових/оновлених записів)"]
     end
 
-    subgraph RepositoryLayer["4. Шар Репозиторію (Repository Layer)"]
+    subgraph RepositoryLayer["5. Шар Репозиторію (Repository Layer)"]
         RepoInterface["INASAIngestRepository<br>(Абстрактний інтерфейс)"]
         DjangoRepo["DjangoORMRepository<br>(Ідемпотентні upsert, update_or_create,<br>bulk транзакції)"]
         RepoInterface --> DjangoRepo
@@ -56,17 +59,13 @@ flowchart TD
     end
 
     External -->|Raw JSON| NASAClient
-    NASAClient -->|Raw Dicts| Pipeline
-    Pipeline -->|Створення & Валідація| DTOs
+    NASAClient -->|Raw Dicts| Mappers
+    Mappers -->|Валідні Об'єкти| DTOs
+    DTOs --> Pipeline
     Pipeline <-->|Перевірка хешу| StateStore
     Pipeline -->|Передача валідних DTO| DjangoRepo
     DjangoRepo -->|Atomic Write| CoreDB
 ```
-
-### Чому саме така структура:
-1. **Тестованість**: Можна протестувати логіку парсингу та збереження DTO без жодного реального запиту до NASA (через мок клієнта).
-2. **Стійкість до хакатону**: Якщо NASA ляже або всі безкоштовні ключі вичерпаються, увімкнеться локальний seed-fallback, і бекенд продовжить працювати.
-3. **Чистота БД**: База даних знає тільки про валідні, нормалізовані дані. Жодних битих записів чи незакритих зв'язків.
 
 ---
 
@@ -112,17 +111,18 @@ REDIS_URL=redis://redis:6379/1
 
 ## 📁 3. Структура Файлів Модуля `backend/loader/`
 
-Ось фінальна файлова структура, яку ти створиш у додатку `loader`:
+Ось повна файлова структура, яку ти реалізуєш у додатку `loader`:
 
 ```
 backend/loader/
 ├── __init__.py
 ├── apps.py                      # Конфігурація Django App
-├── constants.py                 # Ендпоінти NASA, дефолтні константи, сидові об'єкти
+├── constants.py                 # NASA API ендпоінти, константи та сидовий каталог артефактів
 ├── domain/                      # ШАР 1: Доменні сутності та DTO (чистий Python)
 │   ├── __init__.py
 │   ├── dtos.py                  # Dataclass DTO для всіх сутностей
-│   └── exceptions.py            # Кастомні винятки (RateLimitExceeded, IngestError)
+│   ├── exceptions.py            # Кастомні винятки (RateLimitExceeded, IngestError)
+│   └── mappers.py               # Трансформація raw JSON NASA у валідні DTO
 ├── infrastructure/              # ШАР 2: Мережа, NASA API, токени та стан
 │   ├── __init__.py
 │   ├── token_pool.py            # Багатотокенний ротатор з перемиканням при 429
@@ -143,18 +143,286 @@ backend/loader/
 ├── tasks.py                     # Опціональний Celery Task
 └── tests/
     ├── __init__.py
-    ├── test_token_pool.py       # Тести ротації ключів
-    ├── test_repository.py       # Тести ідемпотентного запису в БД
-    └── test_pipeline.py         # Наскрізний тест пайплайну
+    └── test_loader.py           # Комплексний Pytest-сьют
 ```
 
 ---
 
-## 🛠️ КРОК 1. Доменні Винятки та DTO (`loader/domain/`)
+## 🏛️ КРОК 1. Базові Константи та Сидовий Каталог (`loader/constants.py`)
 
-Створимо чисті дата-класи без прив'язки до ORM Django. Це забезпечує валідацію типів, передбачуваність полів та ізоляцію від змін у базі даних.
+Цей файл містить офіційні ендпоінти NASA, тайлові сервери NASA Treks, а також еталонні паспортні дані космічних апаратів NASA для гарантованого наповнення бази даних навіть без інтернету.
 
-### 1.1. Створи `backend/loader/domain/exceptions.py`
+Створи `backend/loader/constants.py`:
+
+```python
+"""
+Constants, API Endpoints, and Curated Seed Datasets for NASA Ingestion.
+"""
+
+# NASA API Endpoints
+MARS_ROVER_PHOTOS_ENDPOINT = "/mars-photos/api/v1/rovers/{rover}/photos"
+MARS_ROVER_MANIFEST_ENDPOINT = "/mars-photos/api/v1/manifests/{rover}"
+APOD_ENDPOINT = "/planetary/apod"
+INSIGHT_WEATHER_ENDPOINT = "/insight_weather/"
+IMAGES_SEARCH_ENDPOINT = "/search"
+
+# NASA Treks WMTS Global Basemaps
+MOON_WMTS_URL = "https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303P_100m/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png"
+MARS_WMTS_URL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png"
+
+# Curated Tier-1 Hardware Catalog (Moon & Mars)
+CURATED_CELESTIAL_BODIES = [
+    {
+        "id": "moon",
+        "name": "Moon",
+        "radius_km": 1737.4,
+        "gravity_ms2": 1.62,
+        "coordinate_system_type": "SELENOGRAPHIC",
+        "wmts_tile_url": MOON_WMTS_URL,
+    },
+    {
+        "id": "mars",
+        "name": "Mars",
+        "radius_km": 3389.5,
+        "gravity_ms2": 3.72,
+        "coordinate_system_type": "PLANETOCENTRIC_360",
+        "wmts_tile_url": MARS_WMTS_URL,
+    },
+]
+
+CURATED_MISSIONS = [
+    {
+        "id": "apollo-11",
+        "name": "Apollo 11",
+        "agency": "NASA",
+        "nssdca_id": "1969-059C",
+        "launch_date": "1969-07-16",
+        "landing_date": "1969-07-20",
+        "end_date": "1969-07-24",
+        "summary": "First crewed landing on the Moon. Tranquility Base.",
+    },
+    {
+        "id": "apollo-14",
+        "name": "Apollo 14",
+        "agency": "NASA",
+        "nssdca_id": "1971-008C",
+        "launch_date": "1971-01-31",
+        "landing_date": "1971-02-05",
+        "end_date": "1971-02-09",
+        "summary": "Explored Fra Mauro formation. Deployed ALSEP and Lunar Ranging Retroreflector.",
+    },
+    {
+        "id": "apollo-15",
+        "name": "Apollo 15",
+        "agency": "NASA",
+        "nssdca_id": "1971-063C",
+        "launch_date": "1971-07-26",
+        "landing_date": "1971-07-30",
+        "end_date": "1971-08-07",
+        "summary": "First J-mission with Lunar Roving Vehicle (LRV) at Hadley Rille.",
+    },
+    {
+        "id": "mer-b",
+        "name": "Mars Exploration Rover - Opportunity",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2003-032A",
+        "launch_date": "2003-07-07",
+        "landing_date": "2004-01-25",
+        "end_date": "2018-06-10",
+        "summary": "Traversed over 45 kilometers on Mars across 5,111 Sols.",
+    },
+    {
+        "id": "mer-a",
+        "name": "Mars Exploration Rover - Spirit",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2003-027A",
+        "launch_date": "2003-06-10",
+        "landing_date": "2004-01-04",
+        "end_date": "2010-03-22",
+        "summary": "Explored Gusev Crater and Columbia Hills. Traversed 7.7 km.",
+    },
+    {
+        "id": "msl",
+        "name": "Mars Science Laboratory (Curiosity)",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2011-070A",
+        "launch_date": "2011-11-26",
+        "landing_date": "2012-08-06",
+        "end_date": None,
+        "summary": "Assessing habitability in Gale Crater and climbing Mount Sharp.",
+    },
+    {
+        "id": "mars-2020",
+        "name": "Mars 2020 (Perseverance & Ingenuity)",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2020-052A",
+        "launch_date": "2020-07-30",
+        "landing_date": "2021-02-18",
+        "end_date": None,
+        "summary": "Astrobiology mission caching sample tubes in Jezero Crater delta.",
+    },
+    {
+        "id": "insight",
+        "name": "InSight Mars Lander",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2018-042A",
+        "launch_date": "2018-05-05",
+        "landing_date": "2018-11-26",
+        "end_date": "2022-12-15",
+        "summary": "Investigated the deep interior of Mars with SEIS seismometer.",
+    },
+    {
+        "id": "pathfinder",
+        "name": "Mars Pathfinder & Sojourner",
+        "agency": "NASA/JPL",
+        "nssdca_id": "1996-068A",
+        "launch_date": "1996-12-04",
+        "landing_date": "1997-07-04",
+        "end_date": "1997-09-27",
+        "summary": "First robotic rover on Mars. Explored Ares Vallis.",
+    },
+]
+
+CURATED_ARTIFACTS = [
+    {
+        "id": "opportunity-rover",
+        "mission_id": "mer-b",
+        "celestial_body_id": "mars",
+        "name": "Opportunity Rover (MER-B)",
+        "artifact_type": "ROVER",
+        "operational_status": "DORMANT",
+        "latitude": -1.9462,
+        "longitude": 354.4734,  # Planetocentric 360 -> normalized to -5.5266
+        "elevation_m": -1440.0,
+        "location_name": "Perseverance Valley, Endeavour Crater",
+        "mass_kg": 185.0,
+        "last_contact_sol": 5111,
+        "cause_of_deactivation": "Global planet-encircling dust storm deprived solar arrays of sunlight (Tau > 10.8).",
+        "is_featured": True,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "My battery is low and it's getting dark. But for 14 years, I showed humanity that water once bathed this red world.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Opportunity/opportunity.glb",
+    },
+    {
+        "id": "spirit-rover",
+        "mission_id": "mer-a",
+        "celestial_body_id": "mars",
+        "name": "Spirit Rover (MER-A)",
+        "artifact_type": "ROVER",
+        "operational_status": "DORMANT",
+        "latitude": -14.5684,
+        "longitude": 175.4726,
+        "elevation_m": -1940.0,
+        "location_name": "Troy, West of Home Plate, Gusev Crater",
+        "mass_kg": 185.0,
+        "last_contact_sol": 2210,
+        "cause_of_deactivation": "Right-front wheel failure led to becoming stuck in soft sulfate sands before the harsh Martian winter.",
+        "is_featured": False,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "I climbed the Columbia Hills on five wheels and unveiled ancient hydrothermal springs.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Spirit/spirit.glb",
+    },
+    {
+        "id": "apollo-11-descent-stage",
+        "mission_id": "apollo-11",
+        "celestial_body_id": "moon",
+        "name": "Apollo 11 Lunar Module Descent Stage (Eagle)",
+        "artifact_type": "DESCENT_STAGE",
+        "operational_status": "PASSIVE_ACTIVE",
+        "latitude": 0.67408,
+        "longitude": 23.47297,
+        "elevation_m": -2573.0,
+        "location_name": "Tranquility Base (Mare Tranquillitatis)",
+        "mass_kg": 2034.0,
+        "cause_of_deactivation": "Descent engine propellant depleted during touchdown; remained as the launch pad for the Ascent Stage.",
+        "is_featured": True,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "Here men from the planet Earth first set foot upon the Moon. July 1969 A.D. We came in peace for all mankind.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Apollo%2011%20LM/apollo_11_lm.glb",
+    },
+    {
+        "id": "apollo-11-lrr",
+        "mission_id": "apollo-11",
+        "celestial_body_id": "moon",
+        "name": "Apollo 11 Lunar Laser Ranging Retroreflector (LRRR)",
+        "artifact_type": "RETRO_REFLECTOR",
+        "operational_status": "PASSIVE_ACTIVE",
+        "latitude": 0.67337,
+        "longitude": 23.47309,
+        "elevation_m": -2573.0,
+        "location_name": "Tranquility Base",
+        "mass_kg": 30.0,
+        "cause_of_deactivation": "Passive optical instrument requiring no electrical power; continuously operational since 1969.",
+        "is_featured": False,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "Fire your lasers from Earth. I will bounce your photons straight back to prove the Moon drifts away by 3.8 cm every year.",
+        "model_3d_url": "",
+    },
+    {
+        "id": "ingenuity-helicopter",
+        "mission_id": "mars-2020",
+        "celestial_body_id": "mars",
+        "name": "Ingenuity Mars Helicopter (Ginny)",
+        "artifact_type": "HELICOPTER",
+        "operational_status": "DORMANT",
+        "latitude": 18.4447,
+        "longitude": 77.4508,
+        "elevation_m": -2540.0,
+        "location_name": "Valinor Hills, Jezero Crater",
+        "mass_kg": 1.8,
+        "last_contact_sol": 1042,
+        "cause_of_deactivation": "Rotor blade tip damage sustained during landing on Flight 72.",
+        "is_featured": True,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "I proved that powered, controlled aerodynamic flight is possible in the razor-thin atmosphere of another world.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Ingenuity/ingenuity.glb",
+    },
+    {
+        "id": "insight-lander",
+        "mission_id": "insight",
+        "celestial_body_id": "mars",
+        "name": "InSight Mars Lander",
+        "artifact_type": "LANDER",
+        "operational_status": "DORMANT",
+        "latitude": 4.5024,
+        "longitude": 135.6234,
+        "elevation_m": -2600.0,
+        "location_name": "Elysium Planitia",
+        "mass_kg": 358.0,
+        "last_contact_sol": 1445,
+        "cause_of_deactivation": "Excessive accumulation of Martian atmospheric dust on dual solar panels.",
+        "is_featured": True,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "My power is really low today, so this may be the last image I can send. Don't worry about me though: my time here has been both productive and serene.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/InSight/insight.glb",
+    },
+    {
+        "id": "sojourner-rover",
+        "mission_id": "pathfinder",
+        "celestial_body_id": "mars",
+        "name": "Sojourner Rover",
+        "artifact_type": "ROVER",
+        "operational_status": "DORMANT",
+        "latitude": 19.33,
+        "longitude": 326.45,  # -33.55
+        "elevation_m": -3650.0,
+        "location_name": "Ares Vallis",
+        "mass_kg": 11.5,
+        "last_contact_sol": 83,
+        "cause_of_deactivation": "Pathfinder base station battery depletion caused communication loss.",
+        "is_featured": False,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "I was the size of a microwave oven, but I was the first set of wheels humanity ever drove on Mars.",
+        "model_3d_url": "",
+    },
+]
+```
+
+---
+
+## 🛠️ КРОК 2. Доменні Винятки, DTO та Мапери (`loader/domain/`)
+
+### 2.1. Створи `backend/loader/domain/exceptions.py`
 
 ```python
 """
@@ -186,7 +454,7 @@ class IngestRepositoryError(LoaderBaseException):
     pass
 ```
 
-### 1.2. Створи `backend/loader/domain/dtos.py`
+### 2.2. Створи `backend/loader/domain/dtos.py`
 
 ```python
 """
@@ -303,22 +571,147 @@ class SyncStatsDTO:
             self.duration_seconds = round((self.end_time - self.start_time).total_seconds(), 2)
 ```
 
+### 2.3. Створи `backend/loader/domain/mappers.py`
+
+Шар мапінгу конвертує неструктуровані сирі словники NASA API у типізовані, перевірені DTO. Він нормалізує координати довготи Марса (з 0..360 у -180..180) та парсить дати.
+
+Створи `backend/loader/domain/mappers.py`:
+
+```python
+"""
+Mappers transforming raw NASA API JSON structures into domain DTOs.
+"""
+from datetime import datetime, date
+from typing import Any, Dict, Optional, Tuple
+
+from loader.domain.dtos import (
+    CelestialBodyDTO,
+    MissionDTO,
+    ArtifactDTO,
+    MediaDTO,
+    WaypointDTO,
+)
+from loader.domain.exceptions import IngestValidationError
+
+
+class NASAJsonMapper:
+    """Utility class for normalizing NASA API responses."""
+
+    @staticmethod
+    def normalize_longitude(lon: float) -> float:
+        """
+        Normalizes longitude into standard -180.0 .. 180.0 range.
+        NASA Mars Treks frequently uses 0..360 planetocentric coordinates.
+        """
+        if lon > 180.0:
+            return round(lon - 360.0, 6)
+        return round(lon, 6)
+
+    @staticmethod
+    def parse_date(date_str: Optional[str]) -> Optional[date]:
+        """Safely parses ISO date string 'YYYY-MM-DD'."""
+        if not date_str:
+            return None
+        try:
+            return datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            return None
+
+    @classmethod
+    def raw_to_celestial_body_dto(cls, raw: Dict[str, Any]) -> CelestialBodyDTO:
+        required = ['id', 'name', 'radius_km', 'gravity_ms2', 'coordinate_system_type', 'wmts_tile_url']
+        for field_name in required:
+            if field_name not in raw:
+                raise IngestValidationError(f"Missing required field {field_name} for CelestialBody")
+
+        return CelestialBodyDTO(
+            id=str(raw['id']).strip().lower(),
+            name=str(raw['name']).strip(),
+            radius_km=float(raw['radius_km']),
+            gravity_ms2=float(raw['gravity_ms2']),
+            coordinate_system_type=str(raw['coordinate_system_type']).strip(),
+            wmts_tile_url=str(raw['wmts_tile_url']).strip(),
+        )
+
+    @classmethod
+    def raw_to_mission_dto(cls, raw: Dict[str, Any]) -> MissionDTO:
+        if 'id' not in raw or 'name' not in raw:
+            raise IngestValidationError("Mission requires 'id' and 'name'.")
+
+        return MissionDTO(
+            id=str(raw['id']).strip().lower(),
+            name=str(raw['name']).strip(),
+            agency=str(raw.get('agency', 'NASA')).strip(),
+            nssdca_id=raw.get('nssdca_id'),
+            launch_date=cls.parse_date(raw.get('launch_date')),
+            landing_date=cls.parse_date(raw.get('landing_date')),
+            end_date=cls.parse_date(raw.get('end_date')),
+            summary=str(raw.get('summary', '')).strip(),
+        )
+
+    @classmethod
+    def raw_to_artifact_dto(cls, raw: Dict[str, Any]) -> ArtifactDTO:
+        if 'id' not in raw or 'celestial_body_id' not in raw:
+            raise IngestValidationError("Artifact requires 'id' and 'celestial_body_id'.")
+
+        lat = float(raw['latitude'])
+        lon = cls.normalize_longitude(float(raw['longitude']))
+
+        return ArtifactDTO(
+            id=str(raw['id']).strip().lower(),
+            mission_id=raw.get('mission_id'),
+            celestial_body_id=str(raw['celestial_body_id']).strip().lower(),
+            name=str(raw['name']).strip(),
+            artifact_type=str(raw.get('artifact_type', 'ROVER')).strip().upper(),
+            operational_status=str(raw.get('operational_status', 'DORMANT')).strip().upper(),
+            latitude=lat,
+            longitude=lon,
+            elevation_m=float(raw['elevation_m']) if raw.get('elevation_m') is not None else None,
+            location_name=str(raw.get('location_name', '')).strip(),
+            mass_kg=float(raw['mass_kg']) if raw.get('mass_kg') is not None else None,
+            last_contact_sol=int(raw['last_contact_sol']) if raw.get('last_contact_sol') is not None else None,
+            cause_of_deactivation=str(raw.get('cause_of_deactivation', '')).strip(),
+            is_featured=bool(raw.get('is_featured', False)),
+            is_nasa_hardware=bool(raw.get('is_nasa_hardware', True)),
+            first_person_monologue=str(raw.get('first_person_monologue', '')).strip(),
+            model_3d_url=str(raw.get('model_3d_url', '')).strip(),
+        )
+
+    @classmethod
+    def rover_photo_to_media_dto(cls, photo: Dict[str, Any], artifact_id: str) -> MediaDTO:
+        """
+        Maps a NASA Mars Rover API photo JSON object into MediaDTO.
+        """
+        camera = photo.get('camera', {}).get('name', 'PANCAM')
+        sol = photo.get('sol', 0)
+        img_src = photo.get('img_src', '').replace('http://', 'https://')
+        photo_id = str(photo.get('id', ''))
+
+        return MediaDTO(
+            artifact_id=artifact_id,
+            media_category="SURFACE_PHOTO",
+            media_url=img_src,
+            nasa_id_or_pia=f"MARS-PHOTO-{photo_id}",
+            caption=f"Captured by {camera} on Sol {sol}.",
+            credit="NASA/JPL-Caltech",
+        )
+```
+
 ---
 
-## 🌐 КРОК 2. Інфраструктура: Пул Токенів та NASA Клієнт (`loader/infrastructure/`)
+## 🌐 КРОК 3. Інфраструктура: Пул Токенів та NASA Клієнт (`loader/infrastructure/`)
 
-### 2.1. Пул Токенів з Ротацією (`loader/infrastructure/token_pool.py`)
-
-Ключова вимога: підтримка списку токенів із `.env` (`NASA_API_KEYS`). Коли NASA повертає **HTTP 429 Too Many Requests** або **HTTP 403 Forbidden**, воркер **не падає**, а миттєво перемикається на наступний доступний токен у пулі!
+### 3.1. Пул Токенів з Авторотацією (`loader/infrastructure/token_pool.py`)
 
 Створи `backend/loader/infrastructure/token_pool.py`:
 
 ```python
 """
 NASA API Token Pool Manager.
-Handles multi-key rotation, HTTP 429 backoff, and quota tracking.
+Handles multi-key rotation, thread safety, HTTP 429 cooldowns, and quota tracking.
 """
 import logging
+import threading
 import time
 from typing import Dict, List, Optional
 
@@ -328,7 +721,7 @@ logger = logging.getLogger('loader.token_pool')
 
 
 class TokenMetadata:
-    """State of an individual NASA API key."""
+    """State tracking for a single NASA API key."""
     def __init__(self, key: str):
         self.key = key
         self.is_active = True
@@ -337,74 +730,61 @@ class TokenMetadata:
         self.rate_limited_until: float = 0.0
 
     def is_available(self) -> bool:
-        """Returns True if the key is not currently blocked by rate limiting."""
         if not self.is_active:
             return False
-        if time.time() < self.rate_limited_until:
-            return False
-        return True
+        return time.time() >= self.rate_limited_until
 
 
 class NASATokenPool:
     """
-    Manages a pool of NASA API keys with round-robin and auto-rotation on 429/403.
+    Thread-safe manager for multiple NASA API keys with auto-rotation on 429/403.
     """
     def __init__(self, raw_keys: str):
         parsed = [k.strip() for k in raw_keys.split(',') if k.strip()]
         if not parsed:
             parsed = ['DEMO_KEY']
-        
+
         self.tokens: List[TokenMetadata] = [TokenMetadata(k) for k in parsed]
         self.current_index: int = 0
         self.rotation_count: int = 0
+        self._lock = threading.Lock()
         logger.info(f"Initialized NASA Token Pool with {len(self.tokens)} key(s).")
 
     def get_token(self) -> str:
-        """
-        Retrieves the next valid available token.
-        Raises RateLimitExceededError if all tokens in the pool are throttled.
-        """
-        initial_index = self.current_index
-        for _ in range(len(self.tokens)):
-            token_meta = self.tokens[self.current_index]
-            if token_meta.is_available():
-                token_meta.total_requests += 1
-                return token_meta.key
-            # Try next token
-            self._advance_index()
+        with self._lock:
+            for _ in range(len(self.tokens)):
+                token_meta = self.tokens[self.current_index]
+                if token_meta.is_available():
+                    token_meta.total_requests += 1
+                    return token_meta.key
+                self._advance_index()
 
-        # If we looped through all and none are available:
-        wait_times = [max(0.0, t.rate_limited_until - time.time()) for t in self.tokens]
-        min_wait = min(wait_times) if wait_times else 60.0
-        raise RateLimitExceededError(
-            f"All {len(self.tokens)} NASA API tokens are rate-limited! Min wait: {min_wait:.1f}s"
-        )
+            wait_times = [max(0.0, t.rate_limited_until - time.time()) for t in self.tokens]
+            min_wait = min(wait_times) if wait_times else 60.0
+            raise RateLimitExceededError(
+                f"All {len(self.tokens)} NASA API tokens are rate-limited! Min cooldown remaining: {min_wait:.1f}s"
+            )
 
     def mark_rate_limited(self, key: str, cooldown_seconds: float = 3600.0) -> None:
-        """
-        Marks a specific key as rate-limited (HTTP 429) for the given cooldown duration.
-        """
-        for t in self.tokens:
-            if t.key == key:
-                t.rate_limited_until = time.time() + cooldown_seconds
-                logger.warning(
-                    f"Token '...{key[-4:] if len(key) > 4 else key}' marked 429 RATE-LIMITED for {cooldown_seconds}s."
-                )
-                break
-        
-        self.rotation_count += 1
-        self._advance_index()
+        with self._lock:
+            for t in self.tokens:
+                if t.key == key:
+                    t.rate_limited_until = time.time() + cooldown_seconds
+                    logger.warning(
+                        f"Token '...{key[-4:] if len(key) > 4 else key}' received HTTP 429! Cooldown for {cooldown_seconds}s."
+                    )
+                    break
+            self.rotation_count += 1
+            self._advance_index()
 
     def update_quota_headers(self, key: str, headers: Dict[str, str]) -> None:
-        """
-        Extracts NASA rate-limit headers (X-RateLimit-Remaining).
-        """
-        for t in self.tokens:
-            if t.key == key:
-                remaining = headers.get('X-RateLimit-Remaining')
-                if remaining and remaining.isdigit():
-                    t.remaining_quota = int(remaining)
-                break
+        remaining = headers.get('X-RateLimit-Remaining')
+        if remaining and remaining.isdigit():
+            with self._lock:
+                for t in self.tokens:
+                    if t.key == key:
+                        t.remaining_quota = int(remaining)
+                        break
 
     def _advance_index(self) -> None:
         self.current_index = (self.current_index + 1) % len(self.tokens)
@@ -412,7 +792,7 @@ class NASATokenPool:
 
 ---
 
-### 2.2. Клієнт NASA API з Ретраями та Фолбеком (`loader/infrastructure/nasa_client.py`)
+### 3.2. Клієнт NASA API з Ретраями та Фолбеком (`loader/infrastructure/nasa_client.py`)
 
 Створи `backend/loader/infrastructure/nasa_client.py`:
 
@@ -428,6 +808,11 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
+from loader.constants import (
+    MARS_ROVER_PHOTOS_ENDPOINT,
+    MARS_ROVER_MANIFEST_ENDPOINT,
+    IMAGES_SEARCH_ENDPOINT,
+)
 from loader.domain.exceptions import NASAClientError, RateLimitExceededError
 from loader.infrastructure.token_pool import NASATokenPool
 
@@ -455,7 +840,6 @@ class NASAClient:
         self.rate_limit_delay = rate_limit_delay
         self.enable_mock_fallback = enable_mock_fallback
 
-        # Configure session with connection pooling and retries
         self.session = requests.Session()
         retries = Retry(
             total=max_retries,
@@ -468,10 +852,6 @@ class NASAClient:
         self.session.mount('http://', adapter)
 
     def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None, use_images_api: bool = False) -> Dict[str, Any]:
-        """
-        Executes a GET request using a token from the pool.
-        Handles HTTP 429 by rotating token and retrying immediately with the next key.
-        """
         params = params.copy() if params else {}
         base = self.images_api_url if use_images_api else self.base_url
         url = f"{base}/{endpoint.lstrip('/')}"
@@ -491,13 +871,12 @@ class NASAClient:
                 response = self.session.get(url, params=params, timeout=self.timeout)
                 self.token_pool.update_quota_headers(current_token, response.headers)
 
-                # Check for rate limiting
                 if response.status_code in (429, 403):
                     logger.warning(
-                        f"NASA returned {response.status_code} for key ...{current_token[-4:]}. Rotating..."
+                        f"NASA returned status {response.status_code} for key ...{current_token[-4:]}. Rotating..."
                     )
                     self.token_pool.mark_rate_limited(current_token, cooldown_seconds=3600.0)
-                    continue  # Retry with next token
+                    continue
 
                 if response.status_code == 200:
                     return response.json()
@@ -505,19 +884,28 @@ class NASAClient:
                 response.raise_for_status()
 
             except requests.RequestException as e:
-                logger.error(f"HTTP request failed for {url}: {e}")
+                logger.error(f"HTTP request error for {url}: {e}")
                 if attempt >= max_pool_attempts:
                     raise NASAClientError(f"Request failed after {attempt} attempts: {e}") from e
 
         raise RateLimitExceededError("Exhausted all available NASA tokens without a successful response.")
 
-    def search_archive_photos(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
-        """
-        Searches the NASA Image Archive (images-api.nasa.gov) for artifact photos.
-        """
+    def fetch_rover_manifest(self, rover_name: str) -> Dict[str, Any]:
+        endpoint = MARS_ROVER_MANIFEST_ENDPOINT.format(rover=rover_name.lower())
+        return self.get(endpoint)
+
+    def fetch_rover_photos(self, rover_name: str, sol: int, camera: Optional[str] = None, page: int = 1) -> List[Dict[str, Any]]:
+        endpoint = MARS_ROVER_PHOTOS_ENDPOINT.format(rover=rover_name.lower())
+        params = {'sol': sol, 'page': page}
+        if camera:
+            params['camera'] = camera
+        data = self.get(endpoint, params=params)
+        return data.get('photos', [])
+
+    def search_archive_images(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
         params = {'q': query, 'media_type': 'image', 'page_size': limit}
         try:
-            data = self.get('search', params=params, use_images_api=True)
+            data = self.get(IMAGES_SEARCH_ENDPOINT, params=params, use_images_api=True)
             items = data.get('collection', {}).get('items', [])
             results = []
             for item in items:
@@ -540,11 +928,7 @@ class NASAClient:
 
 ---
 
-### 2.3. Трекінг Змін та Дельта-Хеші (`loader/infrastructure/state_store.py`)
-
-Як Django дізнається, що вже завантажено, а які дані є новими?
-Ми рахуємо **SHA-256 хеш** від даних кожного об'єкта. Якщо хеш співпадає — об'єкт **пропускається** без навантаження на базу даних!
-Для збереження стану використовується Redis (а якщо Redis недоступний — локальний кеш `sync_state.json`). **Жодної нової таблиці в базі даних!**
+### 3.3. Трекінг Змін та Дельта-Хеші (`loader/infrastructure/state_store.py`)
 
 Створи `backend/loader/infrastructure/state_store.py`:
 
@@ -585,14 +969,10 @@ class SyncStateStore:
             self._load_local_cache()
 
     def compute_hash(self, payload: dict) -> str:
-        """Computes deterministic SHA-256 hash of a dictionary."""
         serialized = json.dumps(payload, sort_keys=True, default=str)
         return hashlib.sha256(serialized.encode('utf-8')).hexdigest()
 
     def is_changed(self, entity_type: str, entity_id: str, current_hash: str) -> bool:
-        """
-        Returns True if the entity is new or its content hash differs from the stored state.
-        """
         key = f"cosmolost:sync:{entity_type}:{entity_id}"
         stored_hash = None
 
@@ -607,7 +987,6 @@ class SyncStateStore:
         return stored_hash != current_hash
 
     def update_hash(self, entity_type: str, entity_id: str, new_hash: str) -> None:
-        """Saves updated hash for entity."""
         key = f"cosmolost:sync:{entity_type}:{entity_id}"
         if self.redis_client:
             try:
@@ -637,12 +1016,11 @@ class SyncStateStore:
 
 ---
 
-## 🗄️ КРОК 3. Шар Репозиторію (`loader/repositories/`)
+## 🗄️ КРОК 4. Шар Репозиторію (`loader/repositories/`)
 
 Репозиторій приймає **DTO** і відповідає за збереження даних у **8 моделей `backend/core/models.py`**.
-Використовуємо атомарні транзакції `transaction.atomic()` та метод `update_or_create`.
 
-### 3.1. Інтерфейс Репозиторію `backend/loader/repositories/base.py`
+### 4.1. Інтерфейс Репозиторію `backend/loader/repositories/base.py`
 
 ```python
 """
@@ -692,7 +1070,7 @@ class INASAIngestRepository(ABC):
         pass
 ```
 
-### 3.2. Django ORM Реалізація `backend/loader/repositories/django_repository.py`
+### 4.2. Django ORM Реалізація `backend/loader/repositories/django_repository.py`
 
 Створи `backend/loader/repositories/django_repository.py`:
 
@@ -776,7 +1154,6 @@ class DjangoNASAIngestRepository(INASAIngestRepository):
 
     def upsert_artifact(self, dto: ArtifactDTO) -> Tuple[bool, bool]:
         try:
-            # Normalize longitude if greater than 180 and body requires it
             lon = dto.longitude
             if lon > 180.0:
                 lon = lon - 360.0
@@ -816,12 +1193,13 @@ class DjangoNASAIngestRepository(INASAIngestRepository):
             with transaction.atomic():
                 saved_count = 0
                 for wp in waypoints:
+                    lon = wp.longitude - 360.0 if wp.longitude > 180.0 else wp.longitude
                     TraverseWaypoint.objects.update_or_create(
                         artifact_id=artifact_id,
                         sol_or_step=wp.sol_or_step,
                         defaults={
                             'latitude': wp.latitude,
-                            'longitude': wp.longitude - 360.0 if wp.longitude > 180.0 else wp.longitude,
+                            'longitude': lon,
                             'elevation_m': wp.elevation_m,
                             'odometry_m': wp.odometry_m,
                             'telemetry_snapshot': wp.telemetry_snapshot,
@@ -864,7 +1242,6 @@ class DjangoNASAIngestRepository(INASAIngestRepository):
             with transaction.atomic():
                 saved = 0
                 for m in media_list:
-                    # Look up by media_url or nasa_id_or_pia to avoid duplicate photo entries
                     lookup = {'artifact_id': artifact_id}
                     if m.nasa_id_or_pia:
                         lookup['nasa_id_or_pia'] = m.nasa_id_or_pia
@@ -889,26 +1266,31 @@ class DjangoNASAIngestRepository(INASAIngestRepository):
 
 ---
 
-## 🚀 КРОК 4. Пайплайн Синхронізації (`loader/services/ingest_pipeline.py`)
+## 🚀 КРОК 5. Пайплайн Синхронізації (`loader/services/ingest_pipeline.py`)
 
 Пайплайн координує весь процес:
-1. Отримує сирі дані від NASA Клієнта (або перевірених NASA сидів).
-2. Формує валідні DTO.
-3. Порівнює хеш об'єкта через `SyncStateStore`.
-4. Зберігає в БД тільки те, що змінилося або є новим (Дельта-оновлення).
-5. Збирає детальну статистику: скільки записів перевірено, скільки додано, скільки оновлено, скільки токенів перемкнуто.
+1. Завантажує небесні тіла (Місяць, Марс).
+2. Завантажує базові місії NASA.
+3. Завантажує каталог артефактів та збагачує їх фотографіями з API.
+4. Зберігає в БД тільки те, що змінилося (Дельта-оновлення на основі SHA-256).
+5. Виводить форматований ASCII-звіт із точними лічильниками.
 
 Створи `backend/loader/services/ingest_pipeline.py`:
 
 ```python
 """
 Orchestration Pipeline for NASA Ingestion.
-Coordinates Client -> DTO -> StateStore -> Repository.
+Coordinates Client -> Mappers -> DTOs -> StateStore -> Repository.
 """
 from datetime import datetime
 import logging
 from typing import List, Optional
 
+from loader.constants import (
+    CURATED_CELESTIAL_BODIES,
+    CURATED_MISSIONS,
+    CURATED_ARTIFACTS,
+)
 from loader.domain.dtos import (
     CelestialBodyDTO,
     MissionDTO,
@@ -918,6 +1300,7 @@ from loader.domain.dtos import (
     MediaDTO,
     SyncStatsDTO,
 )
+from loader.domain.mappers import NASAJsonMapper
 from loader.infrastructure.nasa_client import NASAClient
 from loader.infrastructure.state_store import SyncStateStore
 from loader.repositories.base import INASAIngestRepository
@@ -967,26 +1350,8 @@ class NASAIngestPipeline:
         return stats
 
     def _sync_celestial_bodies(self, stats: SyncStatsDTO, force: bool, dry_run: bool) -> None:
-        bodies = [
-            CelestialBodyDTO(
-                id='moon',
-                name='Moon',
-                radius_km=1737.4,
-                gravity_ms2=1.62,
-                coordinate_system_type='SELENOGRAPHIC',
-                wmts_tile_url='https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303P_100m/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png',
-            ),
-            CelestialBodyDTO(
-                id='mars',
-                name='Mars',
-                radius_km=3389.5,
-                gravity_ms2=3.72,
-                coordinate_system_type='PLANETOCENTRIC_360',
-                wmts_tile_url='https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png',
-            ),
-        ]
-
-        for b in bodies:
+        for raw in CURATED_CELESTIAL_BODIES:
+            b = NASAJsonMapper.raw_to_celestial_body_dto(raw)
             stats.celestial_bodies_checked += 1
             payload = {'id': b.id, 'name': b.name, 'radius': b.radius_km, 'gravity': b.gravity_ms2}
             current_hash = self.state_store.compute_hash(payload)
@@ -1001,39 +1366,8 @@ class NASAIngestPipeline:
                     stats.celestial_bodies_new += 1
 
     def _sync_missions(self, stats: SyncStatsDTO, force: bool, dry_run: bool) -> None:
-        # Predefined NASA Tier-1 Missions
-        missions = [
-            MissionDTO(
-                id='apollo-11',
-                name='Apollo 11',
-                agency='NASA',
-                nssdca_id='1969-059C',
-                summary='First crewed lunar landing mission. Tranquility Base.',
-            ),
-            MissionDTO(
-                id='mars-2020',
-                name='Mars 2020',
-                agency='NASA/JPL',
-                nssdca_id='2020-052A',
-                summary='Perseverance rover and Ingenuity helicopter mission to Jezero Crater.',
-            ),
-            MissionDTO(
-                id='mer-b',
-                name='Mars Exploration Rover - Opportunity',
-                agency='NASA/JPL',
-                nssdca_id='2003-032A',
-                summary='Explored Meridiani Planum for over 14 Earth years and 5,000 Sols.',
-            ),
-            MissionDTO(
-                id='msl',
-                name='Mars Science Laboratory (Curiosity)',
-                agency='NASA/JPL',
-                nssdca_id='2011-070A',
-                summary='Curiosity rover studying habitability in Gale Crater and Mount Sharp.',
-            ),
-        ]
-
-        for m in missions:
+        for raw in CURATED_MISSIONS:
+            m = NASAJsonMapper.raw_to_mission_dto(raw)
             stats.missions_checked += 1
             payload = {'id': m.id, 'name': m.name, 'agency': m.agency, 'summary': m.summary}
             current_hash = self.state_store.compute_hash(payload)
@@ -1050,48 +1384,8 @@ class NASAIngestPipeline:
                     stats.missions_updated += 1
 
     def _sync_artifacts(self, stats: SyncStatsDTO, target_body: Optional[str], force: bool, dry_run: bool) -> None:
-        # High-value NASA artifacts
-        artifacts_data = [
-            ArtifactDTO(
-                id='opportunity-rover',
-                mission_id='mer-b',
-                celestial_body_id='mars',
-                name='Opportunity Rover',
-                artifact_type='ROVER',
-                operational_status='DORMANT',
-                latitude=-1.9462,
-                longitude=354.4734,
-                elevation_m=-1440.0,
-                location_name='Perseverance Valley, Endeavour Crater',
-                mass_kg=185.0,
-                last_contact_sol=5111,
-                cause_of_deactivation='Global dust storm obscured solar panels (Tau > 10.8).',
-                is_featured=True,
-                is_nasa_hardware=True,
-                first_person_monologue="My battery is low and it's getting dark. But for 14 years, I showed you ancient water.",
-                model_3d_url='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Opportunity/opportunity.glb',
-            ),
-            ArtifactDTO(
-                id='apollo-11-descent-stage',
-                mission_id='apollo-11',
-                celestial_body_id='moon',
-                name='Apollo 11 Lunar Module Descent Stage',
-                artifact_type='DESCENT_STAGE',
-                operational_status='PASSIVE_ACTIVE',
-                latitude=0.67408,
-                longitude=23.47297,
-                elevation_m=-2573.0,
-                location_name='Tranquility Base (Mare Tranquillitatis)',
-                mass_kg=2034.0,
-                cause_of_deactivation='Engine propellant depleted on lunar touchdown; served as launch pad.',
-                is_featured=True,
-                is_nasa_hardware=True,
-                first_person_monologue="Here men from the planet Earth first set foot upon the Moon. We came in peace for all mankind.",
-                model_3d_url='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Apollo%2011%20LM/apollo_11_lm.glb',
-            ),
-        ]
-
-        for art in artifacts_data:
+        for raw in CURATED_ARTIFACTS:
+            art = NASAJsonMapper.raw_to_artifact_dto(raw)
             if target_body and art.celestial_body_id != target_body:
                 continue
 
@@ -1113,8 +1407,7 @@ class NASAIngestPipeline:
                         stats.artifacts_new += 1
                     elif updated:
                         stats.artifacts_updated += 1
-                    
-                    # Also sync related child entities (Discoveries, Media)
+
                     self._sync_artifact_children(art.id, stats)
                 else:
                     stats.artifacts_new += 1
@@ -1140,6 +1433,38 @@ class NASAIngestPipeline:
                     nasa_id_or_pia='PIA05556',
                     caption='Microscopic view of Martian blueberries at Eagle Crater.',
                     credit='NASA/JPL/Cornell/USGS',
+                ),
+                MediaDTO(
+                    artifact_id=artifact_id,
+                    media_category='LAST_KNOWN_PHOTO',
+                    media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA23000.jpg',
+                    nasa_id_or_pia='PIA23000',
+                    caption='Opportunity 360-degree panorama of Perseverance Valley.',
+                    credit='NASA/JPL-Caltech',
+                ),
+            ]
+            stats.media_inserted += self.repository.upsert_media(artifact_id, media)
+
+        elif artifact_id == 'apollo-11-descent-stage':
+            discoveries = [
+                DiscoveryDTO(
+                    artifact_id=artifact_id,
+                    title='First Direct Lunar Surface Soil Sample Returned',
+                    instrument_acronym='Apollo Contingency Sampler',
+                    kid_friendly_story='Neil Armstrong scooped lunar dust into a Teflon bag within minutes of landing!',
+                    scientific_fact='Returned 21.55 kg of basaltic rocks and regolith from Mare Tranquillitatis.',
+                ),
+            ]
+            stats.discoveries_inserted += self.repository.upsert_discoveries(artifact_id, discoveries)
+
+            media = [
+                MediaDTO(
+                    artifact_id=artifact_id,
+                    media_category='SURFACE_PHOTO',
+                    media_url='https://images-assets.nasa.gov/image/AS11-40-5927/AS11-40-5927~orig.jpg',
+                    nasa_id_or_pia='AS11-40-5927',
+                    caption='Apollo 11 Lunar Module Eagle standing on Mare Tranquillitatis.',
+                    credit='NASA/Neil Armstrong',
                 ),
             ]
             stats.media_inserted += self.repository.upsert_media(artifact_id, media)
@@ -1168,9 +1493,7 @@ Errors Encountered:   {len(stats.errors_encountered)}
 
 ---
 
-## 💻 КРОК 5. Django Management Команда (`loader/management/commands/run_ingest.py`)
-
-Для запуску вручну, через крон чи у Docker-контейнері створено команду `python manage.py run_ingest`.
+## 💻 КРОК 6. Django Management Команда (`loader/management/commands/run_ingest.py`)
 
 Створи `backend/loader/management/commands/run_ingest.py`:
 
@@ -1187,10 +1510,11 @@ Usage:
   python manage.py run_ingest --daemon --interval 3600
 """
 import os
+import signal
+import sys
 import time
 import logging
 from django.core.management.base import BaseCommand
-from django.conf import settings
 
 from loader.infrastructure.token_pool import NASATokenPool
 from loader.infrastructure.nasa_client import NASAClient
@@ -1203,6 +1527,14 @@ logger = logging.getLogger('loader.command')
 
 class Command(BaseCommand):
     help = 'Synchronizes NASA space artifacts, missions, and telemetry data into CosmoLost core tables.'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.stop_requested = False
+
+    def _signal_handler(self, signum, frame):
+        self.stdout.write(self.style.WARNING("\n>>> [LOADER] Shutdown signal received. Exiting gracefully..."))
+        self.stop_requested = True
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -1234,6 +1566,9 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        signal.signal(signal.SIGINT, self._signal_handler)
+        signal.signal(signal.SIGTERM, self._signal_handler)
+
         target = options['target']
         force = options['force']
         dry_run = options['dry_run']
@@ -1247,7 +1582,6 @@ class Command(BaseCommand):
         images_url = os.getenv('NASA_IMAGES_API_URL', 'https://images-api.nasa.gov')
         redis_url = os.getenv('REDIS_URL', 'redis://redis:6379/1')
 
-        # Dependency Injection
         token_pool = NASATokenPool(raw_keys=raw_keys)
         client = NASAClient(
             token_pool=token_pool,
@@ -1265,57 +1599,33 @@ class Command(BaseCommand):
             self.stdout.write(f">>> Running single ingest cycle (force={force}, dry_run={dry_run})...")
             stats = pipeline.run_sync(target_body=target, force=force, dry_run=dry_run)
             if not stats.is_success:
-                raise SystemExit(1)
+                sys.exit(1)
             return
 
         self.stdout.write(
             self.style.WARNING(f">>> Entering DAEMON mode. Periodic sync every {interval} seconds (Ctrl+C to stop)...")
         )
 
-        while True:
+        while not self.stop_requested:
             try:
                 pipeline.run_sync(target_body=target, force=force, dry_run=dry_run)
             except Exception as e:
                 self.stderr.write(self.style.ERROR(f">>> [WARNING] Ingest cycle encountered error: {e}"))
 
             self.stdout.write(f">>> Sleeping for {interval}s until next sync...")
-            time.sleep(interval)
+            sleep_chunks = interval
+            while sleep_chunks > 0 and not self.stop_requested:
+                time.sleep(min(1, sleep_chunks))
+                sleep_chunks -= 1
 ```
 
 ---
 
-## ⏱️ КРОК 6. Автооновлення: Docker-Воркер та Альтернативи
+## ⏱️ КРОК 7. Автооновлення: Docker-Воркер та Celery Task
 
-### Варіант А: Контейнер `cosmolost-ingest-worker` (Рекомендовано для Docker Stack)
+### 7.1. Celery Periodic Task (`loader/tasks.py`)
 
-У нашому файлі `TASK_DEVOPS_SYSADMIN_GUIDE.md` контейнер `ingest-worker` автоматично викликає цю команду щогодини:
-
-```yaml
-  ingest-worker:
-    build:
-      context: .
-      dockerfile: docker/backend.Dockerfile
-    container_name: cosmolost-ingest-worker
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      POSTGRES_HOST: postgres
-      REDIS_URL: redis://redis:6379/1
-    entrypoint: ["/bin/sh", "-c"]
-    command: >
-      "sleep 30 &&
-       python manage.py run_ingest --daemon --interval 3600"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-```
-
-### Варіант Б: Celery Periodic Task (`loader/tasks.py`)
-
-Якщо на проєкті розгорнуто Celery та Celery Beat, створи `backend/loader/tasks.py`:
+Створи `backend/loader/tasks.py`:
 
 ```python
 """
@@ -1358,20 +1668,21 @@ def sync_nasa_hourly_catalog(self, force: bool = False):
 
 ---
 
-## 🧪 КРОК 7. Модульне Тестування (Pytest Suite)
+## 🧪 КРОК 8. Модульне Тестування (Pytest Suite)
 
 Створи файл `backend/loader/tests/test_loader.py`:
 
 ```python
 """
-Unit tests for NASA Token Pool, DTO validation, and Repository upsert.
-Run: pytest loader/tests/
+Comprehensive Pytest Test Suite for NASA Ingestion Subsystem.
+Run: pytest loader/tests/test_loader.py -v
 """
 import pytest
-from unittest.mock import MagicMock
 from loader.infrastructure.token_pool import NASATokenPool
 from loader.domain.exceptions import RateLimitExceededError
+from loader.domain.mappers import NASAJsonMapper
 from loader.domain.dtos import CelestialBodyDTO, ArtifactDTO
+from loader.infrastructure.state_store import SyncStateStore
 from loader.repositories.django_repository import DjangoNASAIngestRepository
 from core.models import CelestialBody, Artifact
 
@@ -1383,9 +1694,10 @@ def test_token_pool_rotation_on_429():
     token1 = pool.get_token()
     assert token1 == "KEY_ALPHA"
 
-    # Simulate HTTP 429
+    # Simulate HTTP 429 on first token
     pool.mark_rate_limited("KEY_ALPHA", cooldown_seconds=60)
 
+    # Must automatically yield next active key
     token2 = pool.get_token()
     assert token2 == "KEY_BETA"
 
@@ -1393,10 +1705,37 @@ def test_token_pool_rotation_on_429():
     token3 = pool.get_token()
     assert token3 == "KEY_GAMMA"
 
-    # If all 3 are marked rate-limited:
+    # All tokens blocked -> RateLimitExceededError
     pool.mark_rate_limited("KEY_GAMMA", cooldown_seconds=60)
     with pytest.raises(RateLimitExceededError):
         pool.get_token()
+
+
+def test_longitude_normalization_mapper():
+    # Mars IAU 2000 planetocentric: 354.4734 -> -5.5266
+    lon_raw = 354.4734
+    normalized = NASAJsonMapper.normalize_longitude(lon_raw)
+    assert normalized == -5.5266
+
+    # Normal coordinates within -180..180
+    assert NASAJsonMapper.normalize_longitude(23.47297) == 23.47297
+    assert NASAJsonMapper.normalize_longitude(-77.45) == -77.45
+
+
+def test_state_store_hash_detection():
+    store = SyncStateStore()
+    payload1 = {'name': 'Opportunity', 'status': 'DORMANT'}
+    payload2 = {'name': 'Opportunity', 'status': 'ACTIVE'}
+
+    hash1 = store.compute_hash(payload1)
+    hash2 = store.compute_hash(payload2)
+
+    assert hash1 != hash2
+    assert store.is_changed('artifact', 'oppy', hash1) is True
+
+    store.update_hash('artifact', 'oppy', hash1)
+    assert store.is_changed('artifact', 'oppy', hash1) is False
+    assert store.is_changed('artifact', 'oppy', hash2) is True
 
 
 @pytest.mark.django_db
@@ -1412,18 +1751,52 @@ def test_repository_upsert_idempotency():
         wmts_tile_url='https://example.com/tiles',
     )
 
-    # First write: creates record
     created1, updated1 = repo.upsert_celestial_body(dto)
     assert created1 is True
     assert updated1 is False
 
-    # Second write with same data: updates, does not duplicate!
     created2, updated2 = repo.upsert_celestial_body(dto)
     assert created2 is False
     assert updated2 is True
 
-    # Assert exactly 1 record in database
     assert CelestialBody.objects.filter(id='test-mars').count() == 1
+```
+
+---
+
+## 🏃‍♂️ КРОК 9. Інструкція Запуску для Розробника (Developer Runbook)
+
+### 1. Запуск модульних тестів
+```bash
+cd backend
+pytest loader/tests/test_loader.py -v
+```
+
+### 2. Тестовий прогін валідації без запису в БД (`--dry-run`)
+```bash
+python manage.py run_ingest --dry-run --target mars
+```
+
+### 3. Одноразовий повний синк усіх об'єктів
+```bash
+python manage.py run_ingest
+```
+
+### 4. Примусове перезаписування ігноруючи хеші
+```bash
+python manage.py run_ingest --force
+```
+
+### 5. Запуск фонового демона з інтервалом оновлення 1 година (3600 с)
+```bash
+python manage.py run_ingest --daemon --interval 3600
+```
+
+### 6. Перевірка результату в базі даних PostgreSQL
+```sql
+SELECT id, name, operational_status, latitude, longitude, is_featured FROM artifacts ORDER BY name;
+SELECT artifact_id, title FROM scientific_discoveries;
+SELECT artifact_id, media_category, media_url FROM artifact_media;
 ```
 
 ---
