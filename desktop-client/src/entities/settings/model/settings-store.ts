@@ -1,7 +1,9 @@
-import { i18n, tauriStorage } from '@/shared';
+import { createStoreMigrator, i18n, tauriStorage } from '@/shared';
+import { z } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { DEFAULT_SETTINGS } from './defaults';
+import { DesktopSettingsSchema } from './schema';
 import type { AccentColor, DesktopSettings, Language, SettingsState, ThemeMode } from './types';
 
 export const useSettingsStore = create<SettingsState>()(
@@ -81,8 +83,14 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'cosmolost-app-settings',
+      version: 1,
       storage: createJSONStorage(() => tauriStorage),
       partialize: (state) => ({ settings: state.settings }),
+      migrate: createStoreMigrator({
+        version: 1,
+        schema: z.object({ settings: DesktopSettingsSchema }),
+        fallback: { settings: DEFAULT_SETTINGS },
+      }),
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.setHydrated(true);

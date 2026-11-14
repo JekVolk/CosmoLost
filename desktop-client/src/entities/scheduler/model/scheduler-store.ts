@@ -1,7 +1,9 @@
-import { tauriStorage } from '@/shared';
+import { createStoreMigrator, tauriStorage } from '@/shared';
+import { z } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { DEFAULT_SCHEDULED_TASKS } from './defaults';
+import { ScheduledTaskSchema, TaskExecutionLogSchema } from './schema';
 import type { ScheduledTask, SchedulerStoreState, TaskExecutionLog } from './types';
 
 export const useSchedulerStore = create<SchedulerStoreState>()(
@@ -107,10 +109,22 @@ export const useSchedulerStore = create<SchedulerStoreState>()(
     }),
     {
       name: 'cosmolost-scheduler-tasks',
+      version: 1,
       storage: createJSONStorage(() => tauriStorage),
       partialize: (state) => ({
         tasks: state.tasks,
         logs: state.logs.slice(0, 20),
+      }),
+      migrate: createStoreMigrator({
+        version: 1,
+        schema: z.object({
+          tasks: z.array(ScheduledTaskSchema).default(DEFAULT_SCHEDULED_TASKS),
+          logs: z.array(TaskExecutionLogSchema).default([]),
+        }),
+        fallback: {
+          tasks: DEFAULT_SCHEDULED_TASKS,
+          logs: [],
+        },
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHydrated(true);

@@ -1,7 +1,9 @@
-import { tauriStorage } from '@/shared';
+import { createStoreMigrator, tauriStorage } from '@/shared';
+import { z } from 'zod';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { DEFAULT_MCP_SERVERS } from './defaults';
+import { McpInvocationLogSchema, McpServerSchema } from './schema';
 import type { McpInvocationLog, McpServer, McpStatus } from './schema';
 
 export interface McpStoreState {
@@ -106,11 +108,25 @@ export const useMcpStore = create<McpStoreState>()(
     }),
     {
       name: 'cosmolost-mcp-state',
+      version: 1,
       storage: createJSONStorage(() => tauriStorage),
       partialize: (state) => ({
         servers: state.servers,
         selectedServerId: state.selectedServerId,
         logs: state.logs.slice(0, 15),
+      }),
+      migrate: createStoreMigrator({
+        version: 1,
+        schema: z.object({
+          servers: z.array(McpServerSchema).default(DEFAULT_MCP_SERVERS),
+          selectedServerId: z.string().default('tauri'),
+          logs: z.array(McpInvocationLogSchema).default([]),
+        }),
+        fallback: {
+          servers: DEFAULT_MCP_SERVERS,
+          selectedServerId: 'tauri',
+          logs: [],
+        },
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHydrated(true);
