@@ -716,8 +716,8 @@
           "stroke": "#1E293B",
           "strokeWidth": 1,
           "layout": "vertical",
-          "gap": 16,
-          "padding": 20,
+          "gap": 12,
+          "padding": 16,
           "children": [
             {
               "type": "frame",
@@ -750,178 +750,766 @@
             },
             {
               "type": "frame",
+              "id": "JVxsl",
+              "name": "Tier 1 Filter Toggle Card",
+              "width": "fill_container",
+              "fill": "#FFB80014",
+              "cornerRadius": 10,
+              "stroke": "#FFB80066",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                10,
+                12
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "oLJYt",
+                  "name": "Tier 1 Main Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ksrb6",
+                      "name": "Tier 1 Title Group",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "nKXPy",
+                          "name": "Star Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "star",
+                          "library": "lucide",
+                          "fill": "#FFB800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "J4pRh",
+                          "name": "Tier 1 Title",
+                          "fill": "#FFB800",
+                          "content": "Тільки Tier 1",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "S6evw2",
+                          "name": "Badge 3D",
+                          "fill": "#FFB80028",
+                          "cornerRadius": 4,
+                          "padding": [
+                            1,
+                            5
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "TVgID",
+                              "name": "Badge Text",
+                              "fill": "#FFB800",
+                              "content": "3D",
+                              "fontFamily": "Inter",
+                              "fontSize": 9,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kQO6P",
+                      "name": "Switch Component (Active Amber)",
+                      "width": 32,
+                      "height": 18,
+                      "fill": "#FFB800",
+                      "cornerRadius": 9999,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "cTFGA",
+                          "x": 16,
+                          "y": 2,
+                          "name": "Switch Knob",
+                          "fill": "#0A0B10",
+                          "width": 14,
+                          "height": 14
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "G2oAe",
+                  "name": "Tier 1 Description Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Rp2SE",
+                      "name": "Subtitle",
+                      "fill": "#E2E8F0",
+                      "content": "Кураторські 3D-моделі",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "PPGRP",
+                      "name": "State Label",
+                      "fill": "#FFB800",
+                      "content": "АКТИВНО · 18",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "ZNtkC",
               "name": "Section Type",
               "width": "fill_container",
               "layout": "vertical",
-              "gap": 10,
+              "gap": 6,
               "children": [
                 {
                   "type": "text",
                   "id": "jvGnI",
                   "name": "Sec Title",
                   "fill": "#94a3b8",
-                  "content": "Тип об'єкта:",
+                  "content": "Тип обладнання (10 категорій):",
                   "fontFamily": "Inter",
-                  "fontSize": 12,
+                  "fontSize": 11,
                   "fontWeight": "700"
                 },
                 {
                   "type": "frame",
-                  "id": "MAKK9",
-                  "name": "Checkbox Row Апарат",
-                  "gap": 10,
+                  "id": "ONtZH",
+                  "name": "Checkbox Row 1: ROVER",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "rectangle",
-                      "cornerRadius": 4,
-                      "id": "S7coC",
-                      "name": "Box",
-                      "fill": "#070E1E",
-                      "width": 16,
-                      "height": 16,
-                      "stroke": "#334155",
-                      "strokeWidth": 1
-                    },
-                    {
-                      "type": "icon",
-                      "id": "i6PqBi",
-                      "name": "Icon",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "satellite",
-                      "library": "lucide",
-                      "fill": "#94a3b8"
+                      "type": "frame",
+                      "id": "uvobe",
+                      "name": "Left Group",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "PF0a9",
+                          "name": "Box",
+                          "fill": "#38bdf8",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#38bdf8",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "oV2Qi",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "bot",
+                          "library": "lucide",
+                          "fill": "#38bdf8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ZuhWS",
+                          "name": "Label",
+                          "fill": "#f8fafc",
+                          "content": "Ровер (ROVER)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
                     },
                     {
                       "type": "text",
-                      "id": "igWK6",
-                      "name": "Label",
-                      "fill": "#e2e8f0",
-                      "content": "Апарат",
+                      "id": "kExPr",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "14",
                       "fontFamily": "Inter",
-                      "fontSize": 12,
+                      "fontSize": 10,
                       "fontWeight": "500"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "mcOD7",
-                  "name": "Checkbox Row Прилад",
-                  "gap": 10,
+                  "id": "Bx4XL",
+                  "name": "Checkbox Row 2: HELICOPTER",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "rectangle",
-                      "cornerRadius": 4,
-                      "id": "H4suFu",
-                      "name": "Box",
-                      "fill": "#070E1E",
-                      "width": 16,
-                      "height": 16,
-                      "stroke": "#334155",
-                      "strokeWidth": 1
-                    },
-                    {
-                      "type": "icon",
-                      "id": "AONpi",
-                      "name": "Icon",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "box",
-                      "library": "lucide",
-                      "fill": "#94a3b8"
+                      "type": "frame",
+                      "id": "vWbYS",
+                      "name": "Left Group",
+                      "height": 20,
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "ZfVD1",
+                          "name": "Box",
+                          "fill": "#070E1E",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#334155",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "D0kPtg",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "fan",
+                          "library": "lucide",
+                          "fill": "#94a3b8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "U9aY5",
+                          "name": "Label",
+                          "fill": "#cbd5e1",
+                          "content": "Гелікоптер (HELICOPTER)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
                     },
                     {
                       "type": "text",
-                      "id": "X5RATg",
-                      "name": "Label",
-                      "fill": "#e2e8f0",
-                      "content": "Прилад",
+                      "id": "M5MMyR",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "1",
                       "fontFamily": "Inter",
-                      "fontSize": 12,
+                      "fontSize": 10,
                       "fontWeight": "500"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "G4R1N",
-                  "name": "Checkbox Row Прапор",
-                  "gap": 10,
+                  "id": "R3wzNT",
+                  "name": "Checkbox Row 3: LANDER",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "rectangle",
-                      "cornerRadius": 4,
-                      "id": "BWbyE",
-                      "name": "Box",
-                      "fill": "#070E1E",
-                      "width": 16,
-                      "height": 16,
-                      "stroke": "#334155",
-                      "strokeWidth": 1
-                    },
-                    {
-                      "type": "icon",
-                      "id": "zldR3",
-                      "name": "Icon",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "flag",
-                      "library": "lucide",
-                      "fill": "#94a3b8"
+                      "type": "frame",
+                      "id": "ETEKe",
+                      "name": "Left Group",
+                      "height": 20,
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "ROXpi",
+                          "name": "Box",
+                          "fill": "#38bdf8",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#38bdf8",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "u6OU8N",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "satellite",
+                          "library": "lucide",
+                          "fill": "#38bdf8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "FTEnL",
+                          "name": "Label",
+                          "fill": "#f8fafc",
+                          "content": "Посадковий модуль (LANDER)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
                     },
                     {
                       "type": "text",
-                      "id": "JzHtU",
-                      "name": "Label",
-                      "fill": "#e2e8f0",
-                      "content": "Прапор",
+                      "id": "W3s4eH",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "32",
                       "fontFamily": "Inter",
-                      "fontSize": 12,
+                      "fontSize": 10,
                       "fontWeight": "500"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "DYerL",
-                  "name": "Checkbox Row Визначальний модуль",
-                  "gap": 10,
+                  "id": "EW408",
+                  "name": "Checkbox Row 4: DESCENT_STAGE",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "rectangle",
-                      "cornerRadius": 4,
-                      "id": "o363HH",
-                      "name": "Box",
-                      "fill": "#070E1E",
-                      "width": 16,
-                      "height": 16,
-                      "stroke": "#334155",
-                      "strokeWidth": 1
-                    },
-                    {
-                      "type": "icon",
-                      "id": "xngXM",
-                      "name": "Icon",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "compass",
-                      "library": "lucide",
-                      "fill": "#94a3b8"
+                      "type": "frame",
+                      "id": "C6TUxi",
+                      "name": "Left Group",
+                      "height": 20,
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "b9PNxH",
+                          "name": "Box",
+                          "fill": "#070E1E",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#334155",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "a4Rala",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "anchor",
+                          "library": "lucide",
+                          "fill": "#94a3b8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "FOnGg",
+                          "name": "Label",
+                          "fill": "#cbd5e1",
+                          "content": "Посадкова ступінь (DESCENT)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
                     },
                     {
                       "type": "text",
-                      "id": "QHljw",
-                      "name": "Label",
-                      "fill": "#e2e8f0",
-                      "content": "Визначальний модуль",
+                      "id": "hanaT",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "6",
                       "fontFamily": "Inter",
-                      "fontSize": 12,
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "u7iOw",
+                  "name": "Checkbox Row 5: IMPACT_STAGE",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "wnw8e",
+                      "name": "Left Group",
+                      "height": 20,
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "kx7vE",
+                          "name": "Box",
+                          "fill": "#070E1E",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#334155",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "Z1pEYc",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "flame",
+                          "library": "lucide",
+                          "fill": "#94a3b8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "NQly4",
+                          "name": "Label",
+                          "fill": "#cbd5e1",
+                          "content": "Ударний ступінь (IMPACT)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "UAbJT",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "18",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "m64EHh",
+                  "name": "Checkbox Row 6: INSTRUMENT",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "T6EOb3",
+                      "name": "Left Group",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "LvSRR",
+                          "name": "Box",
+                          "fill": "#38bdf8",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#38bdf8",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "M2bsKF",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "activity",
+                          "library": "lucide",
+                          "fill": "#38bdf8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "dEdN3",
+                          "name": "Label",
+                          "fill": "#f8fafc",
+                          "content": "Науковий прилад (INSTRUMENT)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "g2PJjm",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "68",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "j3aDGe",
+                  "name": "Checkbox Row 7: RETRO_REFLECTOR",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "gct0v",
+                      "name": "Left Group",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "jgJBy",
+                          "name": "Box",
+                          "fill": "#070E1E",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#334155",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "lF7VM",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "sparkles",
+                          "library": "lucide",
+                          "fill": "#94a3b8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "TjMmh",
+                          "name": "Label",
+                          "fill": "#cbd5e1",
+                          "content": "Кутовий відбивач (REFLECTOR)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "kYwEk",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "8",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "E1t4f0",
+                  "name": "Checkbox Row 8: SAMPLE_TUBE",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "vlbha",
+                      "name": "Left Group",
+                      "height": 20,
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "dK1yc",
+                          "name": "Box",
+                          "fill": "#070E1E",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#334155",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "L0QG3",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "flask-conical",
+                          "library": "lucide",
+                          "fill": "#94a3b8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "oxaPm",
+                          "name": "Label",
+                          "fill": "#cbd5e1",
+                          "content": "Пробірка зі зразком (SAMPLE)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "R7nhar",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "24",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QQZJx",
+                  "name": "Checkbox Row 9: ENTRY_DEBRIS",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cpBD7",
+                      "name": "Left Group",
+                      "height": 20,
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "eitTh",
+                          "name": "Box",
+                          "fill": "#070E1E",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#334155",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "fK95G",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "shield-alert",
+                          "library": "lucide",
+                          "fill": "#94a3b8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "zGVOx",
+                          "name": "Label",
+                          "fill": "#cbd5e1",
+                          "content": "Уламки входу (DEBRIS)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "VDT8B",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "12",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "okACp",
+                  "name": "Checkbox Row 10: DEEP_SPACE_PROBE",
+                  "width": "fill_container",
+                  "height": 22,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nMRrL",
+                      "name": "Left Group",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "cgntW",
+                          "name": "Box",
+                          "fill": "#070E1E",
+                          "width": 16,
+                          "height": 16,
+                          "stroke": "#334155",
+                          "strokeWidth": 1
+                        },
+                        {
+                          "type": "icon",
+                          "id": "Suzdl",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "compass",
+                          "library": "lucide",
+                          "fill": "#94a3b8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "y45Vlw",
+                          "name": "Label",
+                          "fill": "#cbd5e1",
+                          "content": "Глибокий зонд (PROBE)",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "nJ8T6",
+                      "name": "Count Badge",
+                      "fill": "#64748b",
+                      "content": "4",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
                       "fontWeight": "500"
                     }
                   ]
