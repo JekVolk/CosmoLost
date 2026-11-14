@@ -23,6 +23,7 @@ export const uk: Translations = {
     overview: 'Огляд',
     fsd: 'FSD Архітектура',
     ipc: 'IPC Міст',
+    scheduler: 'Планувальник завдань',
     settings: 'Налаштування',
   },
   statusbar: {

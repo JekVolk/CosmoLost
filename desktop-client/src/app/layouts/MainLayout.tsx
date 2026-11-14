@@ -14,7 +14,8 @@ export const MainLayout: React.FC = () => {
   useHotkey({ key: '1', alt: true }, () => navigate(ROUTES.OVERVIEW));
   useHotkey({ key: '2', alt: true }, () => navigate(ROUTES.FSD));
   useHotkey({ key: '3', alt: true }, () => navigate(ROUTES.IPC));
-  useHotkey({ key: '4', alt: true }, () => navigate(ROUTES.SETTINGS));
+  useHotkey({ key: '4', alt: true }, () => navigate(ROUTES.SCHEDULER));
+  useHotkey({ key: '5', alt: true }, () => navigate(ROUTES.SETTINGS));
 
   return (
     <Flex

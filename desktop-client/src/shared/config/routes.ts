@@ -3,6 +3,7 @@ export const ROUTES = {
   OVERVIEW: '/overview',
   FSD: '/fsd',
   IPC: '/ipc',
+  SCHEDULER: '/scheduler',
   SETTINGS: '/settings',
 } as const;
 

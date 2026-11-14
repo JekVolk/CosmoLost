@@ -1,7 +1,7 @@
 import { useSettingsStore } from '@/entities/settings';
 import { ROUTES } from '@/shared/config';
 import { Box, Button, Text, VStack } from '@/shared/ui';
-import { Home, Layers, Settings, Terminal } from 'lucide-react';
+import { CalendarClock, Home, Layers, Settings, Terminal } from 'lucide-react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ export const Sidebar: React.FC = () => {
   const isOverview = location.pathname === ROUTES.OVERVIEW || location.pathname === ROUTES.ROOT;
   const isFsd = location.pathname === ROUTES.FSD;
   const isIpc = location.pathname === ROUTES.IPC;
+  const isScheduler = location.pathname === ROUTES.SCHEDULER;
   const isSettings = location.pathname === ROUTES.SETTINGS;
 
   return (
@@ -79,6 +80,18 @@ export const Sidebar: React.FC = () => {
         >
           <Terminal size={16} />
           {!compactMode && t('nav.ipc')}
+        </Button>
+        <Button
+          variant={isScheduler ? 'solid' : 'ghost'}
+          colorPalette={accentColor}
+          size="sm"
+          justifyContent={compactMode ? 'center' : 'flex-start'}
+          px={compactMode ? '2' : '3'}
+          onClick={() => navigate(ROUTES.SCHEDULER)}
+          title={t('nav.scheduler')}
+        >
+          <CalendarClock size={16} />
+          {!compactMode && t('nav.scheduler')}
         </Button>
       </VStack>
 

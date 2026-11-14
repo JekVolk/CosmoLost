@@ -21,6 +21,7 @@ export const en = {
     overview: 'Overview',
     fsd: 'FSD Architecture',
     ipc: 'IPC Bridge',
+    scheduler: 'Task Scheduler',
     settings: 'Settings',
   },
   statusbar: {
