@@ -1,8 +1,10 @@
 import { SettingsSummaryCard } from '@/entities/settings';
 import {
+  CliIntegrationsSettingsCard,
   DiagnosticsAuditDrawerCard,
   SettingsImportExportCard,
   SettingsPreferencesCard,
+  SocialIntegrationsSettingsCard,
   useSettingsActions,
 } from '@/features/settings-management';
 import { APP_CONFIG } from '@/shared/config';
@@ -75,6 +77,12 @@ export const SettingsPage: React.FC = () => {
           onToggleDevMode={toggleDeveloperMode}
           onReset={handleReset}
         />
+
+        {/* Social Media Integrations, OAuth Guides & API Keys */}
+        <SocialIntegrationsSettingsCard />
+
+        {/* CLI Interception, Claude, AGY, Codex & Multi-LLM Tokens */}
+        <CliIntegrationsSettingsCard />
 
         {/* Native Store JSON Import & Export with Overwrite / Merge & Projects */}
         <SettingsImportExportCard

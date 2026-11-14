@@ -1,4 +1,10 @@
-import type { AccentColor, DesktopSettings, Language, ThemeMode } from '@/entities/settings';
+import {
+  type AccentColor,
+  DEFAULT_SETTINGS,
+  type DesktopSettings,
+  type Language,
+  type ThemeMode,
+} from '@/entities/settings';
 import {
   Badge,
   Box,
@@ -50,7 +56,7 @@ interface SettingsPreferencesCardProps {
 }
 
 export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = ({
-  settings,
+  settings = DEFAULT_SETTINGS,
   onAccentChange,
   onThemeModeChange,
   onLanguageChange,

@@ -1,7 +1,7 @@
 import { useSettingsStore } from '@/entities/settings';
 import { ROUTES } from '@/shared/config';
 import { Box, Button, Text, VStack } from '@/shared/ui';
-import { Bot, CalendarClock, Home, Layers, Settings, Terminal } from 'lucide-react';
+import { Bot, CalendarClock, Clapperboard, Home, Layers, Settings, Terminal } from 'lucide-react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ export const Sidebar: React.FC = () => {
   const { accentColor, compactMode } = useSettingsStore((state) => state.settings);
 
   const isOverview = location.pathname === ROUTES.OVERVIEW || location.pathname === ROUTES.ROOT;
+  const isContentFactory = location.pathname === ROUTES.CONTENT_FACTORY;
   const isFsd = location.pathname === ROUTES.FSD;
   const isIpc = location.pathname === ROUTES.IPC;
   const isScheduler = location.pathname === ROUTES.SCHEDULER;
@@ -57,6 +58,18 @@ export const Sidebar: React.FC = () => {
         >
           <Home size={16} />
           {!compactMode && t('nav.overview')}
+        </Button>
+        <Button
+          variant={isContentFactory ? 'solid' : 'ghost'}
+          colorPalette={accentColor}
+          size="sm"
+          justifyContent={compactMode ? 'center' : 'flex-start'}
+          px={compactMode ? '2' : '3'}
+          onClick={() => navigate(ROUTES.CONTENT_FACTORY)}
+          title="Фабрика контенту"
+        >
+          <Clapperboard size={16} />
+          {!compactMode && 'Фабрика контенту'}
         </Button>
         <Button
           variant={isFsd ? 'solid' : 'ghost'}

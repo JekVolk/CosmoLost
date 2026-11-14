@@ -32,3 +32,11 @@ This desktop application for **CosmoLost** is built with **Tauri v2**, **React 1
 7. **Tooling & Code Quality**:
    - **Biome** (`@biomejs/biome`) is used for linting and formatting. Run `pnpm check` before committing.
    - **Chakra UI MCP**, **Context7 MCP**, and **Tauri MCP** are configured for agent tool execution.
+
+8. **CLI Integrations & Multi-LLM Interceptor Architecture**:
+   - Supports **Claude CLI** (`claude`), **Antigravity CLI** (`agy`), and **Codex / OpenAI CLI** via stdio MCP (`scripts/cosmolost-mcp-server.mjs`) and CLI Interceptor Bridge (`src/shared/lib/cli-bridge/`).
+   - Direct API token support for Claude (`claudeApiKey`), OpenAI (`openaiApiKey`), and Gemini (`geminiApiKey`).
+   - Custom OpenAPI endpoints supported for local/self-hosted LLMs (Ollama, LM Studio).
+   - Strict zero-leakage security policy: keys are securely persisted in desktop native store and masked in the UI.
+   - For complete contracts and specification, see `.agents/rules/cli-integrations.md`.
+

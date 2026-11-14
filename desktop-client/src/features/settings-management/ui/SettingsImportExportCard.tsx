@@ -88,7 +88,7 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
           </Text>
 
           {/* Feedback message banner */}
-          {feedback.type && (
+          {feedback?.type && (
             <Flex
               p="3"
               borderRadius="lg"
