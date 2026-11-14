@@ -11,6 +11,16 @@ from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load local .env file into os.environ if present
+_env_path = BASE_DIR / '.env'
+if _env_path.exists():
+    with open(_env_path, encoding='utf-8') as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith('#') and '=' in _line:
+                _k, _v = _line.split('=', 1)
+                os.environ.setdefault(_k.strip(), _v.strip())
+
 # Security & environment settings
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
@@ -147,10 +157,13 @@ MAILERS = {
 }
 
 # Django Tasks configuration
-# Configured with ImmediateBackend by default for synchronous background-compatible execution
+# Configured via DJANGO_TASKS_BACKEND (ImmediateBackend for local/sync execution)
 TASKS = {
     'default': {
-        'BACKEND': 'django_tasks.backends.immediate.ImmediateBackend',
+        'BACKEND': os.environ.get(
+            'DJANGO_TASKS_BACKEND',
+            'django_tasks.backends.immediate.ImmediateBackend',
+        ),
     }
 }
 

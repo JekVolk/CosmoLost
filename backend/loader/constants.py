@@ -1,0 +1,270 @@
+"""
+Constants, API Endpoints, and Curated Seed Datasets for NASA Ingestion.
+"""
+
+# NASA API Endpoints
+MARS_ROVER_PHOTOS_ENDPOINT = "/mars-photos/api/v1/rovers/{rover}/photos"
+MARS_ROVER_MANIFEST_ENDPOINT = "/mars-photos/api/v1/manifests/{rover}"
+APOD_ENDPOINT = "/planetary/apod"
+INSIGHT_WEATHER_ENDPOINT = "/insight_weather/"
+IMAGES_SEARCH_ENDPOINT = "/search"
+
+# NASA Treks WMTS Global Basemaps
+MOON_WMTS_URL = "https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303P_100m/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png"
+MARS_WMTS_URL = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png"
+
+# NASA MMGIS Open GeoJSON Traverse & Waypoints Endpoints
+M20_TRAVERSE_URL = "https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_traverse.json"
+M20_WAYPOINTS_URL = "https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json"
+MSL_TRAVERSE_URL = "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_traverse.json"
+MSL_WAYPOINTS_URL = "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json"
+
+# JPL SSD/CNEOS Horizons API
+HORIZONS_API_URL = "https://ssd.jpl.nasa.gov/api/horizons.api"
+
+# Curated Tier-1 Hardware Catalog (Moon & Mars)
+CURATED_CELESTIAL_BODIES = [
+    {
+        "id": "moon",
+        "name": "Moon",
+        "radius_km": 1737.4,
+        "gravity_ms2": 1.62,
+        "coordinate_system_type": "SELENOGRAPHIC",
+        "wmts_tile_url": MOON_WMTS_URL,
+    },
+    {
+        "id": "mars",
+        "name": "Mars",
+        "radius_km": 3389.5,
+        "gravity_ms2": 3.72,
+        "coordinate_system_type": "PLANETOCENTRIC_360",
+        "wmts_tile_url": MARS_WMTS_URL,
+    },
+]
+
+CURATED_MISSIONS = [
+    {
+        "id": "apollo-11",
+        "name": "Apollo 11",
+        "agency": "NASA",
+        "nssdca_id": "1969-059C",
+        "launch_date": "1969-07-16",
+        "landing_date": "1969-07-20",
+        "end_date": "1969-07-24",
+        "summary": "First crewed landing on the Moon. Tranquility Base.",
+    },
+    {
+        "id": "apollo-14",
+        "name": "Apollo 14",
+        "agency": "NASA",
+        "nssdca_id": "1971-008C",
+        "launch_date": "1971-01-31",
+        "landing_date": "1971-02-05",
+        "end_date": "1971-02-09",
+        "summary": "Explored Fra Mauro formation. Deployed ALSEP and Lunar Ranging Retroreflector.",
+    },
+    {
+        "id": "apollo-15",
+        "name": "Apollo 15",
+        "agency": "NASA",
+        "nssdca_id": "1971-063C",
+        "launch_date": "1971-07-26",
+        "landing_date": "1971-07-30",
+        "end_date": "1971-08-07",
+        "summary": "First J-mission with Lunar Roving Vehicle (LRV) at Hadley Rille.",
+    },
+    {
+        "id": "mer-b",
+        "name": "Mars Exploration Rover - Opportunity",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2003-032A",
+        "launch_date": "2003-07-07",
+        "landing_date": "2004-01-25",
+        "end_date": "2018-06-10",
+        "summary": "Traversed over 45 kilometers on Mars across 5,111 Sols.",
+    },
+    {
+        "id": "mer-a",
+        "name": "Mars Exploration Rover - Spirit",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2003-027A",
+        "launch_date": "2003-06-10",
+        "landing_date": "2004-01-04",
+        "end_date": "2010-03-22",
+        "summary": "Explored Gusev Crater and Columbia Hills. Traversed 7.7 km.",
+    },
+    {
+        "id": "msl",
+        "name": "Mars Science Laboratory (Curiosity)",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2011-070A",
+        "launch_date": "2011-11-26",
+        "landing_date": "2012-08-06",
+        "end_date": None,
+        "summary": "Assessing habitability in Gale Crater and climbing Mount Sharp.",
+    },
+    {
+        "id": "mars-2020",
+        "name": "Mars 2020 (Perseverance & Ingenuity)",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2020-052A",
+        "launch_date": "2020-07-30",
+        "landing_date": "2021-02-18",
+        "end_date": None,
+        "summary": "Astrobiology mission caching sample tubes in Jezero Crater delta.",
+    },
+    {
+        "id": "insight",
+        "name": "InSight Mars Lander",
+        "agency": "NASA/JPL",
+        "nssdca_id": "2018-042A",
+        "launch_date": "2018-05-05",
+        "landing_date": "2018-11-26",
+        "end_date": "2022-12-15",
+        "summary": "Investigated the deep interior of Mars with SEIS seismometer.",
+    },
+    {
+        "id": "pathfinder",
+        "name": "Mars Pathfinder & Sojourner",
+        "agency": "NASA/JPL",
+        "nssdca_id": "1996-068A",
+        "launch_date": "1996-12-04",
+        "landing_date": "1997-07-04",
+        "end_date": "1997-09-27",
+        "summary": "First robotic rover on Mars. Explored Ares Vallis.",
+    },
+]
+
+CURATED_ARTIFACTS = [
+    {
+        "id": "opportunity-rover",
+        "mission_id": "mer-b",
+        "celestial_body_id": "mars",
+        "name": "Opportunity Rover (MER-B)",
+        "artifact_type": "ROVER",
+        "operational_status": "DORMANT",
+        "latitude": -1.9462,
+        "longitude": 354.4734,  # Planetocentric 360 -> normalized to -5.5266
+        "elevation_m": -1440.0,
+        "location_name": "Perseverance Valley, Endeavour Crater",
+        "mass_kg": 185.0,
+        "last_contact_sol": 5111,
+        "cause_of_deactivation": "Global planet-encircling dust storm deprived solar arrays of sunlight (Tau > 10.8).",
+        "is_featured": True,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "My battery is low and it's getting dark. But for 14 years, I showed humanity that water once bathed this red world.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Opportunity/opportunity.glb",
+    },
+    {
+        "id": "spirit-rover",
+        "mission_id": "mer-a",
+        "celestial_body_id": "mars",
+        "name": "Spirit Rover (MER-A)",
+        "artifact_type": "ROVER",
+        "operational_status": "DORMANT",
+        "latitude": -14.5684,
+        "longitude": 175.4726,
+        "elevation_m": -1940.0,
+        "location_name": "Troy, West of Home Plate, Gusev Crater",
+        "mass_kg": 185.0,
+        "last_contact_sol": 2210,
+        "cause_of_deactivation": "Right-front wheel failure led to becoming stuck in soft sulfate sands before the harsh Martian winter.",
+        "is_featured": False,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "I climbed the Columbia Hills on five wheels and unveiled ancient hydrothermal springs.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Spirit/spirit.glb",
+    },
+    {
+        "id": "apollo-11-descent-stage",
+        "mission_id": "apollo-11",
+        "celestial_body_id": "moon",
+        "name": "Apollo 11 Lunar Module Descent Stage (Eagle)",
+        "artifact_type": "DESCENT_STAGE",
+        "operational_status": "PASSIVE_ACTIVE",
+        "latitude": 0.67408,
+        "longitude": 23.47297,
+        "elevation_m": -2573.0,
+        "location_name": "Tranquility Base (Mare Tranquillitatis)",
+        "mass_kg": 2034.0,
+        "cause_of_deactivation": "Descent engine propellant depleted during touchdown; remained as the launch pad for the Ascent Stage.",
+        "is_featured": True,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "Here men from the planet Earth first set foot upon the Moon. July 1969 A.D. We came in peace for all mankind.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Apollo%2011%20LM/apollo_11_lm.glb",
+    },
+    {
+        "id": "apollo-11-lrr",
+        "mission_id": "apollo-11",
+        "celestial_body_id": "moon",
+        "name": "Apollo 11 Lunar Laser Ranging Retroreflector (LRRR)",
+        "artifact_type": "RETRO_REFLECTOR",
+        "operational_status": "PASSIVE_ACTIVE",
+        "latitude": 0.67337,
+        "longitude": 23.47309,
+        "elevation_m": -2573.0,
+        "location_name": "Tranquility Base",
+        "mass_kg": 30.0,
+        "cause_of_deactivation": "Passive optical instrument requiring no electrical power; continuously operational since 1969.",
+        "is_featured": False,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "Fire your lasers from Earth. I will bounce your photons straight back to prove the Moon drifts away by 3.8 cm every year.",
+        "model_3d_url": "",
+    },
+    {
+        "id": "ingenuity-helicopter",
+        "mission_id": "mars-2020",
+        "celestial_body_id": "mars",
+        "name": "Ingenuity Mars Helicopter (Ginny)",
+        "artifact_type": "HELICOPTER",
+        "operational_status": "DORMANT",
+        "latitude": 18.4447,
+        "longitude": 77.4508,
+        "elevation_m": -2540.0,
+        "location_name": "Valinor Hills, Jezero Crater",
+        "mass_kg": 1.8,
+        "last_contact_sol": 1042,
+        "cause_of_deactivation": "Rotor blade tip damage sustained during landing on Flight 72.",
+        "is_featured": True,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "I proved that powered, controlled aerodynamic flight is possible in the razor-thin atmosphere of another world.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Ingenuity/ingenuity.glb",
+    },
+    {
+        "id": "insight-lander",
+        "mission_id": "insight",
+        "celestial_body_id": "mars",
+        "name": "InSight Mars Lander",
+        "artifact_type": "LANDER",
+        "operational_status": "DORMANT",
+        "latitude": 4.5024,
+        "longitude": 135.6234,
+        "elevation_m": -2600.0,
+        "location_name": "Elysium Planitia",
+        "mass_kg": 358.0,
+        "last_contact_sol": 1445,
+        "cause_of_deactivation": "Excessive accumulation of Martian atmospheric dust on dual solar panels.",
+        "is_featured": True,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "My power is really low today, so this may be the last image I can send. Don't worry about me though: my time here has been both productive and serene.",
+        "model_3d_url": "https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/InSight/insight.glb",
+    },
+    {
+        "id": "sojourner-rover",
+        "mission_id": "pathfinder",
+        "celestial_body_id": "mars",
+        "name": "Sojourner Rover",
+        "artifact_type": "ROVER",
+        "operational_status": "DORMANT",
+        "latitude": 19.33,
+        "longitude": 326.45,  # -33.55
+        "elevation_m": -3650.0,
+        "location_name": "Ares Vallis",
+        "mass_kg": 11.5,
+        "last_contact_sol": 83,
+        "cause_of_deactivation": "Pathfinder base station battery depletion caused communication loss.",
+        "is_featured": False,
+        "is_nasa_hardware": True,
+        "first_person_monologue": "I was the size of a microwave oven, but I was the first set of wheels humanity ever drove on Mars.",
+        "model_3d_url": "",
+    },
+]
