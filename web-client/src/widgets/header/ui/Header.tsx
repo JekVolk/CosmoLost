@@ -1,74 +1,106 @@
 import React from 'react';
 import type { PlanetId } from '../../../entities/planet/model/types';
-import { Globe2 } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+
+export type AppView = 'map' | 'catalog' | 'community';
 
 interface HeaderProps {
   currentPlanetId: PlanetId;
   onSelectPlanet: (id: PlanetId) => void;
   artifactCount: number;
+  currentView: AppView;
+  onSelectView: (view: AppView) => void;
+  onOpenAbout: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   currentPlanetId,
   onSelectPlanet,
   artifactCount,
+  currentView,
+  onSelectView,
+  onOpenAbout,
 }) => {
+  const isMars = currentPlanetId === 'mars';
+  const themeAccent = isMars ? '#f97316' : '#00F0FF';
+
   return (
-    <header className="cosmo-header">
-      {}
-      <div className="cosmo-brand">
-        <div className="cosmo-logo-badge">
-          <Globe2 size={22} className="text-cyan-400" />
+    <header className="cosmo-header-pen">
+      <div className="cosmo-nav-brand" onClick={() => onSelectView('map')}>
+        <div className="cosmo-emblem-wrap">
+          <div className="cosmo-emblem-diamond" style={{ borderColor: themeAccent }}>
+            <div className="cosmo-emblem-core" style={{ backgroundColor: themeAccent }} />
+          </div>
         </div>
-        <div className="cosmo-title-group">
-          <div className="cosmo-brand-title">
-            CosmoLost
-          </div>
-          <div className="cosmo-hackathon-tag">
-            NASA Space Apps
-          </div>
+        <div className="cosmo-brand-text">
+          <div className="cosmo-brand-title">COSMOLOST</div>
+          <div className="cosmo-brand-sub">NASA SPACE APPS 2026</div>
         </div>
       </div>
 
-      {}
-      <div className="planet-switcher-wrap">
+      <nav className="cosmo-nav-links">
         <button
           type="button"
-          className={`planet-btn ${currentPlanetId === 'mars' ? 'active-mars' : ''}`}
-          onClick={() => onSelectPlanet('mars')}
+          className={`cosmo-nav-link ${currentView === 'map' ? 'active' : ''}`}
+          style={{ '--link-accent': themeAccent } as React.CSSProperties}
+          onClick={() => onSelectView('map')}
         >
-          <span className="planet-icon-dot mars" />
-          <span>MARS</span>
+          3D Map
         </button>
-
         <button
           type="button"
-          className={`planet-btn ${currentPlanetId === 'moon' ? 'active-moon' : ''}`}
-          onClick={() => onSelectPlanet('moon')}
+          className={`cosmo-nav-link ${currentView === 'catalog' ? 'active' : ''}`}
+          style={{ '--link-accent': themeAccent } as React.CSSProperties}
+          onClick={() => onSelectView('catalog')}
         >
-          <span className="planet-icon-dot moon" />
-          <span>MOON</span>
+          Catalog
         </button>
-      </div>
-
-      {}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <div
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '11px',
-            color: 'var(--text-muted)',
-            padding: '6px 12px',
-            borderRadius: '20px',
-            background: 'rgba(10, 15, 28, 0.6)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(8px)',
-          }}
+        <button
+          type="button"
+          className={`cosmo-nav-link ${currentView === 'community' ? 'active' : ''}`}
+          style={{ '--link-accent': themeAccent } as React.CSSProperties}
+          onClick={() => onSelectView('community')}
         >
-          <span style={{ color: currentPlanetId === 'mars' ? '#f97316' : '#38bdf8', fontWeight: 600 }}>
-            {artifactCount}
-          </span>{' '}
-          artifacts archived
+          Community Videos
+        </button>
+        <button
+          type="button"
+          className="cosmo-nav-link"
+          onClick={onOpenAbout}
+        >
+          About Project
+        </button>
+      </nav>
+
+      <div className="cosmo-nav-right">
+        <div className="cosmo-planet-segmented">
+          <button
+            type="button"
+            className={`cosmo-planet-seg-btn ${currentPlanetId === 'moon' ? 'active-moon' : ''}`}
+            onClick={() => onSelectPlanet('moon')}
+          >
+            <span className="cosmo-seg-dot moon" />
+            <span>Moon</span>
+          </button>
+          <button
+            type="button"
+            className={`cosmo-planet-seg-btn ${currentPlanetId === 'mars' ? 'active-mars' : ''}`}
+            onClick={() => onSelectPlanet('mars')}
+          >
+            <span className="cosmo-seg-dot mars" />
+            <span>Mars</span>
+          </button>
+        </div>
+
+        <div className="cosmo-mcp-badge">
+          <Sparkles size={11} className="text-cyan-400" />
+          <span className="cosmo-mcp-label">AI GATEWAY (MCP)</span>
+          <span className="cosmo-pulse-dot" />
+          <span className="cosmo-mcp-status">SYNCED</span>
+        </div>
+
+        <div className="cosmo-theme-tag">
+          {artifactCount} ITEMS
         </div>
       </div>
     </header>

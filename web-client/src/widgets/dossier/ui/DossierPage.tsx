@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { SpaceArtifact, PlanetConfig } from '../../../entities/planet/model/types';
+import { CommunityPublicationsSection } from './CommunityPublicationsSection';
 import {
   ArrowLeft,
   MapPin,
@@ -39,13 +40,66 @@ export const DossierPage: React.FC<DossierPageProps> = ({
       <div className="dossier-container">
         {}
         <div className="dossier-nav-bar">
-          <button type="button" className="btn-back" onClick={onBackToMap}>
-            <ArrowLeft size={16} />
-            <span>Back to 3D Map ({planet.nameEn})</span>
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button type="button" className="btn-back" onClick={onBackToMap}>
+              <ArrowLeft size={16} />
+              <span>Back to 3D Map</span>
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'var(--text-dim)' }}>
+              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>Home</span>
+              <span>/</span>
+              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>Catalog</span>
+              <span>/</span>
+              <span style={{ color: themeColor, fontWeight: 600 }}>{artifact.name}</span>
+            </div>
+          </div>
 
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)' }}>
             NASA SPACE APPS 2026 ARCHIVE
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'rgba(11, 17, 31, 0.85)',
+            border: '1px solid #1E293B',
+            borderRadius: '14px',
+            padding: '12px 24px',
+            marginBottom: '20px',
+            flexWrap: 'wrap',
+            gap: '16px',
+          }}
+        >
+          <div>
+            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>LANDING DATE</div>
+            <div style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}>{artifact.landingDate}</div>
+          </div>
+          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
+          <div>
+            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>PLANET</div>
+            <div style={{ fontSize: '12.5px', color: themeColor, fontWeight: 700, marginTop: '2px' }}>{planet.nameEn.toUpperCase()}</div>
+          </div>
+          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
+          <div>
+            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>LOCATION</div>
+            <div style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}>{artifact.locationName}</div>
+          </div>
+          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
+          <div>
+            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>HARDWARE MASS</div>
+            <div style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}>
+              {artifact.massKg ? `${artifact.massKg.toLocaleString()} kg` : 'Telemetry Not Available'}
+            </div>
+          </div>
+          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
+          <div>
+            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>COORDINATES</div>
+            <div style={{ fontSize: '12.5px', color: '#38bdf8', fontFamily: 'var(--font-mono)', fontWeight: 600, marginTop: '2px' }}>
+              {Math.abs(artifact.lat).toFixed(2)}°{artifact.lat >= 0 ? 'N' : 'S'}, {Math.abs(artifact.lon).toFixed(2)}°{artifact.lon >= 0 ? 'E' : 'W'}
+            </div>
           </div>
         </div>
 
@@ -538,6 +592,12 @@ export const DossierPage: React.FC<DossierPageProps> = ({
         </div>
 
         {}
+        <CommunityPublicationsSection
+          artifactId={artifact.id}
+          missionName={artifact.name}
+          themeColor={themeColor}
+        />
+
         <div
           style={{
             marginTop: '32px',

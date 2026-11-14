@@ -1,18 +1,24 @@
 import React, { useState, useRef } from 'react';
 import type { PlanetId, SpaceArtifact } from '../entities/planet/model/types';
 import { PLANETS } from '../entities/planet/model/planetData';
-import { Header } from '../widgets/header/ui/Header';
+import { Header, type AppView } from '../widgets/header/ui/Header';
 import { PlanetViewer } from '../widgets/planet-viewer/ui/PlanetViewer';
 import { PlanetTelemetry } from '../widgets/planet-telemetry/ui/PlanetTelemetry';
 import { ViewControls } from '../features/view-controls/ui/ViewControls';
 import { DossierPage } from '../widgets/dossier/ui/DossierPage';
+import { CatalogPage } from '../widgets/catalog/ui/CatalogPage';
+import { CommunityVideosPage } from '../widgets/community/ui/CommunityVideosPage';
+import { AboutModal } from '../widgets/about/ui/AboutModal';
 import './styles/global.css';
 
 export const App: React.FC = () => {
   const [currentPlanetId, setCurrentPlanetId] = useState<PlanetId>('mars');
+  const [currentView, setCurrentView] = useState<AppView>('map');
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [showMarkers, setShowMarkers] = useState(true);
   const [activeArtifact, setActiveArtifact] = useState<SpaceArtifact | null>(null);
+  const [filteredArtifactIds, setFilteredArtifactIds] = useState<Set<string> | null>(null);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const [standaloneDossier, setStandaloneDossier] = useState<{
     artifact: SpaceArtifact;
@@ -37,19 +43,24 @@ export const App: React.FC = () => {
 
   const currentPlanet = PLANETS[currentPlanetId];
 
-  const handleOpenDossier = (artifact: SpaceArtifact) => {
+  const handleOpenDossier = (artifact: SpaceArtifact, planetId?: PlanetId) => {
+    const pId = planetId || currentPlanetId;
     setActiveArtifact(artifact);
+    setCurrentPlanetId(pId);
 
-    const url = `${window.location.origin}${window.location.pathname}?artifact=${artifact.id}&planet=${currentPlanetId}`;
+    const url = `${window.location.origin}${window.location.pathname}?artifact=${artifact.id}&planet=${pId}`;
     const newWindow = window.open(url, '_blank');
 
     if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-      setStandaloneDossier({ artifact, planetId: currentPlanetId });
+      setStandaloneDossier({ artifact, planetId: pId });
     }
   };
 
   const handleSelectArtifactFromList = (artifact: SpaceArtifact) => {
     setActiveArtifact(artifact);
+    if (currentView !== 'map') {
+      setCurrentView('map');
+    }
     if (sceneActionsRef.current) {
       sceneActionsRef.current.flyTo(artifact);
     }
@@ -73,7 +84,6 @@ export const App: React.FC = () => {
         artifact={standaloneDossier.artifact}
         planet={pConfig}
         onBackToMap={() => {
-
           window.history.pushState({}, '', window.location.pathname);
           setStandaloneDossier(null);
         }}
@@ -81,9 +91,11 @@ export const App: React.FC = () => {
     );
   }
 
+  const isMars = currentPlanetId === 'mars';
+  const themeAccent = isMars ? '#f97316' : '#00F0FF';
+
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      {}
       <Header
         currentPlanetId={currentPlanetId}
         onSelectPlanet={(id) => {
@@ -91,33 +103,68 @@ export const App: React.FC = () => {
           setActiveArtifact(null);
         }}
         artifactCount={currentPlanet.artifacts.length}
-      />
-
-      {}
-      <PlanetViewer
-        planet={currentPlanet}
-        onOpenDossier={handleOpenDossier}
-        isAutoRotating={isAutoRotating}
-        showMarkers={showMarkers}
-        onRegisterSceneActions={(actions) => {
-          sceneActionsRef.current = actions;
+        currentView={currentView}
+        onSelectView={(view) => {
+          setCurrentView(view);
+          if (view !== 'map') {
+            setActiveArtifact(null);
+          }
         }}
+        onOpenAbout={() => setIsAboutOpen(true)}
       />
 
-      {}
-      <PlanetTelemetry
-        planet={currentPlanet}
-        onSelectArtifact={handleSelectArtifactFromList}
-        activeArtifactId={activeArtifact?.id}
-      />
+      {currentView === 'map' && (
+        <>
+          <PlanetViewer
+            planet={currentPlanet}
+            onOpenDossier={(art) => handleOpenDossier(art, currentPlanetId)}
+            isAutoRotating={isAutoRotating}
+            showMarkers={showMarkers}
+            selectedArtifact={activeArtifact}
+            onSelectArtifact={setActiveArtifact}
+            filteredArtifactIds={filteredArtifactIds}
+            onRegisterSceneActions={(actions) => {
+              sceneActionsRef.current = actions;
+            }}
+          />
 
-      {}
-      <ViewControls
-        isAutoRotating={isAutoRotating}
-        onToggleAutoRotate={handleToggleAutoRotate}
-        onResetView={handleResetView}
-        showMarkers={showMarkers}
-        onToggleMarkers={() => setShowMarkers((prev) => !prev)}
+          <PlanetTelemetry
+            planet={currentPlanet}
+            onSelectArtifact={handleSelectArtifactFromList}
+            activeArtifactId={activeArtifact?.id}
+            onFilteredIdsChange={setFilteredArtifactIds}
+          />
+
+          <ViewControls
+            isAutoRotating={isAutoRotating}
+            onToggleAutoRotate={handleToggleAutoRotate}
+            onResetView={handleResetView}
+            showMarkers={showMarkers}
+            onToggleMarkers={() => setShowMarkers((prev) => !prev)}
+            planetColor={themeAccent}
+          />
+        </>
+      )}
+
+      {currentView === 'catalog' && (
+        <CatalogPage
+          onOpenDossier={(art, pId) => handleOpenDossier(art, pId)}
+          onBackToMap={() => setCurrentView('map')}
+        />
+      )}
+
+      {currentView === 'community' && (
+        <CommunityVideosPage
+          onOpenArtifact={(art, pId) => {
+            setCurrentPlanetId(pId);
+            handleOpenDossier(art, pId);
+          }}
+        />
+      )}
+
+      <AboutModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
       />
     </div>
   );

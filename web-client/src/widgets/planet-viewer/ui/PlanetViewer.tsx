@@ -2,12 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { PlanetConfig, SpaceArtifact } from '../../../entities/planet/model/types';
 import { PlanetScene } from '../lib/threeScene';
 import { HoverPreviewCard } from './HoverPreviewCard';
+import { RightDetailCard } from './RightDetailCard';
 
 interface PlanetViewerProps {
   planet: PlanetConfig;
   onOpenDossier: (artifact: SpaceArtifact) => void;
   isAutoRotating: boolean;
   showMarkers: boolean;
+  selectedArtifact?: SpaceArtifact | null;
+  onSelectArtifact?: (artifact: SpaceArtifact | null) => void;
+  filteredArtifactIds?: Set<string> | null;
   onRegisterSceneActions?: (actions: {
     flyTo: (artifact: SpaceArtifact, onComplete?: () => void) => void;
     resetView: () => void;
@@ -20,6 +24,9 @@ export const PlanetViewer: React.FC<PlanetViewerProps> = ({
   onOpenDossier,
   isAutoRotating,
   showMarkers,
+  selectedArtifact,
+  onSelectArtifact,
+  filteredArtifactIds,
   onRegisterSceneActions,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,20 +37,16 @@ export const PlanetViewer: React.FC<PlanetViewerProps> = ({
   const [hoveredArtifact, setHoveredArtifact] = useState<SpaceArtifact | null>(null);
   const [hoverScreenPos, setHoverScreenPos] = useState<{ x: number; y: number } | null>(null);
 
-  const handleOpenDossierWithFlight = (artifact: SpaceArtifact) => {
+  const handleMarkerClick = (artifact: SpaceArtifact) => {
+    if (onSelectArtifact) {
+      onSelectArtifact(artifact);
+    }
     if (sceneRef.current) {
-
       sceneRef.current.flyToArtifact(artifact, () => {
         if (sceneRef.current) {
           sceneRef.current.freezeControls();
         }
-
-        setTimeout(() => {
-          onOpenDossierRef.current(artifact);
-        }, 80);
       });
-    } else {
-      onOpenDossierRef.current(artifact);
     }
   };
 
@@ -59,8 +62,7 @@ export const PlanetViewer: React.FC<PlanetViewerProps> = ({
     };
 
     scene.onMarkerClick = (artifact) => {
-
-      handleOpenDossierWithFlight(artifact);
+      handleMarkerClick(artifact);
     };
 
     if (onRegisterSceneActions) {
@@ -97,17 +99,37 @@ export const PlanetViewer: React.FC<PlanetViewerProps> = ({
     }
   }, [showMarkers]);
 
+  useEffect(() => {
+    if (sceneRef.current) {
+      sceneRef.current.setFilteredArtifactIds(filteredArtifactIds || null);
+    }
+  }, [filteredArtifactIds]);
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
       <div ref={containerRef} className="planet-viewer-container" />
 
-      {}
-      {hoveredArtifact && hoverScreenPos && (
+      {hoveredArtifact && hoverScreenPos && !selectedArtifact && (
         <HoverPreviewCard
           artifact={hoveredArtifact}
           screenPos={hoverScreenPos}
           planetId={planet.id}
-          onOpenDossier={handleOpenDossierWithFlight}
+          onOpenDossier={(art) => {
+            handleMarkerClick(art);
+          }}
+        />
+      )}
+
+      {selectedArtifact && (
+        <RightDetailCard
+          artifact={selectedArtifact}
+          planetId={planet.id}
+          onClose={() => {
+            if (onSelectArtifact) onSelectArtifact(null);
+          }}
+          onExplore={(art) => {
+            onOpenDossierRef.current(art);
+          }}
         />
       )}
     </div>

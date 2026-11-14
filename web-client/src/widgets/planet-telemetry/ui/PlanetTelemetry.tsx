@@ -1,252 +1,240 @@
 import React, { useState } from 'react';
 import type { PlanetConfig, SpaceArtifact } from '../../../entities/planet/model/types';
-import { ChevronLeft, ChevronRight, Layers, Radio, Search, X } from 'lucide-react';
+import { Filter, Search, X, ChevronLeft, ChevronRight, Info, Check, Compass } from 'lucide-react';
 
 interface PlanetTelemetryProps {
   planet: PlanetConfig;
   onSelectArtifact: (artifact: SpaceArtifact) => void;
   activeArtifactId?: string | null;
+  onFilteredIdsChange?: (ids: Set<string> | null) => void;
 }
 
 export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
   planet,
   onSelectArtifact,
   activeArtifactId,
+  onFilteredIdsChange,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [filterType, setFilterType] = useState<string>('all');
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
   const isMars = planet.id === 'mars';
-  const themeColor = isMars ? '#f97316' : '#38bdf8';
+  const themeColor = isMars ? '#f97316' : '#00F0FF';
 
-  const filteredArtifacts = planet.artifacts.filter((art) => {
-    if (filterType === 'rovers' && art.type !== 'rover' && art.type !== 'helicopter') return false;
-    if (filterType === 'landers' && art.type !== 'lander' && art.type !== 'descent_stage') return false;
-    if (filterType === 'science' && art.type !== 'retro_reflector' && art.type !== 'impact_stage' && art.type !== 'sample_depot' && art.type !== 'instrument') return false;
+  const typeOptions = [
+    { id: 'rover', label: 'Rovers & Flight' },
+    { id: 'lander', label: 'Landers & Descent' },
+    { id: 'science', label: 'Laser & Relics' },
+    { id: 'impact', label: 'Impact Sites' },
+  ];
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      const matchName = art.name.toLowerCase().includes(q);
-      const matchMission = art.mission.toLowerCase().includes(q);
-      const matchAgency = art.agency.toLowerCase().includes(q);
-      const matchCountry = art.country?.toLowerCase().includes(q);
-      const matchLoc = art.locationName.toLowerCase().includes(q);
-      const matchNssdca = art.nssdcaId?.toLowerCase().includes(q);
-      return matchName || matchMission || matchAgency || matchCountry || matchLoc || matchNssdca;
+  const statusOptions = [
+    { id: 'active', label: 'Active Telemetry' },
+    { id: 'preserved', label: 'Defunct / Preserved' },
+    { id: 'lost', label: 'Lost / Silent' },
+  ];
+
+  const toggleType = (t: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]
+    );
+  };
+
+  const toggleStatus = (s: string) => {
+    setSelectedStatuses((prev) =>
+      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+    );
+  };
+
+  const filteredArtifacts = React.useMemo(() => {
+    return planet.artifacts.filter((art) => {
+      if (selectedTypes.length > 0) {
+        const isMatch = selectedTypes.some((t) => {
+          if (t === 'rover') return art.type === 'rover' || art.type === 'helicopter';
+          if (t === 'lander') return art.type === 'lander' || art.type === 'descent_stage';
+          if (t === 'science') return art.type === 'retro_reflector' || art.type === 'instrument' || art.type === 'sample_depot';
+          if (t === 'impact') return art.type === 'impact_stage';
+          return false;
+        });
+        if (!isMatch) return false;
+      }
+
+      if (selectedStatuses.length > 0) {
+        const stat = (art.operationalStatus || '').toLowerCase();
+        const isMatch = selectedStatuses.some((s) => {
+          if (s === 'active') return stat.includes('active') || stat.includes('operating');
+          if (s === 'preserved') return stat.includes('preserved') || stat.includes('complete') || stat.includes('intact');
+          if (s === 'lost') return stat.includes('lost') || stat.includes('crashed') || stat.includes('inactive');
+          return false;
+        });
+        if (!isMatch) return false;
+      }
+
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        return (
+          art.name.toLowerCase().includes(q) ||
+          art.mission.toLowerCase().includes(q) ||
+          art.agency.toLowerCase().includes(q) ||
+          art.locationName.toLowerCase().includes(q)
+        );
+      }
+
+      return true;
+    });
+  }, [planet.artifacts, selectedTypes, selectedStatuses, searchQuery]);
+
+  React.useEffect(() => {
+    if (selectedTypes.length === 0 && selectedStatuses.length === 0 && !searchQuery.trim()) {
+      onFilteredIdsChange?.(null);
+    } else {
+      onFilteredIdsChange?.(new Set(filteredArtifacts.map((a) => a.id)));
     }
-    return true;
-  });
+  }, [filteredArtifacts, selectedTypes, selectedStatuses, searchQuery, onFilteredIdsChange]);
 
   return (
     <>
-      {}
       {!isOpen && (
         <button
           type="button"
-          className="sidebar-toggle-btn"
+          className="pen-sidebar-toggle-btn"
           onClick={() => setIsOpen(true)}
-          title="Open telemetry registry"
+          title="Open filters & catalog"
         >
-          <Layers size={16} style={{ color: themeColor }} />
-          <span>Artifact Registry ({planet.artifacts.length})</span>
+          <Filter size={15} style={{ color: themeColor }} />
+          <span>Filters & Registry ({planet.artifacts.length})</span>
           <ChevronRight size={14} />
         </button>
       )}
 
-      {}
-      <aside className={`telemetry-sidebar ${!isOpen ? 'collapsed' : ''}`}>
-        <div className="cosmo-glass sidebar-scroll-box" style={{ borderColor: `${themeColor}30` }}>
-          {}
-          <div className="sidebar-header">
-            <div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10.5px', color: themeColor, textTransform: 'uppercase' }}>
-                {planet.telemetry.designation}
-              </div>
-              <h2 className="planet-title-large">{planet.nameEn}</h2>
+      <aside className={`pen-filters-panel ${!isOpen ? 'collapsed' : ''}`}>
+        <div className="pen-filters-card">
+          <div className="pen-filter-header">
+            <div className="pen-filter-title-group">
+              <Filter size={16} style={{ color: themeColor }} />
+              <span className="pen-filter-title">Filters & Registry</span>
             </div>
-
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="hud-btn"
-              style={{ width: '32px', height: '32px' }}
-              title="Collapse panel"
+              className="pen-collapse-btn"
+              title="Collapse"
             >
               <ChevronLeft size={16} />
             </button>
           </div>
 
-          {}
-          <p className="planet-tagline">{planet.tagline}</p>
-
-          {}
-          <div className="telemetry-grid">
-            <div className="telemetry-stat-card">
-              <div className="stat-label">Radius</div>
-              <div className="stat-value">{planet.telemetry.radiusKm.toLocaleString()} km</div>
-            </div>
-
-            <div className="telemetry-stat-card">
-              <div className="stat-label">Gravity</div>
-              <div className="stat-value">{planet.telemetry.surfaceGravity.split(' ')[0]} m/s²</div>
-            </div>
-
-            <div className="telemetry-stat-card">
-              <div className="stat-label">Day Length</div>
-              <div className="stat-value">{planet.telemetry.dayLength.split('(')[0]}</div>
-            </div>
-
-            <div className="telemetry-stat-card">
-              <div className="stat-label">Avg Temp</div>
-              <div className="stat-value">{planet.telemetry.avgTemperature}</div>
-            </div>
-          </div>
-
-          {}
-          <div className="artifacts-section-title">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Radio size={14} style={{ color: themeColor }} />
-              <span>Abandoned Hardware</span>
-            </div>
-            <span style={{ color: themeColor }}>{filteredArtifacts.length} / {planet.artifacts.length}</span>
-          </div>
-
-          {}
-          <div style={{ position: 'relative', marginBottom: '8px' }}>
-            <Search
-              size={13}
-              style={{
-                position: 'absolute',
-                left: '9px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: 'var(--text-dim)',
-                pointerEvents: 'none',
-              }}
-            />
+          <div className="pen-search-box">
+            <Search size={13} className="pen-search-icon" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by mission, name, NSSDCA..."
-              style={{
-                width: '100%',
-                padding: '6px 28px 6px 28px',
-                borderRadius: '8px',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                background: 'rgba(255, 255, 255, 0.04)',
-                color: '#fff',
-                fontSize: '11px',
-                fontFamily: 'var(--font-mono)',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
+              placeholder="Search by mission, name, site..."
+              className="pen-search-input"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                style={{
-                  position: 'absolute',
-                  right: '6px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--text-dim)',
-                  cursor: 'pointer',
-                  padding: '2px',
-                }}
-                title="Clear search"
+                className="pen-search-clear"
+                title="Clear"
               >
                 <X size={12} />
               </button>
             )}
           </div>
 
-          {}
-          <div style={{ display: 'flex', gap: '4px', marginBottom: '10px', flexWrap: 'wrap' }}>
-            {[
-              { id: 'all', label: 'All' },
-              { id: 'rovers', label: 'Rovers & Flight' },
-              { id: 'landers', label: 'Landers' },
-              { id: 'science', label: 'Laser & Relics' },
-            ].map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => setFilterType(f.id)}
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '10px',
-                  padding: '3px 8px',
-                  borderRadius: '12px',
-                  border: filterType === f.id ? `1px solid ${themeColor}` : '1px solid rgba(255,255,255,0.1)',
-                  background: filterType === f.id ? `${themeColor}25` : 'rgba(255,255,255,0.03)',
-                  color: filterType === f.id ? '#fff' : 'var(--text-dim)',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                {f.label}
-              </button>
-            ))}
+          <div className="pen-filter-section">
+            <div className="pen-section-title">Object Type</div>
+            <div className="pen-checkbox-grid">
+              {typeOptions.map((opt) => {
+                const active = selectedTypes.includes(opt.id);
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    className={`pen-chip-btn ${active ? 'active' : ''}`}
+                    style={{ '--chip-accent': themeColor } as React.CSSProperties}
+                    onClick={() => toggleType(opt.id)}
+                  >
+                    <span className="pen-chip-box">
+                      {active && <Check size={10} />}
+                    </span>
+                    <span>{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {filteredArtifacts.map((artifact) => {
-              const isSelected = activeArtifactId === artifact.id;
+          <div className="pen-filter-section">
+            <div className="pen-section-title">Operational Status</div>
+            <div className="pen-checkbox-grid">
+              {statusOptions.map((opt) => {
+                const active = selectedStatuses.includes(opt.id);
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    className={`pen-chip-btn ${active ? 'active' : ''}`}
+                    style={{ '--chip-accent': themeColor } as React.CSSProperties}
+                    onClick={() => toggleStatus(opt.id)}
+                  >
+                    <span className="pen-chip-box">
+                      {active && <Check size={10} />}
+                    </span>
+                    <span>{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="pen-registry-header">
+            <div className="pen-registry-title">
+              <Compass size={13} style={{ color: themeColor }} />
+              <span>Artifacts</span>
+            </div>
+            <span className="pen-registry-count" style={{ color: themeColor }}>
+              {filteredArtifacts.length} of {planet.artifacts.length}
+            </span>
+          </div>
+
+          <div className="pen-artifact-scroll-list">
+            {filteredArtifacts.map((art) => {
+              const isSelected = activeArtifactId === art.id;
               return (
                 <div
-                  key={artifact.id}
-                  className="artifact-item-card"
-                  style={{
-                    borderColor: isSelected ? themeColor : undefined,
-                    background: isSelected ? `${themeColor}15` : undefined,
-                  }}
-                  onClick={() => onSelectArtifact(artifact)}
+                  key={art.id}
+                  className={`pen-artifact-row ${isSelected ? 'selected' : ''}`}
+                  style={{ '--row-accent': themeColor } as React.CSSProperties}
+                  onClick={() => onSelectArtifact(art)}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span className="artifact-item-name">{artifact.name}</span>
+                  <div className="pen-row-main">
+                    <span className="pen-row-name">{art.name}</span>
                     <span
-                      style={{
-                        width: '6px',
-                        height: '6px',
-                        borderRadius: '50%',
-                        backgroundColor: artifact.badgeColor || themeColor,
-                        boxShadow: `0 0 6px ${artifact.badgeColor || themeColor}`,
-                      }}
+                      className="pen-row-dot"
+                      style={{ backgroundColor: art.badgeColor || themeColor }}
                     />
                   </div>
-
-                  <div className="artifact-item-meta">
-                    <span>{artifact.agency}</span>
-                    <span style={{ color: 'var(--text-muted)' }}>
-                      {artifact.massKg ? `${artifact.massKg} kg` : ''} • {artifact.type.replace('_', ' ')}
-                    </span>
+                  <div className="pen-row-meta">
+                    <span>{art.agency}</span>
+                    <span>•</span>
+                    <span className="truncate">{art.locationName}</span>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {}
-          <div
-            style={{
-              marginTop: '16px',
-              paddingTop: '12px',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-              fontSize: '10px',
-              color: 'var(--text-dim)',
-              fontFamily: 'var(--font-mono)',
-              lineHeight: 1.5,
-            }}
-          >
-            <div style={{ color: themeColor, fontWeight: 600, marginBottom: '2px' }}>
-              NASA SPACE APPS 2026
-            </div>
-            Sourced from NASA Planetary Data System (PDS), NSSDCA Master Catalog, JPL Mission Archives, LROC & MRO HiRISE.
+          <div className="pen-tip-card">
+            <Info size={14} className="pen-tip-icon" style={{ color: themeColor }} />
+            <p className="pen-tip-text">
+              Click any surface beacon or list item to fly camera & open archival dossier.
+            </p>
           </div>
         </div>
       </aside>

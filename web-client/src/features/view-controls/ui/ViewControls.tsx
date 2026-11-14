@@ -7,6 +7,7 @@ interface ViewControlsProps {
   onResetView: () => void;
   showMarkers: boolean;
   onToggleMarkers: () => void;
+  planetColor?: string;
 }
 
 export const ViewControls: React.FC<ViewControlsProps> = ({
@@ -15,6 +16,7 @@ export const ViewControls: React.FC<ViewControlsProps> = ({
   onResetView,
   showMarkers,
   onToggleMarkers,
+  planetColor = '#00F0FF',
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -27,45 +29,55 @@ export const ViewControls: React.FC<ViewControlsProps> = ({
   };
 
   return (
-    <div className="hud-controls-panel">
-      {}
+    <div className="pen-viewport-pill">
       <button
         type="button"
-        className={`hud-btn ${isAutoRotating ? 'active' : ''}`}
+        className={`pen-pill-btn ${isAutoRotating ? 'active' : ''}`}
+        style={{ '--pill-accent': planetColor } as React.CSSProperties}
         onClick={onToggleAutoRotate}
-        title={isAutoRotating ? 'Pause auto-rotation' : 'Start auto-rotation'}
+        title={isAutoRotating ? 'Pause rotation' : 'Start auto-rotation'}
       >
-        <RotateCw size={18} className={isAutoRotating ? 'animate-spin' : ''} />
+        <RotateCw size={13} className={isAutoRotating ? 'animate-spin' : ''} />
+        <span>Rotate</span>
       </button>
 
-      {}
+      <div className="pen-pill-divider" />
+
       <button
         type="button"
-        className={`hud-btn ${showMarkers ? 'active' : ''}`}
+        className={`pen-pill-btn ${showMarkers ? 'active' : ''}`}
+        style={{ '--pill-accent': planetColor } as React.CSSProperties}
         onClick={onToggleMarkers}
-        title={showMarkers ? 'Hide surface markers' : 'Show surface markers'}
+        title={showMarkers ? 'Hide markers' : 'Show markers'}
       >
-        <MapPin size={18} />
+        <MapPin size={13} />
+        <span>Markers</span>
       </button>
 
-      {}
+      <div className="pen-pill-divider" />
+
       <button
         type="button"
-        className="hud-btn"
+        className="pen-pill-btn"
+        style={{ '--pill-accent': planetColor } as React.CSSProperties}
         onClick={onResetView}
-        title="Reset camera view"
+        title="Reset camera orientation"
       >
-        <Compass size={18} />
+        <Compass size={13} />
+        <span>Reset View</span>
       </button>
 
-      {}
+      <div className="pen-pill-divider" />
+
       <button
         type="button"
-        className="hud-btn"
+        className="pen-pill-btn"
+        style={{ '--pill-accent': planetColor } as React.CSSProperties}
         onClick={toggleFullscreen}
-        title={isFullscreen ? 'Exit fullscreen' : 'Toggle fullscreen'}
+        title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
       >
-        {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+        {isFullscreen ? <Minimize size={13} /> : <Maximize size={13} />}
+        <span>{isFullscreen ? 'Exit' : 'Full'}</span>
       </button>
     </div>
   );
