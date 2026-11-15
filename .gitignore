@@ -12,7 +12,14 @@ dist-ssr/
 desktop-client/.env
 desktop-client/node_modules/
 desktop-client/dist/
+desktop-client/releases/
+releases/
 desktop-client/src-tauri/target/
+desktop-client/src-tauri/target*/
+desktop-client/src-tauri/target-dev/
+desktop-client/src-tauri/target-prod/
+src-tauri/target/
+src-tauri/target*/
 desktop-client/src-tauri/binaries/*.exe
 desktop-client/src-tauri/binaries/*.pdb
 

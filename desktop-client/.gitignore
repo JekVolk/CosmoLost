@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-ssr/
+releases/
+src-tauri/target/
+src-tauri/target*/
+src-tauri/target-dev/
+src-tauri/target-prod/
+src-tauri/binaries/*.exe
+src-tauri/binaries/*.pdb
+*.local
+.env
+.env.local
+*.log
