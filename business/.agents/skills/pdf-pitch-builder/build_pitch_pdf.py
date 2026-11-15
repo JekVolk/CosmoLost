@@ -15,6 +15,23 @@ from reportlab.platypus import (
 )
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
+# Реєстрація системних шрифтів для повної підтримки кирилиці (Windows / Linux)
+FONT_MAIN = "Helvetica"
+FONT_BOLD = "Helvetica-Bold"
+FONT_DIR = "C:/Windows/Fonts"
+if os.path.exists(os.path.join(FONT_DIR, "arial.ttf")):
+    try:
+        pdfmetrics.registerFont(TTFont("Arial", os.path.join(FONT_DIR, "arial.ttf")))
+        pdfmetrics.registerFont(TTFont("Arial-Bold", os.path.join(FONT_DIR, "arialbd.ttf")))
+        pdfmetrics.registerFont(TTFont("Arial-Italic", os.path.join(FONT_DIR, "ariali.ttf")))
+        FONT_MAIN = "Arial"
+        FONT_BOLD = "Arial-Bold"
+    except Exception:
+        pass
+
 
 class NumberedCanvas(canvas.Canvas):
     """Канвас із двопрохідним додаванням номерів сторінок та колонтитулів."""
@@ -36,7 +53,7 @@ class NumberedCanvas(canvas.Canvas):
 
     def draw_page_decorations(self, page_count):
         self.saveState()
-        self.setFont("Helvetica", 8)
+        self.setFont(FONT_MAIN, 8)
         self.setFillColor(colors.HexColor("#64748B"))
         
         # Верхній колонтитул (якщо не 1 сторінка)
@@ -103,7 +120,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
     title_style = ParagraphStyle(
         'PitchTitle',
         parent=styles['Normal'],
-        fontName='Helvetica-Bold',
+        fontName=FONT_BOLD,
         fontSize=24,
         leading=28,
         textColor=colors.HexColor("#0F172A")
@@ -112,7 +129,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
     subtitle_style = ParagraphStyle(
         'PitchSubtitle',
         parent=styles['Normal'],
-        fontName='Helvetica',
+        fontName=FONT_MAIN,
         fontSize=12,
         leading=16,
         textColor=colors.HexColor("#475569")
@@ -121,7 +138,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
     section_heading = ParagraphStyle(
         'PitchHeading',
         parent=styles['Normal'],
-        fontName='Helvetica-Bold',
+        fontName=FONT_BOLD,
         fontSize=14,
         leading=18,
         textColor=colors.HexColor("#1E293B"),
@@ -131,7 +148,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
     body_style = ParagraphStyle(
         'PitchBody',
         parent=styles['Normal'],
-        fontName='Helvetica',
+        fontName=FONT_MAIN,
         fontSize=9,
         leading=13,
         textColor=colors.HexColor("#334155")
@@ -140,7 +157,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
     bold_item = ParagraphStyle(
         'PitchBoldItem',
         parent=styles['Normal'],
-        fontName='Helvetica-Bold',
+        fontName=FONT_BOLD,
         fontSize=10,
         leading=13,
         textColor=colors.HexColor("#0F172A")
@@ -152,7 +169,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
     header_data = [
         [
             Paragraph(f"<b>{data.get('title', 'Pitch Presentation')}</b>", title_style),
-            Paragraph(f"<font color='#0284C7'><b>ВЕРСІЯ: {data.get('version', 'v0.1.0')}</b></font>", ParagraphStyle('Ver', parent=body_style, alignment=2, fontSize=11, fontName='Helvetica-Bold'))
+            Paragraph(f"<font color='#0284C7'><b>ВЕРСІЯ: {data.get('version', 'v0.1.0')}</b></font>", ParagraphStyle('Ver', parent=body_style, alignment=2, fontSize=11, fontName=FONT_BOLD))
         ],
         [
             Paragraph(data.get('subtitle', ''), subtitle_style),

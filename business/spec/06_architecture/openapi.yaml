@@ -1,0 +1,1445 @@
+openapi: 3.1.0
+info:
+  title: CosmoLost API Protocol & Data Services
+  description: |
+    # CosmoLost Unified API & MCP Protocol Specification
+    
+    CosmoLost ("Abandoned, but not forgotten") is an educational ecosystem exploring space hardware 
+    and historical artifacts left across the Moon, Mars, and deep space.
+    
+    ## Architectural Zones:
+    1. **Portal API (`/api/v1/portal/`)**: High-performance, read-optimized endpoints for the 3D Web Portal (Three.js).
+    2. **Editor API (`/api/v1/editor/`)**: Data exchange for the Desktop "Content Factory" (Tauri v2).
+    3. **Ingestion API (`/api/v1/loader/`)**: Automated ingestion and synchronization from official NASA catalogs (PDS, NSSDCA, Horizons).
+    4. **FastMCP Protocol**: Standardized Model Context Protocol toolset for external LLM agents (Gemini, Claude).
+    
+    ## Zero-Media Server Load Policy:
+    * The backend server never handles or stores heavy binary video or raw image files.
+    * Video rendering occurs strictly on the user's desktop hardware (Local-First).
+    * NASA photos and 3D `.glb` assets stream directly from open NASA CDNs and GitHub Raw.
+    * Server database PostgreSQL stores structured text, verified telemetry, coordinates, and citations.
+  version: 0.5.8
+  contact:
+    name: Space Likhtar Team (CosmoLost)
+    url: https://cosmolost.lihtar.org
+    email: arch@lihtar.org
+
+servers:
+  - url: https://cosmolost.lihtar.org/api/v1
+    description: Production Environment (Dedicated Server)
+  - url: http://localhost:8000/api/v1
+    description: Local Development Server
+
+tags:
+  - name: Portal - Celestial Bodies
+    description: Planetary data, physical dimensions, and NASA Treks WMTS tile layers.
+  - name: Portal - Artifacts
+    description: Catalog of space hardware, spatial coordinates, status, and clustering.
+  - name: Portal - Missions
+    description: Official NASA launch programs and expeditions.
+  - name: Portal - Community Publications
+    description: Verified user-submitted videos and shorts with source attribution.
+  - name: Editor - Templates & Bundles
+    description: SMM script structures, TTS scripts, and high-res asset packages.
+  - name: Editor - Synchronization
+    description: Centralized persistence of project texts, drafts, and topic bridges.
+  - name: Ingestion - NASA Catalog
+    description: Admin data ingestion pipelines and enrichment triggers.
+
+paths:
+  # ===========================================================================
+  # 1. PORTAL API: CELESTIAL BODIES
+  # ===========================================================================
+  /portal/celestial-bodies/:
+    get:
+      tags:
+        - Portal - Celestial Bodies
+      summary: List all celestial bodies
+      description: Returns Moon and Mars physical attributes and NASA Treks WMTS tile URL templates for Three.js sphere rendering.
+      operationId: listCelestialBodies
+      responses:
+        '200':
+          description: List of supported celestial bodies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CelestialBody'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /portal/celestial-bodies/{id}/:
+    get:
+      tags:
+        - Portal - Celestial Bodies
+      summary: Get celestial body details
+      description: Returns detailed physical characteristics and coordinate system specs for a specific celestial body.
+      operationId: getCelestialBody
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Slug of celestial body ('moon' or 'mars')
+          schema:
+            type: string
+            enum: [moon, mars]
+      responses:
+        '200':
+          description: Detailed celestial body configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CelestialBody'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ===========================================================================
+  # 2. PORTAL API: ARTIFACTS
+  # ===========================================================================
+  /portal/artifacts/:
+    get:
+      tags:
+        - Portal - Artifacts
+      summary: Catalog of space hardware for 3D globe visualization
+      description: |
+        Retrieves artifacts matching spatial and domain filters. Supports dynamic clustering for objects located
+        closer than 500 meters (e.g. Apollo 11 or Perseverance Three Forks depot).
+      operationId: listArtifacts
+      parameters:
+        - name: body
+          in: query
+          required: false
+          description: Filter by target body ('moon', 'mars')
+          schema:
+            type: string
+            enum: [moon, mars]
+        - name: type
+          in: query
+          required: false
+          description: Hardware classification type
+          schema:
+            $ref: '#/components/schemas/ArtifactType'
+        - name: status
+          in: query
+          required: false
+          description: Operational status
+          schema:
+            $ref: '#/components/schemas/OperationalStatus'
+        - name: is_featured
+          in: query
+          required: false
+          description: Curated Tier 1 objects with 3D models and verified monologues
+          schema:
+            type: boolean
+        - name: is_nasa_hardware
+          in: query
+          required: false
+          description: Filter by official NASA hardware vs international cataloged equipment
+          schema:
+            type: boolean
+        - name: cluster_distance_m
+          in: query
+          required: false
+          description: Spatial clustering threshold in meters (default 500m)
+          schema:
+            type: number
+            default: 500.0
+        - name: search
+          in: query
+          required: false
+          description: Full-text search keyword in English
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Paginated catalog of artifacts with spatial coordinates and preview thumbnails.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /portal/artifacts/{id}/:
+    get:
+      tags:
+        - Portal - Artifacts
+      summary: Comprehensive artifact technical passport
+      description: Returns full passport, first-person monologue script (en-US), 3D GLB model URL, media, and scientific discoveries.
+      operationId: getArtifactDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique artifact slug (e.g. 'opportunity-rover', 'apollo-11-lm-descent')
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Complete artifact detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /portal/artifacts/{id}/waypoints/:
+    get:
+      tags:
+        - Portal - Artifacts
+      summary: Traverse waypoints and telemetry history
+      description: Returns chronologically ordered path waypoints, odometry, and telemetry snapshots for rovers and atmospheric drones.
+      operationId: getArtifactWaypoints
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique artifact slug
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chronological list of traverse waypoints.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TraverseWaypoint'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /portal/artifacts/{id}/discoveries/:
+    get:
+      tags:
+        - Portal - Artifacts
+      summary: Scientific discoveries and onboard instruments
+      description: Returns verified peer-reviewed scientific findings with both rigorous technical facts and kid-friendly storytelling analogies.
+      operationId: getArtifactDiscoveries
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Scientific discoveries enabled by the artifact.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScientificDiscovery'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /portal/artifacts/{id}/media/:
+    get:
+      tags:
+        - Portal - Artifacts
+      summary: NASA archival media files and proof photos
+      description: Returns direct streaming URLs to high-resolution surface photos, orbital proof imagery (HiRISE, LROC), and audio recordings.
+      operationId: getArtifactMedia
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Curated NASA archival media assets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtifactMedia'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ===========================================================================
+  # 3. PORTAL API: MISSIONS
+  # ===========================================================================
+  /portal/missions/:
+    get:
+      tags:
+        - Portal - Missions
+      summary: List space exploration missions
+      description: Returns official NASA missions from NSSDCA catalog.
+      operationId: listMissions
+      parameters:
+        - name: agency
+          in: query
+          required: false
+          schema:
+            type: string
+            default: NASA
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of space missions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissionListResponse'
+
+  /portal/missions/{id}/:
+    get:
+      tags:
+        - Portal - Missions
+      summary: Get mission details and hardware manifest
+      description: Returns mission narrative, launch/landing dates, NSSDCA ID, and list of associated hardware artifacts.
+      operationId: getMissionDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Mission passport and list of left hardware.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissionDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ===========================================================================
+  # 4. PORTAL API: COMMUNITY PUBLICATIONS
+  # ===========================================================================
+  /portal/community-publications/:
+    get:
+      tags:
+        - Portal - Community Publications
+      summary: List approved community video publications
+      description: Returns verified external video links (YouTube Shorts, TikTok) created by the community with scientific source citations.
+      operationId: listCommunityPublications
+      parameters:
+        - name: mission_id
+          in: query
+          required: false
+          description: Filter publications by mission slug
+          schema:
+            type: string
+        - name: artifact_id
+          in: query
+          required: false
+          description: Filter publications by specific artifact slug
+          schema:
+            type: string
+        - name: platform_type
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PlatformType'
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Approved community publications.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityPublicationListResponse'
+
+    post:
+      tags:
+        - Portal - Community Publications
+      summary: Submit a community video publication
+      description: Allows content creators to submit an external YouTube Shorts or TikTok link with mandatory NASA source citations for moderation.
+      operationId: submitCommunityPublication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityPublicationCreate'
+      responses:
+        '201':
+          description: Publication submitted for review.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityPublicationSubmitResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ===========================================================================
+  # 5. EDITOR API: TEMPLATES & ASSETS (DESKTOP CONTENT FACTORY)
+  # ===========================================================================
+  /editor/templates/:
+    get:
+      tags:
+        - Editor - Templates & Bundles
+      summary: List SMM rubric templates
+      description: Returns standard vertical video storyboard structures, target durations (~40s), and safe zone presets.
+      operationId: listContentTemplates
+      responses:
+        '200':
+          description: Active editorial templates for the node graph.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContentTemplate'
+
+  /editor/templates/{id}/:
+    get:
+      tags:
+        - Editor - Templates & Bundles
+      summary: Get rubric template configuration
+      description: Returns slide definitions, timing phases (Hook, B-roll, Drama, Loop CTA), and layout rules.
+      operationId: getContentTemplate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentTemplate'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /editor/artifacts/{id}/assets/:
+    get:
+      tags:
+        - Editor - Templates & Bundles
+      summary: Get editing asset package for video rendering
+      description: |
+        Delivers an optimized content package for the desktop editor:
+        * Pre-split TTS speech scripts (Ukrainian & English)
+        * 3-line SEO description & provocative Pin Comment
+        * Direct URLs for high-resolution archival photos
+        * Direct URL to interactive 3D model (.glb)
+      operationId: getEditorAssetBundle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Target artifact slug
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Media and script asset bundle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditorAssetBundle'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ===========================================================================
+  # 6. EDITOR API: SYNCHRONIZATION & RECOMMENDATIONS
+  # ===========================================================================
+  /editor/projects/sync/:
+    post:
+      tags:
+        - Editor - Synchronization
+      summary: Synchronize project text and metadata to server
+      description: |
+        Centralized backup of video project texts (Zero-Media Policy):
+        Saves slides narrative text, generated SEO lines, pin comment, and creator's selection reason.
+        Does NOT accept heavy video or audio files.
+      operationId: syncProjectText
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectSyncRequest'
+      responses:
+        '200':
+          description: Project successfully synchronized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /editor/recommend-next-topic/:
+    post:
+      tags:
+        - Editor - Synchronization
+      summary: Recommend next video topic (Smart Next Topic Engine)
+      description: |
+        Analyzes the current artifact, selected rubric, and creator's selection reason to suggest
+        the next serialized video topic with an engaging narrative bridge.
+      operationId: recommendNextTopic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecommendNextTopicRequest'
+      responses:
+        '200':
+          description: Context-aware topic suggestion with narrative bridge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecommendNextTopicResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # ===========================================================================
+  # 7. INGESTION API: NASA DATA PIPELINE
+  # ===========================================================================
+  /loader/sync-nasa-catalog/:
+    post:
+      tags:
+        - Ingestion - NASA Catalog
+      summary: Trigger NASA catalog synchronization
+      description: Admin-triggered or cron-driven batch upsert of artifacts from official NASA catalogs (NSSDCA, Moon Manmade Material).
+      operationId: syncNasaCatalog
+      responses:
+        '200':
+          description: Ingestion job completed or queued.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: COMPLETED
+                  upserted_count:
+                    type: integer
+                    example: 142
+                  duration_sec:
+                    type: number
+                    example: 3.45
+
+# =============================================================================
+# COMPONENTS & SCHEMAS
+# =============================================================================
+components:
+  schemas:
+    # -------------------------------------------------------------------------
+    # Enums
+    # -------------------------------------------------------------------------
+    CoordinateSystemType:
+      type: string
+      enum:
+        - SELENOGRAPHIC
+        - PLANETOCENTRIC_360
+      description: Coordinate reference standard (Selenographic for Moon [-180..180], IAU 2000 for Mars [0..360])
+
+    ArtifactType:
+      type: string
+      enum:
+        - ROVER
+        - HELICOPTER
+        - LANDER
+        - DESCENT_STAGE
+        - IMPACT_STAGE
+        - INSTRUMENT
+        - RETRO_REFLECTOR
+        - SAMPLE_TUBE
+        - ENTRY_DEBRIS
+        - DEEP_SPACE_PROBE
+      description: 10 official NASA hardware categories
+
+    OperationalStatus:
+      type: string
+      enum:
+        - DORMANT
+        - PASSIVE_ACTIVE
+        - DESTROYED_ON_IMPACT
+        - ACTIVE_TRANSMITTING
+      description: Hardware operational lifecycle status
+
+    MediaCategory:
+      type: string
+      enum:
+        - SURFACE_FIRST_PERSON
+        - LAST_KNOWN_PHOTO
+        - ORBITAL_PROOF_LROC_HIRISE
+        - MODEL_3D
+        - AUDIO_RECORDING
+      description: NASA archival media category
+
+    PlatformType:
+      type: string
+      enum:
+        - YOUTUBE
+        - TIKTOK
+        - REELS
+        - OTHER
+      description: Destination social video platform
+
+    # -------------------------------------------------------------------------
+    # Domain Objects
+    # -------------------------------------------------------------------------
+    CelestialBody:
+      type: object
+      required:
+        - id
+        - name
+        - radius_km
+        - gravity_ms2
+        - coordinate_system_type
+        - wmts_tile_url
+      properties:
+        id:
+          type: string
+          example: mars
+        name:
+          type: string
+          example: Mars
+        radius_km:
+          type: number
+          format: float
+          example: 3396.2
+        gravity_ms2:
+          type: number
+          format: float
+          example: 3.72
+        coordinate_system_type:
+          $ref: '#/components/schemas/CoordinateSystemType'
+        wmts_tile_url:
+          type: string
+          format: uri
+          example: https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{TileMatrix}/{TileRow}/{TileCol}.jpg
+
+    Coordinates:
+      type: object
+      required:
+        - latitude
+        - longitude
+        - coordinate_system
+        - location_name
+      properties:
+        latitude:
+          type: number
+          format: float
+          minimum: -90.0
+          maximum: 90.0
+          example: -1.9462
+        longitude:
+          type: number
+          format: float
+          example: 354.4734
+        elevation_m:
+          type: number
+          format: float
+          example: -1420.0
+        coordinate_system:
+          $ref: '#/components/schemas/CoordinateSystemType'
+        location_name:
+          type: string
+          example: Perseverance Valley
+
+    ClusterInfo:
+      type: object
+      required:
+        - is_clustered
+        - cluster_count
+      properties:
+        is_clustered:
+          type: boolean
+          example: false
+        cluster_id:
+          type: string
+          nullable: true
+          example: null
+        cluster_count:
+          type: integer
+          example: 1
+
+    ArtifactSummary:
+      type: object
+      required:
+        - id
+        - name
+        - mission_name
+        - celestial_body
+        - is_nasa_hardware
+        - artifact_type
+        - operational_status
+        - coordinates
+        - cluster_info
+        - is_featured
+        - preview_image_url
+        - cosmolost_url
+      properties:
+        id:
+          type: string
+          example: opportunity-rover
+        name:
+          type: string
+          example: Opportunity Rover (MER-B)
+        mission_name:
+          type: string
+          example: Mars Exploration Rover - Opportunity
+        celestial_body:
+          type: string
+          example: mars
+        is_nasa_hardware:
+          type: boolean
+          example: true
+        artifact_type:
+          $ref: '#/components/schemas/ArtifactType'
+        operational_status:
+          $ref: '#/components/schemas/OperationalStatus'
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        cluster_info:
+          $ref: '#/components/schemas/ClusterInfo'
+        mass_kg:
+          type: number
+          format: float
+          nullable: true
+          example: 185.0
+        is_featured:
+          type: boolean
+          example: true
+        preview_image_url:
+          type: string
+          format: uri
+          example: https://images-assets.nasa.gov/image/PIA22521/PIA22521~thumb.jpg
+        cosmolost_url:
+          type: string
+          format: uri
+          example: https://cosmolost.lihtar.org/artifacts/opportunity-rover
+
+    ArtifactDetail:
+      type: object
+      required:
+        - id
+        - name
+        - mission
+        - celestial_body
+        - artifact_type
+        - operational_status
+        - coordinates
+        - is_featured
+        - is_nasa_hardware
+        - first_person_monologue
+        - media
+        - discoveries
+      properties:
+        id:
+          type: string
+          example: opportunity-rover
+        name:
+          type: string
+          example: Opportunity Rover (MER-B)
+        mission:
+          $ref: '#/components/schemas/MissionSummary'
+        celestial_body:
+          type: string
+          example: mars
+        artifact_type:
+          $ref: '#/components/schemas/ArtifactType'
+        operational_status:
+          $ref: '#/components/schemas/OperationalStatus'
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        mass_kg:
+          type: number
+          format: float
+          nullable: true
+          example: 185.0
+        last_contact_sol:
+          type: integer
+          nullable: true
+          example: 5111
+        cause_of_deactivation:
+          type: string
+          nullable: true
+          example: Global Martian planet-encircling dust storm blocking solar panels
+        is_featured:
+          type: boolean
+          example: true
+        is_nasa_hardware:
+          type: boolean
+          example: true
+        first_person_monologue:
+          type: string
+          description: Atmospheric first-person story strictly in en-US
+          example: My clock stopped on Sol 5111. The dust was thick enough to turn afternoon into midnight...
+        model_3d_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Opportunity%20Rover/opportunity.glb
+        updated_at:
+          type: string
+          format: date-time
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArtifactMedia'
+        discoveries:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScientificDiscovery'
+
+    ArtifactListResponse:
+      type: object
+      required:
+        - total
+        - limit
+        - offset
+        - results
+      properties:
+        total:
+          type: integer
+          example: 120
+        limit:
+          type: integer
+          example: 50
+        offset:
+          type: integer
+          example: 0
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArtifactSummary'
+
+    TraverseWaypoint:
+      type: object
+      required:
+        - id
+        - sol_or_step
+        - latitude
+        - longitude
+        - elevation_m
+        - odometry_m
+        - telemetry_snapshot
+      properties:
+        id:
+          type: string
+          example: wp-oppy-5111
+        sol_or_step:
+          type: integer
+          example: 5111
+        latitude:
+          type: number
+          format: float
+          example: -1.9462
+        longitude:
+          type: number
+          format: float
+          example: 354.4734
+        elevation_m:
+          type: number
+          format: float
+          example: -1420.0
+        odometry_m:
+          type: number
+          format: float
+          example: 45160.0
+        telemetry_snapshot:
+          type: object
+          properties:
+            power_wh:
+              type: number
+              example: 22.0
+            dust_tau:
+              type: number
+              example: 10.8
+            temp_c:
+              type: number
+              example: -42.0
+        story_snippet:
+          type: string
+          nullable: true
+          example: Final telemetry packet received before transmitter lost carrier wave.
+
+    ScientificDiscovery:
+      type: object
+      required:
+        - id
+        - instrument_acronym
+        - instrument_full_name
+        - title
+        - kid_friendly_story
+        - scientific_fact
+      properties:
+        id:
+          type: string
+          example: disc-oppy-blueberries
+        instrument_acronym:
+          type: string
+          example: Pancam
+        instrument_full_name:
+          type: string
+          example: Panoramic Camera
+        title:
+          type: string
+          example: Hematite Concretions (Martian Blueberries)
+        kid_friendly_story:
+          type: string
+          example: Tiny ball-shaped stones that could only grow in warm pools of mineral water!
+        scientific_fact:
+          type: string
+          example: Discovered spherules composed of crystalline hematite indicative of standing liquid water.
+
+    ArtifactMedia:
+      type: object
+      required:
+        - id
+        - media_category
+        - media_url
+        - caption
+        - credit
+      properties:
+        id:
+          type: string
+          example: media-pia22521
+        media_category:
+          $ref: '#/components/schemas/MediaCategory'
+        media_url:
+          type: string
+          format: uri
+          example: https://photojournal.jpl.nasa.gov/jpeg/PIA22521.jpg
+        nasa_id_or_pia:
+          type: string
+          nullable: true
+          example: PIA22521
+        caption:
+          type: string
+          example: Final panorama looking eastward from Perseverance Valley rim.
+        credit:
+          type: string
+          example: NASA/JPL-Caltech
+
+    MissionSummary:
+      type: object
+      required:
+        - id
+        - nssdca_id
+        - name
+        - agency
+      properties:
+        id:
+          type: string
+          example: mars-exploration-rover-opportunity
+        nssdca_id:
+          type: string
+          example: 2003-032A
+        name:
+          type: string
+          example: Mars Exploration Rover - Opportunity
+        agency:
+          type: string
+          example: NASA
+
+    MissionDetail:
+      type: object
+      required:
+        - id
+        - nssdca_id
+        - name
+        - agency
+        - summary
+        - artifacts
+      properties:
+        id:
+          type: string
+          example: mars-exploration-rover-opportunity
+        nssdca_id:
+          type: string
+          example: 2003-032A
+        name:
+          type: string
+          example: Mars Exploration Rover - Opportunity
+        agency:
+          type: string
+          example: NASA
+        launch_date:
+          type: string
+          format: date
+          nullable: true
+          example: 2003-07-07
+        landing_date:
+          type: string
+          format: date
+          nullable: true
+          example: 2004-01-25
+        end_date:
+          type: string
+          format: date
+          nullable: true
+          example: 2018-06-10
+        summary:
+          type: string
+          example: Twin exploration rover mission confirming past persistent liquid water on Mars.
+        artifacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArtifactSummary'
+
+    MissionListResponse:
+      type: object
+      required:
+        - total
+        - results
+      properties:
+        total:
+          type: integer
+          example: 18
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MissionDetail'
+
+    CommunityPublication:
+      type: object
+      required:
+        - id
+        - mission_id
+        - title
+        - video_url
+        - platform_type
+        - source_references
+        - author_name
+        - is_approved
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: e2a1b5c4-d6e7-4f8a-9b0c-1d2e3f4a5b6c
+        mission_id:
+          type: string
+          example: mars-exploration-rover-opportunity
+        artifact_id:
+          type: string
+          nullable: true
+          example: opportunity-rover
+        title:
+          type: string
+          example: Last Sol of Opportunity: The Storm that Never Ended
+        video_url:
+          type: string
+          format: uri
+          example: https://youtube.com/shorts/dQw4w9WgXcQ
+        platform_type:
+          $ref: '#/components/schemas/PlatformType'
+        source_references:
+          type: string
+          example: NASA Photojournal PIA22521, MER PDS raw imaging catalog, Sol 5111 tau readings
+        author_name:
+          type: string
+          example: SpaceGeek99
+        is_approved:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+
+    CommunityPublicationCreate:
+      type: object
+      required:
+        - mission_id
+        - title
+        - video_url
+        - platform_type
+        - source_references
+        - author_name
+      properties:
+        mission_id:
+          type: string
+          example: mars-exploration-rover-opportunity
+        artifact_id:
+          type: string
+          nullable: true
+          example: opportunity-rover
+        title:
+          type: string
+          maxLength: 256
+          example: Last Sol of Opportunity: The Storm that Never Ended
+        video_url:
+          type: string
+          format: uri
+          maxLength: 512
+          example: https://youtube.com/shorts/dQw4w9WgXcQ
+        platform_type:
+          $ref: '#/components/schemas/PlatformType'
+        source_references:
+          type: string
+          description: Official NASA catalog IDs or papers cited in video
+          example: NASA Photojournal PIA22521, MER PDS catalog
+        author_name:
+          type: string
+          maxLength: 128
+          example: SpaceGeek99
+
+    CommunityPublicationSubmitResponse:
+      type: object
+      required:
+        - id
+        - status
+        - is_approved
+        - message
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          example: SUBMITTED_FOR_REVIEW
+        is_approved:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Publication submitted successfully. It will appear on the portal once approved by moderators.
+
+    CommunityPublicationListResponse:
+      type: object
+      required:
+        - total
+        - results
+      properties:
+        total:
+          type: integer
+          example: 1
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityPublication'
+
+    # -------------------------------------------------------------------------
+    # Editor & Desktop Factory Schemas
+    # -------------------------------------------------------------------------
+    ContentTemplate:
+      type: object
+      required:
+        - id
+        - rubric_name
+        - target_duration_sec
+        - slide_structure
+      properties:
+        id:
+          type: string
+          example: last-sol-drama
+        rubric_name:
+          type: string
+          example: Last Day of Contact
+        target_duration_sec:
+          type: integer
+          minimum: 15
+          maximum: 60
+          example: 40
+        slide_structure:
+          type: array
+          items:
+            type: object
+            required:
+              - slide_index
+              - type
+              - duration_sec
+              - safe_zone_layout
+            properties:
+              slide_index:
+                type: integer
+                example: 1
+              type:
+                type: string
+                enum: [HOOK, B_ROLL_FACTS, DRAMA_PEAK, SEAMLESS_LOOP_CTA]
+              duration_sec:
+                type: number
+                example: 3.5
+              safe_zone_layout:
+                type: string
+                example: CORNER_AVATAR_CENTER_3D
+
+    EditorAssetBundle:
+      type: object
+      required:
+        - artifact_id
+        - name
+        - tts_script
+        - seo_caption
+        - pin_comment
+        - high_res_photos
+      properties:
+        artifact_id:
+          type: string
+          example: opportunity-rover
+        name:
+          type: string
+          example: Opportunity Rover
+        tts_script:
+          type: object
+          required:
+            - uk
+            - en
+          properties:
+            uk:
+              type: string
+              example: Мій годинник зупинився на Sol 5111...
+            en:
+              type: string
+              example: My clock stopped on Sol 5111...
+        seo_caption:
+          type: object
+          required:
+            - line1_hook
+            - line2_seo
+            - line3_tags
+          properties:
+            line1_hook:
+              type: string
+              example: Чому вчені NASA мовчали про те, що сталося на Sol 5111? 👇
+            line2_seo:
+              type: string
+              example: Повна історія марсохода Opportunity та 3D-мапа: cosmolost.lihtar.org
+            line3_tags:
+              type: string
+              example: "#cosmolost #nasa #space #mars"
+        pin_comment:
+          type: string
+          example: Як ви вважаєте, чи варто забрати марсоходи на Землю у музей?
+        high_res_photos:
+          type: array
+          items:
+            type: string
+            format: uri
+            example: https://photojournal.jpl.nasa.gov/jpeg/PIA22521.jpg
+        model_3d_glb_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Opportunity%20Rover/opportunity.glb
+
+    ProjectSyncRequest:
+      type: object
+      required:
+        - project_id
+        - artifact_id
+        - template_id
+        - status
+        - selection_reason
+        - target_duration_sec
+        - render_timeout_sec
+        - script_slides
+        - caption_line1
+        - caption_line2_seo
+        - caption_line3_tags
+        - pin_comment
+      properties:
+        project_id:
+          type: string
+          format: uuid
+          example: 7b8f2d1e-9a4c-4e8b-821f-3d6a9e1b2c3d
+        artifact_id:
+          type: string
+          example: opportunity-rover
+        template_id:
+          type: string
+          example: last-sol-drama
+        status:
+          type: string
+          enum: [DRAFT, RENDERING, RENDERED, PUBLISHED, FAILED]
+          example: DRAFT
+        selection_reason:
+          type: string
+          minLength: 10
+          maxLength: 500
+          description: Why this hardware was chosen (anniversary, tragic storm, instrument novelty)
+          example: Sol 5111 anniversary and dramatic global dust storm burial
+        target_duration_sec:
+          type: integer
+          minimum: 15
+          maximum: 60
+          example: 40
+        render_timeout_sec:
+          type: integer
+          minimum: 30
+          maximum: 300
+          default: 40
+          description: Adjustable watchdog timeout for slower GPUs
+          example: 40
+        script_slides:
+          type: array
+          items:
+            type: object
+            required:
+              - slide_index
+              - type
+              - duration_sec
+              - narrator_text
+            properties:
+              slide_index:
+                type: integer
+                example: 1
+              type:
+                type: string
+                example: HOOK
+              duration_sec:
+                type: number
+                example: 3.0
+              narrator_text:
+                type: string
+                example: Why did Opportunity send its final heartbeat on Sol 5111?
+        caption_line1:
+          type: string
+          example: Останній день легендарного марсохода 😱👇
+        caption_line2_seo:
+          type: string
+          example: Повна історія Opportunity на Марсі. 3D-мапа: cosmolost.lihtar.org
+        caption_line3_tags:
+          type: string
+          example: "#cosmolost #nasa #mars #opportunity"
+        pin_comment:
+          type: string
+          example: Як ви вважаєте, чи варто забрати Opportunity на Землю у музей, чи залишити на Марсі?
+
+    ProjectSyncResponse:
+      type: object
+      required:
+        - status
+        - project_id
+        - synced_at
+      properties:
+        status:
+          type: string
+          example: SYNCED
+        project_id:
+          type: string
+          format: uuid
+          example: 7b8f2d1e-9a4c-4e8b-821f-3d6a9e1b2c3d
+        synced_at:
+          type: string
+          format: date-time
+
+    RecommendNextTopicRequest:
+      type: object
+      required:
+        - current_artifact_id
+        - rubric_id
+        - selection_reason
+      properties:
+        current_artifact_id:
+          type: string
+          example: spirit-rover
+        rubric_id:
+          type: string
+          example: last-sol-drama
+        selection_reason:
+          type: string
+          example: Wheel stuck in sand trap at Troy and winter freezing
+
+    RecommendNextTopicResponse:
+      type: object
+      required:
+        - suggested_artifact_id
+        - suggested_artifact_name
+        - narrative_bridge
+        - suggested_hook
+        - suggested_rubric_id
+        - recommended_pin_comment
+      properties:
+        suggested_artifact_id:
+          type: string
+          example: opportunity-rover
+        suggested_artifact_name:
+          type: string
+          example: Opportunity Rover (MER-B)
+        narrative_bridge:
+          type: string
+          example: While Spirit froze in Gusev Crater, twin rover Opportunity drove 45 km and survived 8 more years...
+        suggested_hook:
+          type: string
+          example: Did you know Spirit's twin pulled off an impossible Martian miracle?
+        suggested_rubric_id:
+          type: string
+          example: last-sol-drama
+        recommended_pin_comment:
+          type: string
+          example: Which rover had the more heroic story: Spirit or Opportunity?
+
+    # -------------------------------------------------------------------------
+    # Error Schemas
+    # -------------------------------------------------------------------------
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: NOT_FOUND
+        message:
+          type: string
+          example: Requested resource was not found.
+        details:
+          type: object
+          nullable: true
+
+  # ---------------------------------------------------------------------------
+  # Reusable Responses
+  # ---------------------------------------------------------------------------
+  responses:
+    BadRequest:
+      description: Invalid query parameters or malformed JSON payload.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Unexpected internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
