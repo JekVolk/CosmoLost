@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg_eq" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <polygon points="96,24 416,24 488,96 488,416 416,488 96,488 24,416 24,96" fill="url(#bg_eq)" stroke="#475569" stroke-width="14"/>
+  <polygon points="108,44 404,44 468,108 468,404 404,468 108,468 44,404 44,108" fill="none" stroke="#334155" stroke-width="4"/>
+  
+      <!-- Magnetometer Boom & Atmospheric Waves -->
+      <path d="M120,210 A150,150 0 0,1 392,210" fill="none" stroke="#38B2AC" stroke-width="16" stroke-linecap="round"/>
+      <path d="M165,245 A100,100 0 0,1 347,245" fill="none" stroke="#81E6D9" stroke-width="16" stroke-linecap="round"/>
+      <polygon points="240,420 272,420 264,280 248,280" fill="#A0AEC0"/>
+      <circle cx="256" cy="270" r="32" fill="#234E52" stroke="#4FD1C5" stroke-width="10"/>
+      <circle cx="256" cy="270" r="12" fill="#E6FFFA"/>
+      <line x1="185" y1="330" x2="327" y2="330" stroke="#CBD5E0" stroke-width="10" stroke-linecap="round"/>
+    
+    <!-- SI-generated Badge -->
+  <g id="si-generated-badge" transform="translate(408, 480)">
+    <rect x="0" y="0" width="92" height="20" rx="6" ry="6" fill="#0A0B10" fill-opacity="0.75" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1"/>
+    <text x="46" y="14" fill="#E2E8F0" font-family="'Segoe UI', 'Inter', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" letter-spacing="0.3">SI-generated</text>
+  </g>
+</svg>
