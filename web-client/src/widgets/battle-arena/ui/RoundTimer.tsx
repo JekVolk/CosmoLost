@@ -1,4 +1,5 @@
 import { useMatchStore } from '@/entities/game';
+import { playSfx } from '@/shared/lib';
 import { CountdownTimer } from '@/shared/ui';
 import { Box, HStack, Text } from '@chakra-ui/react';
 import { Clock } from 'lucide-react';
@@ -21,6 +22,12 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({ className }) => {
       clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    if (roundTimerSec <= 5 && roundTimerSec > 0) {
+      playSfx('timer_tick', 0.5);
+    }
+  }, [roundTimerSec]);
 
   const isLowTime = roundTimerSec <= 10 && roundTimerSec > 0;
 

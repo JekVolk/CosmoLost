@@ -11,11 +11,11 @@
       "description": "Production Server (Editor API)"
     },
     {
-      "url": "http://localhost:8000/api/v1/editor",
+      "url": "/api/v1/editor",
       "description": "Local Dev Server (Editor API)"
     },
     {
-      "url": "http://localhost:8000/api/desktop",
+      "url": "/api/desktop",
       "description": "Local Dev Server (Desktop Compatibility Alias)"
     }
   ],

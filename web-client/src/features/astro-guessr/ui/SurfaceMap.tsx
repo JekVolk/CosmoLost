@@ -42,6 +42,9 @@ export const SurfaceMap: React.FC<SurfaceMapProps> = ({
   const pinTop = pin ? `${((90 - pin.lat) / 180) * 100}%` : '50%';
 
   const isMars = planet.toUpperCase().includes('MARS');
+  const effectiveMapUrl =
+    mapUrl ||
+    (isMars ? '/assets/3d/planets/mars_diffuse_2k.jpg' : '/assets/3d/planets/moon_diffuse_2k.jpg');
 
   return (
     <Box
@@ -61,9 +64,9 @@ export const SurfaceMap: React.FC<SurfaceMapProps> = ({
       aria-label="2D інтерактивна карта поверхні"
     >
       {/* Real NASA Map Image or Graceful Fallback Grid */}
-      {mapUrl && !imageError ? (
+      {effectiveMapUrl && !imageError ? (
         <img
-          src={mapUrl}
+          src={effectiveMapUrl}
           alt={`${planet} Surface Map`}
           onError={() => setImageError(true)}
           style={{

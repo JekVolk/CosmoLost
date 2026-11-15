@@ -4,6 +4,7 @@ import { PLANETS } from '../entities/planet/model/planetData';
 import type { PlanetConfig, PlanetId, SpaceArtifact } from '../entities/planet/model/types';
 import { AstroGuessrGame } from '../features/astro-guessr-360';
 import { ViewControls } from '../features/view-controls/ui/ViewControls';
+import { ArenaPage } from '../pages/arena';
 import {
   apiArtifactDetailToSpaceArtifact,
   apiArtifactSummaryToSpaceArtifact,
@@ -12,7 +13,6 @@ import {
 import { AboutModal } from '../widgets/about/ui/AboutModal';
 import { CatalogPage } from '../widgets/catalog/ui/CatalogPage';
 import { CommunityVideosPage } from '../widgets/community/ui/CommunityVideosPage';
-import { ArenaPage } from '../pages/arena';
 import { DossierPage } from '../widgets/dossier/ui/DossierPage';
 import { type AppView, Header } from '../widgets/header/ui/Header';
 import { PlanetTelemetry } from '../widgets/planet-telemetry/ui/PlanetTelemetry';
@@ -284,10 +284,7 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        <AboutModal
-          isOpen={isAboutOpen}
-          onClose={() => setIsAboutOpen(false)}
-        />
+        <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
       </div>
     </AppProviders>
   );

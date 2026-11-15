@@ -1,3 +1,4 @@
+import { API_URL } from '@/shared/config/env';
 import { MARS_ARTIFACTS } from '../../entities/planet/model/artifactsMars';
 import { MOON_ARTIFACTS } from '../../entities/planet/model/artifactsMoon';
 import type {
@@ -22,13 +23,7 @@ import type {
   TraverseWaypoint,
 } from './types';
 
-export const API_BASE_URL =
-  (import.meta as any).env?.VITE_API_URL ||
-  (typeof window !== 'undefined'
-    ? window.location.port === '5173' || window.location.port === '3000'
-      ? 'http://localhost:8000/api/v1/portal'
-      : '/api/v1/portal'
-    : 'https://cosmolost.lihtar.org/api/v1/portal');
+export const API_BASE_URL = `${API_URL.replace(/\/+$/, '')}/api/v1/portal`;
 
 const COMMUNITY_STORAGE_KEY = 'cosmolost_community_publications_v1';
 
