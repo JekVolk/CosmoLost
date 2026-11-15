@@ -1,8 +1,8 @@
 import React from 'react';
 import type { PlanetId } from '../../../entities/planet/model/types';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Gamepad2 } from 'lucide-react';
 
-export type AppView = 'map' | 'catalog' | 'community';
+export type AppView = 'map' | 'catalog' | 'community' | 'astro-guessr';
 
 interface HeaderProps {
   currentPlanetId: PlanetId;
@@ -64,6 +64,21 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onSelectView('community')}
         >
           Community Videos
+        </button>
+        <button
+          type="button"
+          className={`cosmo-nav-link ${currentView === 'astro-guessr' ? 'active' : ''}`}
+          style={{
+            '--link-accent': themeAccent,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            color: currentView === 'astro-guessr' ? themeAccent : undefined,
+          } as React.CSSProperties}
+          onClick={() => onSelectView('astro-guessr')}
+        >
+          <Gamepad2 size={13} />
+          <span>AstroGuessr 360°</span>
         </button>
         <button
           type="button"

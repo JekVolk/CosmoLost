@@ -90,6 +90,7 @@ export interface SpaceArtifact {
   nasaPiaId?: string;
   badgeColor?: string;
   model3dName?: string;
+  model3dUrl?: string;
 }
 
 export interface PlanetTelemetry {
