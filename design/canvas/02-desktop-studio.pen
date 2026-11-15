@@ -5014,7 +5014,7 @@
                           "id": "UT1do",
                           "name": "P3 Title",
                           "fill": "#38BDF8",
-                          "content": "Відкрити папку для TikTok",
+                          "content": "Open Folder for TikTok",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -5354,7 +5354,7 @@
                       "id": "KN6Ze",
                       "name": "Close Label",
                       "fill": "#94A3B8",
-                      "content": "Закрити",
+                      "content": "Close",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -5385,7 +5385,7 @@
                           "id": "msWIu",
                           "name": "Folder Label",
                           "fill": "#38BDF8",
-                          "content": "Відкрити папку",
+                          "content": "Open Folder",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -5408,7 +5408,7 @@
                           "id": "xh1uZ",
                           "name": "Pkg Label",
                           "fill": "#0F172A",
-                          "content": "Копіювати SEO-пакет",
+                          "content": "Copy SEO Package",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -5449,7 +5449,7 @@
               "id": "L5D2B",
               "name": "Toast Message",
               "fill": "#F8FAFC",
-              "content": "«Папку відкрито, SEO-пакет у буфері обміну!»",
+              "content": "\"Folder opened, SEO package copied to clipboard!\"",
               "fontFamily": "Inter",
               "fontSize": 12,
               "fontWeight": "600"
@@ -13670,7 +13670,7 @@
                           "id": "KmJq2",
                           "name": "P3 Title",
                           "fill": "#0F172A",
-                          "content": "Відкрити папку для TikTok",
+                          "content": "Open Folder for TikTok",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -14010,7 +14010,7 @@
                       "id": "BAalB",
                       "name": "Close Label",
                       "fill": "#64748B",
-                      "content": "Закрити",
+                      "content": "Close",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -14041,7 +14041,7 @@
                           "id": "B0t6w",
                           "name": "Folder Label",
                           "fill": "$lunar-primary",
-                          "content": "Відкрити папку",
+                          "content": "Open Folder",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -14064,7 +14064,7 @@
                           "id": "FXwi8",
                           "name": "Pkg Label",
                           "fill": "#0F172A",
-                          "content": "Копіювати SEO-пакет",
+                          "content": "Copy SEO Package",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -14105,7 +14105,7 @@
               "id": "a1qMOJ",
               "name": "Toast Message",
               "fill": "#0F172A",
-              "content": "«Папку відкрито, SEO-пакет у буфері обміну!»",
+              "content": "\"Folder opened, SEO package copied to clipboard!\"",
               "fontFamily": "Inter",
               "fontSize": 12,
               "fontWeight": "500"
@@ -18193,7 +18193,8 @@
                           "fill": "#94A3B8",
                           "content": "0.674° N, 23.473° E",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -18202,7 +18203,8 @@
                           "fill": "#38BDF8",
                           "content": "NSSDCA: 1969-059C",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -18346,7 +18348,8 @@
                           "width": "fill_container",
                           "content": "\"Fifty-five years ago, humanity left me in the Sea of Tranquility. Now the lunar dust is whispering again...\"",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -18388,7 +18391,8 @@
                           "fill": "#94A3B8",
                           "content": "Format: Karaoke Word Timings",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -18397,7 +18401,8 @@
                           "fill": "#10B981",
                           "content": "Fact-check: 100% NASA verified",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -18685,7 +18690,8 @@
                           "fill": "#A5B4FC",
                           "content": "Viseme Sync: 312 phonemes matched",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -18694,7 +18700,8 @@
                           "fill": "#818CF8",
                           "content": "Rendering: 00:32 / 00:48.8",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -18905,7 +18912,8 @@
                           "fill": "#94A3B8",
                           "content": "Safe Zones: 9:16 Vertical Strict",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -18914,7 +18922,8 @@
                           "fill": "#F97316",
                           "content": "Vocal Gate: -22 dB RMS",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -19074,7 +19083,8 @@
                           "fill": "#94A3B8",
                           "content": "• YouTube Shorts (4K 60fps)\n• TikTok (Native Folder)\n• Telegram Channel",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -19116,7 +19126,8 @@
                           "fill": "#94A3B8",
                           "content": "Resolution: 1080×1920 (9:16)",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -19125,7 +19136,8 @@
                           "fill": "#EAB308",
                           "content": "Estimated Size: ~42 MB",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -20632,7 +20644,8 @@
                   "fill": "#94A3B8",
                   "content": "Five domain nodes demonstrated across the five complete execution states: Default, Selected, Running, Completed, and Error.",
                   "fontFamily": "Inter",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -20896,7 +20909,8 @@
                   "width": "fill_container",
                   "content": "Queries planetary databases for 3D GLB meshes, coordinates, landing telemetry, and NASA historical photographs.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -21091,7 +21105,8 @@
                       "fill": "#CBD5E1",
                       "content": "• payload.glb_url: \"/assets/apollo_11.glb\"\n• payload.coords: { lat: 0.6740, lon: 23.4731 }\n• payload.photos: 6 archive images (NASA)\n• payload.nssdca_id: \"1969-059C\"",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21260,7 +21275,8 @@
                   "width": "fill_container",
                   "content": "Generates narrative script and millisecond karaoke captions synchronized with scientific facts and artifact heritage.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -21460,7 +21476,8 @@
                       "width": "fill_container",
                       "content": "\"Speak from the first-person view of the Apollo 11 Lunar Module Eagle. Highlight the 55 years of cold solitude on Mare Tranquillitatis...\"",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -21656,7 +21673,8 @@
                   "width": "fill_container",
                   "content": "Synthesizes emotive narration with Cosmo's signature space acoustic warmth and extracts precise phoneme/viseme timing maps.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -21856,7 +21874,8 @@
                       "fill": "#CBD5E1",
                       "content": "• Packet #142: [T] -> viseme_teeth (00:32.100)\n• Packet #143: [RAH] -> viseme_open_wide (00:32.250)\n• Packet #144: [NG] -> viseme_closed (00:32.400)",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -22054,7 +22073,8 @@
                   "width": "fill_container",
                   "content": "Composes 8-sprite avatar reactions, audio amplitude mouth switching, safe zone boundaries, and GLB render overlays.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -22200,7 +22220,8 @@
                       "fill": "#34D399",
                       "content": "sha256:7f3a9e88b201fca3401c... [Cached]",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -22386,7 +22407,8 @@
                   "width": "fill_container",
                   "content": "Encodes multi-track video stream and packages SEO descriptions, pin comments, and platform-specific assets.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -22421,7 +22443,8 @@
                       "width": "fill_container",
                       "content": "CodecTimeout: NVENC hardware encoder failed to initialize 60fps session on GPU-0. VRAM pressure exceeded 95%.",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -22638,7 +22661,8 @@
                   "width": "fill_container",
                   "content": "React Flow custom handles enforce typed payload validation at runtime. Incompatible node connections are visually prevented with snap rejection.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -22675,7 +22699,8 @@
                           "fill": "#CBD5E1",
                           "content": "{ glb_url: string, coords: GeoPoint, photos: Photo[] }",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -22703,7 +22728,8 @@
                           "fill": "#CBD5E1",
                           "content": "{ text: string, words: number, karaoke: TimedWord[] }",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -22731,7 +22757,8 @@
                           "fill": "#CBD5E1",
                           "content": "{ wav_buffer: ArrayBuffer, visemes: VisemeEvent[] }",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -22759,7 +22786,8 @@
                           "fill": "#CBD5E1",
                           "content": "{ video_stream: MediaStream, safe_zones: Rect916 }",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -22844,7 +22872,8 @@
                   "width": "fill_container",
                   "content": "Each node acts as an autonomous worker thread with isolated memory boundaries. Failures gracefully halt downstream nodes without crashing the Studio host.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -22889,7 +22918,8 @@
                           "fill": "#64748B",
                           "content": "Awaiting Input",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -22934,7 +22964,8 @@
                           "fill": "#818CF8",
                           "content": "IPC Async Stream",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -22979,7 +23010,8 @@
                           "fill": "#22C55E",
                           "content": "Cached Artifact",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -23024,7 +23056,8 @@
                           "fill": "#EF4444",
                           "content": "Auto Retry/Bypass",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -23109,7 +23142,8 @@
                   "width": "fill_container",
                   "content": "Node surfaces leverage 3 distinct visual depth layers: Canvas Ground (#070B14), Raised Node Chassis (#0F172A), and Sunk Parameter Wells (#16243B).",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -23129,7 +23163,8 @@
                       "fill": "#CBD5E1",
                       "content": "• Tactile Stroke: 1.5px solid boundary with accent tint per domain role",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -23138,7 +23173,8 @@
                       "fill": "#CBD5E1",
                       "content": "• Elevation Drop: Crisp 1px drop shadow + 2px focus ring on selected state",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -23147,7 +23183,8 @@
                       "fill": "#CBD5E1",
                       "content": "• Micro-Interactions: 150ms press feedback scale(0.98) on action buttons",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -23156,7 +23193,8 @@
                       "fill": "#FB923C",
                       "content": "• High Contrast: Contrast ratio > 7:1 for all primary labels and telemetry",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -23266,7 +23304,8 @@
                   "fill": "#94A3B8",
                   "content": "Designed with distinctive silhouettes, reflective visors, detailed suits, and Moon/Mars inspired palettes for social-media video production.",
                   "fontFamily": "Inter",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -23746,7 +23785,8 @@
                       "width": "fill_container",
                       "content": "The Inquisitive Lunar Explorer. Oversized bubble helmet, sparkling expressive eyes, soft marshmallow pressurized suit, and friendly approachable charisma.",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -23909,7 +23949,8 @@
                           "fill": "#94A3B8",
                           "content": "#38BDF8 • #0C2A45 • #F8FAFC",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -24279,7 +24320,8 @@
                       "width": "fill_container",
                       "content": "The Veteran Mission Commander. Geometric aerodynamic helmet, Martian gold reflective visor with illuminated HUD telemetry, tactical carbon exo-suit.",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -24442,7 +24484,8 @@
                           "fill": "#94A3B8",
                           "content": "#F97316 • #EA580C • #FFEDD5",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -24806,7 +24849,8 @@
                       "width": "fill_container",
                       "content": "The Autonomous AI Science Companion. Emotive digital LED gaze faceplate, floating magnetic collar, titanium chassis, and holographic telemetry projector.",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -24969,7 +25013,8 @@
                           "fill": "#94A3B8",
                           "content": "#818CF8 • #6366F1 • #312E81",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -25138,30 +25183,6 @@
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "jXg4K",
-                          "x": 106,
-                          "y": 72,
-                          "name": "Anime Eye Right Wink",
-                          "width": 24,
-                          "height": 10,
-                          "layout": "none",
-                          "children": [
-                            {
-                              "type": "path",
-                              "id": "o2tJml",
-                              "x": 0,
-                              "y": 0,
-                              "name": "Wink Line",
-                              "geometry": "M0 5q12 7 24 0",
-                              "width": 0,
-                              "height": 0,
-                              "stroke": "#F8FAFC",
-                              "strokeWidth": 2.5
-                            }
-                          ]
-                        },
-                        {
                           "type": "path",
                           "id": "bXiAq",
                           "x": 66,
@@ -25172,6 +25193,40 @@
                           "height": 12,
                           "stroke": "#F8FAFC",
                           "strokeWidth": 2.5
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YGWlj",
+                          "x": 106,
+                          "y": 65,
+                          "name": "Anime Eye Right",
+                          "width": 22,
+                          "height": 26,
+                          "fill": "#F8FAFC",
+                          "cornerRadius": 8,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "PMhYA",
+                              "x": 4,
+                              "y": 4,
+                              "name": "Iris",
+                              "fill": "#0D9488",
+                              "width": 14,
+                              "height": 16
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "HPj87",
+                              "x": 6,
+                              "y": 6,
+                              "name": "Sparkle",
+                              "fill": "#FFFFFF",
+                              "width": 5,
+                              "height": 5
+                            }
+                          ]
                         }
                       ]
                     },
@@ -25350,9 +25405,10 @@
                       "fill": "#94A3B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "The High-Energy Pilot Storyteller. Transparent retro bubble helmet with brass lock clamps, pilot boom headset, charismatic wink, and patched flight jacket.",
+                      "content": "The High-Energy Pilot Storyteller. Transparent retro bubble helmet with brass lock clamps, pilot boom headset, charismatic smile, and patched flight jacket.",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -25515,7 +25571,8 @@
                           "fill": "#94A3B8",
                           "content": "#14B8A6 • #2DD4BF • #F97316",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -25617,7 +25674,8 @@
                   "fill": "#94A3B8",
                   "content": "Four distinct expressions (Idle, Expert, Shock, Hype) with calibrated closed-mouth and open-mouth speaking phases.",
                   "fontFamily": "Inter",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -26209,7 +26267,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_idle_closed.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -26464,7 +26523,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_expert_closed.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -26714,7 +26774,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_shock_closed.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -26970,7 +27031,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_hype_closed.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -27230,7 +27292,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_idle_open.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -27499,7 +27562,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_expert_open.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -27749,7 +27813,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_shock_open.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -28004,7 +28069,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_hype_open.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -28973,7 +29039,8 @@
                           "fill": "#64748B",
                           "content": "0.674° N, 23.473° E",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -29127,7 +29194,8 @@
                           "width": "fill_container",
                           "content": "\"Fifty-five years ago, humanity left me in the Sea of Tranquility. Now the lunar dust is whispering again...\"",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -29169,7 +29237,8 @@
                           "fill": "#64748B",
                           "content": "Format: Karaoke Word Timings",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -29467,7 +29536,8 @@
                           "fill": "#4338CA",
                           "content": "Viseme Sync: 312 phonemes matched",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -29688,7 +29758,8 @@
                           "fill": "#64748B",
                           "content": "Safe Zones: 9:16 Vertical Strict",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -29858,7 +29929,8 @@
                           "fill": "#64748B",
                           "content": "• YouTube Shorts (4K 60fps)\n• TikTok (Native Folder)\n• Telegram Channel",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -29900,7 +29972,8 @@
                           "fill": "#64748B",
                           "content": "Resolution: 1080×1920 (9:16)",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -31311,7 +31384,8 @@
                   "fill": "#475569",
                   "content": "Five domain nodes demonstrated across execution lifecycle states with crisp tactile elevation and high-contrast typography.",
                   "fontFamily": "Inter",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -31575,7 +31649,8 @@
                   "width": "fill_container",
                   "content": "Queries planetary databases for 3D GLB meshes, coordinates, landing telemetry, and NASA historical photographs.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -31772,7 +31847,8 @@
                       "fill": "#1E293B",
                       "content": "• payload.glb_url: \"/assets/apollo_11.glb\"\n• payload.coords: { lat: 0.6740, lon: 23.4731 }\n• payload.photos: 6 archive images (NASA)\n• payload.nssdca_id: \"1969-059C\"",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -31941,7 +32017,8 @@
                   "width": "fill_container",
                   "content": "Generates narrative script and millisecond karaoke captions synchronized with scientific facts and artifact heritage.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -32145,7 +32222,8 @@
                       "width": "fill_container",
                       "content": "\"Speak from the first-person view of the Apollo 11 Lunar Module Eagle. Highlight the 55 years of cold solitude on Mare Tranquillitatis...\"",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -32341,7 +32419,8 @@
                   "width": "fill_container",
                   "content": "Synthesizes emotive narration with Cosmo's signature space acoustic warmth and extracts precise phoneme/viseme timing maps.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -32541,7 +32620,8 @@
                       "fill": "#1E293B",
                       "content": "• Packet #142: [T] -> viseme_teeth (00:32.100)\n• Packet #143: [RAH] -> viseme_open_wide (00:32.250)\n• Packet #144: [NG] -> viseme_closed (00:32.400)",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -32739,7 +32819,8 @@
                   "width": "fill_container",
                   "content": "Composes 8-sprite avatar reactions, audio amplitude mouth switching, safe zone boundaries, and GLB render overlays.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -33072,7 +33153,8 @@
                   "width": "fill_container",
                   "content": "Encodes multi-track video stream and packages SEO descriptions, pin comments, and platform-specific assets.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -33107,7 +33189,8 @@
                       "width": "fill_container",
                       "content": "CodecTimeout: NVENC hardware encoder failed to initialize 60fps session on GPU-0. VRAM pressure exceeded 95%.",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -33322,7 +33405,8 @@
                   "width": "fill_container",
                   "content": "React Flow custom handles enforce typed payload validation at runtime. Incompatible node connections are visually prevented with snap rejection.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -33361,7 +33445,8 @@
                           "fill": "#334155",
                           "content": "{ glb_url: string, coords: GeoPoint, photos: Photo[] }",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -33389,7 +33474,8 @@
                           "fill": "#334155",
                           "content": "{ text: string, words: number, karaoke: TimedWord[] }",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -33417,7 +33503,8 @@
                           "fill": "#334155",
                           "content": "{ wav_buffer: ArrayBuffer, visemes: VisemeEvent[] }",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -33445,7 +33532,8 @@
                           "fill": "#334155",
                           "content": "{ video_stream: MediaStream, safe_zones: Rect916 }",
                           "fontFamily": "Inter",
-                          "fontSize": 10
+                          "fontSize": 10,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -33530,7 +33618,8 @@
                   "width": "fill_container",
                   "content": "Each node acts as an autonomous worker thread with isolated memory boundaries. Failures gracefully halt downstream nodes without crashing the Studio host.",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -33579,7 +33668,8 @@
                           "fill": "#64748B",
                           "content": "Awaiting Input",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -33626,7 +33716,8 @@
                           "fill": "#6366F1",
                           "content": "IPC Async Stream",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -33673,7 +33764,8 @@
                           "fill": "#16A34A",
                           "content": "Cached Artifact",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -33720,7 +33812,8 @@
                           "fill": "#DC2626",
                           "content": "Auto Retry/Bypass",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -33805,7 +33898,8 @@
                   "width": "fill_container",
                   "content": "Light surfaces leverage 3 distinct tactile layers: Soft Ground (#F8FAFC), Raised White Chassis (#FFFFFF with 1px border), and Sunk Parameter Wells (#F8FAFC).",
                   "fontFamily": "Inter",
-                  "fontSize": 11
+                  "fontSize": 11,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -33827,7 +33921,8 @@
                       "fill": "#334155",
                       "content": "• Tactile Stroke: 1.5px solid border with accent tint per domain role",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -33836,7 +33931,8 @@
                       "fill": "#334155",
                       "content": "• Elevation Drop: Crisp 1px drop shadow + 2px focus ring on selected state",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -33845,7 +33941,8 @@
                       "fill": "#334155",
                       "content": "• Micro-Interactions: 150ms press feedback scale(0.98) on action buttons",
                       "fontFamily": "Inter",
-                      "fontSize": 10
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -33965,7 +34062,8 @@
                   "fill": "#475569",
                   "content": "High-fidelity vector character art calibrated for bright light-mode streaming overlays, thumbnails, and clean branding.",
                   "fontFamily": "Inter",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -34435,7 +34533,8 @@
                       "width": "fill_container",
                       "content": "The Inquisitive Lunar Explorer. Oversized bubble helmet, sparkling expressive eyes, soft marshmallow pressurized suit, and friendly approachable charisma.",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -34602,7 +34701,8 @@
                           "fill": "#64748B",
                           "content": "#0284C7 • #0C2A45 • #FFFFFF",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -34962,7 +35062,8 @@
                       "width": "fill_container",
                       "content": "The Veteran Mission Commander. Geometric aerodynamic helmet, Martian gold reflective visor with illuminated HUD telemetry, tactical carbon exo-suit.",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -35127,7 +35228,8 @@
                           "fill": "#64748B",
                           "content": "#EA580C • #F97316 • #334155",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -35491,7 +35593,8 @@
                       "width": "fill_container",
                       "content": "The Autonomous AI Science Companion. Emotive digital LED gaze faceplate, floating magnetic collar, titanium chassis, and holographic telemetry projector.",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -35658,7 +35761,8 @@
                           "fill": "#64748B",
                           "content": "#4338CA • #6366F1 • #0284C7",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -35784,7 +35888,7 @@
                           "name": "Pilot Hair Silhouette",
                           "width": 120,
                           "height": 50,
-                          "fill": "#115E59",
+                          "fill": "#57d4cbff",
                           "cornerRadius": [
                             20,
                             20,
@@ -35827,30 +35931,6 @@
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "RVu6R",
-                          "x": 106,
-                          "y": 72,
-                          "name": "Anime Eye Right Wink",
-                          "width": 24,
-                          "height": 10,
-                          "layout": "none",
-                          "children": [
-                            {
-                              "type": "path",
-                              "id": "k0PyWt",
-                              "x": 0,
-                              "y": 0,
-                              "name": "Wink Line",
-                              "geometry": "M0 5q12 7 24 0",
-                              "width": 0,
-                              "height": 0,
-                              "stroke": "#0F172A",
-                              "strokeWidth": 2.5
-                            }
-                          ]
-                        },
-                        {
                           "type": "path",
                           "id": "z0SoP",
                           "x": 66,
@@ -35861,6 +35941,40 @@
                           "height": 12,
                           "stroke": "#0F172A",
                           "strokeWidth": 2.5
+                        },
+                        {
+                          "type": "frame",
+                          "id": "KXAk9",
+                          "x": 106,
+                          "y": 65,
+                          "name": "Anime Eye Right",
+                          "width": 22,
+                          "height": 26,
+                          "fill": "#F8FAFC",
+                          "cornerRadius": 8,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "q9ANgk",
+                              "x": 4,
+                              "y": 4,
+                              "name": "Iris",
+                              "fill": "#0D9488",
+                              "width": 14,
+                              "height": 16
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "B7ps5",
+                              "x": 6,
+                              "y": 6,
+                              "name": "Sparkle",
+                              "fill": "#FFFFFF",
+                              "width": 5,
+                              "height": 5
+                            }
+                          ]
                         }
                       ]
                     },
@@ -36039,9 +36153,10 @@
                       "fill": "#475569",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "The High-Energy Pilot Storyteller. Transparent retro bubble helmet with brass lock clamps, pilot boom headset, charismatic wink, and patched flight jacket.",
+                      "content": "The High-Energy Pilot Storyteller. Transparent retro bubble helmet with brass lock clamps, pilot boom headset, charismatic smile, and patched flight jacket.",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -36206,7 +36321,8 @@
                           "fill": "#64748B",
                           "content": "#0D9488 • #2DD4BF • #EA580C",
                           "fontFamily": "Inter",
-                          "fontSize": 9
+                          "fontSize": 9,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -36308,7 +36424,8 @@
                   "fill": "#475569",
                   "content": "Four distinct expressions (Idle, Expert, Shock, Hype) with calibrated closed-mouth and open-mouth speaking phases.",
                   "fontFamily": "Inter",
-                  "fontSize": 12
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -36900,7 +37017,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_idle_closed.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -37155,7 +37273,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_expert_closed.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -37405,7 +37524,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_shock_closed.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -37661,7 +37781,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_hype_closed.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -37921,7 +38042,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_idle_open.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -38190,7 +38312,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_expert_open.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -38440,7 +38563,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_shock_open.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -38695,7 +38819,8 @@
                       "fill": "#64748B",
                       "content": "File: cosmo_hype_open.png • 512×512 Alpha",
                       "fontFamily": "Inter",
-                      "fontSize": 9
+                      "fontSize": 9,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
