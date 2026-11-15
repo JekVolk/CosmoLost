@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "web-client",
   "private": true,
   "version": "0.1.0",
@@ -13,7 +13,7 @@
     "check": "biome check --write src"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.8.3",
+    "@chakra-ui/react": "^3.38.0",
     "@emotion/react": "^11.14.0",
     "@tanstack/react-query": "^5.66.0",
     "lucide-react": "^0.475.0",
