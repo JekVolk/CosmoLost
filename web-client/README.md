@@ -1,32 +1,42 @@
-# React + TypeScript + Vite
+﻿# CosmoLost — Web Client (FSD v2.1)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Веб-клієнт космічної дедуктивної платформи **CosmoLost** на базі React 19, Chakra UI v3, Three.js, Zustand та TanStack Query.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🏗️ Архітектура: Feature-Sliced Design (FSD v2.1)
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+web-client/src/
+├── app/                  # Ініціалізація, провайдери (Chakra, Query), роутер
+├── pages/                # Сторінки (Home, Arena, Profile, Leaderboards)
+├── widgets/              # Великі UI блоки (PlanetViewer, BattleArena, CuratorShowcase, PlanetaryTerrarium)
+├── features/             # Сценарії користувача (Auth, Matchmaking, AstroGuessr, ForensicSol...)
+├── entities/             # Бізнес-сутності (User, Container, Game, Inventory, Planet)
+└── shared/               # Спільні утиліти, UI-кіт, HTTP та WS клієнти
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## 🛠️ Технічний стек
+
+* **Фреймворк**: React 19
+* **Збірка**: Vite 6 + TypeScript 5.7
+* **Стилізація**: Chakra UI v3 (@chakra-ui/react + @emotion/react)
+* **State Management**: Zustand
+* **Серверні дані**: TanStack Query v5
+* **Real-Time зв'язок**: WebSocket (Zero-Knowledge протокол)
+* **3D візуалізація**: Three.js (карти Місяця та Марса + моделі артефактів)
+* **Лінтер & Форматер**: Biome
+
+---
+
+## 🚀 Команди розробника
+
+```bash
+pnpm install
+pnpm dev
+pnpm typecheck
+pnpm check
+pnpm build
+```

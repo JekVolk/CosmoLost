@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import type { PlanetId, SpaceArtifact } from '../entities/planet/model/types';
 import { PLANETS } from '../entities/planet/model/planetData';
 import { Header, type AppView } from '../widgets/header/ui/Header';
@@ -9,6 +9,8 @@ import { DossierPage } from '../widgets/dossier/ui/DossierPage';
 import { CatalogPage } from '../widgets/catalog/ui/CatalogPage';
 import { CommunityVideosPage } from '../widgets/community/ui/CommunityVideosPage';
 import { AboutModal } from '../widgets/about/ui/AboutModal';
+import { ArenaPage } from '../pages/arena';
+import { AppProviders } from './providers';
 import './styles/global.css';
 
 export const App: React.FC = () => {
@@ -80,14 +82,16 @@ export const App: React.FC = () => {
   if (standaloneDossier) {
     const pConfig = PLANETS[standaloneDossier.planetId];
     return (
-      <DossierPage
-        artifact={standaloneDossier.artifact}
-        planet={pConfig}
-        onBackToMap={() => {
-          window.history.pushState({}, '', window.location.pathname);
-          setStandaloneDossier(null);
-        }}
-      />
+      <AppProviders>
+        <DossierPage
+          artifact={standaloneDossier.artifact}
+          planet={pConfig}
+          onBackToMap={() => {
+            window.history.pushState({}, '', window.location.pathname);
+            setStandaloneDossier(null);
+          }}
+        />
+      </AppProviders>
     );
   }
 
@@ -95,77 +99,85 @@ export const App: React.FC = () => {
   const themeAccent = isMars ? '#f97316' : '#00F0FF';
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      <Header
-        currentPlanetId={currentPlanetId}
-        onSelectPlanet={(id) => {
-          setCurrentPlanetId(id);
-          setActiveArtifact(null);
-        }}
-        artifactCount={currentPlanet.artifacts.length}
-        currentView={currentView}
-        onSelectView={(view) => {
-          setCurrentView(view);
-          if (view !== 'map') {
+    <AppProviders>
+      <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+        <Header
+          currentPlanetId={currentPlanetId}
+          onSelectPlanet={(id) => {
+            setCurrentPlanetId(id);
             setActiveArtifact(null);
-          }
-        }}
-        onOpenAbout={() => setIsAboutOpen(true)}
-      />
+          }}
+          artifactCount={currentPlanet?.artifacts?.length || 0}
+          currentView={currentView}
+          onSelectView={(view) => {
+            setCurrentView(view);
+            if (view !== 'map') {
+              setActiveArtifact(null);
+            }
+          }}
+          onOpenAbout={() => setIsAboutOpen(true)}
+        />
 
-      {currentView === 'map' && (
-        <>
-          <PlanetViewer
-            planet={currentPlanet}
-            onOpenDossier={(art) => handleOpenDossier(art, currentPlanetId)}
-            isAutoRotating={isAutoRotating}
-            showMarkers={showMarkers}
-            selectedArtifact={activeArtifact}
-            onSelectArtifact={setActiveArtifact}
-            filteredArtifactIds={filteredArtifactIds}
-            onRegisterSceneActions={(actions) => {
-              sceneActionsRef.current = actions;
+        {currentView === 'map' && currentPlanet && (
+          <>
+            <PlanetViewer
+              planet={currentPlanet}
+              onOpenDossier={(art) => handleOpenDossier(art, currentPlanetId)}
+              isAutoRotating={isAutoRotating}
+              showMarkers={showMarkers}
+              selectedArtifact={activeArtifact}
+              onSelectArtifact={setActiveArtifact}
+              filteredArtifactIds={filteredArtifactIds}
+              onRegisterSceneActions={(actions) => {
+                sceneActionsRef.current = actions;
+              }}
+            />
+
+            <PlanetTelemetry
+              planet={currentPlanet}
+              onSelectArtifact={handleSelectArtifactFromList}
+              activeArtifactId={activeArtifact?.id}
+              onFilteredIdsChange={setFilteredArtifactIds}
+            />
+
+            <ViewControls
+              isAutoRotating={isAutoRotating}
+              onToggleAutoRotate={handleToggleAutoRotate}
+              onResetView={handleResetView}
+              showMarkers={showMarkers}
+              onToggleMarkers={() => setShowMarkers((prev) => !prev)}
+              planetColor={themeAccent}
+            />
+          </>
+        )}
+
+        {currentView === 'catalog' && (
+          <CatalogPage
+            onOpenDossier={(art, pId) => handleOpenDossier(art, pId)}
+            onBackToMap={() => setCurrentView('map')}
+          />
+        )}
+
+        {currentView === 'community' && (
+          <CommunityVideosPage
+            onOpenArtifact={(art, pId) => {
+              setCurrentPlanetId(pId);
+              handleOpenDossier(art, pId);
             }}
           />
+        )}
 
-          <PlanetTelemetry
-            planet={currentPlanet}
-            onSelectArtifact={handleSelectArtifactFromList}
-            activeArtifactId={activeArtifact?.id}
-            onFilteredIdsChange={setFilteredArtifactIds}
-          />
+        {currentView === ('arena' as AppView) && (
+          <div style={{ padding: '80px 20px 20px', height: '100vh', overflowY: 'auto' }}>
+            <ArenaPage />
+          </div>
+        )}
 
-          <ViewControls
-            isAutoRotating={isAutoRotating}
-            onToggleAutoRotate={handleToggleAutoRotate}
-            onResetView={handleResetView}
-            showMarkers={showMarkers}
-            onToggleMarkers={() => setShowMarkers((prev) => !prev)}
-            planetColor={themeAccent}
-          />
-        </>
-      )}
-
-      {currentView === 'catalog' && (
-        <CatalogPage
-          onOpenDossier={(art, pId) => handleOpenDossier(art, pId)}
-          onBackToMap={() => setCurrentView('map')}
+        <AboutModal
+          isOpen={isAboutOpen}
+          onClose={() => setIsAboutOpen(false)}
         />
-      )}
-
-      {currentView === 'community' && (
-        <CommunityVideosPage
-          onOpenArtifact={(art, pId) => {
-            setCurrentPlanetId(pId);
-            handleOpenDossier(art, pId);
-          }}
-        />
-      )}
-
-      <AboutModal
-        isOpen={isAboutOpen}
-        onClose={() => setIsAboutOpen(false)}
-      />
-    </div>
+      </div>
+    </AppProviders>
   );
 };
