@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import type { PlatformType, CommunityPublication } from '../../../shared/api/types';
 import { portalApi } from '../../../shared/api/portalApi';
-import { Video, PlusCircle, ExternalLink, CheckCircle, Sparkles, X } from 'lucide-react';
+import { validateVideoUrl } from '../../../shared/lib/videoUrl';
+import { Video, PlusCircle, ExternalLink, CheckCircle, Sparkles, X, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 interface CommunityPublicationsSectionProps {
   artifactId: string;
@@ -19,6 +20,7 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
+  const [urlValidationError, setUrlValidationError] = useState<string | null>(null);
 
   const [formTitle, setFormTitle] = useState('');
   const [formVideoUrl, setFormVideoUrl] = useState('');
@@ -40,18 +42,40 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
     loadPublications();
   }, [artifactId]);
 
+  const handleVideoUrlChange = (newUrl: string) => {
+    setFormVideoUrl(newUrl);
+    if (newUrl.trim()) {
+      const val = validateVideoUrl(newUrl);
+      if (val.isValid && val.platform) {
+        setFormPlatform(val.platform);
+        setUrlValidationError(null);
+      } else if (!val.isValid) {
+        setUrlValidationError(val.error || 'Invalid video link');
+      }
+    } else {
+      setUrlValidationError(null);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formTitle.trim() || !formVideoUrl.trim() || !formAuthor.trim()) return;
 
+    const validation = validateVideoUrl(formVideoUrl);
+    if (!validation.isValid) {
+      setUrlValidationError(validation.error || 'Accepted platforms: YouTube, Instagram, TikTok, Vimeo, NASA Media.');
+      return;
+    }
+
     setIsSubmitting(true);
+    setUrlValidationError(null);
     try {
       const res = await portalApi.submitCommunityPublication({
         mission_id: artifactId,
         artifact_id: artifactId,
         title: formTitle.trim(),
-        video_url: formVideoUrl.trim(),
-        platform_type: formPlatform,
+        video_url: validation.cleanUrl || formVideoUrl.trim(),
+        platform_type: validation.platform || formPlatform,
         source_references: formSources.trim() || 'NASA Public Archive',
         author_name: formAuthor.trim(),
       });
@@ -61,6 +85,7 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
       setFormVideoUrl('');
       setFormAuthor('');
       setFormSources('');
+      setUrlValidationError(null);
       await loadPublications();
 
       setTimeout(() => {
@@ -299,26 +324,40 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
 
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', marginBottom: '5px' }}>
-                      VIDEO URL *
-                    </label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                      <label style={{ margin: 0, fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)' }}>
+                        VIDEO URL *
+                      </label>
+                      <span style={{ fontSize: '10px', color: '#94a3b8' }}>YouTube, Instagram, TikTok</span>
+                    </div>
                     <input
                       type="url"
                       required
-                      placeholder="https://youtube.com/watch?v=..."
+                      placeholder="https://youtube.com/watch?v=... or tiktok / instagram reel"
                       value={formVideoUrl}
-                      onChange={(e) => setFormVideoUrl(e.target.value)}
+                      onChange={(e) => handleVideoUrlChange(e.target.value)}
                       style={{
                         width: '100%',
                         padding: '10px 14px',
                         borderRadius: '8px',
                         background: 'rgba(255, 255, 255, 0.04)',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        border: `1px solid ${urlValidationError ? '#ef4444' : formVideoUrl && !urlValidationError ? '#10b981' : 'rgba(255, 255, 255, 0.12)'}`,
                         color: '#fff',
                         fontSize: '13.5px',
                         boxSizing: 'border-box',
                       }}
                     />
+                    {urlValidationError ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px', color: '#f87171', fontSize: '10.5px' }}>
+                        <AlertTriangle size={11} />
+                        <span>{urlValidationError}</span>
+                      </div>
+                    ) : formVideoUrl.trim() ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px', color: '#34d399', fontSize: '10.5px' }}>
+                        <CheckCircle2 size={11} />
+                        <span>Valid {formPlatform} video source</span>
+                      </div>
+                    ) : null}
                   </div>
 
                   <div>

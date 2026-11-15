@@ -1078,6 +1078,60 @@ body:has(.dossier-page),
   50% { opacity: 0.4; transform: scale(0.85); }
 }
 
+@keyframes pulseBorderMars {
+  0%, 100% {
+    border-color: rgba(249, 115, 22, 0.6);
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.35);
+  }
+  50% {
+    border-color: #f97316;
+    box-shadow: 0 0 24px rgba(249, 115, 22, 0.75), inset 0 0 8px rgba(249, 115, 22, 0.25);
+  }
+}
+
+@keyframes pulseBorderMoon {
+  0%, 100% {
+    border-color: rgba(56, 189, 248, 0.6);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+  }
+  50% {
+    border-color: #38bdf8;
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.75), inset 0 0 8px rgba(56, 189, 248, 0.25);
+  }
+}
+
+.btn-open-360 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 9px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: rgba(11, 17, 31, 0.92);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(10px);
+}
+
+.btn-open-360.mars {
+  border: 1.5px solid rgba(249, 115, 22, 0.7);
+  animation: pulseBorderMars 2.2s infinite ease-in-out;
+}
+
+.btn-open-360.moon {
+  border: 1.5px solid rgba(56, 189, 248, 0.7);
+  animation: pulseBorderMoon 2.2s infinite ease-in-out;
+}
+
+.btn-open-360:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
 .cosmo-mcp-status {
   color: #22c55e;
   font-weight: 700;
