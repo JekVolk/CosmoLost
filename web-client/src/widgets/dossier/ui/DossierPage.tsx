@@ -3,6 +3,7 @@ import { portalApi } from '../../../shared/api/portalApi';
 import type { ArtifactDetail, TraverseWaypoint } from '../../../shared/api/types';
 import type { SpaceArtifact, PlanetConfig } from '../../../entities/planet/model/types';
 import { CommunityPublicationsSection } from './CommunityPublicationsSection';
+import { Model3DViewer } from './Model3DViewer';
 import {
   ArrowLeft,
   MapPin,
@@ -20,6 +21,7 @@ import {
   Camera,
   Maximize2,
   X,
+  Box,
 } from 'lucide-react';
 
 interface DossierPageProps {
@@ -36,23 +38,30 @@ export const DossierPage: React.FC<DossierPageProps> = ({
   const isMars = planet.id === 'mars';
   const themeColor = isMars ? '#f97316' : '#38bdf8';
   const [isPhotoExpanded, setIsPhotoExpanded] = useState(false);
+  const [viewMode, setViewMode] = useState<'3d' | 'photo'>('3d');
   const [liveDetail, setLiveDetail] = useState<ArtifactDetail | null>(null);
   const [liveWaypoints, setLiveWaypoints] = useState<TraverseWaypoint[]>([]);
 
   useEffect(() => {
     let active = true;
+
     async function fetchApiArtifact() {
       try {
         const [detail, waypoints] = await Promise.all([
           portalApi.getArtifactDetail(artifact.id),
           portalApi.getArtifactWaypoints(artifact.id),
         ]);
+
         if (!active) return;
         if (detail) setLiveDetail(detail);
         if (waypoints && waypoints.length > 0) setLiveWaypoints(waypoints);
-      } catch {}
+      } catch {
+        // Keep cached artifact data if the live API is unavailable.
+      }
     }
+
     fetchApiArtifact();
+
     return () => {
       active = false;
     };
@@ -282,46 +291,112 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               </div>
             </div>
 
-            {}
-            {artifact.imageUrl && (
-              <div className="dossier-photo-container">
-                <div
-                  className="dossier-photo-frame"
-                  onClick={() => setIsPhotoExpanded(true)}
-                  style={{ borderColor: `${themeColor}50` }}
+            {/* Media Presentation Area: 3D GLB Model & Archival Photo */}
+            <div className="dossier-photo-container" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {/* Mode Switcher Tabs */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(15, 23, 42, 0.9)',
+                  padding: '4px',
+                  borderRadius: '10px',
+                  border: '1px solid #1e293b',
+                  width: 'fit-content',
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setViewMode('3d')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    fontSize: '11.5px',
+                    fontFamily: 'var(--font-mono, monospace)',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    border: 'none',
+                    transition: 'all 0.2s ease',
+                    background: viewMode === '3d' ? `${themeColor}25` : 'transparent',
+                    color: viewMode === '3d' ? themeColor : '#94a3b8',
+                  }}
                 >
-                  <img
-                    src={artifact.imageUrl}
-                    alt={artifact.name}
-                    className="dossier-photo-img"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = 'none';
+                  <Box size={13} />
+                  <span>3D DIGITAL TWIN (GLB)</span>
+                </button>
+
+                {artifact.imageUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('photo')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      fontSize: '11.5px',
+                      fontFamily: 'var(--font-mono, monospace)',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      border: 'none',
+                      transition: 'all 0.2s ease',
+                      background: viewMode === 'photo' ? `${themeColor}25` : 'transparent',
+                      color: viewMode === 'photo' ? themeColor : '#94a3b8',
                     }}
-                  />
-                  {}
-                  <div className="dossier-photo-hud-top">
-                    <span className="photo-hud-tag" style={{ color: themeColor }}>
-                      <Camera size={12} /> ARCHIVAL RECON PHOTO
-                    </span>
-                    <button
-                      type="button"
-                      className="photo-expand-btn"
-                      title="View Fullscreen"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsPhotoExpanded(true);
-                      }}
-                    >
-                      <Maximize2 size={13} />
-                    </button>
-                  </div>
-                  <div className="dossier-photo-hud-bottom">
-                    <span className="photo-credit-tag">{artifact.agency} MISSION ARCHIVE</span>
-                    <span className="photo-hint-tag">Click to expand</span>
-                  </div>
-                </div>
+                  >
+                    <Camera size={13} />
+                    <span>ARCHIVAL 2D PHOTO</span>
+                  </button>
+                )}
               </div>
-            )}
+
+              {/* View Content */}
+              {viewMode === '3d' ? (
+                <Model3DViewer artifact={artifact} themeColor={themeColor} />
+              ) : (
+                artifact.imageUrl && (
+                  <div
+                    className="dossier-photo-frame"
+                    onClick={() => setIsPhotoExpanded(true)}
+                    style={{ borderColor: `${themeColor}50` }}
+                  >
+                    <img
+                      src={artifact.imageUrl}
+                      alt={artifact.name}
+                      className="dossier-photo-img"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = 'none';
+                      }}
+                    />
+                    <div className="dossier-photo-hud-top">
+                      <span className="photo-hud-tag" style={{ color: themeColor }}>
+                        <Camera size={12} /> ARCHIVAL RECON PHOTO
+                      </span>
+                      <button
+                        type="button"
+                        className="photo-expand-btn"
+                        title="View Fullscreen"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsPhotoExpanded(true);
+                        }}
+                      >
+                        <Maximize2 size={13} />
+                      </button>
+                    </div>
+                    <div className="dossier-photo-hud-bottom">
+                      <span className="photo-credit-tag">{artifact.agency} MISSION ARCHIVE</span>
+                      <span className="photo-hint-tag">Click to expand</span>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
           </div>
         </div>
 
