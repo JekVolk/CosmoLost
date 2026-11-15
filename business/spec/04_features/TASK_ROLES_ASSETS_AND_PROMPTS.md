@@ -37,7 +37,7 @@
 | **JB-03** | **Django Unfold Admin інтерфейс** | Зареєструвати ігрові моделі в `game/admin.py` з фільтрами за ELO, тиром рідкості, статусом матчу, красивими бейджами Unfold. | JB-01 | Налаштований Django Admin для гейм-майстрів |
 | **JB-04** | **DRF Serializers та базові CRUD Views** | Реалізувати `UserProfileSerializer`, `InventoryItemSerializer`, `ContainerSlotSerializer`, ендпоінти читання інвентарю та публічного профілю (`/api/web/game/profile/{callsign}/`). | JB-01 | Ендпоінти REST API з пермішенами |
 | **JB-05** | **Сервіс розрахунку ELO (`EloService`)** | Написати чисті функції для розрахунку нового рейтингу гравця та бота за формулою FIDE: $R_{new} = R + K \cdot (S - E)$. Покрити unit-тестами. | — | `game/services/elo_service.py`, тести в `tests/test_elo.py` |
-| **JB-06** | **Юніт-тести Pity та Лут-таблиць** | Написати тести на симуляцію 10 000 відкриттів контейнерів: перевірити, що Hard Pity спрацьовує на 61-му відкритті для Historic та на 500-му для Anomaly. | MB-02 | `tests/test_loot_system.py` |
+| **JB-06** | **Юніт-тести Pity та Лут-таблиць** | Перевірити, що після 60 послідовних дропів без Historic+ 61-ше відкриття гарантує Historic або вище; Anomaly guarantee на 500-му не входить до MVP без окремого sign-off. | MB-02 | `tests/test_loot_system.py` |
 
 ---
 
@@ -49,8 +49,8 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **MB-01** | **Google OAuth + JWT Pipeline** | Інтеграція `social-auth-app-django`, створення кастомного пайплайну `create_game_profile`, випуск JWT (access/refresh), генерація callsign гравця. | JB-01 | Працюючий OAuth флоу, створення профілю при першому вході |
 | **MB-02** | **Сервіс генерації луту (`LootService`)** | Алгоритм видачі предметів з контейнера з динамічним шансом (Pity Counter), захист від дублікатів з конвертацією в Research Points (RP), нарахування щоденних скриньок. | JB-01 | `game/services/loot_service.py` |
-| **MB-03** | **Zero-Knowledge генератор раундів** | Метод `pick_target_artifact()`: виключення артефактів за 72 години (SQL blacklist), маскування координат/відповідей, формування `round_data` без відповідей для клієнта. | JB-02 | `game/services/round_orchestrator.py` |
-| **MB-04** | **WebSocket Consumer (`DuelConsumer`)** | Асинхронний споживач Django Channels: авторизація по JWT у WS-хендшейку, обробка подій `round.answer`, таймери раундів у фоні, розрахунок балів за формулою Haversine. | JB-05, MB-03 | `backend/game/consumers.py`, `routing.py` |
+| **MB-03** | **Zero-Knowledge генератор раундів** | Відбирати лише три MVP-режими з повним перевіреним payload: AstroGuessr (карта), ForensicSol, MissionHangar. Маскувати координати/відповіді; за нестачі даних не підміняти режим і не стартувати неповний матч. | JB-02 | `game/services/round_orchestrator.py` |
+| **MB-04** | **WebSocket Consumer (`DuelConsumer`)** | Асинхронний споживач Django Channels: JWT-авторизація, таймери та серверний розрахунок. Не розкривати відповідь/оцінку опоненту після першого submit; round result — лише після submit/timeout обох. | JB-05, MB-03 | `backend/game/consumers.py`, `routing.py` |
 | **MB-05** | **Matchmaking черга в Redis** | Логіка очікування суперника (до 8 секунд). Якщо суперник не знайдений — безшовне підключення `SpaceBot` з ELO, наближеним до рейтингу гравця. | MB-04 | Redis Matchmaker з fallback на бота |
 | **MB-06** | **Налаштування Daphne, ASGI та каналів** | Оновлення `config/asgi.py`, інтеграція `channels_redis`, конфігурація для продакшн середовища з захистом від флуду та розривів зв'язку. | MB-04 | `backend/config/asgi.py` |
 
@@ -65,7 +65,7 @@
 | **MF-01** | **Скелет FSD v2.1 та WebSocket зв'язка** | Ініціалізація `web-client`, налаштування Vite, Biome, Chakra UI v3, шарів FSD. Створення єдиного WS клієнта `ws-client.ts` та Zustand-стору `useMatchStore`. | — | Робоча структура додатку, глобальний стан матчу |
 | **MF-02** | **Google OAuth флоу на клієнті** | Сторінка входу, перенаправлення на Google, обробка callback URL, парсинг JWT токена, збереження у `useAuthStore` (localStorage/cookie), роутинг `RequireAuth`. | MB-01 | Робоча авторизація з автооновленням токенів |
 | **MF-03** | **Контейнери та інвентар (UI/State)** | Віджет списку 10 контейнерних слотів з таймером накопичення (кожні 4 години), сітка інвентарю з кольоровим кодуванням рідкостей (7 тирів). | JB-04 | `entities/container`, `entities/inventory` |
-| **MF-04** | **Міні-гра AstroGuessr** | Повноекранний або віконний переглядач панорами (Photo-Sphere-Viewer) + міні-карта поверхні (SVG/Canvas). Клік ставить пін, відправляє `{lat, lon}` через WS. | MF-01, MB-04 | `features/astro-guessr` |
+| **MF-04** | **Міні-гра AstroGuessr** | Інтерактивна 2D карта NASA з піном; перевірене фото/панорама — необов'язкова підказка. Відправити `{lat, lon}` через WS; цільові координати приховані до блокування відповідей обох гравців. | MF-01, MB-04 | `features/astro-guessr` |
 | **MF-05** | **Міні-гра ForensicSol** | Графіки телеметрії марсохода (Recharts: живлення, оптична глибина пилу, кут нахилу), вибір варіанту відповіді за 30 секунд. | MF-01, MB-04 | `features/forensic-sol` |
 | **MF-06** | **Міні-гра MissionHangar** | Інтерфейс Drag-and-Drop (@dnd-kit) для розподілу бортових систем по 4 відсіках місії (Science, Propulsion, Comms, Power). | MF-01, MB-04 | `features/mission-hangar` |
 | **MF-07** | **Віджет Арени (`BattleArena`)** | HUD бою: таймер раунду, рахунок гравця і суперника, плавне перемикання між 3 раундами, екран підсумків матчу та підрахунку ELO. | MF-04, MF-05, MF-06 | `widgets/battle-arena` |

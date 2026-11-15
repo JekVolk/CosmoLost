@@ -1,7 +1,7 @@
 # [FEAT-11] Специфікація реалізації: Ігровий модуль CosmoLost
 
-> **Статус**: `READY FOR DEVELOPMENT`  
-> **Версія**: `v1.0.0`  
+> **Статус**: `IMPLEMENTATION REFERENCE / PENDING PRODUCT SIGN-OFF`<br>
+> **Версія**: `v1.1.0`
 > **Аудиторія**: Backend-розробник, Frontend-розробник, QA  
 > **Контекст бази**: 118 артефактів (82 Місяць + 36 Марс), повний каталог NASA/PDS  
 > **Залежні специфікації**: [`FEAT-10`](./FEAT-10_deductive_game_and_containers.md) · [`FEAT-10 Risk Audit`](./FEAT-10_RISK_AUDIT_AND_DETAIL.md)
@@ -12,11 +12,14 @@
 
 > [!IMPORTANT]
 > Весь ігровий стан зберігається та валідується **виключно на бекенді**. Фронтенд отримує лише медіа-URL та дескриптори раундів — правильні відповіді ніколи не передаються клієнту до завершення ходу.
+>
+> **MVP-контракт:** три раунди беруться лише з валідованих AstroGuessr, ForensicSol і MissionHangar payloads. Якщо повного набору немає, матч не запускається з підміною на інший режим чи синтетичними NASA-даними. Стартовий пакет пропонується як 1 навчальне відкриття + 2 зачинені слоти; фінальні значення чекають sign-off.
 
 ```python
 # backend/game/models.py
 import uuid
 import random
+from datetime import timedelta
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -67,7 +70,7 @@ class EquipmentClass(models.TextChoices):
     CREW_RELICS       = 'CREW_RELICS',       'Особисті речі та Меморіали'
 
 class MiniGameType(models.TextChoices):
-    ASTRO_GUESSR      = 'ASTRO_GUESSR',      'AstroGuessr 360° Панорама'
+    ASTRO_GUESSR      = 'ASTRO_GUESSR',      'AstroGuessr: карта та пін'
     TRAVERSE_TRACER   = 'TRAVERSE_TRACER',   'Traverse Tracer: Маршрут ровера'
     FORENSIC_SOL      = 'FORENSIC_SOL',      'Судмедекспертиза: Останній Сол'
     SHADOW_PROJECTOR  = 'SHADOW_PROJECTOR',  'Тіньовий Проектор'
@@ -125,6 +128,36 @@ class EquipmentItem(models.Model):
 
 
 # ──────────────────────────────────────────────
+# КОНТЕЙНЕРНІ СЛОТИ
+# ──────────────────────────────────────────────
+
+class ContainerSlot(models.Model):
+    """Один контейнер зі збереженим прогресом пломби."""
+    user         = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                     on_delete=models.CASCADE,
+                                     related_name='container_slots')
+    slot_index   = models.PositiveSmallIntegerField()
+    seal_progress = models.PositiveSmallIntegerField(default=0)  # 0 або 50
+    container_type = models.CharField(max_length=20, choices=ContainerType.choices,
+                                      default=ContainerType.DAILY)
+    filled_at    = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'slot_index'],
+                                    name='unique_container_slot_per_user'),
+            models.CheckConstraint(
+                check=models.Q(slot_index__gte=0, slot_index__lte=9),
+                name='valid_container_slot_index'
+            ),
+            models.CheckConstraint(
+                check=models.Q(seal_progress__in=[0, 50]),
+                name='valid_container_seal_progress'
+            ),
+        ]
+
+
+# ──────────────────────────────────────────────
 # ПРОФІЛЬ ГРАВЦЯ
 # ──────────────────────────────────────────────
 
@@ -145,10 +178,10 @@ class UserGameProfile(models.Model):
     curator_index        = models.BigIntegerField(default=0)
 
     # Контейнери та валюта
-    container_slots      = models.IntegerField(default=3)   # поточна кількість [0..10]
     research_points      = models.IntegerField(default=0)
     last_chest_accrual   = models.DateTimeField(default=timezone.now)
     last_daily_login     = models.DateField(null=True, blank=True)
+    pending_daily_claim_date = models.DateField(null=True, blank=True)
 
     # Статистика
     matches_played       = models.IntegerField(default=0)
@@ -158,11 +191,10 @@ class UserGameProfile(models.Model):
     total_containers_opened = models.IntegerField(default=0)
 
     # Pity лічильники (анти-невдача)
-    pity_counter_historic = models.IntegerField(default=0)  # скільки дропів без Historic+
-    pity_counter_anomaly  = models.IntegerField(default=0)  # скільки дропів без Anomaly
+    pity_counter_historic = models.IntegerField(default=0)  # послідовні дропи без Historic+
 
     # Privacy
-    is_public            = models.BooleanField(default=True)
+    is_public            = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'game_user_profiles'
@@ -170,27 +202,49 @@ class UserGameProfile(models.Model):
     MAX_CONTAINERS = 10
     ACCRUAL_HOURS  = 4   # 1 контейнер кожні 4 год
 
+    @property
+    def container_count(self) -> int:
+        return self.user.container_slots.count()
+
     def try_accrue_container(self) -> bool:
-        """Нараховує контейнер якщо пройшло ≥ ACCRUAL_HOURS і слоти не повні."""
-        if self.container_slots >= self.MAX_CONTAINERS:
+        """Нараховує всі повні періоди, але не більше вільних слотів."""
+        now = timezone.now()
+        occupied = set(self.user.container_slots.values_list('slot_index', flat=True))
+        if len(occupied) >= self.MAX_CONTAINERS:
+            self.last_chest_accrual = now
+            self.save(update_fields=['last_chest_accrual'])
             return False
-        delta = timezone.now() - self.last_chest_accrual
-        if delta.total_seconds() >= self.ACCRUAL_HOURS * 3600:
-            self.container_slots = min(self.container_slots + 1, self.MAX_CONTAINERS)
-            self.last_chest_accrual = timezone.now()
-            self.save(update_fields=['container_slots', 'last_chest_accrual'])
-            return True
-        return False
+        elapsed = int((now - self.last_chest_accrual).total_seconds()
+                      // (self.ACCRUAL_HOURS * 3600))
+        if elapsed < 1:
+            return False
+        free = [i for i in range(self.MAX_CONTAINERS) if i not in occupied]
+        for slot_index in free[:elapsed]:
+            ContainerSlot.objects.create(user=self.user, slot_index=slot_index)
+        reached_capacity = len(occupied) + min(elapsed, len(free)) == self.MAX_CONTAINERS
+        self.last_chest_accrual = (
+            now if reached_capacity else
+            self.last_chest_accrual + timedelta(hours=self.ACCRUAL_HOURS * elapsed)
+        )
+        self.save(update_fields=['last_chest_accrual'])
+        return True
 
     def claim_daily_login(self) -> bool:
-        """Нараховує 1 контейнер за перший щоденний вхід."""
+        """Видає UTC daily claim або залишає його доступним до кінця доби."""
         today = timezone.now().date()
         if self.last_daily_login == today:
             return False
-        if self.container_slots < self.MAX_CONTAINERS:
-            self.container_slots += 1
+        if self.pending_daily_claim_date != today:
+            self.pending_daily_claim_date = today
+        occupied = set(self.user.container_slots.values_list('slot_index', flat=True))
+        free = next((i for i in range(self.MAX_CONTAINERS) if i not in occupied), None)
+        if free is None:
+            self.save(update_fields=['pending_daily_claim_date'])
+            return False
+        ContainerSlot.objects.create(user=self.user, slot_index=free)
         self.last_daily_login = today
-        self.save(update_fields=['container_slots', 'last_daily_login'])
+        self.pending_daily_claim_date = None
+        self.save(update_fields=['last_daily_login', 'pending_daily_claim_date'])
         return True
 
     def update_rank(self):
@@ -245,18 +299,25 @@ class GameMatch(models.Model):
                                         related_name='matches_p1')
     player2         = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
                                         on_delete=models.SET_NULL, related_name='matches_p2')
+    container_slot_p1 = models.ForeignKey(ContainerSlot, null=True, blank=True,
+                                          on_delete=models.PROTECT,
+                                          related_name='reserved_matches_p1')
+    container_slot_p2 = models.ForeignKey(ContainerSlot, null=True, blank=True,
+                                          on_delete=models.PROTECT,
+                                          related_name='reserved_matches_p2')
     is_bot_match    = models.BooleanField(default=False)
     bot_accuracy    = models.FloatField(default=0.5)   # 0.4-0.92 за ELO
 
     target_artifact = models.ForeignKey(Artifact, on_delete=models.PROTECT)
-    mini_games      = models.JSONField(default=list)   # ['ASTRO_GUESSR','FORENSIC_SOL','SCALE_MATCHER']
+    mini_games      = models.JSONField(default=list)   # MVP: ASTRO_GUESSR, FORENSIC_SOL, MISSION_HANGAR
     round_data      = models.JSONField(default=dict)   # server-side state (правильні відповіді НЕ в WS)
 
     score_p1        = models.IntegerField(default=0)
     score_p2        = models.IntegerField(default=0)
     winner          = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
                                         on_delete=models.SET_NULL, related_name='won_matches')
-    is_chest_unlocked = models.BooleanField(default=False)
+    is_chest_unlocked_p1 = models.BooleanField(default=False)
+    is_chest_unlocked_p2 = models.BooleanField(default=False)
     elo_delta_p1    = models.IntegerField(default=0)
     elo_delta_p2    = models.IntegerField(default=0)
 
@@ -275,33 +336,18 @@ class GameMatch(models.Model):
 
     @property
     def threshold_score(self) -> int:
-        """Поріг балів для відкриття контейнера."""
-        return 100
+        """Proposed match score required for immediate container opening."""
+        return 150
 
-    def select_mini_games(self) -> list:
-        """Вибирає 3 різні міні-гри з пулу для цього матчу."""
-        pool = list(MiniGameType.values)
-        # Фільтруємо ігри що потребують даних які є для цього артефакту
-        available = []
-        a = self.target_artifact
-        if hasattr(a, 'media') and a.media.filter(media_category='PANORAMA').exists():
-            available.append(MiniGameType.ASTRO_GUESSR)
-        if a.waypoints.count() >= 4:
-            available.append(MiniGameType.TRAVERSE_TRACER)
-        if a.last_contact_sol:
-            available.append(MiniGameType.FORENSIC_SOL)
-        if a.model_3d_url:
-            available.extend([MiniGameType.SHADOW_PROJECTOR,
-                               MiniGameType.SCALE_MATCHER,
-                               MiniGameType.COMPONENT_DISSECT])
-        if a.mass_kg:
-            available.append(MiniGameType.STAT_GUESSER)
-        available.append(MiniGameType.MISSION_HANGAR)
-        available.append(MiniGameType.MISSION_STACK)
-        # Гарантуємо мінімум 3
-        if len(available) < 3:
-            available = pool
-        return random.sample(available, min(3, len(available)))
+    def select_mini_games(self, eligible_rounds: list[MiniGameType]) -> list:
+        """Select 3 data-validated MVP rounds; never substitute an unsupported mode."""
+        mvp = {
+            MiniGameType.ASTRO_GUESSR,
+            MiniGameType.FORENSIC_SOL,
+            MiniGameType.MISSION_HANGAR,
+        }
+        available = list(set(eligible_rounds) & mvp)
+        return random.sample(available, 3) if len(available) >= 3 else []
 
 
 # ──────────────────────────────────────────────
@@ -348,8 +394,7 @@ class LootService:
     """
 
     # Pity пороги
-    PITY_HARD_HISTORIC = 61   # після 61 дропу без Historic+ — гарантія
-    PITY_HARD_ANOMALY  = 500  # після 500 дропів без Anomaly — гарантія
+    PITY_HARD_HISTORIC = 60   # 60 попередніх невдач означають гарантію на відкритті №61
 
     def roll(self, profile: UserGameProfile,
              container_type: ContainerType,
@@ -378,7 +423,7 @@ class LootService:
 
         profile.total_containers_opened += 1
         profile.save(update_fields=['research_points', 'total_containers_opened',
-                                    'pity_counter_historic', 'pity_counter_anomaly'])
+                                    'pity_counter_historic'])
 
         return ContainerCraft.objects.create(
             user=profile.user,
@@ -407,10 +452,6 @@ class LootService:
         # Hard Pity Historic
         if profile.pity_counter_historic >= self.PITY_HARD_HISTORIC:
             return {'HISTORIC': 100.0}
-
-        # Hard Pity Anomaly
-        if profile.pity_counter_anomaly >= self.PITY_HARD_ANOMALY:
-            return {'ANOMALY': 100.0}
 
         # Soft Pity Historic (21-60): шанс зростає лінійно
         if profile.pity_counter_historic >= 21:
@@ -443,10 +484,7 @@ class LootService:
         else:
             profile.pity_counter_historic += 1
 
-        if rarity == 'ANOMALY':
-            profile.pity_counter_anomaly = 0
-        else:
-            profile.pity_counter_anomaly += 1
+        # Separate Anomaly guarantee is not part of MVP; require product sign-off.
 ```
 
 ---
@@ -488,7 +526,7 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
 
     # ── AstroGuessr ──────────────────────────────
     async def on_submit_guess(self, data):
-        """Гаверсин рахується тут. Клієнт надсилає лише [lat, lon]."""
+        """Score is server-side; target location remains hidden until both answers lock."""
         match = await self._get_match()
         round_state = match.round_data.get('current_round', {})
         target_lat  = round_state['target_lat']     # ← секрет на сервері
@@ -511,15 +549,10 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         # Зберігаємо результат гравця
         await self._save_round_score(match, self.user.id, score)
 
-        # Відправляємо результат — тепер розкриваємо правду
-        await self.channel_layer.group_send(self.group, {
-            'type':       'broadcast.round_result',
-            'user_id':    self.user.id,
-            'score':      score,
-            'dist_km':    round(dist_km, 2),
-            'true_lat':   target_lat,   # ← правда тільки після вибору
-            'true_lon':   target_lon,
-        })
+        await self._send_private(self.user.id, {'event': 'round.answer_accepted'})
+        # Do not publish score, distance, or target to the opponent after one answer.
+        if await self._all_human_answers_locked(match):
+            await self._broadcast_locked_round_result(match)
 
     async def on_scale_lock(self, data):
         """Scale Matcher — сервер порівнює scale_factor з реальним."""
@@ -529,18 +562,16 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         true_ratio   = true_mass / ref_mass
         user_ratio   = data['scale_factor']
         error_pct    = abs(user_ratio - true_ratio) / true_ratio * 100
-        score = 50 if error_pct < 5 else (25 if error_pct < 20 else 0)
+        score = 100 if error_pct < 5 else (50 if error_pct < 20 else 0)
         await self._save_round_score(match, self.user.id, score)
-        await self.channel_layer.group_send(self.group, {
-            'type':        'broadcast.round_result',
-            'user_id':     self.user.id,
-            'score':       score,
-            'error_pct':   round(error_pct, 1),
-            'true_ratio':  round(true_ratio, 3),
-        })
+        await self._send_private(self.user.id, {'event': 'round.answer_accepted'})
+        if await self._all_human_answers_locked(match):
+            await self._broadcast_locked_round_result(match)
 
     async def finish_match(self, match):
-        """Фінал: ELO + лут + повідомлення. Повністю на сервері."""
+        """Finalize both human players independently; this excerpt shows player 1."""
+        # Apply the same container rule to player 2 using reversed scores and
+        # their reserved slot; a bot has no container slot or private reward.
         profile1 = await self._get_profile(match.player1_id)
         is_win   = match.score_p1 > match.score_p2
 
@@ -552,10 +583,13 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         profile1.matches_played += 1
 
         loot_result = None
-        if is_win and match.score_p1 >= match.threshold_score:
-            match.is_chest_unlocked = True
+        slot = match.container_slot_p1
+        if is_win and slot and (
+            match.score_p1 >= match.threshold_score or slot.seal_progress == 50
+        ):
+            match.is_chest_unlocked_p1 = True
             loot_svc    = LootService()
-            craft       = loot_svc.roll(profile1, match.container_type)
+            craft       = loot_svc.roll(profile1, slot.container_type)
             loot_result = {
                 'item_id':      craft.dropped_item.id,
                 'name':         craft.dropped_item.name,
@@ -565,7 +599,12 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
                 'was_duplicate': craft.was_duplicate,
                 'rp_earned':    craft.rp_earned,
             }
-            profile1.container_slots = max(0, profile1.container_slots - 1)
+            slot.delete()
+            if profile1.pending_daily_claim_date == timezone.now().date():
+                profile1.claim_daily_login()
+        elif is_win and slot and match.score_p1 < match.threshold_score:
+            slot.seal_progress = 50
+            slot.save(update_fields=['seal_progress'])
 
         profile1.consecutive_losses = 0 if is_win else profile1.consecutive_losses + 1
         profile1.update_rank()
@@ -573,16 +612,25 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
 
         await self.channel_layer.group_send(self.group, {
             'type':              'broadcast.match_finish',
-            'winner_id':         match.player1_id if is_win else match.player2_id,
+            'winner_id':         (
+                match.player1_id if match.score_p1 > match.score_p2 else
+                match.player2_id if match.score_p2 > match.score_p1 else None
+            ),
             'score_p1':          match.score_p1,
             'score_p2':          match.score_p2,
-            'is_chest_unlocked': match.is_chest_unlocked,
-            'loot':              loot_result,
+            'is_chest_unlocked_p1': match.is_chest_unlocked_p1,
+            'is_chest_unlocked_p2': match.is_chest_unlocked_p2,
             'elo_delta':         d1,
             'new_elo':           profile1.elo_rating,
             'new_rank':          profile1.rank,
             'consecutive_losses': profile1.consecutive_losses,
         })
+        # Loot and exact RP are sent only to the player who opened the reserved slot.
+        if loot_result:
+            await self._send_private(profile1.user_id, {
+                'event': 'match.private_reward',
+                'loot': loot_result,
+            })
 
     # ── Симуляція бота ───────────────────────────
     async def run_bot_turn(self, match, round_type, round_state):
@@ -598,15 +646,14 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
             dist_km  = random.uniform(0, max_err)
             score    = max(0, round(100 * math.exp(-dist_km / 50.0)))
         elif round_type in ('FORENSIC_SOL', 'STAT_GUESSER', 'MISSION_STACK'):
-            score = 35 if random.random() < accuracy else 0
+            score = 100 if random.random() < accuracy else 0
         elif round_type == 'SCALE_MATCHER':
-            score = 50 if random.random() < accuracy else (25 if random.random() < 0.5 else 0)
+            score = 100 if random.random() < accuracy else (50 if random.random() < 0.5 else 0)
 
         await self._save_round_score(match, 'BOT', score)
         await self.channel_layer.group_send(self.group, {
             'type':    'broadcast.opponent_action',
             'hint':    'Опонент зробив вибір...',   # не розкриваємо деталі
-            'score':   score,
         })
 
     def _bot_delay(self, accuracy: float) -> float:
@@ -614,6 +661,8 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         jitter = random.uniform(-0.5, 0.8)
         return max(1.0, base + jitter)
 ```
+
+> **Важливо:** приклад фіналізує лише гравця 1. Production-обробник має симетрично й незалежно оновити для гравця 2 ELO, лічильники/ранг, його зарезервований слот і приватну нагороду; матч із ботом не створює профільної нагороди для бота. Нічия не має `winner_id`; ELO-сервіс рахує її як нічию, а поведінка серії поразок потребує sign-off.
 
 ---
 
@@ -700,11 +749,15 @@ def get_match_config(profile: UserGameProfile) -> dict:
 
 ## 6. REST API Ендпоінти (`backend/game/urls.py`)
 
+`/profile/me/` використовує приватний serializer; `/profile/:callsign/` — окремий public serializer. Публічна відповідь не містить email, точного RP, повного інвентарю, pity, контейнерних слотів чи приватної історії матчів. Вітрина обмежена п'ятьма вибраними предметами; не повертати той самий serializer для власника й публічного профілю.
+
 | Метод | URL | Призначення | Auth |
 |:--|:--|:--|:--|
 | `GET` | `/api/game/profile/me/` | Мій ігровий профіль | ✅ |
 | `GET` | `/api/game/profile/:callsign/` | Публічний профіль | Public |
-| `POST` | `/api/game/match/create/` | Запуск пошуку матчу | ✅ |
+| `GET` | `/api/game/containers/` | Мої слоти та прогрес пломб | ✅ |
+| `POST` | `/api/game/containers/daily/` | Забрати daily claim або побачити pending/expiry | ✅ |
+| `POST` | `/api/game/match/create/` | Запуск пошуку матчу з `slot_index` | ✅ |
 | `GET` | `/api/game/match/:id/` | Статус матчу | ✅ |
 | `POST` | `/api/game/container/craft/` | Синтез контейнера за RP | ✅ |
 | `POST` | `/api/game/showcase/update/` | Оновити Полицю Спадщини | ✅ |
@@ -729,11 +782,11 @@ def get_match_config(profile: UserGameProfile) -> dict:
   "round_type": "ASTRO_GUESSR",
   "time_limit_sec": 15,
   "payload": {
-    "panorama_url":  "https://nasa.gov/.../panorama.jpg",   // тільки картинка
+    "map_url":       "https://trek.nasa.gov/...",           // перевірений шар поверхні
+    "media_url":     "https://nasa.gov/.../surface.jpg",    // необов'язкова підказка
     "celestial_body": "mars",
-    "radius_km":     3389.5,
-    "wmts_tile_url": "https://trek.nasa.gov/..."
-    // ← lat/lon цілі ВІДСУТНІ
+    "radius_km":     3389.5
+    // target_lat/target_lon/location_name відсутні до блокування відповідей
   }
 }
 
@@ -745,25 +798,20 @@ def get_match_config(profile: UserGameProfile) -> dict:
   "scores": { "p1": 85, "p2": 40 },
   "reveal": { "true_lat": -1.95, "true_lon": 354.47, "dist_km_p1": 8.3 },
   "fun_fact": "Opportunity проїхав 45.16 км — відстань Нью-Йорк–Бостон!" }
+// Надсилати обом лише після submit/timeout обох гравців; до того opponent бачить лише answer_accepted.
 
 // Фінал матчу
 { "event": "match.finish",
   "winner_callsign": "DarkStar_UA",
   "scores": { "p1": 185, "p2": 120 },
-  "is_chest_unlocked": true,
-  "loot": {
-    "name": "Лазерний спектрометр ChemCam",
-    "rarity": "PROTOTYPE",
-    "eq_class": "OPTICS_SENSORS",
-    "image_url": "...",
-    "was_duplicate": false,
-    "rp_earned": 0
-  },
+  "is_chest_unlocked_p1": true,
+  "is_chest_unlocked_p2": false,
   "elo_delta": 28,
   "new_elo": 1278,
   "new_rank": "MISSION_SPEC",
   "consecutive_losses": 0
 }
+// Нагороду й точний RP надсилати приватною подією лише власнику відкритого слота.
 ```
 
 ### Клієнт → Сервер

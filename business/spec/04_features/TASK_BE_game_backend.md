@@ -181,7 +181,7 @@ python manage.py migrate
 - `_build_weights(profile, container_type) → dict` — Pity System, WOW-ефект перших 5 контейнерів
 - `_weighted_choice(weights) → str`
 - `_pick_item(rarity, target_class) → EquipmentItem`
-- `_update_pity(profile, rarity)` — оновлює обидва лічильники pity
+- `_update_pity(profile, rarity)` — лічильник Historic+; гарантія на 61-му відкритті після 60 невдач
 
 **Файл `backend/game/services/elo_service.py`**:
 ```python
@@ -260,9 +260,24 @@ class UserInventorySerializer(serializers.ModelSerializer):
         model  = UserInventoryItem
         fields = ['id', 'equipment', 'acquired_at', 'is_showcased', 'showcase_slot']
 
-class UserGameProfileSerializer(serializers.ModelSerializer):
+class PublicShowcaseItemSerializer(serializers.ModelSerializer):
+    equipment = EquipmentItemSerializer(read_only=True)
+    artifact_location = serializers.SerializerMethodField()
+
+    def get_artifact_location(self, obj):
+        artifact = obj.equipment.artifact
+        if artifact.latitude is None or artifact.longitude is None:
+            return None
+        return {'latitude': artifact.latitude, 'longitude': artifact.longitude}
+
+    class Meta:
+        model = UserInventoryItem
+        fields = ['equipment', 'artifact_location']
+
+class PrivateGameProfileSerializer(serializers.ModelSerializer):
     inventory_count   = serializers.SerializerMethodField()
     win_rate          = serializers.SerializerMethodField()
+    container_count   = serializers.SerializerMethodField()
 
     def get_inventory_count(self, obj):
         return obj.user.inventory.count()
@@ -271,13 +286,31 @@ class UserGameProfileSerializer(serializers.ModelSerializer):
         if obj.matches_played == 0: return 0
         return round(obj.matches_won / obj.matches_played * 100, 1)
 
+    def get_container_count(self, obj):
+        return obj.user.container_slots.count()
+
     class Meta:
         model  = UserGameProfile
         fields = ['callsign', 'bio', 'avatar_frame', 'favorite_planet',
                   'elo_rating', 'rank', 'curator_index',
-                  'container_slots', 'research_points',
+                  'container_count', 'research_points',
                   'matches_played', 'matches_won', 'current_win_streak',
                   'is_public', 'inventory_count', 'win_rate']
+
+class PublicGameProfileSerializer(serializers.ModelSerializer):
+    collection_count = serializers.SerializerMethodField()
+    showcase = serializers.SerializerMethodField()
+
+    def get_collection_count(self, obj):
+        return obj.user.inventory.count()
+
+    def get_showcase(self, obj):
+        items = obj.user.inventory.filter(is_showcased=True).select_related('equipment')
+        return PublicShowcaseItemSerializer(items, many=True).data
+
+    class Meta:
+        model = UserGameProfile
+        fields = ['callsign', 'avatar_frame', 'rank', 'collection_count', 'showcase']
 ```
 
 **`backend/game/views.py`** — ключові ендпоінти:
@@ -288,7 +321,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from game.models import UserGameProfile, UserInventoryItem, EquipmentItem, ContainerCraft, ContainerType
-from game.serializers import UserGameProfileSerializer, UserInventorySerializer
+from game.serializers import PrivateGameProfileSerializer, PublicGameProfileSerializer, UserInventorySerializer
 from game.services.loot_service import LootService
 from game.services.matchmaker import pick_target_artifact, build_bot_accuracy
 from game.services.difficulty_service import get_match_config
@@ -303,8 +336,17 @@ class MyProfileView(APIView):
     def get(self, request):
         profile = request.user.game_profile
         profile.try_accrue_container()   # перевіряємо таймер накопичення
-        profile.claim_daily_login()      # перевіряємо щоденний бонус
-        return Response(UserGameProfileSerializer(profile).data)
+        return Response(PrivateGameProfileSerializer(profile).data)
+
+
+class DailyContainerClaimView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        profile = request.user.game_profile
+        claimed = profile.claim_daily_login()
+        # Return claimed / pending_space / already_claimed with the UTC expiry.
+        return Response(daily_claim_state(profile, claimed))
 
 
 class PublicProfileView(APIView):
@@ -314,7 +356,7 @@ class PublicProfileView(APIView):
         profile = UserGameProfile.objects.select_related('user').get(callsign=callsign)
         if not profile.is_public:
             return Response({'detail': 'Профіль приховано'}, status=403)
-        return Response(UserGameProfileSerializer(profile).data)
+        return Response(PublicGameProfileSerializer(profile).data)
 
 
 class InventoryView(APIView):
@@ -481,17 +523,17 @@ class EquipmentItemAdmin(ModelAdmin):
 
 @admin.register(UserGameProfile)
 class UserGameProfileAdmin(ModelAdmin):
-    list_display  = ['callsign', 'elo_rating', 'rank', 'container_slots',
+    list_display  = ['callsign', 'elo_rating', 'rank', 'container_count',
                      'research_points', 'matches_played']
     search_fields = ['callsign', 'user__email']
-    readonly_fields = ['pity_counter_historic', 'pity_counter_anomaly',
+    readonly_fields = ['pity_counter_historic',
                        'total_containers_opened']
 
 @admin.register(GameMatch)
 class GameMatchAdmin(ModelAdmin):
     list_display  = ['id', 'player1', 'is_bot_match', 'score_p1', 'score_p2',
-                     'is_chest_unlocked', 'status', 'created_at']
-    list_filter   = ['is_bot_match', 'status', 'is_chest_unlocked']
+                     'is_chest_unlocked_p1', 'is_chest_unlocked_p2', 'status', 'created_at']
+    list_filter   = ['is_bot_match', 'status', 'is_chest_unlocked_p1', 'is_chest_unlocked_p2']
 
 @admin.register(ContainerCraft)
 class ContainerCraftAdmin(ModelAdmin):
@@ -546,9 +588,9 @@ class LootServiceTest(TestCase):
         self.assertEqual(weights['SPECIALIZED'], 40.0)
 
     def test_pity_hard_historic(self):
-        """При 61 pity_counter_historic → гарантований Historic."""
+        """Після 60 невдач 61-ше відкриття гарантує Historic+."""
         self.profile.total_containers_opened = 10  # минули WOW-5
-        self.profile.pity_counter_historic = 61
+        self.profile.pity_counter_historic = 60
         svc = LootService()
         weights = svc._build_weights(self.profile, 'STANDARD')
         self.assertEqual(weights, {'HISTORIC': 100.0})
@@ -589,10 +631,13 @@ class EloServiceTest(TestCase):
 
 - [ ] `python manage.py migrate` проходить без помилок
 - [ ] `GET /api/game/profile/me/` → 200 після JWT-авторизації
+- [ ] `GET /api/game/containers/` → власні слоти з прогресом пломби
+- [ ] `POST /api/game/containers/daily/` → claimed/pending_space/already_claimed і UTC expiry
+- [ ] Pending daily claim автоматично видається після звільнення слота в ту саму UTC-добу; прострочений claim не переноситься
 - [ ] `GET /auth/login/google-oauth2/` → редирект на Google
 - [ ] Після Google callback → `UserGameProfile` створено автоматично через pipeline
 - [ ] `POST /api/game/match/create/` → повертає `match_id` + `ws_url`
 - [ ] WS `ws/game/duel/{id}/` → accept + `round.start` без правильних координат
-- [ ] `submit_guess` → сервер рахує Гаверсин, відповідає `round.result` із `true_lat/lon`
+- [ ] `submit_guess` → сервер рахує Гаверсин; персональне підтвердження submit без розкриття опоненту, `round.result` із `true_lat/lon` лише після submit/timeout обох
 - [ ] `match.finish` → `ContainerCraft` запис створено, ELO оновлено
 - [ ] `python manage.py test game` → всі тести зелені

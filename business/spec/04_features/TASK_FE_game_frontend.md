@@ -17,6 +17,9 @@
 | State | Zustand для глобального, TanStack Query для серверних даних |
 | WS | Єдиний клієнт `shared/api/ws-client.ts`, підключається один раз |
 | Тести | Vitest + Testing Library, мінімум: кожен store + кожен міні-ігровий hook |
+| MVP games | AstroGuessr (2D NASA map), ForensicSol, MissionHangar; no unsupported-mode fallback |
+| Scores | 0–100 per round, 0–300 per match; proposed chest threshold 150 is pending sign-off |
+| Reveal | Do not render answer, target location, or opponent score until both answers are locked |
 
 ---
 
@@ -46,7 +49,7 @@ pnpm add react-router-dom
 
 # 3D / Canvas
 pnpm add three @types/three
-pnpm add photo-sphere-viewer   # для AstroGuessr панорами
+# photo-sphere-viewer is optional and only needed if verified 360° panoramas are approved
 
 # DnD
 pnpm add @dnd-kit/core @dnd-kit/sortable
@@ -423,14 +426,20 @@ export type { MatchPhase, RoundData, MatchState } from './model/useMatchStore';
 interface ContainerSlot {
   slot_index: number;    // 0–9
   filled_at: string;     // ISO timestamp
-  is_opened: boolean;
+  seal_progress: 0 | 50; // прогрес прив'язаний до конкретного слота
+  is_reserved: boolean;
 }
 
 interface ContainerState {
   slots: ContainerSlot[];
   next_fill_at: string | null;  // коли заповниться наступний слот
   fetchSlots: () => Promise<void>;
-  openContainer: (slot_index: number) => Promise<LootResult>;
+  startMatchWithSlot: (slot_index: number) => Promise<void>;
+}
+
+interface DailyClaimState {
+  status: 'available' | 'pending_space' | 'claimed' | 'expired';
+  expires_at: string; // UTC boundary
 }
 ```
 
@@ -440,19 +449,20 @@ interface ContainerState {
 // entities/container/api/container-repository.ts
 export const containerRepository = {
   getSlots: () => httpClient.get<ContainerSlot[]>('/api/web/game/containers/'),
-  openSlot: (slot_index: number) =>
-    httpClient.post<LootResult>('/api/web/game/containers/open/', { slot_index }),
-  claimDaily: () => httpClient.post<{ ok: boolean }>('/api/web/game/containers/daily/', {}),
+  startMatchWithSlot: (slot_index: number) =>
+    httpClient.post('/api/web/game/match/create/', { slot_index }),
+  claimDaily: () => httpClient.post<DailyClaimState>('/api/web/game/containers/daily/', {}),
 };
 ```
 
 ### 4.3 UI (`entities/container/ui/ContainerSlot.tsx`)
 
 - Компонент: кнопка/карточка слоту
-- Якщо `is_opened`: напівпрозора (сірий)
-- Якщо `filled_at` ≤ now: активний (золотий glow)
+- Якщо `is_reserved`: disabled і показує матч у процесі
+- Якщо `seal_progress === 50`: показує частково зняту пломбу
+- Якщо контейнер доступний: активний, дія починає матч, а не відкриває loot напряму
 - Якщо ще не наповнений: countdown до `next_fill_at`
-- Props: `slot: ContainerSlot`, `onOpen: () => void`
+- Props: `slot: ContainerSlot`, `onPlay: () => void`
 
 ### 4.4 Public API (`entities/container/index.ts`)
 ```ts
@@ -485,8 +495,8 @@ export type { ContainerSlot as ContainerSlotData } from './model/useContainerSto
 ```ts
 export const inventoryRepository = {
   getInventory: () => httpClient.get<InventoryItem[]>('/api/web/game/inventory/'),
-  getPublicInventory: (callsign: string) =>
-    httpClient.get<InventoryItem[]>(`/api/web/game/inventory/${callsign}/`),
+  getPublicShowcase: (callsign: string) =>
+    httpClient.get<ShowcaseItem[]>(`/api/web/game/showcase/${callsign}/`),
   scrapItem: (item_id: number) =>
     httpClient.post<{ rp_gained: number }>('/api/web/game/inventory/scrap/', { item_id }),
 };
@@ -555,17 +565,17 @@ export { useMatchmaking } from './model/useMatchmaking';
 
 ---
 
-### 7.1 AstroGuessr (Знайди координати)
+### 7.1 AstroGuessr (Знайди координати на карті)
 
 **Директорія**: `features/astro-guessr/`
 
-**Завдання**: По панорамній фото (або звичайній фото місцевості) гравець ставить пін на міні-карті — здогадується, де на планеті знаходиться артефакт.
+**Завдання**: На інтерактивній 2D карті NASA гравець ставить пін і визначає місце апарата. Перевірене фото/панорама може бути необов'язковою підказкою, якщо asset доступний.
 
 **Дані в `payload`**:
 ```json
 {
-  "photo_url": "https://nasa.gov/...",
-  "photo_type": "PANORAMA | SURFACE_PHOTO",
+  "map_url": "https://trek.nasa.gov/...",
+  "media_url": "https://nasa.gov/... (optional verified asset)",
   "planet": "MOON | MARS",
   "hint": "Місія Curiosity, 2023"
 }
@@ -576,15 +586,15 @@ export { useMatchmaking } from './model/useMatchmaking';
 | Файл | Опис |
 |------|------|
 | `ui/AstroGuessr.tsx` | Головний контейнер |
-| `ui/PanoViewer.tsx` | `<canvas>` через Photo-Sphere-Viewer (якщо PANORAMA) або `<img>` |
-| `ui/MiniMap.tsx` | SVG карта (Moon / Mars) з можливістю кліку для постановки піна |
+| `ui/SurfaceMap.tsx` | Інтерактивний шар поверхні NASA з можливістю кліку для постановки піна |
+| `ui/LocationHint.tsx` | Перевірене фото, якщо воно доступне |
 | `model/useAstroGuessr.ts` | Стан `{pin: {lat,lon} | null}`, `submit()` |
 
-**MiniMap**: SVG зображення поверхні (Moon / Mars) масштабом екватор→полюс. Клік → конвертувати pixel coords → (lat, lon). Відображає пін та кнопку Submit.
+**SurfaceMap**: показує карту та пін, конвертує вибір у координати. Не показує цільові координати або назву місця до завершення раунду.
 
 **Submit payload**: `{ lat: number, lon: number }` — координати піна гравця.
 
-**Scoring**: Бекенд отримує координати, рахує відстань до реального `artifact.latitude/longitude` (Haversine), повертає бали (0–1000) обернено пропорційно відстані.
+**Scoring**: бекенд рахує Haversine-відстань і повертає 0–100 балів. Результат/ціль не розкриваються опоненту, доки обидва гравці не надіслали відповідь або не сплив таймер.
 
 ---
 
@@ -708,10 +718,9 @@ export { BattleArena } from './ui/BattleArena';
 ### 9.1 Флоу
 
 ```
-Match End (chest_earned: true) → ChestOpeningModal з'являється
-User натискає "Відкрити" → POST /api/web/game/containers/open/
-                         → response: { item: InventoryItem, rp_gained: number }
-                         → Reveal Animation → Показ артефакту + Rarity
+Match End (is_chest_unlocked) + private match.private_reward → ChestOpeningModal
+                      → Reveal Animation → Показ артефакту + Rarity / duplicate RP
+Match End (seal_progress: 50) → показати збережений прогрес пломби; без loot-запиту
 ```
 
 ### 9.2 Анімація
@@ -825,11 +834,11 @@ phase === 'MATCH_END'      → <ChestOpeningModal /> (якщо chest_earned)
 ### 12.3 `pages/profile/:callsign`
 
 Секції:
-1. **Header**: аватар (Google photo), callsign, ELO, win/loss, RP balance
+1. **Header**: public view — callsign, avatar, rank and aggregate collection progress; owner-only view may add ELO, win/loss and RP
 2. **Planetary Terrarium**: `<PlanetaryTerrarium />` (3D планета)
 3. **Curator Showcase**: `<CuratorShowcase />` (5 вибраних артефактів)
-4. **Inventory Grid**: всі артефакти гравця, фільтр по рідкості
-5. **Stats**: win_streak, matches_played, total_rp_earned
+4. **Inventory Grid**: повний інвентар і фільтри — лише власнику; відвідувач бачить тільки showcase
+5. **Stats**: win_streak, matches_played, total_rp_earned — лише власнику
 
 > Якщо `callsign === me` → show edit controls для showcase. Інакше — read-only.
 
