@@ -147,6 +147,8 @@ export class PlanetScene {
     const tex = this.textureLoader.load(url);
     if (sRGB) {
       tex.colorSpace = THREE.SRGBColorSpace;
+    } else {
+      tex.colorSpace = THREE.NoColorSpace;
     }
     this.textureCache.set(url, tex);
     return tex;
@@ -218,10 +220,13 @@ export class PlanetScene {
 
     const geo = new THREE.SphereGeometry(planet.radius, 128, 128);
     const colorTex = this.getTexture(planet.colorMap, true);
+    const bumpTex = this.getTexture(planet.bumpMap, false);
 
     const mat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       map: colorTex,
+      bumpMap: bumpTex,
+      bumpScale: planet.bumpScale,
       roughness: planet.id === 'moon' ? 0.92 : 0.82,
       metalness: 0.05,
     });
