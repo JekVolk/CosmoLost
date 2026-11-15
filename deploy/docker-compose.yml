@@ -11,6 +11,11 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-cosmolost}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - cosmolost-network
 
@@ -40,7 +45,7 @@ services:
     restart: always
     env_file:
         - ./../backend/.env
-    command: sh -c "uv run manage.py migrate && uv run manage.py runserver 0.0.0.0:8000"
+    command: sh -c "uv run manage.py migrate && uv run manage.py run_ingest && uv run manage.py runserver 0.0.0.0:8000"
     environment:
       - USE_SQLITE=False
       - DB_HOST=db
@@ -48,8 +53,33 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - cosmolost-network
+
+  ingest-worker:
+    build: ./../backend
+    container_name: django_ingest_worker
+    restart: always
+    env_file:
+        - ./../backend/.env
+    command: uv run manage.py run_ingest --daemon --interval 3600
+    environment:
+      - USE_SQLITE=False
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - cosmolost-network
 

@@ -1,4 +1,4 @@
-.PHONY: up down stop createsuperuser logs migrate backend-shell
+.PHONY: up down stop createsuperuser logs migrate backend-shell ingest
 
 up:
 	docker compose up --build -d
@@ -17,6 +17,9 @@ migrate:
 
 backend-shell:
 	docker compose exec backend sh
+
+ingest:
+	docker compose exec backend uv run manage.py run_ingest --force
 
 logs:
 	docker compose logs -f

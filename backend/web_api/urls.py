@@ -21,4 +21,7 @@ urlpatterns = [
 
     # Community publications
     path('community-publications/', views.community_publications_view, name='community-publications'),
+
+    # Portal Catalog Statistics
+    path('stats/', views.portal_stats, name='portal-stats'),
 ]

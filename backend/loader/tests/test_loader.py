@@ -460,3 +460,35 @@ def test_state_store_atomic_file_write(tmp_path):
     # Verify temp file was cleanly replaced and does not remain on disk
     assert not (tmp_path / "atomic_state.json.tmp").exists()
     assert (tmp_path / "atomic_state.json").exists()
+
+
+# ==============================================================================
+# 11. Management Command & Fallback Tests
+# ==============================================================================
+
+@pytest.mark.django_db
+def test_ingest_nasa_catalog_management_command(capsys):
+    """Verify ingest_nasa_catalog command runs cleanly and supports all CLI flags."""
+    from django.core.management import call_command
+    from io import StringIO
+
+    out = StringIO()
+    call_command('ingest_nasa_catalog', target='moon', dry_run=True, stdout=out)
+    output = out.getvalue()
+    assert '[LOADER] Initializing NASA Ingest Subsystem...' in output
+    captured = capsys.readouterr()
+    assert 'COSMOLOST NASA INGEST' in captured.out
+    assert 'SUCCESS' in captured.out
+
+
+def test_rover_photos_fallback_to_curated_seeds():
+    """Verify RoverPhotosIngestService falls back to curated seeds when NASA API returns empty/404."""
+    mock_client = MagicMock(spec=NASAClient)
+    mock_client.fetch_rover_photos.return_value = []
+    mock_repo = MagicMock(spec=DjangoNASAIngestRepository)
+    service = RoverPhotosIngestService(mock_client, mock_repo)
+
+    stats = SyncStatsDTO(start_time=date.today())
+    photos = service.sync_rover_photos('opportunity-rover', stats, dry_run=True)
+    assert len(photos) > 0
+    assert any('PIA23000' in p.nasa_id_or_pia for p in photos)
