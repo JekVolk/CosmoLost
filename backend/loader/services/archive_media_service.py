@@ -35,14 +35,24 @@ CURATED_MEDIA_QUERIES: Dict[str, List[tuple[str, str]]] = {
 
 # Curated seed media guarantees 100% offline hackathon availability
 CURATED_SEED_MEDIA: Dict[str, List[MediaDTO]] = {
+    'apollo-11-lrr': [
+        MediaDTO(
+            artifact_id='apollo-11-lrr',
+            media_category='SURFACE_PHOTO',
+            media_url='https://images-assets.nasa.gov/image/6900957/6900957~medium.jpg',
+            nasa_id_or_pia='6900957',
+            caption='Apollo 11 Lunar Laser Ranging Retroreflector (LRRR) deployed at Tranquility Base.',
+            credit='NASA/Buzz Aldrin',
+        ),
+    ],
     'opportunity-rover': [
         MediaDTO(
             artifact_id='opportunity-rover',
             media_category='SURFACE_PHOTO',
-            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA05556.jpg',
-            nasa_id_or_pia='PIA05556',
-            caption='Microscopic view of Martian blueberries at Eagle Crater.',
-            credit='NASA/JPL/Cornell/USGS',
+            media_url='https://images-assets.nasa.gov/image/PIA22074/PIA22074~medium.jpg',
+            nasa_id_or_pia='PIA22074',
+            caption='Opportunity rover mosaic in Perseverance Valley, Endeavour Crater.',
+            credit='NASA/JPL-Caltech/Cornell/ASU',
         ),
         MediaDTO(
             artifact_id='opportunity-rover',
@@ -57,8 +67,8 @@ CURATED_SEED_MEDIA: Dict[str, List[MediaDTO]] = {
         MediaDTO(
             artifact_id='apollo-11-descent-stage',
             media_category='SURFACE_PHOTO',
-            media_url='https://images-assets.nasa.gov/image/AS11-40-5927/AS11-40-5927~orig.jpg',
-            nasa_id_or_pia='AS11-40-5927',
+            media_url='https://images-assets.nasa.gov/image/as11-40-5927/as11-40-5927~medium.jpg',
+            nasa_id_or_pia='as11-40-5927',
             caption='Apollo 11 Lunar Module Eagle standing on Mare Tranquillitatis.',
             credit='NASA/Neil Armstrong',
         ),
@@ -67,19 +77,19 @@ CURATED_SEED_MEDIA: Dict[str, List[MediaDTO]] = {
         MediaDTO(
             artifact_id='spirit-rover',
             media_category='SURFACE_PHOTO',
-            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA05200.jpg',
-            nasa_id_or_pia='PIA05200',
-            caption='Spirit rover looking back toward Columbia Memorial Station in Gusev Crater.',
-            credit='NASA/JPL-Caltech',
+            media_url='https://images-assets.nasa.gov/image/PIA05500/PIA05500~thumb.jpg',
+            nasa_id_or_pia='PIA05500',
+            caption='Spirit rover on the summit of Husband Hill overlooking Gusev Crater.',
+            credit='NASA/JPL-Caltech/Cornell',
         ),
     ],
     'insight-lander': [
         MediaDTO(
             artifact_id='insight-lander',
             media_category='SURFACE_PHOTO',
-            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA22521.jpg',
-            nasa_id_or_pia='PIA22521',
-            caption='InSight first selfie on Elysium Planitia, Mars.',
+            media_url='https://images-assets.nasa.gov/image/PIA23014/PIA23014~thumb.jpg',
+            nasa_id_or_pia='PIA23014',
+            caption='InSight lander selfie displaying SEIS dome and twin solar arrays at Elysium Planitia.',
             credit='NASA/JPL-Caltech',
         ),
     ],
@@ -87,10 +97,20 @@ CURATED_SEED_MEDIA: Dict[str, List[MediaDTO]] = {
         MediaDTO(
             artifact_id='ingenuity-helicopter',
             media_category='SURFACE_PHOTO',
-            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA24836.jpg',
+            media_url='https://images-assets.nasa.gov/image/PIA24836/PIA24836~medium.jpg',
             nasa_id_or_pia='PIA24836',
-            caption='Ingenuity Mars Helicopter captured in flight by Perseverance rover.',
-            credit='NASA/JPL-Caltech',
+            caption='Ingenuity Mars Helicopter resting on Martian sand in Jezero Crater.',
+            credit='NASA/JPL-Caltech/ASU/MSSS',
+        ),
+    ],
+    'sojourner-rover': [
+        MediaDTO(
+            artifact_id='sojourner-rover',
+            media_category='SURFACE_PHOTO',
+            media_url='https://images-assets.nasa.gov/image/PIA01120/PIA01120~medium.jpg',
+            nasa_id_or_pia='PIA01120',
+            caption='Sojourner rover examining the Martian rock named Yogi near Mars Pathfinder station.',
+            credit='NASA/JPL',
         ),
     ],
 }
