@@ -20,10 +20,13 @@ export type OperationalStatus =
 
 export type MediaCategory =
   | 'SURFACE_FIRST_PERSON'
+  | 'SURFACE_PHOTO'
   | 'LAST_KNOWN_PHOTO'
+  | 'PANORAMA'
   | 'ORBITAL_PROOF_LROC_HIRISE'
   | 'MODEL_3D'
-  | 'AUDIO_RECORDING';
+  | 'AUDIO_RECORDING'
+  | string;
 
 export type PlatformType = 'YOUTUBE' | 'TIKTOK' | 'REELS' | 'OTHER';
 

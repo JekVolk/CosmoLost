@@ -1,0 +1,304 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(5, 7, 13, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.embeddedContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #05070d;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+
+.canvasDragging {
+  cursor: grabbing;
+}
+
+.hudLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.hudLayer > * {
+  pointer-events: auto;
+}
+
+.hudTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.hudTopLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hudTopRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.badgeMars {
+  color: #f97316;
+  border-color: rgba(249, 115, 22, 0.4);
+  background: rgba(249, 115, 22, 0.12);
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.15);
+}
+
+.badgeMoon {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.12);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+}
+
+.compassCard {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  background: rgba(11, 17, 31, 0.88);
+  border: 1px solid rgba(86, 128, 233, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  color: #f1f5f9;
+}
+
+.compassDial {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(148, 163, 184, 0.3);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s linear;
+}
+
+.compassNeedle {
+  width: 2px;
+  height: 16px;
+  background: linear-gradient(to bottom, #ef4444 50%, #94a3b8 50%);
+  border-radius: 1px;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.iconBtn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  color: #ffffff;
+  border-color: rgba(148, 163, 184, 0.45);
+  transform: translateY(-1px);
+}
+
+.iconBtn:active {
+  transform: translateY(0);
+}
+
+.closeBtn {
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+.closeBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.hudRightControls {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.hudBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.metaCard {
+  max-width: 640px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: rgba(11, 17, 31, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(86, 128, 233, 0.25);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+}
+
+.metaTopRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.piaTag {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+}
+
+.creditTag {
+  font-size: 11px;
+  color: #94a3b8;
+  font-family: var(--font-mono, monospace);
+}
+
+.captionText {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #f8fafc;
+}
+
+.hudHint {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.8);
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.centerNotice {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 32px;
+  border-radius: 16px;
+  background: rgba(11, 17, 31, 0.92);
+  border: 1px solid rgba(86, 128, 233, 0.3);
+  backdrop-filter: blur(16px);
+  text-align: center;
+  pointer-events: auto;
+  max-width: 440px;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(148, 163, 184, 0.2);
+  border-radius: 50%;
+  border-top-color: #38bdf8;
+  animation: spin 0.9s linear infinite;
+}
+
+.spinnerMars {
+  border-top-color: #f97316;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f87171;
+}
+
+.errorDesc {
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.retryBtn {
+  padding: 8px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retryBtn:hover {
+  background: rgba(56, 189, 248, 0.35);
+}

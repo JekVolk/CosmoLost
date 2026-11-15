@@ -160,6 +160,7 @@ export function apiArtifactDetailToSpaceArtifact(detail: ArtifactDetail, bodyId:
     firstPersonMonologue: detail.first_person_monologue || match?.firstPersonMonologue,
     whyAbandoned: detail.cause_of_deactivation || match?.whyAbandoned || 'Mission finished.',
     imageUrl: detail.media?.[0]?.media_url || match?.imageUrl,
+    model3dUrl: detail.model_3d_url || match?.model3dUrl,
     keyInstruments:
       detail.discoveries && detail.discoveries.length > 0
         ? detail.discoveries.map((d) => ({
@@ -437,12 +438,46 @@ export const portalApi = {
       const res = await fetch(`${API_BASE_URL}/artifacts/${id}/media/`, { signal: AbortSignal.timeout(2500) });
       if (res.ok) {
         isLiveBackendConnected = true;
-        return await res.json();
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) return data;
       }
     } catch {}
 
     const detail = await this.getArtifactDetail(id);
-    return detail?.media || [];
+    const mediaList = [...(detail?.media || [])];
+
+    if (!mediaList.some((m) => m.media_category === 'PANORAMA')) {
+      if (id.includes('opportunity')) {
+        mediaList.push({
+          id: 'media-oppy-panorama',
+          media_category: 'PANORAMA',
+          media_url: 'https://photojournal.jpl.nasa.gov/jpeg/PIA18604.jpg',
+          nasa_id_or_pia: 'PIA18604',
+          caption: 'Opportunity 360-degree color panorama from Wdowiak Ridge overlooking Endeavour Crater.',
+          credit: 'NASA/JPL-Caltech/Cornell/ASU',
+        });
+      } else if (id.includes('spirit')) {
+        mediaList.push({
+          id: 'media-spirit-panorama',
+          media_category: 'PANORAMA',
+          media_url: 'https://photojournal.jpl.nasa.gov/jpeg/PIA01907.jpg',
+          nasa_id_or_pia: 'PIA01907',
+          caption: 'Spirit 360-degree panorama from the summit of Husband Hill, Gusev Crater.',
+          credit: 'NASA/JPL-Caltech/Cornell',
+        });
+      } else if (id.includes('apollo-11') || id.includes('eagle')) {
+        mediaList.push({
+          id: 'media-apollo11-panorama',
+          media_category: 'PANORAMA',
+          media_url: 'https://photojournal.jpl.nasa.gov/jpeg/PIA14545.jpg',
+          nasa_id_or_pia: 'PIA14545',
+          caption: 'Apollo 11 Tranquility Base 360-degree lunar surface panorama.',
+          credit: 'NASA / Neil Armstrong & Buzz Aldrin Archive',
+        });
+      }
+    }
+
+    return mediaList;
   },
 
   async listMissions(): Promise<MissionListResponse> {
