@@ -1,4 +1,4 @@
-.PHONY: up down stop createsuperuser logs migrate ingest
+.PHONY: up down stop createsuperuser logs migrate backend-shell ingest
 
 up:
 	docker compose up --build -d
@@ -10,13 +10,16 @@ stop:
 	docker compose down
 
 createsuperuser:
-	docker compose exec backend python3 manage.py createsuperuser
+	docker compose exec backend uv run manage.py createsuperuser
 
 migrate:
-	docker compose exec backend python3 manage.py migrate
+	docker compose exec backend uv run manage.py migrate
+
+backend-shell:
+	docker compose exec backend sh
 
 ingest:
-	docker compose exec backend python3 manage.py run_ingest --force
+	docker compose exec backend uv run manage.py run_ingest --force
 
 logs:
 	docker compose logs -f
