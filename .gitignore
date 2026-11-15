@@ -24,6 +24,6 @@ __pycache__/
 
 # Local documents and handbooks
 *.pdf
+!business/spec/04_features/TEAM_PROPOSAL_ONE_PAGER.pdf
 CosmoLost_Engineering_Handbook (1).pdf
 CosmoLost_Engineering_Handbook*.pdf
-
