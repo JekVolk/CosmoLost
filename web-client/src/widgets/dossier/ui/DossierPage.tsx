@@ -101,34 +101,59 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
       <div className="dossier-container">
         {}
         <div className="dossier-nav-bar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0, flex: 1, overflow: 'hidden' }}>
             <button type="button" className="btn-back" onClick={onBackToMap}>
               <ArrowLeft size={16} />
               <span>Back to 3D Map</span>
             </button>
             <div
+              className="dossier-breadcrumbs"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
                 fontSize: '11px',
                 color: 'var(--text-dim)',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                minWidth: 0,
               }}
             >
-              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>
+              <span style={{ cursor: 'pointer', color: '#94A3B8', flexShrink: 0 }} onClick={onBackToMap}>
                 Home
               </span>
-              <span>/</span>
-              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>
+              <span style={{ flexShrink: 0 }}>/</span>
+              <span style={{ cursor: 'pointer', color: '#94A3B8', flexShrink: 0 }} onClick={onBackToMap}>
                 Catalog
               </span>
-              <span>/</span>
-              <span style={{ color: themeColor, fontWeight: 600 }}>{artifact.name}</span>
+              <span style={{ flexShrink: 0 }}>/</span>
+              <span
+                style={{
+                  color: themeColor,
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '220px',
+                  display: 'inline-block',
+                }}
+                title={artifact.name}
+              >
+                {artifact.name}
+              </span>
             </div>
           </div>
 
           <div
-            style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)' }}
+            className="dossier-archive-badge"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              color: 'var(--text-dim)',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
           >
             NASA SPACE APPS 2026 ARCHIVE
           </div>

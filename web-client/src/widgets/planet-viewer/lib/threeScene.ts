@@ -36,10 +36,18 @@ export class PlanetScene {
   }[] = [];
 
   private hoveredArtifact: SpaceArtifact | null = null;
+  private selectedArtifactId: string | null = null;
+  private selectionGroup = new THREE.Group();
+  private selectionRings: THREE.Mesh[] = [];
+  private selectionPillar: THREE.Mesh | null = null;
+  private selectionLaser: THREE.Mesh | null = null;
+  private selectionReticle: THREE.Group | null = null;
+  private selectionLight: THREE.PointLight | null = null;
   private pointerDownPos = { x: 0, y: 0 };
   private lastPointerPos = { x: 0, y: 0 };
   private isPointerDown = false;
   private isDragging = false;
+  private activePointerId: number | null = null;
   private angularVelocity = new THREE.Vector2(0, 0);
 
   private cameraDistance = 5.8;
@@ -101,6 +109,7 @@ export class PlanetScene {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.15;
+    this.renderer.domElement.style.touchAction = 'none';
     this.container.appendChild(this.renderer.domElement);
 
     this.ambientLight = new THREE.AmbientLight(0xddeeff, 0.28);
@@ -880,6 +889,130 @@ export class PlanetScene {
     }, 400);
   }
 
+  public setSelectedArtifact(artifact: SpaceArtifact | null) {
+    this.selectedArtifactId = artifact ? artifact.id : null;
+    this.rebuildSelectionGroup(artifact);
+  }
+
+  private rebuildSelectionGroup(artifact: SpaceArtifact | null) {
+    if (this.selectionGroup.parent) {
+      this.selectionGroup.parent.remove(this.selectionGroup);
+    }
+    while (this.selectionGroup.children.length > 0) {
+      const child = this.selectionGroup.children[0];
+      this.selectionGroup.remove(child);
+      if ((child as any).geometry) (child as any).geometry.dispose();
+    }
+    this.selectionRings = [];
+    this.selectionPillar = null;
+    this.selectionLaser = null;
+    this.selectionReticle = null;
+    this.selectionLight = null;
+
+    if (!artifact) return;
+
+    const marker = this.markerMeshes.find((m) => m.artifact.id === artifact.id);
+    if (!marker) return;
+
+    const isMars = this.currentPlanet.id === 'mars';
+    const colorHex = artifact.badgeColor
+      ? new THREE.Color(artifact.badgeColor)
+      : (isMars ? new THREE.Color(0xf97316) : new THREE.Color(0x00F0FF));
+
+    // 1. High-intensity vertical quantum laser pillar shooting into orbit
+    const pillarHeight = 0.85;
+    const pillarGeo = new THREE.CylinderGeometry(0.009, 0.048, pillarHeight, 24, 1, true);
+    const pillarMat = new THREE.MeshBasicMaterial({
+      color: colorHex,
+      transparent: true,
+      opacity: 0.7,
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    });
+    this.selectionPillar = new THREE.Mesh(pillarGeo, pillarMat);
+    this.selectionPillar.position.y = pillarHeight / 2;
+    this.selectionGroup.add(this.selectionPillar);
+
+    // Inner pure white laser needle
+    const laserGeo = new THREE.CylinderGeometry(0.0022, 0.0022, pillarHeight * 1.05, 8);
+    const laserMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending,
+    });
+    this.selectionLaser = new THREE.Mesh(laserGeo, laserMat);
+    this.selectionLaser.position.y = (pillarHeight * 1.05) / 2;
+    this.selectionGroup.add(this.selectionLaser);
+
+    // 2. Three concentric pulsing radar rings on the planetary crust
+    for (let i = 0; i < 3; i++) {
+      const ringGeo = new THREE.RingGeometry(0.022, 0.034, 36);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: colorHex,
+        transparent: true,
+        opacity: 0.85,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 0.003 + i * 0.0012;
+      this.selectionGroup.add(ring);
+      this.selectionRings.push(ring);
+    }
+
+    // 3. Holographic HUD targeting reticle brackets floating above the beacon
+    const reticleGroup = new THREE.Group();
+    reticleGroup.position.y = 0.16;
+
+    const bSize = 0.046;
+    const bLen = 0.018;
+    const bracketPts = [
+      new THREE.Vector3(-bSize, 0, -bSize), new THREE.Vector3(-bSize + bLen, 0, -bSize),
+      new THREE.Vector3(-bSize, 0, -bSize), new THREE.Vector3(-bSize, 0, -bSize + bLen),
+      new THREE.Vector3(bSize, 0, -bSize), new THREE.Vector3(bSize - bLen, 0, -bSize),
+      new THREE.Vector3(bSize, 0, -bSize), new THREE.Vector3(bSize, 0, -bSize + bLen),
+      new THREE.Vector3(-bSize, 0, bSize), new THREE.Vector3(-bSize + bLen, 0, bSize),
+      new THREE.Vector3(-bSize, 0, bSize), new THREE.Vector3(-bSize, 0, bSize - bLen),
+      new THREE.Vector3(bSize, 0, bSize), new THREE.Vector3(bSize - bLen, 0, bSize),
+      new THREE.Vector3(bSize, 0, bSize), new THREE.Vector3(bSize, 0, bSize - bLen),
+    ];
+    const bGeo = new THREE.BufferGeometry().setFromPoints(bracketPts);
+    const bMat = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending,
+    });
+    reticleGroup.add(new THREE.LineSegments(bGeo, bMat));
+
+    // Central diamond target glyph
+    const diamondGeo = new THREE.RingGeometry(0.014, 0.019, 4);
+    const diamondMat = new THREE.MeshBasicMaterial({
+      color: colorHex,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.92,
+      blending: THREE.AdditiveBlending,
+    });
+    const diamondMesh = new THREE.Mesh(diamondGeo, diamondMat);
+    diamondMesh.rotation.x = Math.PI / 2;
+    reticleGroup.add(diamondMesh);
+
+    this.selectionGroup.add(reticleGroup);
+    this.selectionReticle = reticleGroup;
+
+    // 4. PointLight illuminating the planetary surface
+    this.selectionLight = new THREE.PointLight(colorHex, 4.5, 1.4, 1.6);
+    this.selectionLight.position.y = 0.14;
+    this.selectionGroup.add(this.selectionLight);
+
+    marker.markerGroup.add(this.selectionGroup);
+  }
+
   public flyToArtifact(artifact: SpaceArtifact, onComplete?: () => void) {
     this.cancelGlide(false);
     this.onGlideComplete = onComplete || null;
@@ -922,8 +1055,25 @@ export class PlanetScene {
     this.markersGroup.visible = visible;
   }
 
+  private applyRotation(deltaX: number, deltaY: number) {
+    const dist = Math.hypot(deltaX, deltaY);
+    if (dist > 0.0000001) {
+      // True 360-degree trackball rotation around screen-space motion axis
+      const axis = new THREE.Vector3(deltaY, deltaX, 0).normalize();
+      const rot = new THREE.Quaternion().setFromAxisAngle(axis, dist);
+      this.planetGroup.quaternion.premultiply(rot);
+    }
+  }
+
   private onPointerDown = (e: PointerEvent) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    if (this.activePointerId !== null) return;
+    this.activePointerId = e.pointerId;
+
+    try {
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {}
+
     this.cancelGlide();
     this.isPointerDown = true;
     this.isDragging = false;
@@ -933,6 +1083,10 @@ export class PlanetScene {
   };
 
   private onPointerMove = (e: PointerEvent) => {
+    if (this.activePointerId !== null && e.pointerId !== this.activePointerId) {
+      return;
+    }
+
     if (this.isPointerDown && this.controlsEnabled) {
       const dx = e.clientX - this.lastPointerPos.x;
       const dy = e.clientY - this.lastPointerPos.y;
@@ -953,17 +1107,16 @@ export class PlanetScene {
 
       this.lastPointerPos = { x: e.clientX, y: e.clientY };
 
+      const isCoarse =
+        e.pointerType === 'touch' ||
+        (typeof window !== 'undefined' &&
+          ('ontouchstart' in window || navigator.maxTouchPoints > 0));
       const baseDist = this.currentPlanet.radius * 2.6;
       const zoomFactor = THREE.MathUtils.clamp(this.cameraDistance / baseDist, 0.22, 1.0);
-      const speed = zoomFactor * 0.0018;
+      const speed = zoomFactor * (isCoarse ? 0.0036 : 0.0019);
 
-      const rotY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), dx * speed);
-      const rotX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), dy * speed);
-
-      this.planetGroup.quaternion.premultiply(rotY);
-      this.planetGroup.quaternion.premultiply(rotX);
-
-      this.angularVelocity.set(dx * speed * 0.65, dy * speed * 0.65);
+      this.applyRotation(dx * speed, dy * speed);
+      this.angularVelocity.set(dx * speed * 0.75, dy * speed * 0.75);
       return;
     }
 
@@ -1029,6 +1182,13 @@ export class PlanetScene {
   };
 
   private onPointerUp = (e: PointerEvent) => {
+    if (this.activePointerId !== null && e.pointerId === this.activePointerId) {
+      try {
+        (e.target as HTMLElement).releasePointerCapture(this.activePointerId);
+      } catch {}
+      this.activePointerId = null;
+    }
+
     if (!this.isPointerDown) return;
     this.isPointerDown = false;
 
@@ -1094,7 +1254,10 @@ export class PlanetScene {
 
   private touchStartDist = 0;
   private onTouchStart = (e: TouchEvent) => {
-    if (e.touches.length === 2) {
+    if (e.touches.length >= 2) {
+      this.isPointerDown = false;
+      this.activePointerId = null;
+      this.angularVelocity.set(0, 0);
       this.touchStartDist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY,
@@ -1154,20 +1317,10 @@ export class PlanetScene {
 
     if (!this.isPointerDown && !this.isGliding) {
       if (this.angularVelocity.lengthSq() > 0.0000001) {
-        const rotY = new THREE.Quaternion().setFromAxisAngle(
-          new THREE.Vector3(0, 1, 0),
-          this.angularVelocity.x,
-        );
-        const rotX = new THREE.Quaternion().setFromAxisAngle(
-          new THREE.Vector3(1, 0, 0),
-          this.angularVelocity.y,
-        );
-        this.planetGroup.quaternion.premultiply(rotY);
-        this.planetGroup.quaternion.premultiply(rotX);
-        this.angularVelocity.multiplyScalar(0.88);
+        this.applyRotation(this.angularVelocity.x, this.angularVelocity.y);
+        this.angularVelocity.multiplyScalar(0.92);
       } else if (this.isAutoRotating) {
-        const autoRot = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), 0.001);
-        this.planetGroup.quaternion.premultiply(autoRot);
+        this.applyRotation(0.001, 0);
       }
     }
 
@@ -1212,31 +1365,61 @@ export class PlanetScene {
       if (!isVisible) return;
 
       const isHovered = this.hoveredArtifact?.id === item.artifact.id;
+      const isSelected = this.selectedArtifactId === item.artifact.id;
 
-      item.beaconHead.rotation.y += isHovered ? 0.042 : 0.016;
+      item.beaconHead.rotation.y += isSelected ? 0.055 : (isHovered ? 0.042 : 0.016);
 
-      const bob = Math.sin(time * 2.2 + item.phase) * 0.005;
-      item.beaconHead.position.y = 0.08 + bob;
+      const bob = Math.sin(time * 2.2 + item.phase) * (isSelected ? 0.009 : 0.005);
+      item.beaconHead.position.y = (isSelected ? 0.095 : 0.08) + bob;
 
       if (item.rotorTop && item.rotorBottom) {
-        item.rotorTop.rotation.y += isHovered ? 0.28 : 0.09;
-        item.rotorBottom.rotation.y -= isHovered ? 0.28 : 0.09;
+        item.rotorTop.rotation.y += isSelected ? 0.35 : (isHovered ? 0.28 : 0.09);
+        item.rotorBottom.rotation.y -= isSelected ? 0.35 : (isHovered ? 0.28 : 0.09);
       }
 
       if (item.sonarRing && item.sonarRing.material instanceof THREE.MeshBasicMaterial) {
         const cycle = (time * 0.75 + item.phase / (Math.PI * 2)) % 1;
-        const sonarScale = 0.6 + cycle * 2.2;
+        const sonarScale = (isSelected ? 1.0 : 0.6) + cycle * (isSelected ? 3.0 : 2.2);
         item.sonarRing.scale.set(sonarScale, sonarScale, 1);
-        item.sonarRing.material.opacity = Math.max(0, (1 - cycle) * 0.65);
+        item.sonarRing.material.opacity = Math.max(0, (1 - cycle) * (isSelected ? 0.95 : 0.65));
       }
 
-      const targetScale = isHovered ? 1.42 : 1.0;
-      item.beaconHead.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.2);
+      const targetScale = isSelected
+        ? 2.2 + Math.sin(time * 4.5) * 0.35
+        : (isHovered ? 1.42 : 1.0);
+      item.beaconHead.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.25);
 
       if (item.beamMesh && item.beamMesh.material instanceof THREE.MeshBasicMaterial) {
-        item.beamMesh.material.opacity = isHovered ? 0.8 : 0.38;
+        item.beamMesh.material.opacity = isSelected ? 1.0 : (isHovered ? 0.8 : 0.38);
       }
     });
+
+    // Animate active selection highlight elements
+    if (this.selectedArtifactId) {
+      const animT = performance.now() * 0.003;
+      if (this.selectionPillar) {
+        const pulse = 0.75 + Math.sin(animT * 4) * 0.25;
+        (this.selectionPillar.material as THREE.MeshBasicMaterial).opacity = 0.55 * pulse;
+        this.selectionPillar.scale.x = 1.0 + Math.sin(animT * 3.5) * 0.18;
+        this.selectionPillar.scale.z = 1.0 + Math.sin(animT * 3.5) * 0.18;
+      }
+      if (this.selectionLaser) {
+        const needlePulse = 0.85 + Math.sin(animT * 6) * 0.15;
+        (this.selectionLaser.material as THREE.MeshBasicMaterial).opacity = needlePulse;
+      }
+      if (this.selectionReticle) {
+        this.selectionReticle.rotation.y += 0.025;
+      }
+      this.selectionRings.forEach((ring, idx) => {
+        const ringPhase = (animT * 0.75 + idx * 0.33) % 1.0;
+        const ringScale = 0.8 + ringPhase * 4.5;
+        ring.scale.set(ringScale, ringScale, 1);
+        (ring.material as THREE.MeshBasicMaterial).opacity = Math.max(0, (1.0 - ringPhase) * 0.85);
+      });
+      if (this.selectionLight) {
+        this.selectionLight.intensity = 3.5 + Math.sin(animT * 6) * 1.5;
+      }
+    }
 
     if (this.hoveredArtifact) {
       const current = this.markerMeshes.find((m) => m.artifact.id === this.hoveredArtifact?.id);
@@ -1253,6 +1436,7 @@ export class PlanetScene {
   };
 
   public destroy() {
+    this.setSelectedArtifact(null);
     cancelAnimationFrame(this.animationFrameId);
     window.removeEventListener('resize', this.onResize);
     const dom = this.renderer.domElement;

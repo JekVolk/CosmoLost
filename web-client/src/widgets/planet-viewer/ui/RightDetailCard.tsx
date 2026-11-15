@@ -20,10 +20,12 @@ export const RightDetailCard: React.FC<RightDetailCardProps> = ({
 
   return (
     <div className="pen-right-detail-card">
+      <div className="pen-mobile-handle" />
       <div className="pen-card-header">
         <div className="pen-header-title-wrap">
-          <div className="pen-card-agency" style={{ color: themeColor }}>
-            {artifact.agency} {artifact.country ? `• ${artifact.country}` : ''}
+          <div className="pen-target-lock-badge" style={{ borderColor: `${themeColor}50`, color: themeColor }}>
+            <span className="pen-target-lock-dot" style={{ backgroundColor: themeColor }} />
+            <span>LOCKED TARGET • {artifact.agency} {artifact.country ? `• ${artifact.country}` : ''}</span>
           </div>
           <h3 className="pen-card-title">{artifact.name}</h3>
         </div>
