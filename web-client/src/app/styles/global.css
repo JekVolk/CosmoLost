@@ -2534,6 +2534,7 @@ body:has(.dossier-page),
   font-size: 14px;
   outline: none;
   font-family: var(--font-main);
+  width: 100%;
 }
 
 .pen-form-field input:focus,
