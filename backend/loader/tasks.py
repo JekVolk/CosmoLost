@@ -21,6 +21,7 @@ def build_pipeline() -> NASAIngestPipeline:
     raw_keys = os.getenv('NASA_API_KEYS', 'DEMO_KEY')
     base_url = os.getenv('NASA_API_BASE_URL', 'https://api.nasa.gov')
     images_url = os.getenv('NASA_IMAGES_API_URL', 'https://images-api.nasa.gov')
+    mars_rover_url = os.getenv('MARS_ROVER_API_BASE_URL')
     redis_url = os.getenv('REDIS_URL')
     timeout = int(os.getenv('NASA_REQUEST_TIMEOUT', '15'))
     delay = float(os.getenv('NASA_RATE_LIMIT_DELAY', '0.25'))
@@ -31,6 +32,7 @@ def build_pipeline() -> NASAIngestPipeline:
         token_pool=token_pool,
         base_url=base_url,
         images_api_url=images_url,
+        mars_rover_api_base_url=mars_rover_url,
         timeout=timeout,
         rate_limit_delay=delay,
         enable_mock_fallback=mock_fallback,
