@@ -11,6 +11,7 @@ export const DEFAULT_SETTINGS: DesktopSettings = {
   compactMode: false,
   soundEnabled: false,
   developerMode: false,
+  renderTimeoutSec: 40,
   lastExportedAt: null,
   youtubeClientId: '',
   youtubeConnected: false,
@@ -33,5 +34,8 @@ export const DEFAULT_SETTINGS: DesktopSettings = {
   runwayApiKey: '',
   cliInterceptionEnabled: true,
   cliBridgePort: 8089,
+  generativeProxyEndpoint: 'http://localhost:8000/v1',
+  generativeProxyAuthToken: '',
+  generativeDevMode: true,
   agentProfiles: DEFAULT_AGENT_PROFILES,
 };

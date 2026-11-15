@@ -13,6 +13,13 @@ desktop-client/.env
 desktop-client/node_modules/
 desktop-client/dist/
 desktop-client/src-tauri/target/
+desktop-client/src-tauri/binaries/*.exe
+desktop-client/src-tauri/binaries/*.pdb
+
+# OAuth client secrets & credentials (Zero-Trust BYOK)
+client_secret*.json
+*.credentials.json
+desktop-client/client_secret*.json
 
 # IDE
 .idea/

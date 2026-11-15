@@ -30,6 +30,7 @@ export interface SettingsState {
   toggleCompactMode: () => void;
   toggleSound: () => void;
   toggleDeveloperMode: () => void;
+  setRenderTimeoutSec: (seconds: number) => void;
   updateSettings: (partial: Partial<DesktopSettings>) => void;
   resetSettings: () => void;
   setHydrated: (hydrated: boolean) => void;

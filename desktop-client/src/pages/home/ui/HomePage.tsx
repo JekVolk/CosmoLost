@@ -1,4 +1,4 @@
-import { useArtifactsQuery } from '@/entities/artifact';
+import { useArtifactStore, useArtifactsQuery } from '@/entities/artifact';
 import {
   POPULAR_MAGNET_WORDS,
   downloadScriptMarkdownFile,
@@ -32,7 +32,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import type React from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const RUBRIC_LABELS: Record<SmmRubricType, { label: string; color: string }> = {
@@ -73,6 +73,14 @@ export const HomePage: React.FC = () => {
   const [seriesPart, setSeriesPart] = useState(1);
   const [seriesTotalParts, setSeriesTotalParts] = useState(3);
 
+  // Sync selectedArtifactId once artifacts list loads
+  useEffect(() => {
+    const first = artifacts[0];
+    if (first && !artifacts.some((a) => a.id === selectedArtifactId)) {
+      setSelectedArtifactId(first.id);
+    }
+  }, [artifacts, selectedArtifactId]);
+
   // Smart Next Topic Generator (REQ-FAC-13)
   const coveredArtifactIds = useMemo(() => new Set(projects.map((p) => p.artifactId)), [projects]);
 
@@ -109,6 +117,10 @@ export const HomePage: React.FC = () => {
   }, [projects, filterStatus, searchQuery]);
 
   const handleOpenProjectInEditor = (projectId: string) => {
+    const target = projects.find((p) => p.id === projectId);
+    if (target?.artifactId) {
+      useArtifactStore.getState().selectArtifactById(target.artifactId);
+    }
     openProject(projectId);
     navigate(ROUTES.CONTENT_FACTORY);
   };
@@ -135,6 +147,7 @@ export const HomePage: React.FC = () => {
           : undefined,
     });
     setIsCreateOpen(false);
+    useArtifactStore.getState().selectArtifactById(selectedArtifactId);
     openProject(created.id);
     navigate(ROUTES.CONTENT_FACTORY);
   };
@@ -154,6 +167,7 @@ export const HomePage: React.FC = () => {
         totalParts: 3,
       },
     });
+    useArtifactStore.getState().selectArtifactById(smartSuggestion.artifactId);
     openProject(created.id);
     navigate(ROUTES.CONTENT_FACTORY);
   };

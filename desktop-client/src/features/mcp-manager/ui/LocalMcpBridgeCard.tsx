@@ -15,7 +15,7 @@ export const LocalMcpBridgeCard: React.FC = () => {
         'cosmolost-desktop': {
           command: 'node',
           args: [
-            'C:\\Users\\JekVo\\orca\\workspaces\\CosmoLost\\feature-desktop-client\\desktop-client\\scripts\\cosmolost-mcp-server.mjs',
+            'C:\\Users\\JekVo\\orca\\workspaces\\CosmoLost\\feature-desktop-client-two-stage\\desktop-client\\scripts\\cosmolost-mcp-server.mjs',
           ],
         },
       },

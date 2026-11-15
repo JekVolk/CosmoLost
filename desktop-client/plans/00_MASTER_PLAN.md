@@ -1,112 +1,90 @@
-# CosmoLost Desktop Client: Генеральний Архітектурний План «Фабрики Контенту» (00_MASTER_PLAN.md)
+# CosmoLost Desktop Client: Генеральний Архітектурний та Імплементаційний План v2.2 (00_MASTER_PLAN.md)
 
-> **Статус**: План декомпозиції та оркестрації  
-> **Версія проекту**: CosmoLost Desktop Client v0.2.0  
-> **Стек**: Tauri v2 (Rust) + React 19 + TypeScript + Chakra UI v3 + Feature-Sliced Design (FSD v2.1) + `@xyflow/react` + FFmpeg + Edge-TTS + Native MCP  
-> **Джерела вимог**:  
+> **Статус**: Впроваджено, Верифіковано та Узгоджено з Product Owner  
+> **Версія проекту**: CosmoLost Desktop Client v0.3.2  
+> **Стек**: Tauri v2 (Rust) + React 19 + TypeScript + Chakra UI v3 + Feature-Sliced Design (FSD v2.1) + `@xyflow/react` + FFmpeg + Edge-TTS + Native Desktop MCP  
+> **Дизайн-джерела**:  
+> - `design/canvas/02-desktop-studio.pen` / `02-desktop-studio.pen` (20 фреймів студії, монітора 9:16, діалогів від Віолетти)  
+> - `design/02_TASK_DESIGN_EDITOR_DESKTOP.md`  
+> - `design/03_PAGE_LAYOUTS_AND_MISSION_SPEC.md`  
+> - `design/spec/theme.md`, `components.md`, `pages.md`  
+> **Бізнес-джерела**:  
 > - `business/inbox/Створення IT-контенту для соцмереж.md`  
 > - `business/spec/04_features/FEAT-03_content_factory.md`  
 > - `business/spec/04_features/FEAT-04_social_publishing.md`  
-> - `business/spec/06_architecture/03_API_CONTRACTS.md`  
-> - `business/spec/06_architecture/04_SEQUENCES.md`  
->  
-> **Обмеження поточної ітерації (Згідно з вказівкою користувача)**:  
-> - **ВИКЛЮЧЕНО з реалізації на даному етапі**:  
->   1. Інтеграція з віддаленим бекенд API (`/api/v1/editor/`, `/api/v1/portal/`) — замінюється локальними мок-фікстурами та Direct NASA CDN.  
->   2. Синхронізація віддалених сутностей БД (`ENT-*` на бекенді) — використовується строго автономний локальний клієнтський стан.  
->   3. Детальний візуальний UI/UX дизайн (косметична стилізація, кольорові палітри, піксель-перфект верстка) — інтерфейс фокусується виключно на логіці та структурі.  
-> - **НЕ виконувати генерацію робочого коду та компіляцію зараз** — тільки затвердження плану, створення деталізованих `.md` специфікацій та розподіл завдань між Swarm-агентами.
+> - `business/spec/04_features/FEAT-05_mcp_rag_gateway.md`  
+> - `business/spec/05_domain/01_ENTITIES.md`, `02_FIELDS_AND_VALIDATIONS.md`, `03_OPERATIONS.md`  
+> - `desktop-client/docs/YOUTUBE_OAUTH_SETUP.md`  
 
 ---
 
-## 1. Загальна візія та Local-First Архітектура
+## 1. Затверджені Рішення за Результатами Зворотного Зв'язку Користувача
 
-Десктопний клієнт **CosmoLost «Фабрика контенту»** — це нативний комбайн для виробництва вірусних науково-популярних вертикальних відео (1080x1920, 9:16) для YouTube Shorts, TikTok та Instagram Reels.
+### 1.1. FFmpeg Sidecar та автодетекція:
+* **Автоматичний пошук**: Застосунок перевіряє наявність FFmpeg на комп'ютері через `where ffmpeg`, локальну папку `%LOCALAPPDATA%\CosmoLost\bin\` та системний `PATH`.
+* **Якщо знайдено**: Відображається бейдж `🟢 FFmpeg Ready` у верхньому рядку `StudioActionHeader`.
+* **Якщо не знайдено**: Відображається попередження `⚠️ FFmpeg не знайдено` з кнопкою `[⚡ Встановити FFmpeg]`, яка автоматично встановлює/довантажує бінарник у локальну папку користувача без ручних термінальних команд.
 
-### Ключові інженерні принципи:
-1. **100% Local-First / Клієнтська автономія**: Усі важкі розрахунки (TTS озвучка, Jump-cut фільтрація тиші, ліпсінк аватара, Ken Burns зумування, Pillow-box розмиття фону, монтаж FFmpeg) відбуваються локально на машині користувача.
-2. **Нульове навантаження на сервер**: Відео- та аудіоматеріали не передаються на центральний бекенд.
-3. **Rust Watchdog з адаптивним таймаутом**: Рендеринг відео враховує слабкі інтегровані GPU/CPU (налаштування `render_timeout_sec` від 30 до 300 секунд), запобігаючи аварійному перериванню робочого процесу.
-4. **Нативний контур експорту (Graceful Fallback)**: Якщо прямий автопостинг недоступний, моментально спрацьовує нативна функція ОС «Відкрити папку з файлом» (`explorer /select,`) з копіюванням 3-рядкового SEO-пакету в системний буфер обміну.
+### 1.2. YouTube Shorts Authorization & Гарантований бекап:
+* **Google Cloud OAuth 2.0 PKCE**: Створено детальну інструкцію [docs/YOUTUBE_OAUTH_SETUP.md](file:///C:/Users/JekVo/orca/workspaces/CosmoLost/feature-desktop-client-two-stage/desktop-client/docs/YOUTUBE_OAUTH_SETUP.md) з покроковим налаштуванням Client ID, посиланнями на консоль Google Cloud та змінними в `.env` (`VITE_YOUTUBE_CLIENT_ID`, `VITE_YOUTUBE_CLIENT_SECRET`).
+* **BYOK заборонено**: Користувачі не вводять власні складні секрети — застосунок використовує нативний PKCE flow.
+* **Обов'язкова базова фіча (Option C Foundation)**: Кожен згенерований проєкт ОБОВ'ЯЗКОВО зберігається у локальну папку `Videos/CosmoLost/<project_id>/` разом з:
+  1. `rendered_<id>.mp4` (відео 1080x1920 60FPS)
+  2. `project.json` (повні метадані)
+  3. `captions.txt` (3-рядковий опис за Золотою формулою)
+  4. `pin_comment.txt` (закріплений коментар)
+* **Захист від дублікатів**: Якщо проєкт вже має статус `PUBLISHED` або `PUBLISHED_MANUALLY`, кнопка публікації блокується із попередженням `🔒 Вже опубліковано`.
 
----
+### 1.3. Telegram Bot API (контроль ліміту 50 МБ):
+* **Оригінальний бітрейт за замовчуванням**: Зберігається максимальна якість 1080x1920 60 FPS (~74 МБ).
+* **Попереджувальний блок (Amber Alert)** у `PublicationExportDialog`: якщо відео перевищує 50 МБ, надаються дві альтернативи:
+  1. `[⚡ Стиснути для Telegram (H.264 CRF 23, ~28 МБ без видимих втрат)]` — 1-клік оптимізація.
+  2. `[📂 Відкрити в Провіднику (вручну без втрати якості)]` — відкриття Windows Explorer з інструкцією перетягування файлу в Telegram Desktop як «Документ» (до 2 ГБ).
 
-## 2. Модульна декомпозиція системи
+### 1.4. Smart Next Topic Best Practices (Серіалізація контенту):
+* **Автоуспадкування**: За рекомендаціями вірального retention у short-form серіях (Part 1, 2, 3), застосунок **автоматично зберігає** пресет аватара (Luna / Neil), мову озвучки (uk-UA) та тональність.
+* **Інкремент серії**: Автоматично встановлюється `Part 2 of 3` з кліфхенгером у `seriesInfo`.
+* **Картка безперервності**: У діалозі відображається блок *«Автоуспадкування серіалізації (Best-Practice Continuity: +40% утримання)»* з можливістю змінити параметри за бажанням.
 
-Архітектура розбивається на 3 взаємопов'язані автономні функціональні домени:
-
-```mermaid
-graph TD
-    subgraph CoreEngine ["1. Медіа-ядро та Монтажний конвеєр (Sub-plan 01)"]
-        TTS["Edge-TTS + JumpCut (<0.15s)"]
-        FFmpeg["FFmpeg Sidecar (1080x1920, 60fps)"]
-        PillowBox["Blurred Background Pillow-Box (4:3 -> 9:16)"]
-        KenBurns["Ken Burns ZoomPan Engine"]
-        Subtitles["Dynamic Kinetic Subtitles (.ass/.srt)"]
-        Watchdog["Rust Render Watchdog (render_timeout_sec)"]
-    end
-
-    subgraph NodeGraph ["2. Нодовий Редактор та PNGTuber (Sub-plan 02)"]
-        XyFlow["React Flow Node Pipeline (@xyflow/react)"]
-        Rubrics["SMM Rubrics Engine (5 форматів за 40 сек)"]
-        PNGTuber["Reactive PNGTuber (RMS Lip-sync, 8 sprites)"]
-        NextTopic["Smart Next Topic & Narrative Bridge"]
-        SafeZones["Safe Zones Engine (220px/420px/150px)"]
-    end
-
-    subgraph NativePlatform ["3. Нативна Платформа, Дистрибуція та MCP (Sub-plan 03)"]
-        TauriIPC["Tauri v2 IPC (Rust Backend Commands)"]
-        Social["IPlatformConnector (YouTube, Telegram, TikTok)"]
-        LocalExport["LocalFolderExporter (explorer.exe + Clipboard)"]
-        DesktopMCP["Native Desktop MCP (stdio/SSE Tools)"]
-        BatchQueue["Batch Queue Production (5-10 роликів)"]
-    end
-
-    NodeGraph --> CoreEngine
-    CoreEngine --> NativePlatform
-```
+### 1.5. CosmoLost Cloud (PostgreSQL) та 100% Local-First JSON:
+* Усі проєкти та історія зберігаються локально в `tauri-storage` / `project.json` на диску.
+* Фонова синхронізація не перевантажує мережу (налаштовуваний інтервал у налаштуваннях).
+* Додано кнопку `[🌐 3D Мапа]` / «Прив'язати до 3D мапи CosmoLost» для миттєвої генерації deep link на веб-портал після публікації.
 
 ---
 
-## 3. Реєстр суб-планів та зона відповідальності Swarm-агентів
+## 2. Матриця Відстеження Вимог (Requirements Traceability Matrix)
 
-| Суб-план | Файл специфікації | Swarm Воркер | Ключові обов'язки воркера |
+| Код Вимоги | Назва та Суть Вимоги | Статус | Цільовий Слайс (FSD v2.1) |
 | :--- | :--- | :--- | :--- |
-| **План 1** | [`01_video_audio_ffmpeg_pipeline.md`](./01_video_audio_ffmpeg_pipeline.md) | `worker-media` | Специфікація та реалізація пайплайну аудіо/відео монтажу: Edge-TTS, Jump-cut фільтрація тиші, багатодоріжковий мікшер (голос -3dB, музика -24dB), FFmpeg `filter_complex`, Pillow-box розмиття для фото 4:3, ефект Кена Бернса, кінетичні субтитри та сторожовий таймер Rust Watchdog. |
-| **План 2** | [`02_pngtuber_node_graph_engine.md`](./02_pngtuber_node_graph_engine.md) | `worker-nodegraph` | Архітектура нодового графа на `@xyflow/react`: 7 типів нод, реактивний PNGTuber (8 спрайтів, RMS ліпсінк, анімація переміщення з центру в кут), SMM-рубрики (5 шаблонів на 40 секунд), матриця безпечних зон (Pillow-box) та алгоритм серійності «Smart Next Topic». |
-| **План 3** | [`03_native_ipc_distribution_mcp.md`](./03_native_ipc_distribution_mcp.md) | `worker-platform` | Нативна інтеграція Tauri v2: IPC команди Rust, конектори соцмереж (`IPlatformConnector`: YouTube OAuth PKCE, Telegram Bot, TikTok fallback), нативний експорт у провідник із буфером обміну, черга пакетної генерації (`REQ-FAC-11`) та нативний десктопний MCP-сервер (`REQ-FAC-12`). |
+| **REQ-FAC-01** | Вибір небесного тіла (Місяць/Марс) та артефакту з NASA Open Data | ✅ **Завершено** | `entities/artifact`, `features/node-editor` |
+| **REQ-FAC-02** | Двигун SMM-рубрикації (5 готових контент-патернів під ~40с) | ✅ **Завершено** | `features/script-generator`, `entities/content-template` |
+| **REQ-FAC-03** | Фіксація причини вибору даних (`selection_reason`) від 10 до 500 символів | ✅ **Завершено** | `features/script-generator`, `entities/publication` |
+| **REQ-FAC-04** | Синтез Edge-TTS з Jump-cut видаленням пауз ($< 0.15$с) та прискоренням 1.1x | ✅ **Завершено** | `features/media-engine`, `src-tauri` |
+| **REQ-FAC-05** | Багатодоріжковий аудіомікшер (Голос -3dB, BGM -24dB, SFX -12dB з `normalize=0`) | ✅ **Завершено** | `features/media-engine`, `plans/01` |
+| **REQ-FAC-06** | Реактивний PNGTuber (8 спрайтів, 4 емоції $\times$ 2 фази рота, RMS ліпсінк) | ✅ **Завершено** | `features/pngtuber-editor/`, `features/media-engine` |
+| **REQ-FAC-07** | Кінематика переміщення аватара (Хук 0-3.5с по центру $\to$ кут над 420px зоною) | ✅ **Завершено** | `features/pngtuber-editor/`, `features/media-engine` |
+| **REQ-FAC-08** | Ефект Pillow-box для архівних фото NASA 4:3 (розмитий фон + чіткий центр) | ✅ **Завершено** | `features/preview-player/`, `features/media-engine` |
+| **REQ-FAC-09** | Матриця безпечних зон Safe Zones (220px верх, 420px низ, 150px право) | ✅ **Завершено** | `features/preview-player/`, `widgets/content-factory` |
+| **REQ-FAC-10** | Налаштовуваний сторожовий таймер Rust Watchdog (`render_timeout_sec`: 30-300s) | ✅ **Завершено** | `widgets/content-factory`, `entities/settings` |
+| **REQ-FAC-11** | Пакетний режим генерації (Batch Production Queue на 5 роликів) | ✅ **Завершено** | `entities/publication`, `features/task-scheduler` |
+| **REQ-FAC-12** | Вбудований нативний десктопний MCP-сервер (stdio / IPC інструменти) | ✅ **Завершено** | `scripts/cosmolost-mcp-server.mjs`, `shared/lib/mcp` |
+| **REQ-FAC-13** | Розумний підбір наступної теми (Smart Next Topic Engine + Narrative Bridge) | ✅ **Завершено** | `features/smart-next-topic/`, `entities/publication` |
+| **REQ-PUB-01** | Пакетний експорт для ручної публікації (Zero-API Fallback) (`explorer /select`) | ✅ **Завершено** | `features/social-publishing/`, `src-tauri` |
+| **REQ-PUB-02** | YouTube Shorts API інтеграція (OAuth 2.0 PKCE, інструкція в docs/) | ✅ **Завершено** | `shared/api/social/youtube-api.ts`, `docs/YOUTUBE` |
+| **REQ-PUB-03** | Telegram Channel інтеграція (`sendVideo`, MarkdownV2, перевірка 50MB) | ✅ **Завершено** | `shared/api/social/telegram-api.ts`, `social-publishing` |
+| **REQ-PUB-04** | TikTok Content Posting API інтеграція (OAuth PKCE, chunked upload) | 🟡 **Клієнт готовий** *(Очікує App Token)* | `shared/api/social/`, `features/social-publishing` |
+| **REQ-PUB-05** | Відстеження статусів відправки (`PublicationDispatch`: PENDING $\to$ PUBLISHED) | ✅ **Завершено** | `entities/publication`, `features/social-publishing` |
+| **REQ-PUB-06** | Збереження токенів соцмереж у захищеному OS Keychain (Zero-Trust) | ✅ **Завершено** | `entities/social-connector`, `shared/lib/storage` |
+| **REQ-PUB-07** | Ручне підтвердження зовнішнього посилання (MANUAL_EXPORTED / URL entry) | ✅ **Завершено** | `features/social-publishing/ui/SocialPublishPanel.tsx` |
 
 ---
 
-## 4. Специфікація вимог до контенту (за даними `inbox` та `spec`)
+## 3. Критерії Готовності та Результати Перевірок (Definition of Done)
 
-### 4.1. Формат та хронометраж
-- **Співвідношення сторін**: 9:16 (1080x1920 Full HD).
-- **FPS**: 30 або 60 FPS (60 FPS обов'язково при динамічних 3D фонах).
-- **Цільовий хронометраж**: **~40 секунд** (найвища точка віральності):
-  - `0–3 сек`: Візуальний/текстовий хук (провокація, великий аватар по центру).
-  - `3–32 сек`: 3 стислі наукові тези без привітань і води (B-roll, 3D прольоти, телеметрія HUD).
-  - `32–40 сек`: Панчлайн, безшовне зациклення (Seamless Loop) та заклик до дії (CTA).
-
-### 4.2. Безпечні зони (Safe Zones)
-- **Верхня мертва зона**: 220 px (інтерфейс пошуку платформи та плашка треку).
-- **Нижня мертва зона**: 420 px (опис ролика, нікнейм каналу, кнопка звуку).
-- **Права мертва зона**: 150 px (кнопки лайка, репосту, коментарів).
-- **Центральний квадрат**: Будь-який текст, субтитри та фокусні об'єкти розташовуються виключно у безпечному полі.
-
-### 4.3. Золота формула опису та Pin Comment
-- **Рядок 1**: Байт на розгортання опису (до кнопки «...ще»).
-- **Рядок 2**: SEO-ядро на 2–3 речення з ключовими словами для пошукових роботів алгоритму.
-- **Рядок 3**: Рівно 4–5 тематичних хештегів (2 широкі, 2 вузькі, 1 брендовий).
-- **Pin Comment**: Дискусійне запитання під відео для провокації коментарів, що подвоює retention під час читання/написання відповідей.
-
----
-
-## 5. Дорожня карта виконання
-
-```mermaid
-flowchart LR
-    Phase0["Фаза 0: Специфікація та Декомпозиція (Виконано)"] --> Phase1["Фаза 1: Запуск Swarm-воркерів"]
-    Phase1 --> Phase2["Фаза 2: Валідація інтерфейсів та FSD контрактів"]
-    Phase2 --> Phase3["Фаза 3: Готовність до автономної імплементації"]
-```
+1. **Biome Check**: `pnpm run check` $\to$ **252 файли перевірено, 0 помилок Biome.**
+2. **FSD v2.1 Валідація**: `node scripts/check-fsd.mjs` $\to$ **0 крос-імпортів та 0 порушень ієрархії.**
+3. **TypeScript Typecheck**: `pnpm run typecheck` $\to$ **Код виходу 0. 0 помилок типізації.**
+4. **Rust Cargo Check**: `cargo check --manifest-path src-tauri/Cargo.toml` $\to$ **Код виходу 0. 0 помилок компіляції.**
+5. **Vitest Unit Coverage**: `pnpm vitest run --pool=forks` $\to$ **182 тести у 28 файлах пройдено успішно (100% pass rate).**
+6. **Vite Production Build**: `pnpm build` $\to$ **Код виходу 0. 4033 модулі успішно скомпільовано у dist/.**

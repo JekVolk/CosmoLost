@@ -29,21 +29,26 @@ export const Statusbar: React.FC = () => {
     >
       <HStack gap="3">
         <HStack gap="1.5">
-          <CheckCircle2 size={12} color="#22c55e" />
+          <CheckCircle2 size={12} color="var(--chakra-colors-green-500)" />
           <Text fontSize="2xs" fontWeight="medium">
             {t('statusbar.tauriConnected')}
           </Text>
         </HStack>
         <Box width="1px" height="12px" bg="border.subtle" />
         <HStack gap="1.5">
-          <Database size={12} color={isHydrated ? '#22c55e' : '#f59e0b'} />
+          <Database
+            size={12}
+            color={
+              isHydrated ? 'var(--chakra-colors-green-500)' : 'var(--chakra-colors-yellow-500)'
+            }
+          />
           <Text fontSize="2xs">
             {isHydrated ? t('statusbar.storeSynced') : t('statusbar.storeLoading')}
           </Text>
         </HStack>
         <Box width="1px" height="12px" bg="border.subtle" />
         <HStack gap="1.5">
-          <Activity size={12} color="#38bdf8" />
+          <Activity size={12} color="var(--chakra-colors-cyan-400)" />
           <Text fontSize="2xs">
             {t('common.route')}: {currentRouteName}
           </Text>
@@ -52,7 +57,7 @@ export const Statusbar: React.FC = () => {
 
       <HStack gap="3">
         <HStack gap="1.5">
-          <Sparkles size={12} color="#38bdf8" />
+          <Sparkles size={12} color="var(--chakra-colors-cyan-400)" />
           <Text fontSize="2xs">Shorts Studio • 1080p 60FPS</Text>
         </HStack>
         <Badge

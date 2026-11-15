@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import type {
+  BatchQueueTask,
   ContentLanguage,
+  PublicationDispatch,
   PublicationProject,
   SeriesInfo,
   SubtitleStyleConfig,
@@ -282,6 +284,7 @@ interface CreateProjectParams {
 interface PublicationState {
   currentProject: PublicationProject | null;
   projects: PublicationProject[];
+  batchQueue: BatchQueueTask | null;
   setCurrentProject: (project: PublicationProject | null) => void;
   createProject: (params: CreateProjectParams) => PublicationProject;
   openProject: (id: string) => void;
@@ -289,6 +292,13 @@ interface PublicationState {
   duplicateProject: (id: string) => PublicationProject;
   saveCurrentProject: () => void;
   updateSlides: (slides: VideoScriptSlide[]) => void;
+  updateSlideMedia: (slideId: string, mediaUrl: string, mediaType: 'video' | 'image') => void;
+  updateSlidePrompt: (
+    slideId: string,
+    field: 'narratorText' | 'visualPrompt' | 'veoPrompt' | 'imagePrompt' | 'audioPrompt',
+    value: string,
+  ) => void;
+  clearSlideMedia: (slideId: string) => void;
   updateStatus: (status: PublicationProject['status']) => void;
   updateSeo: (seoCaption: PublicationProject['seoCaption'], pinComment: string) => void;
   setRenderTimeout: (sec: number) => void;
@@ -299,11 +309,22 @@ interface PublicationState {
   setMagnetWord: (word: string | undefined) => void;
   setTagGroups: (groups: string[]) => void;
   toggleTagGroup: (groupId: string) => void;
+  setNextTopicSuggestion: (suggestedArtifactId: string, suggestedHook: string) => void;
+  createProjectFromSuggestion: () => PublicationProject | null;
+  setExternalPostUrl: (url: string) => void;
+  updateDispatch: (dispatch: PublicationDispatch) => void;
+  batchGenerateProjects: (
+    artifacts: Array<{ id: string; name: string }>,
+    rubricId: PublicationProject['rubricId'],
+  ) => BatchQueueTask;
+  updateBatchQueue: (partial: Partial<BatchQueueTask>) => void;
+  clearBatchQueue: () => void;
 }
 
 export const usePublicationStore = create<PublicationState>((set, get) => ({
   currentProject: null,
   projects: INITIAL_DEMO_PROJECTS,
+  batchQueue: null,
   setCurrentProject: (project) => set({ currentProject: project }),
 
   createProject: (params) => {
@@ -442,6 +463,45 @@ export const usePublicationStore = create<PublicationState>((set, get) => ({
   updateSlides: (slides) =>
     set((state) => {
       if (!state.currentProject) return { currentProject: null };
+      const updated = { ...state.currentProject, slides, updatedAt: new Date().toISOString() };
+      return {
+        currentProject: updated,
+        projects: state.projects.map((p) => (p.id === updated.id ? updated : p)),
+      };
+    }),
+
+  updateSlideMedia: (slideId, mediaUrl, mediaType) =>
+    set((state) => {
+      if (!state.currentProject) return { currentProject: null };
+      const slides = state.currentProject.slides.map((s) =>
+        s.id === slideId ? { ...s, customMediaUrl: mediaUrl, customMediaType: mediaType } : s,
+      );
+      const updated = { ...state.currentProject, slides, updatedAt: new Date().toISOString() };
+      return {
+        currentProject: updated,
+        projects: state.projects.map((p) => (p.id === updated.id ? updated : p)),
+      };
+    }),
+
+  updateSlidePrompt: (slideId, field, value) =>
+    set((state) => {
+      if (!state.currentProject) return { currentProject: null };
+      const slides = state.currentProject.slides.map((s) =>
+        s.id === slideId ? { ...s, [field]: value } : s,
+      );
+      const updated = { ...state.currentProject, slides, updatedAt: new Date().toISOString() };
+      return {
+        currentProject: updated,
+        projects: state.projects.map((p) => (p.id === updated.id ? updated : p)),
+      };
+    }),
+
+  clearSlideMedia: (slideId) =>
+    set((state) => {
+      if (!state.currentProject) return { currentProject: null };
+      const slides = state.currentProject.slides.map((s) =>
+        s.id === slideId ? { ...s, customMediaUrl: undefined, customMediaType: undefined } : s,
+      );
       const updated = { ...state.currentProject, slides, updatedAt: new Date().toISOString() };
       return {
         currentProject: updated,
@@ -615,4 +675,119 @@ export const usePublicationStore = create<PublicationState>((set, get) => ({
         projects: state.projects.map((p) => (p.id === updated.id ? updated : p)),
       };
     }),
+
+  setNextTopicSuggestion: (suggestedArtifactId, suggestedHook) =>
+    set((state) => {
+      if (!state.currentProject) return { currentProject: null };
+      const updated: PublicationProject = {
+        ...state.currentProject,
+        nextSuggestedArtifactId: suggestedArtifactId,
+        nextSuggestedHook: suggestedHook,
+        updatedAt: new Date().toISOString(),
+      };
+      return {
+        currentProject: updated,
+        projects: state.projects.map((p) => (p.id === updated.id ? updated : p)),
+      };
+    }),
+
+  createProjectFromSuggestion: () => {
+    const current = get().currentProject;
+    if (!current?.nextSuggestedArtifactId) return null;
+    const nextArtifactId = current.nextSuggestedArtifactId;
+    const nextHook = current.nextSuggestedHook || 'Таємниця космосу';
+
+    return get().createProject({
+      artifactId: nextArtifactId,
+      artifactName: nextArtifactId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      rubricId: current.rubricId,
+      selectionReason: `Серійне продовження теми ${current.artifactName}: ${nextHook}`,
+      contentLanguage: current.contentLanguage,
+      seriesInfo: current.seriesInfo
+        ? {
+            seriesName: current.seriesInfo.seriesName,
+            partNumber: current.seriesInfo.partNumber + 1,
+            totalParts: Math.max(current.seriesInfo.totalParts, current.seriesInfo.partNumber + 1),
+            cliffhanger: nextHook,
+          }
+        : {
+            seriesName: `Серія ${current.artifactName}`,
+            partNumber: 2,
+            totalParts: 3,
+            cliffhanger: nextHook,
+          },
+    });
+  },
+
+  setExternalPostUrl: (url) =>
+    set((state) => {
+      if (!state.currentProject) return { currentProject: null };
+      const updated: PublicationProject = {
+        ...state.currentProject,
+        externalPostUrl: url,
+        status: 'PUBLISHED_MANUALLY',
+        updatedAt: new Date().toISOString(),
+      };
+      return {
+        currentProject: updated,
+        projects: state.projects.map((p) => (p.id === updated.id ? updated : p)),
+      };
+    }),
+
+  updateDispatch: (dispatch) =>
+    set((state) => {
+      if (!state.currentProject) return { currentProject: null };
+      const currentDispatches = state.currentProject.dispatches || [];
+      const index = currentDispatches.findIndex(
+        (d) => d.id === dispatch.id || d.connectorId === dispatch.connectorId,
+      );
+      const nextDispatches =
+        index >= 0
+          ? currentDispatches.map((d, i) => (i === index ? dispatch : d))
+          : [...currentDispatches, dispatch];
+
+      const updated: PublicationProject = {
+        ...state.currentProject,
+        dispatches: nextDispatches,
+        updatedAt: new Date().toISOString(),
+      };
+      return {
+        currentProject: updated,
+        projects: state.projects.map((p) => (p.id === updated.id ? updated : p)),
+      };
+    }),
+
+  batchGenerateProjects: (artifacts, rubricId) => {
+    const createdProjects: PublicationProject[] = [];
+    for (const art of artifacts) {
+      const proj = get().createProject({
+        artifactId: art.id,
+        artifactName: art.name,
+        rubricId,
+        selectionReason: `Пакетний випуск для рубрики ${rubricId} за даними артефакту ${art.name}`,
+      });
+      createdProjects.push(proj);
+    }
+
+    const batchTask: BatchQueueTask = {
+      id: `batch-${Date.now().toString(36)}`,
+      projectIds: createdProjects.map((p) => p.id),
+      totalCount: createdProjects.length,
+      completedCount: 0,
+      status: 'IN_PROGRESS',
+      createdAt: new Date().toISOString(),
+    };
+
+    set({ batchQueue: batchTask });
+    return batchTask;
+  },
+
+  updateBatchQueue: (partial) =>
+    set((state) => ({
+      batchQueue: state.batchQueue
+        ? { ...state.batchQueue, ...partial, updatedAt: new Date().toISOString() }
+        : null,
+    })),
+
+  clearBatchQueue: () => set({ batchQueue: null }),
 }));

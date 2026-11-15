@@ -5,8 +5,46 @@ export type ProjectStatus =
   | 'SYNTHESIZING'
   | 'RENDERING'
   | 'READY'
+  | 'RENDERED'
   | 'PUBLISHED'
+  | 'PARTIALLY_PUBLISHED'
+  | 'PUBLISHED_MANUALLY'
   | 'FAILED';
+
+export type DispatchStatus = 'PENDING' | 'UPLOADING' | 'PUBLISHED' | 'MANUAL_EXPORTED' | 'FAILED';
+
+export type PinCommentStatus =
+  | 'NOT_APPLICABLE'
+  | 'PENDING'
+  | 'POSTED'
+  | 'PINNED'
+  | 'MANUAL_COPIED'
+  | 'FAILED';
+
+export interface PublicationDispatch {
+  id: string;
+  projectId: string;
+  connectorId: string;
+  platformType: string;
+  dispatchStatus: DispatchStatus;
+  pinCommentStatus: PinCommentStatus;
+  externalPostId?: string;
+  externalPostUrl?: string;
+  errorLog?: string;
+  dispatchedAt?: string;
+}
+
+export type BatchTaskStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+
+export interface BatchQueueTask {
+  id: string;
+  projectIds: string[];
+  totalCount: number;
+  completedCount: number;
+  status: BatchTaskStatus;
+  createdAt: string;
+  updatedAt?: string;
+}
 
 export interface VideoScriptSlide {
   id: string;
@@ -16,6 +54,11 @@ export interface VideoScriptSlide {
   narratorText: string;
   visualPrompt: string;
   pngtuberState: 'IDLE' | 'EXPERT' | 'SHOCK' | 'HYPE';
+  veoPrompt?: string;
+  imagePrompt?: string;
+  audioPrompt?: string;
+  customMediaUrl?: string;
+  customMediaType?: 'video' | 'image';
 }
 
 export type SubtitlePresetName = 'HORMOZI_YELLOW' | 'MRBEAST_CYAN' | 'CYBER_LIME' | 'CLEAN_WHITE';
@@ -74,6 +117,10 @@ export interface PublicationProject {
   subtitleStyle?: SubtitleStyleConfig;
   contentLanguage?: ContentLanguage;
   renderTimeoutSec: number;
+  nextSuggestedArtifactId?: string;
+  nextSuggestedHook?: string;
+  externalPostUrl?: string;
+  dispatches?: PublicationDispatch[];
   createdAt: string;
   updatedAt: string;
 }

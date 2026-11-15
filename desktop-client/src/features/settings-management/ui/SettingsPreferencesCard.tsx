@@ -19,12 +19,14 @@ import {
   VStack,
 } from '@/shared/ui';
 import {
+  Clock,
   Globe,
   Languages,
   Moon,
   Palette,
   RefreshCw,
   RotateCcw,
+  ShieldAlert,
   Sliders,
   Sun,
   SunMoon,
@@ -50,6 +52,7 @@ interface SettingsPreferencesCardProps {
   onThemeModeChange: (mode: ThemeMode) => void;
   onLanguageChange: (lang: Language) => void;
   onContentLanguageChange?: (lang: ContentGenerationLanguage) => void;
+  onRenderTimeoutChange?: (seconds: number) => void;
   onToggleAutoRefresh: () => void;
   onIntervalChange: (seconds: number) => void;
   onToggleCompact: () => void;
@@ -64,6 +67,7 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
   onThemeModeChange,
   onLanguageChange,
   onContentLanguageChange,
+  onRenderTimeoutChange,
   onToggleAutoRefresh,
   onIntervalChange,
   onToggleCompact,
@@ -295,6 +299,85 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
                 ))}
               </HStack>
             )}
+          </Box>
+
+          <Separator borderColor="border.subtle" />
+
+          {/* FFmpeg GPU Render Watchdog Timeout Slider */}
+          <Box>
+            <Flex justify="space-between" align="center" mb="2" wrap="wrap" gap="2">
+              <HStack gap="2">
+                <ShieldAlert size={16} color="#f59e0b" />
+                <Text fontSize="sm" fontWeight="medium" color="fg">
+                  FFmpeg GPU Watchdog Timeout
+                </Text>
+              </HStack>
+              <HStack gap="2">
+                <Badge
+                  colorPalette={
+                    (settings.renderTimeoutSec || 40) <= 60
+                      ? 'teal'
+                      : (settings.renderTimeoutSec || 40) <= 120
+                        ? 'yellow'
+                        : 'red'
+                  }
+                  variant="solid"
+                  size="sm"
+                >
+                  <Clock size={12} style={{ marginRight: '4px' }} />
+                  {settings.renderTimeoutSec || 40}с{' '}
+                  {(settings.renderTimeoutSec || 40) === 40
+                    ? '(GPU Рекомендовано)'
+                    : (settings.renderTimeoutSec || 40) === 120
+                      ? '(CPU Емуляція)'
+                      : ''}
+                </Badge>
+              </HStack>
+            </Flex>
+
+            {/* Presets */}
+            <HStack gap="2" wrap="wrap" mb="2.5">
+              {[30, 40, 60, 120, 180, 300].map((sec) => (
+                <Button
+                  key={sec}
+                  size="xs"
+                  variant={settings.renderTimeoutSec === sec ? 'solid' : 'outline'}
+                  colorPalette={settings.renderTimeoutSec === sec ? settings.accentColor : 'gray'}
+                  onClick={() => onRenderTimeoutChange?.(sec)}
+                >
+                  {sec === 40 ? '40с (GPU Реком.)' : sec === 120 ? '120с (CPU)' : `${sec}с`}
+                </Button>
+              ))}
+            </HStack>
+
+            {/* Range Slider */}
+            <HStack gap="3" align="center">
+              <Text fontSize="xs" color="fg.muted" minW="26px">
+                30s
+              </Text>
+              <input
+                type="range"
+                min="30"
+                max="300"
+                step="5"
+                value={settings.renderTimeoutSec || 40}
+                onChange={(e) => onRenderTimeoutChange?.(Number(e.target.value))}
+                style={{ flex: 1, cursor: 'pointer' }}
+                title={`Watchdog timeout: ${settings.renderTimeoutSec || 40}s`}
+                aria-label="Watchdog Timeout Slider"
+              />
+              <Text fontSize="xs" color="fg.muted" minW="32px">
+                300s
+              </Text>
+              <Badge variant="surface" size="xs" fontFamily="monospace">
+                {settings.renderTimeoutSec || 40}s
+              </Badge>
+            </HStack>
+
+            <Text fontSize="2xs" color="fg.muted" mt="2">
+              Захист від зависання FFmpeg: автоматично перериває генерацію при перевантаженні VRAM
+              або зависанні кодека (30–300 секунд).
+            </Text>
           </Box>
 
           <Separator borderColor="border.subtle" />
