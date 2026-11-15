@@ -1,5 +1,14 @@
-import React, { useRef, useState, useCallback, useMemo } from 'react';
-import { MapPin, Navigation, CheckCircle2, ZoomIn, ZoomOut, Maximize2, Minimize2 } from 'lucide-react';
+import {
+  CheckCircle2,
+  MapPin,
+  Maximize2,
+  Minimize2,
+  Navigation,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react';
+import type React from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { normalizeLongitude } from '../../../shared/lib/coordinates';
 import styles from './AstroGuessr.module.css';
 

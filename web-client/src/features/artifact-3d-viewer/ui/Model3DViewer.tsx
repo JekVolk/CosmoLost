@@ -1,19 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { Box, Layers, Maximize2, Minimize2, Pause, Play, RefreshCw, RotateCcw } from 'lucide-react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { Model3DViewerProps } from '../types';
 import { resolveGlbModelUrl } from '../model/cdnModels';
-import {
-  RotateCcw,
-  Play,
-  Pause,
-  Maximize2,
-  Minimize2,
-  Box,
-  Layers,
-  RefreshCw,
-} from 'lucide-react';
+import type { Model3DViewerProps } from '../types';
 
 export const Model3DViewer: React.FC<Model3DViewerProps> = ({
   artifact,
@@ -355,7 +347,7 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
         () => {
           // If remote GLB network fetch fails, fallback seamlessly to procedural
           buildProceduralModel(artifact.type);
-        }
+        },
       );
     } else {
       buildProceduralModel(artifact.type);

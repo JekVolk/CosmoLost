@@ -19,7 +19,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  background: linear-gradient(180deg, rgba(5, 7, 13, 0.95) 0%, rgba(5, 7, 13, 0.7) 80%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(5, 7, 13, 0.95) 0%,
+    rgba(5, 7, 13, 0.7) 80%,
+    transparent 100%
+  );
   pointer-events: none;
 }
 
@@ -34,7 +39,7 @@
 }
 
 .gameTitle {
-  font-family: var(--font-display, 'Chakra Petch', sans-serif);
+  font-family: var(--font-display, "Chakra Petch", sans-serif);
   font-size: 17px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -267,7 +272,8 @@
 }
 
 @keyframes pinPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -476,7 +482,7 @@
 }
 
 .scoreHuge {
-  font-family: var(--font-display, 'Chakra Petch', sans-serif);
+  font-family: var(--font-display, "Chakra Petch", sans-serif);
   font-size: 42px;
   font-weight: 700;
   color: #34d399;
@@ -617,7 +623,7 @@
 }
 
 .rankTitle {
-  font-family: var(--font-display, 'Chakra Petch', sans-serif);
+  font-family: var(--font-display, "Chakra Petch", sans-serif);
   font-size: 24px;
   font-weight: 700;
   color: #ffffff;
