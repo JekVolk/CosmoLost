@@ -21,6 +21,7 @@
 | **`FEAT-09`** | **Особистий кабінет та квоти API-токенів** | Реєстрація користувачів, генерація API-ключів для MCP з лімітом 10 000 req/month, збереження «Вибраного» | `[AI-DRAFT]` **COULD HAVE** | Беклог |
 | **`FEAT-10`** | **Дедуктивна міні-гра, контейнери та рейтинг** | Щоденні скриньки (до 10), PvP/PvE батли за дедукцією на реальній базі NASA, 7 тирів рідкості обладнання, синтез за RP та публічний лідерборд | **HIGH ENGAGEMENT** | [`FEAT-10_deductive_game_and_containers.md`](./FEAT-10_deductive_game_and_containers.md) · [Аудит ризиків](./FEAT-10_RISK_AUDIT_AND_DETAIL.md) |
 | **`FEAT-11`** | **Ігровий рушій: Архітектура, WS та План** | Повна технічна специфікація: Django Channels WS (Zero-Knowledge), Redis Matchmaker, Pity System, EloService, FSD веб-клієнт, 9 спринтів | **CRITICAL SPEC** | [`FEAT-11_game_implementation_spec.md`](./FEAT-11_game_implementation_spec.md) · [Таска BE](./TASK_BE_game_backend.md) · [Таска FE](./TASK_FE_game_frontend.md) · [Ассети і промпти](./TASK_ROLES_ASSETS_AND_PROMPTS.md) |
+| **`FEAT-12`** | **Геймплей, Онбординг та UI/UX Вайрфрейми** | Детальний опис 9 міні-ігор, діалог CAPCOM AI, флоу входу та реєстрації, вайрфрейми екранів та токени Chakra UI v3 | **DESIGN & UX** | [`FEAT-12_gameplay_ui_and_onboarding_guide.md`](./FEAT-12_gameplay_ui_and_onboarding_guide.md) |
 
 ---
 
