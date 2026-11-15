@@ -7,13 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "dist",
-      "src-tauri/target",
-      "src-tauri/gen",
-      "node_modules",
-      "ponytail"
-    ]
+    "ignore": ["dist", "src-tauri/target", "src-tauri/gen", "node_modules", "ponytail"]
   },
   "formatter": {
     "enabled": true,

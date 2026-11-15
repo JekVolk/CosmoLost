@@ -5,13 +5,14 @@ import {
 } from '@/entities/publication';
 import { ConnectorBadge, useConnectorStore } from '@/entities/social-connector';
 import { ROUTES } from '@/shared/config';
-import { Badge, Box, Button, Card, Flex, HStack, Text, VStack } from '@chakra-ui/react';
+import { Badge, Box, Button, Card, Flex, HStack, Input, Text, VStack } from '@chakra-ui/react';
 import {
   Check,
   Copy,
   Download,
   FileText,
   Hash,
+  Link2,
   Rocket,
   Send,
   SlidersHorizontal,
@@ -28,12 +29,14 @@ export function SocialPublishPanel() {
     publishToSelectedChannels,
     autoPublishAll,
     openLocalFolderDirectly,
+    markPublishedManually,
     currentProject,
   } = useSocialPublishing();
 
   const toggleTagGroup = usePublicationStore((s) => s.toggleTagGroup);
   const { connectors, selectedConnectorIds, toggleSelection } = useConnectorStore();
   const [copiedSeo, setCopiedSeo] = useState(false);
+  const [manualUrl, setManualUrl] = useState('');
 
   const activeTagGroups = currentProject?.tagGroups || ['viral', 'space', 'nasa'];
 
@@ -262,6 +265,101 @@ export function SocialPublishPanel() {
               OS Explorer
             </Button>
           </Flex>
+
+          {/* REQ-PUB-07: Manual Post Link Entry (TikTok / Instagram Reels fallback) */}
+          <Box p="3" borderRadius="lg" bg="bg.subtle" borderWidth="1px" borderColor="border.subtle">
+            <VStack align="stretch" gap="2">
+              <HStack justify="space-between">
+                <HStack gap="1.5">
+                  <Link2 size={14} color="#a855f7" />
+                  <Text fontSize="xs" fontWeight="semibold" color="fg">
+                    Ручне підтвердження публікації (TikTok / Instagram Reels):
+                  </Text>
+                </HStack>
+                {currentProject?.status === 'PUBLISHED_MANUALLY' && (
+                  <Badge colorPalette="green" size="xs">
+                    PUBLISHED_MANUALLY
+                  </Badge>
+                )}
+              </HStack>
+              <HStack gap="2">
+                <Input
+                  size="xs"
+                  placeholder="Вставте посилання на опублікований ролик (наприклад: https://tiktok.com/@...)"
+                  value={manualUrl || currentProject?.externalPostUrl || ''}
+                  onChange={(e) => setManualUrl(e.target.value)}
+                />
+                <Button
+                  size="xs"
+                  colorPalette="purple"
+                  variant="solid"
+                  onClick={() => {
+                    markPublishedManually(manualUrl);
+                    setManualUrl('');
+                  }}
+                >
+                  Зберегти лінк
+                </Button>
+              </HStack>
+            </VStack>
+          </Box>
+
+          {/* REQ-PUB-05: PublicationDispatch Status Tracking */}
+          {currentProject?.dispatches && currentProject.dispatches.length > 0 && (
+            <Box
+              p="3"
+              borderRadius="lg"
+              bg="bg.subtle"
+              borderWidth="1px"
+              borderColor="border.subtle"
+            >
+              <VStack align="stretch" gap="1.5">
+                <Text fontSize="xs" fontWeight="semibold" color="fg.muted">
+                  Статус доставки по каналах (PublicationDispatch):
+                </Text>
+                {currentProject.dispatches.map((disp) => (
+                  <Flex
+                    key={disp.id}
+                    justify="space-between"
+                    align="center"
+                    p="1.5"
+                    borderRadius="md"
+                    bg="bg.panel"
+                    borderWidth="1px"
+                    borderColor="border.subtle"
+                  >
+                    <HStack gap="2">
+                      <Badge size="xs" variant="outline">
+                        {disp.platformType}
+                      </Badge>
+                      {disp.externalPostUrl && (
+                        <Text fontSize="2xs" color="teal.300" lineClamp={1}>
+                          {disp.externalPostUrl}
+                        </Text>
+                      )}
+                    </HStack>
+                    <HStack gap="1.5">
+                      <Badge
+                        size="xs"
+                        colorPalette={
+                          disp.dispatchStatus === 'PUBLISHED'
+                            ? 'green'
+                            : disp.dispatchStatus === 'MANUAL_EXPORTED'
+                              ? 'teal'
+                              : 'yellow'
+                        }
+                      >
+                        {disp.dispatchStatus}
+                      </Badge>
+                      <Badge size="xs" variant="surface" colorPalette="yellow">
+                        Pin: {disp.pinCommentStatus}
+                      </Badge>
+                    </HStack>
+                  </Flex>
+                ))}
+              </VStack>
+            </Box>
+          )}
 
           {publishFeedback && (
             <Box p="2" borderRadius="md" bg="purple.950" borderWidth="1px" borderColor="purple.700">

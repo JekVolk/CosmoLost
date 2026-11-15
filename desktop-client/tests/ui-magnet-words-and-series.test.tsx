@@ -3,11 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  PREDEFINED_TAG_GROUPS,
-  generateScriptMarkdown,
-  usePublicationStore,
-} from '../src/entities/publication';
+import { generateScriptMarkdown, usePublicationStore } from '../src/entities/publication';
 import { ShortsSplitScreenStudio } from '../src/features/media-engine';
 import { ScriptGeneratorPanel } from '../src/features/script-generator';
 import { SocialPublishPanel } from '../src/features/social-publishing';
@@ -90,10 +86,12 @@ describe('QA Test: Word Magnets, Multi-part Chronicles, Safe Zones & Auto-Publis
     expect(md).toContain('# 🚀 CosmoLost Shorts: Opportunity Rover (MER-B)');
     expect(md).toContain('⚡ [МАГНІТНЕ СЛОВО: 💔 ОСТАННІ СЛОВА]');
     expect(md).toContain('Хроніки Марса (Частина 1 з 3)');
-    expect(md).toContain('У наступній частині: чому вчені не змогли пробудити ровер у 2019 році...');
+    expect(md).toContain(
+      'У наступній частині: чому вчені не змогли пробудити ровер у 2019 році...',
+    );
     expect(md).toContain('Покадровий монтажний план (Split-Screen & PNGTuber)');
     expect(md).toContain('Повний суцільний дикторський текст');
-    expect(md).toContain('SEO-Пакет та Алгоритмічний Дистриб\'юшн');
+    expect(md).toContain("SEO-Пакет та Алгоритмічний Дистриб'юшн");
     expect(md).toContain('Безпечні Зони (Safe Zones Checklist)');
   });
 

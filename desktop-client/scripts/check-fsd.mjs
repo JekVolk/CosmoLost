@@ -103,7 +103,8 @@ function validateFsdBoundaries() {
 
       // Rule 1: No deep imports into slices from external modules
       const isExternalToTargetSlice =
-        source.layer !== target.layer || (source.slice && target.slice && source.slice !== target.slice);
+        source.layer !== target.layer ||
+        (source.slice && target.slice && source.slice !== target.slice);
 
       if (target.isDeep && isExternalToTargetSlice) {
         violations.push({
@@ -158,6 +159,9 @@ if (errors.length > 0) {
   }
   process.exit(1);
 } else {
-  console.log('\x1b[32m%s\x1b[0m', '✔ FSD Boundaries Check Passed: 0 cross-imports or hierarchy violations.');
+  console.log(
+    '\x1b[32m%s\x1b[0m',
+    '✔ FSD Boundaries Check Passed: 0 cross-imports or hierarchy violations.',
+  );
   process.exit(0);
 }
