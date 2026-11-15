@@ -6,6 +6,7 @@ export {
   createDefaultPipelineNodes,
   createDefaultPipelineEdges,
 } from './model/defaults';
+export { PIPELINE_STAGES } from './model/types';
 export type {
   FlowNodeType,
   PipelineNode,
@@ -22,4 +23,6 @@ export type {
   FfmpegRenderNodeData,
   SocialPublishNodeData,
   PipelineExecutionResult,
+  PipelineStageId,
+  PipelineStageDefinition,
 } from './model/types';

@@ -14,6 +14,48 @@ export type FlowNodeType =
   | 'ffmpegRender'
   | 'socialPublish';
 
+export type PipelineStageId = 'artifact' | 'script' | 'audio' | 'composite' | 'publish';
+
+export interface PipelineStageDefinition {
+  id: PipelineStageId;
+  label: string;
+  description: string;
+  nodeTypes: readonly FlowNodeType[];
+}
+
+export const PIPELINE_STAGES: readonly PipelineStageDefinition[] = [
+  {
+    id: 'artifact',
+    label: 'Artifact Source',
+    description: 'NASA Data & 3D GLB',
+    nodeTypes: ['artifactSource'],
+  },
+  {
+    id: 'script',
+    label: 'Script & Cues',
+    description: 'SMM Rubric & Hook',
+    nodeTypes: ['scriptTemplate', 'hookScorer'],
+  },
+  {
+    id: 'audio',
+    label: 'Audio & Sync',
+    description: 'TTS, BGM & Phonemes',
+    nodeTypes: ['audioTts', 'audioBgm'],
+  },
+  {
+    id: 'composite',
+    label: 'Visual Composite',
+    description: 'Subtitles, Avatar & Safe Zones',
+    nodeTypes: ['subtitle', 'pngTuber', 'visualComposite', 'safeZonePreview'],
+  },
+  {
+    id: 'publish',
+    label: 'Export & Publish',
+    description: 'FFmpeg Render, Shorts & TG',
+    nodeTypes: ['ffmpegRender', 'socialPublish'],
+  },
+];
+
 export interface ArtifactSourceNodeData extends Record<string, unknown> {
   celestialBody: 'moon' | 'mars';
   artifactId: string;

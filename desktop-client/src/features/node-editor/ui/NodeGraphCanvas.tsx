@@ -3,6 +3,7 @@ import { Background, BackgroundVariant, Controls, MiniMap, ReactFlow } from '@xy
 import '@xyflow/react/dist/style.css';
 import { CheckCircle2, Play, RotateCcw } from 'lucide-react';
 import { useState } from 'react';
+import { PIPELINE_STAGES } from '../model/types';
 import { useNodeGraphStore } from '../model/use-node-graph-store';
 import { ArtifactSourceNode } from './nodes/ArtifactSourceNode';
 import { AudioBgmNode } from './nodes/AudioBgmNode';
@@ -95,6 +96,9 @@ export function NodeGraphCanvas() {
             Нодовий Пайплайн Контенту (@xyflow/react):
           </Text>
           <Badge colorPalette="teal" size="xs">
+            {PIPELINE_STAGES.length} Етапів
+          </Badge>
+          <Badge colorPalette="cyan" size="xs">
             {nodes.length} Нод
           </Badge>
           <Badge colorPalette="purple" size="xs">
@@ -154,6 +158,22 @@ export function NodeGraphCanvas() {
           </Button>
         </HStack>
       </Flex>
+
+      <HStack
+        position="absolute"
+        top="14"
+        left="3"
+        right="3"
+        zIndex="10"
+        gap="1"
+        pointerEvents="none"
+      >
+        {PIPELINE_STAGES.map((stage, index) => (
+          <Badge key={stage.id} flex="1" justifyContent="center" size="xs" colorPalette="gray">
+            {index + 1}. {stage.label}
+          </Badge>
+        ))}
+      </HStack>
 
       {/* Main React Flow Canvas */}
       <ReactFlow
