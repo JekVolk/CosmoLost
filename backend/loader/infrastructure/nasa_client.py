@@ -48,6 +48,7 @@ class NASAClient:
             backoff_factor=0.5,
             status_forcelist=[500, 502, 503, 504],
             raise_on_status=False,
+            respect_retry_after_header=False,
         )
         adapter = HTTPAdapter(max_retries=retries, pool_connections=10, pool_maxsize=20)
         self.session.mount('https://', adapter)
@@ -103,6 +104,12 @@ class NASAClient:
                     if current_token:
                         self.token_pool.mark_rate_limited(current_token, cooldown_seconds=3600.0)
                     continue
+
+                if response.status_code == 404:
+                    logger.warning(f"NASA resource returned 404 Not Found: {url}")
+                    if self.enable_mock_fallback:
+                        return {}
+                    raise NASAClientError(f"Resource not found: {url}")
 
                 if response.status_code == 200:
                     # Enforce max 25MB response size limit to prevent memory exhaustion DoS
