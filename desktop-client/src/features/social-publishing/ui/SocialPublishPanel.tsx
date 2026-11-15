@@ -221,7 +221,7 @@ export function SocialPublishPanel() {
                 <Text color="fg.muted" fontFamily="monospace" fontSize="2xs">
                   Рядок 3 (Теги): {currentProject.seoCaption.line3Tags}
                 </Text>
-                <Text color="teal.300">Закріплений коментар: {currentProject.pinComment}</Text>
+                <Text color="fg">Закріплений коментар: {currentProject.pinComment}</Text>
               </VStack>
             </Box>
           )}

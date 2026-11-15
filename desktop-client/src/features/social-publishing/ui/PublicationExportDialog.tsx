@@ -142,7 +142,7 @@ export const PublicationExportDialog: React.FC<PublicationExportDialogProps> = (
           width="100%"
           maxWidth="880px"
           maxHeight="92vh"
-          overflowY="auto"
+          overflow="hidden"
           boxShadow="0 25px 50px -12px rgba(0, 0, 0, 0.7)"
           display="flex"
           flexDirection="column"
@@ -153,9 +153,7 @@ export const PublicationExportDialog: React.FC<PublicationExportDialogProps> = (
             borderBottomWidth="1px"
             borderColor="border.subtle"
             bg="bg.surface"
-            position="sticky"
-            top="0"
-            zIndex="10"
+            flexShrink="0"
           >
             <Flex justify="space-between" align="center" wrap="wrap" gap="2">
               <VStack align="flex-start" gap="1">
@@ -197,7 +195,7 @@ export const PublicationExportDialog: React.FC<PublicationExportDialogProps> = (
           </Box>
 
           {/* Body */}
-          <Box p="6" display="flex" flexDirection="column" gap="5">
+          <Box p="6" display="flex" flexDirection="column" gap="5" overflowY="auto" minH="0">
             {/* Duplicate Publication Protection Banner */}
             {isAlreadyPublished && (
               <Box
@@ -526,7 +524,7 @@ export const PublicationExportDialog: React.FC<PublicationExportDialogProps> = (
                   borderLeftWidth="3px"
                   borderColor="green.500"
                 >
-                  <Text fontSize="3xs" fontWeight="bold" color="green.500" mb="0.5">
+                  <Text fontSize="3xs" fontWeight="bold" color="fg" mb="0.5">
                     РЯДОК 3 — ЗАКЛИК ДО ДІЇ (CTA НА 3D МАПУ):
                   </Text>
                   <Text fontSize="xs" color="fg">
@@ -561,7 +559,7 @@ export const PublicationExportDialog: React.FC<PublicationExportDialogProps> = (
             >
               <Flex justify="space-between" align="center" mb="2">
                 <HStack gap="2">
-                  <MessageSquare size={16} color="var(--chakra-colors-green-500)" />
+                  <MessageSquare size={16} color="var(--chakra-colors-fg)" />
                   <Text fontWeight="bold" fontSize="sm" color="fg">
                     Закріплений коментар (Pin Comment):
                   </Text>
@@ -599,8 +597,7 @@ export const PublicationExportDialog: React.FC<PublicationExportDialogProps> = (
             borderTopWidth="1px"
             borderColor="border.subtle"
             bg="bg.surface"
-            position="sticky"
-            bottom="0"
+            flexShrink="0"
           >
             <Flex justify="space-between" align="center" wrap="wrap" gap="3">
               <HStack gap="2">
