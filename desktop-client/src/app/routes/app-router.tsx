@@ -38,7 +38,7 @@ export const appRouter = createHashRouter([
     children: [
       {
         index: true,
-        element: <Navigate to={ROUTES.OVERVIEW} replace />,
+        element: <Navigate to={ROUTES.CONTENT_FACTORY} replace />,
       },
       {
         path: ROUTES.OVERVIEW,

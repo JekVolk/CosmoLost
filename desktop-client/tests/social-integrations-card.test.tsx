@@ -80,9 +80,7 @@ describe('Social Integrations & OAuth Settings Card', () => {
       expect(useSettingsStore.getState().settings.telegramBotToken).toBe(
         '7123456789:ABCdefGHIjklMNOpqrSTUvwxYZ',
       );
-      expect(useSettingsStore.getState().settings.telegramChatId).toBe(
-        '@cosmolost_test_channel',
-      );
+      expect(useSettingsStore.getState().settings.telegramChatId).toBe('@cosmolost_test_channel');
     });
   });
 
@@ -111,8 +109,7 @@ describe('Social Integrations & OAuth Settings Card', () => {
 
     fireEvent.change(authCodeInput, {
       target: {
-        value:
-          '4/0AUn6Hd8DBQ1SVUeGEgJBxln9lTerL-CvZPPvCPua1Kize4qYeKf2Nbq32-APJ2akkUdG2A',
+        value: '4/0AUn6Hd8DBQ1SVUeGEgJBxln9lTerL-CvZPPvCPua1Kize4qYeKf2Nbq32-APJ2akkUdG2A',
       },
     });
     fireEvent.click(confirmBtn);

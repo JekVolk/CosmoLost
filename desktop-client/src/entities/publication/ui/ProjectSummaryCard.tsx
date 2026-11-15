@@ -40,7 +40,13 @@ export function ProjectSummaryCard({ project, onOpen }: ProjectSummaryCardProps)
           <Text fontWeight="semibold" fontSize="md" color="fg">
             {project.artifactName}
           </Text>
-          <Badge colorPalette={getStatusColor(project.status)} size="sm">
+          <Badge
+            colorPalette={getStatusColor(project.status)}
+            size="sm"
+            px="2.5"
+            py="0.5"
+            borderRadius="md"
+          >
             {project.status}
           </Badge>
         </Flex>
@@ -50,9 +56,23 @@ export function ProjectSummaryCard({ project, onOpen }: ProjectSummaryCardProps)
         </Text>
 
         <HStack justify="space-between" pt="2" borderTopWidth="1px" borderColor="border.subtle">
-          <Badge variant="outline" size="xs">
-            {project.rubricId}
-          </Badge>
+          <HStack gap="2">
+            <Badge variant="outline" size="xs" px="2" py="0.5" borderRadius="md">
+              {project.rubricId}
+            </Badge>
+            {project.brollVideoUrl && (
+              <Badge
+                colorPalette="purple"
+                variant="subtle"
+                size="xs"
+                px="2"
+                py="0.5"
+                borderRadius="md"
+              >
+                🎮 B-Roll: {project.brollPreset?.replace('_', ' ') || 'Custom'}
+              </Badge>
+            )}
+          </HStack>
           <Text fontSize="xs" color="fg.muted">
             {project.slides.length} слайдів • ~{project.targetDurationSec}с
           </Text>

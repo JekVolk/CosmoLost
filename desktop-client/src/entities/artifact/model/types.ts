@@ -1,3 +1,10 @@
+import type {
+  EditorAssetBundle,
+  PortalArtifactMediaDto,
+  ScientificDiscoveryDto,
+  TraverseWaypointDto,
+} from '@/shared/api';
+
 export type ArtifactType = 'ROVER' | 'LANDER' | 'DESCENT_STAGE' | 'INSTRUMENT' | 'RETRO_REFLECTOR';
 
 export type OperationalStatus = 'DORMANT' | 'PASSIVE_ACTIVE' | 'DESTROYED_ON_IMPACT';
@@ -38,4 +45,15 @@ export interface ArtifactDomainModel {
 export interface IArtifactRepository {
   listFeaturedArtifacts(): Promise<ArtifactDomainModel[]>;
   getArtifactById(id: string): Promise<ArtifactDomainModel>;
+  getAssetBundle(id: string): Promise<EditorAssetBundle>;
+  getArtifactWaypoints(id: string): Promise<TraverseWaypointDto[]>;
+  getArtifactDiscoveries(id: string): Promise<ScientificDiscoveryDto[]>;
+  getArtifactMedia(id: string): Promise<PortalArtifactMediaDto[]>;
 }
+
+export type {
+  EditorAssetBundle,
+  PortalArtifactMediaDto,
+  ScientificDiscoveryDto,
+  TraverseWaypointDto,
+};

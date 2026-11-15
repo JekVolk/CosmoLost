@@ -1,5 +1,6 @@
 import { SettingsSummaryCard } from '@/entities/settings';
 import {
+  AgentStudioSettingsCard,
   CliIntegrationsSettingsCard,
   DiagnosticsAuditDrawerCard,
   SettingsImportExportCard,
@@ -27,6 +28,7 @@ export const SettingsPage: React.FC = () => {
     setAccentColor,
     setThemeMode,
     setLanguage,
+    setContentGenerationLanguage,
     toggleAutoRefresh,
     setRefreshInterval,
     toggleCompactMode,
@@ -70,6 +72,7 @@ export const SettingsPage: React.FC = () => {
           onAccentChange={setAccentColor}
           onThemeModeChange={setThemeMode}
           onLanguageChange={setLanguage}
+          onContentLanguageChange={setContentGenerationLanguage}
           onToggleAutoRefresh={toggleAutoRefresh}
           onIntervalChange={setRefreshInterval}
           onToggleCompact={toggleCompactMode}
@@ -80,6 +83,9 @@ export const SettingsPage: React.FC = () => {
 
         {/* Social Media Integrations, OAuth Guides & API Keys */}
         <SocialIntegrationsSettingsCard />
+
+        {/* AI Agent Studio: Prompts, Custom Roles, Models & Skill Downloads */}
+        <AgentStudioSettingsCard />
 
         {/* CLI Interception, Claude, AGY, Codex & Multi-LLM Tokens */}
         <CliIntegrationsSettingsCard />
@@ -183,28 +189,20 @@ export const SettingsPage: React.FC = () => {
             <Card.Body p="0">
               <VStack align="stretch" gap="2.5" fontSize="sm">
                 <HStack justify="space-between">
-                  <Text color="fg.muted">Quick Refresh:</Text>
-                  <Badge variant="outline">F5 / Ctrl + R</Badge>
-                </HStack>
-                <HStack justify="space-between">
-                  <Text color="fg.muted">{t('nav.overview')}:</Text>
+                  <Text color="fg.muted">Відеоредактор Shorts:</Text>
                   <Badge variant="outline">Alt + 1</Badge>
                 </HStack>
                 <HStack justify="space-between">
-                  <Text color="fg.muted">{t('nav.fsd')}:</Text>
+                  <Text color="fg.muted">Проєкти та чернетки:</Text>
                   <Badge variant="outline">Alt + 2</Badge>
                 </HStack>
                 <HStack justify="space-between">
-                  <Text color="fg.muted">{t('nav.ipc')}:</Text>
+                  <Text color="fg.muted">{t('nav.settings')}:</Text>
                   <Badge variant="outline">Alt + 3</Badge>
                 </HStack>
                 <HStack justify="space-between">
-                  <Text color="fg.muted">{t('nav.scheduler')}:</Text>
-                  <Badge variant="outline">Alt + 4</Badge>
-                </HStack>
-                <HStack justify="space-between">
-                  <Text color="fg.muted">{t('nav.settings')}:</Text>
-                  <Badge variant="outline">Alt + 5</Badge>
+                  <Text color="fg.muted">Швидке оновлення:</Text>
+                  <Badge variant="outline">F5 / Ctrl + R</Badge>
                 </HStack>
               </VStack>
             </Card.Body>

@@ -34,7 +34,7 @@ export function SubtitleNode({ data, selected }: NodeProps & { data: SubtitleNod
         </HStack>
 
         <Box p="2" borderRadius="md" bg="bg.subtle">
-          <HStack justify="space-between">
+          <HStack justify="space-between" mb="1">
             <Text fontSize="2xs" color="fg.muted">
               Підсвічування:
             </Text>
@@ -45,7 +45,24 @@ export function SubtitleNode({ data, selected }: NodeProps & { data: SubtitleNod
               </Text>
             </HStack>
           </HStack>
-          <Text fontSize="2xs" color="fg.muted" pt="1">
+          <HStack justify="space-between" mb="1">
+            <Text fontSize="2xs" color="fg.muted">
+              Стиль:
+            </Text>
+            <HStack gap="1">
+              {data.isUppercase && (
+                <Badge colorPalette="purple" size="xs">
+                  CAPS
+                </Badge>
+              )}
+              {data.highlightKeywords && (
+                <Badge colorPalette="yellow" size="xs">
+                  GLOW
+                </Badge>
+              )}
+            </HStack>
+          </HStack>
+          <Text fontSize="2xs" color="fg.muted" pt="0.5">
             {data.wordsPerChunk} слова на чанк (Safe Area)
           </Text>
         </Box>

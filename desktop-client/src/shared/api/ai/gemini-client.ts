@@ -145,21 +145,49 @@ Output raw JSON only matching GeneratedScriptResult interface.`;
 
   private generateHeuristicScript(p: GenerateScriptPayload): GeneratedScriptResult {
     const isUk = p.language === 'uk';
+    const isDual = p.language === 'dual';
     const art = p.artifactName;
+    const magnetWord = p.magnetWord || (isUk ? 'ОСТАННІ СЛОВА' : 'LAST WORDS');
+    const isChronicles = p.rubricId === 'chronicles';
+    const seriesInfo =
+      p.seriesInfo ||
+      (isChronicles
+        ? {
+            seriesName: isUk ? 'Космічні Хроніки' : 'Cosmic Chronicles',
+            partNumber: 1,
+            totalParts: 3,
+            cliffhanger: isUk
+              ? 'Але що зафіксував сенсор за 60 секунд до темряви... дивіться у 2-й частині!'
+              : 'What the sensors detected 60 seconds before darkness... find out in Part 2!',
+          }
+        : undefined);
+
+    const titlePrefix = seriesInfo
+      ? `[${seriesInfo.seriesName}: Ч.${seriesInfo.partNumber}/${seriesInfo.totalParts}] `
+      : '';
+
+    const hookPrefix = magnetWord ? `⚡ ${magnetWord}: ` : '';
 
     return {
-      title: isUk ? `${art}: Таємниця останнього сигналу` : `${art}: Mystery of the Final Signal`,
+      title: isUk
+        ? `${titlePrefix}${art}: Таємниця останнього сигналу`
+        : isDual
+          ? `${titlePrefix}${art}: Mystery of the Final Signal • Таємниця сигналу`
+          : `${titlePrefix}${art}: Mystery of the Final Signal`,
       rubricId: p.rubricId,
       totalDurationSec: 40,
+      magnetWord,
+      seriesInfo,
       slides: [
         {
           slideIndex: 1,
           type: 'HOOK',
           durationSec: 3,
           narratorText: isUk
-            ? `Чому зв'язок з ${art} обірвався саме у цей фатальний день? Дивись до кінця!`
-            : `Why did transmissions from ${art} abruptly vanish on that fateful day? Watch closely!`,
-          visualPrompt: 'Close up archival photo with high contrast dramatic zoom',
+            ? `${hookPrefix}Чому зв'язок з ${art} обірвався саме у цей фатальний день? Дивись до кінця!`
+            : `${hookPrefix}Why did transmissions from ${art} abruptly vanish on that fateful day? Watch closely!`,
+          visualPrompt:
+            'Close up archival photo with high contrast dramatic zoom and magnet callout',
           pngtuberState: 'SHOCK',
         },
         {
@@ -186,27 +214,37 @@ Output raw JSON only matching GeneratedScriptResult interface.`;
           slideIndex: 4,
           type: 'SEAMLESS_LOOP_CTA',
           durationSec: 8,
-          narratorText: isUk
-            ? 'Але його наукова спадщина назавжди змінила підручники астрономії. А ти знав...'
-            : 'Yet its scientific legacy permanently rewrote textbooks of astrophysics. And did you know...',
+          narratorText: seriesInfo?.cliffhanger
+            ? `${seriesInfo.cliffhanger} Досліджуй 3D-мапу на CosmoLost!`
+            : isUk
+              ? 'Але його наукова спадщина назавжди змінила підручники астрономії. А ти знав...'
+              : 'Yet its scientific legacy permanently rewrote textbooks of astrophysics. And did you know...',
           visualPrompt: '3D interactive model rotation with glowing safe zones and portal URL',
           pngtuberState: 'HYPE',
         },
       ],
       seoCaption: {
         line1Hook: isUk
-          ? `Останні секунди ${art} перед вічним замерзанням 😱👇`
-          : `The final seconds of ${art} before eternal freezing 😱👇`,
+          ? `${hookPrefix}Останні секунди ${art} перед вічним замерзанням 😱👇`
+          : isDual
+            ? `${hookPrefix}Final seconds of ${art} | Останні секунди перед замерзанням 😱👇`
+            : `${hookPrefix}The final seconds of ${art} before eternal freezing 😱👇`,
         line2Seo: isUk
           ? `Повна історія та розбір останньої телеметрії ${art}. Досліджуй артефакт на 3D-мапі CosmoLost: cosmolost.lihtar.org`
-          : `Complete chronicle and telemetry breakdown of ${art}. Explore on CosmoLost 3D map: cosmolost.lihtar.org`,
+          : isDual
+            ? `Complete chronicle of ${art}. Explore 3D map: cosmolost.lihtar.org • Досліджуй на 3D-мапі`
+            : `Complete chronicle and telemetry breakdown of ${art}. Explore on CosmoLost 3D map: cosmolost.lihtar.org`,
         line3Tags: isUk
           ? '#космос #наука #марсохід #nasa #cosmolost'
-          : '#space #nasa #marsrover #science #cosmolost',
+          : isDual
+            ? '#space #nasa #космос #science #наука #cosmolost'
+            : '#space #nasa #marsrover #science #cosmolost',
       },
       pinComment: isUk
         ? `Як ви вважаєте, чи варто майбутнім колоністам доставити ${art} на Землю в музей? Напишіть у коментарях 👇`
-        : `Do you believe future colonists should retrieve ${art} back to Earth for a museum? Share below 👇`,
+        : isDual
+          ? `Should future explorers bring ${art} back to Earth? / Чи варто привезти в музей? 👇`
+          : `Do you believe future colonists should retrieve ${art} back to Earth for a museum? Share below 👇`,
     };
   }
 }

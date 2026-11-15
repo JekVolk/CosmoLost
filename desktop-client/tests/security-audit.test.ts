@@ -40,7 +40,8 @@ describe('Red-Team Hacker Security & Robustness Audit', () => {
           openaiApiKey: 'sk-proj-super-secret-key-67890',
           geminiApiKey: 'AIzaSySecretGeminiKey123',
           telegramBotToken: '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11',
-          youtubeAuthCode: '4/0AUn6Hd8DBQ1SVUeGEgJBxln9lTerL-CvZPPvCPua1Kize4qYeKf2Nbq32-APJ2akkUdG2A',
+          youtubeAuthCode:
+            '4/0AUn6Hd8DBQ1SVUeGEgJBxln9lTerL-CvZPPvCPua1Kize4qYeKf2Nbq32-APJ2akkUdG2A',
           youtubeRefreshToken: '1//0gSecretRefreshTokenXYZ',
           sunoApiKey: 'suno_secret_token_abc',
           runwayApiKey: 'rw_secret_token_def',
@@ -84,7 +85,9 @@ describe('Red-Team Hacker Security & Robustness Audit', () => {
 
   describe('2. Telegram Connector Entity Integrity', () => {
     it('escapes all MarkdownV2 special characters properly', () => {
-      const escaped = telegramConnector.escapeMarkdown('Hello [World]! (100% *Mars* _Rover_ - 2026)');
+      const escaped = telegramConnector.escapeMarkdown(
+        'Hello [World]! (100% *Mars* _Rover_ - 2026)',
+      );
       expect(escaped).toBe('Hello \\[World\\]\\! \\(100% \\*Mars\\* \\_Rover\\_ \\- 2026\\)');
     });
 
@@ -126,7 +129,8 @@ describe('Red-Team Hacker Security & Robustness Audit', () => {
     it('truncates titles strictly <= 60 characters and preserves #Shorts suffix', async () => {
       await youtubeConnector.connect();
 
-      const longTitle = 'Super Long Martian Mission Telemetry Video Breakdown From Jezero Crater With Full Audio';
+      const longTitle =
+        'Super Long Martian Mission Telemetry Video Breakdown From Jezero Crater With Full Audio';
       const res = await youtubeConnector.publishVideo({
         projectId: 'proj_1',
         title: longTitle,
@@ -194,10 +198,12 @@ describe('Red-Team Hacker Security & Robustness Audit', () => {
   describe('6. CLI Interceptor Prototype Pollution Immunity', () => {
     it('discards prototype pollution flags during CLI argument parsing', async () => {
       const interceptor = new CliInterceptor();
-      const res = await interceptor.execute('cosmolost status --__proto__ bad --constructor bad --lang en');
+      const res = await interceptor.execute(
+        'cosmolost status --__proto__ bad --constructor bad --lang en',
+      );
 
       expect(res.success).toBe(true);
-      expect(Object.prototype.hasOwnProperty('bad')).toBe(false);
+      expect(Object.hasOwn(Object.prototype, 'bad')).toBe(false);
     });
   });
 

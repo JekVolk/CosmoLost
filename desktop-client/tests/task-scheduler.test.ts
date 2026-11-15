@@ -31,9 +31,7 @@ describe('Task Scheduler Engine & Strategy Registry', () => {
 
     await schedulerService.runTask('test-run-task');
 
-    expect(onStartMock).toHaveBeenCalledWith(
-      expect.objectContaining({ taskId: 'test-run-task' }),
-    );
+    expect(onStartMock).toHaveBeenCalledWith(expect.objectContaining({ taskId: 'test-run-task' }));
     expect(onSuccessMock).toHaveBeenCalledWith(
       expect.objectContaining({
         taskId: 'test-run-task',

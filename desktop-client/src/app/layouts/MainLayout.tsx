@@ -11,13 +11,9 @@ export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
 
   // Desktop keyboard shortcuts to quickly navigate routes
-  useHotkey({ key: '1', alt: true }, () => navigate(ROUTES.OVERVIEW));
-  useHotkey({ key: '2', alt: true }, () => navigate(ROUTES.CONTENT_FACTORY));
-  useHotkey({ key: '3', alt: true }, () => navigate(ROUTES.FSD));
-  useHotkey({ key: '4', alt: true }, () => navigate(ROUTES.IPC));
-  useHotkey({ key: '5', alt: true }, () => navigate(ROUTES.SCHEDULER));
-  useHotkey({ key: '6', alt: true }, () => navigate(ROUTES.MCP));
-  useHotkey({ key: '7', alt: true }, () => navigate(ROUTES.SETTINGS));
+  useHotkey({ key: '1', alt: true }, () => navigate(ROUTES.CONTENT_FACTORY));
+  useHotkey({ key: '2', alt: true }, () => navigate(ROUTES.OVERVIEW));
+  useHotkey({ key: '3', alt: true }, () => navigate(ROUTES.SETTINGS));
 
   return (
     <Flex
@@ -27,6 +23,9 @@ export const MainLayout: React.FC = () => {
       overflow="hidden"
       bg="bg.canvas"
       color="fg"
+      borderWidth="1px"
+      borderColor="border.subtle"
+      boxSizing="border-box"
     >
       <Header />
       <Flex flex="1" overflow="hidden">

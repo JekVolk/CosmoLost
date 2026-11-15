@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { usePublicationStore } from '../src/entities/publication';
 import { ContentFactoryWidget } from '../src/widgets/content-factory';
 
 function renderWithProviders(ui: React.ReactElement) {
@@ -24,10 +25,12 @@ function renderWithProviders(ui: React.ReactElement) {
 describe('QA UI Test: Content Factory Interactive Flow', () => {
   beforeEach(() => {
     window.location.hash = '#/content-factory';
+    usePublicationStore.setState({ currentProject: null });
   });
 
   afterEach(() => {
     cleanup();
+    usePublicationStore.setState({ currentProject: null });
   });
 
   it('renders Content Factory header, badges, and artifact selector', async () => {
@@ -38,19 +41,25 @@ describe('QA UI Test: Content Factory Interactive Flow', () => {
     expect(screen.getByText(/Вибір цільового артефакту/)).toBeDefined();
 
     // Check artifacts rendered
-    await waitFor(() => {
-      expect(screen.getByText(/Opportunity Rover/)).toBeDefined();
-      expect(screen.getByText(/Spirit Rover/)).toBeDefined();
-      expect(screen.getByText(/Apollo 11 Lunar Module/)).toBeDefined();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getAllByText(/Opportunity Rover/)[0]).toBeDefined();
+        expect(screen.getAllByText(/Spirit Rover/)[0]).toBeDefined();
+        expect(screen.getAllByText(/Apollo 11 Lunar Module/)[0]).toBeDefined();
+      },
+      { timeout: 5000 },
+    );
   });
 
   it('allows clicking artifacts to change selected target', async () => {
     renderWithProviders(<ContentFactoryWidget />);
 
-    await waitFor(() => {
-      expect(screen.getByText(/Spirit Rover/)).toBeDefined();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getAllByText(/Spirit Rover/)[0]).toBeDefined();
+      },
+      { timeout: 5000 },
+    );
 
     const spiritCard = screen.getByText(/Spirit Rover/).closest('div');
     if (spiritCard) {

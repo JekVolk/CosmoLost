@@ -90,9 +90,7 @@ describe('Node Editor & Core Pipeline Engine (@xyflow/react)', () => {
         hookText: 'Шокуюча таємниця загибелі Оппортюніті: чому NASA мовчала? 🔥',
       });
 
-      const scorerNode = useNodeGraphStore
-        .getState()
-        .nodes.find((n) => n.type === 'hookScorer');
+      const scorerNode = useNodeGraphStore.getState().nodes.find((n) => n.type === 'hookScorer');
 
       expect(scorerNode?.data.curiosityGap).toBe(true);
       expect(scorerNode?.data.questionFormat).toBe(true);
@@ -101,9 +99,7 @@ describe('Node Editor & Core Pipeline Engine (@xyflow/react)', () => {
 
     it('detects missing nodes when DAG is incomplete', () => {
       useNodeGraphStore.setState({
-        nodes: useNodeGraphStore
-          .getState()
-          .nodes.filter((n) => n.type !== 'ffmpegRender'),
+        nodes: useNodeGraphStore.getState().nodes.filter((n) => n.type !== 'ffmpegRender'),
       });
 
       const validation = useNodeGraphStore.getState().runPipelineValidation();

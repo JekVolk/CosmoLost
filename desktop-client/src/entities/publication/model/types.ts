@@ -18,6 +18,36 @@ export interface VideoScriptSlide {
   pngtuberState: 'IDLE' | 'EXPERT' | 'SHOCK' | 'HYPE';
 }
 
+export type SubtitlePresetName = 'HORMOZI_YELLOW' | 'MRBEAST_CYAN' | 'CYBER_LIME' | 'CLEAN_WHITE';
+
+export interface SubtitleStyleConfig {
+  preset: SubtitlePresetName;
+  textColor: string;
+  highlightColor: string;
+  strokeColor: string;
+  strokeWidth: number;
+  isUppercase: boolean;
+  highlightKeywords: boolean;
+  wordsPerChunk: number;
+  fontSizePx: number;
+}
+
+export type ContentLanguage = 'en' | 'uk' | 'dual';
+
+export interface SeriesInfo {
+  seriesName: string;
+  partNumber: number;
+  totalParts: number;
+  cliffhanger?: string;
+}
+
+export interface TagGroup {
+  id: string;
+  name: string;
+  icon: string;
+  tags: string[];
+}
+
 export interface PublicationProject {
   id: string;
   artifactId: string;
@@ -33,8 +63,16 @@ export interface PublicationProject {
     line3Tags: string;
   };
   pinComment: string;
+  seriesInfo?: SeriesInfo;
+  magnetWord?: string;
+  tagGroups?: string[];
   localVideoPath?: string;
   localAudioPath?: string;
+  brollVideoUrl?: string;
+  brollPreset?: string;
+  brollDurationSec?: number;
+  subtitleStyle?: SubtitleStyleConfig;
+  contentLanguage?: ContentLanguage;
   renderTimeoutSec: number;
   createdAt: string;
   updatedAt: string;

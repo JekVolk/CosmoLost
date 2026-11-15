@@ -66,8 +66,11 @@ export function createDefaultPipelineNodes(): PipelineNode[] {
       position: { x: 1060, y: 60 },
       data: {
         format: 'ASS',
-        highlightColor: '#FFD700',
+        highlightColor: '#facc15',
         wordsPerChunk: 3,
+        isUppercase: true,
+        highlightKeywords: true,
+        presetName: 'HORMOZI_YELLOW',
       },
     },
     {

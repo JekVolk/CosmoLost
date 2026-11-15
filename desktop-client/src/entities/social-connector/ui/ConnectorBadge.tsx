@@ -22,11 +22,20 @@ export function ConnectorBadge({ connector, isSelected = false, onToggle }: Conn
       onClick={() => onToggle?.(connector.id)}
       transition="all 0.2s"
     >
-      <Badge colorPalette={isConnected ? 'green' : 'red'} variant="solid" size="xs" />
+      <Badge
+        colorPalette={isConnected ? 'green' : 'red'}
+        variant="solid"
+        size="xs"
+        px="2"
+        py="0.5"
+        borderRadius="full"
+      >
+        {isConnected ? '✓' : '✗'}
+      </Badge>
       <Text fontSize="xs" fontWeight="medium" color="fg">
         {connector.displayName}
       </Text>
-      <Badge variant="subtle" size="xs">
+      <Badge variant="subtle" size="xs" px="2" py="0.5" borderRadius="md">
         {connector.platformType}
       </Badge>
     </HStack>

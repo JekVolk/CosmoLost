@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 describe('Desktop MCP Server (JSON-RPC 2.0 stdio)', () => {
   const mcpServerPath = path.resolve(__dirname, '../scripts/cosmolost-mcp-server.mjs');
 
-  function callMcpTool(toolName: string, toolArgs: Record<string, unknown> = {}): Promise<any> {
+  function callMcpTool(toolName: string, toolArgs: Record<string, unknown> = {}): Promise<unknown> {
     return new Promise((resolve, reject) => {
       const child = spawn(process.execPath, [mcpServerPath], {
         stdio: ['pipe', 'pipe', 'pipe'],

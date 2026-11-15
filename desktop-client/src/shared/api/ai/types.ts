@@ -3,7 +3,8 @@ export type SmmRubricType =
   | 'tech-explain'
   | 'dictionary-30s'
   | 'crash-test'
-  | 'build-in-public';
+  | 'build-in-public'
+  | 'chronicles';
 
 export interface ScriptSlideDto {
   slideIndex: number;
@@ -14,12 +15,21 @@ export interface ScriptSlideDto {
   pngtuberState: 'IDLE' | 'EXPERT' | 'SHOCK' | 'HYPE';
 }
 
+export type ContentLanguage = 'en' | 'uk' | 'dual';
+
 export interface GenerateScriptPayload {
   artifactId: string;
   artifactName: string;
   rubricId: SmmRubricType;
-  language: 'uk' | 'en';
+  language: ContentLanguage;
   selectionReason?: string;
+  magnetWord?: string;
+  seriesInfo?: {
+    seriesName: string;
+    partNumber: number;
+    totalParts: number;
+    cliffhanger?: string;
+  };
 }
 
 export interface GeneratedScriptResult {
@@ -33,6 +43,13 @@ export interface GeneratedScriptResult {
     line3Tags: string;
   };
   pinComment: string;
+  magnetWord?: string;
+  seriesInfo?: {
+    seriesName: string;
+    partNumber: number;
+    totalParts: number;
+    cliffhanger?: string;
+  };
 }
 
 export interface NextTopicPayload {

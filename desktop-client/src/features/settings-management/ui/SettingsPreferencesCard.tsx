@@ -1,5 +1,6 @@
 import {
   type AccentColor,
+  type ContentGenerationLanguage,
   DEFAULT_SETTINGS,
   type DesktopSettings,
   type Language,
@@ -27,6 +28,7 @@ import {
   Sliders,
   Sun,
   SunMoon,
+  Video,
 } from 'lucide-react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -47,6 +49,7 @@ interface SettingsPreferencesCardProps {
   onAccentChange: (accent: AccentColor) => void;
   onThemeModeChange: (mode: ThemeMode) => void;
   onLanguageChange: (lang: Language) => void;
+  onContentLanguageChange?: (lang: ContentGenerationLanguage) => void;
   onToggleAutoRefresh: () => void;
   onIntervalChange: (seconds: number) => void;
   onToggleCompact: () => void;
@@ -60,6 +63,7 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
   onAccentChange,
   onThemeModeChange,
   onLanguageChange,
+  onContentLanguageChange,
   onToggleAutoRefresh,
   onIntervalChange,
   onToggleCompact,
@@ -140,7 +144,7 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
               <HStack gap="2">
                 <Languages size={16} />
                 <Text fontSize="sm" fontWeight="medium" color="fg">
-                  {t('settings.language')}
+                  {t('settings.language')} (UI)
                 </Text>
               </HStack>
               <Badge variant="surface" size="sm">
@@ -165,6 +169,53 @@ export const SettingsPreferencesCard: React.FC<SettingsPreferencesCardProps> = (
                 🇺🇦 {t('settings.langUk')}
               </Button>
             </HStack>
+          </Box>
+
+          <Separator borderColor="border.subtle" />
+
+          {/* Video Content Generation Language */}
+          <Box>
+            <Flex justify="space-between" align="center" mb="2">
+              <HStack gap="2">
+                <Video size={16} color="#06b6d4" />
+                <Text fontSize="sm" fontWeight="medium" color="fg">
+                  Пріоритетна мова генерації відеоконтенту (Shorts/Reels)
+                </Text>
+              </HStack>
+              <Badge colorPalette="teal" variant="solid" size="sm">
+                {settings.contentGenerationLanguage?.toUpperCase() || 'EN'}
+              </Badge>
+            </Flex>
+            <HStack gap="2" wrap="wrap">
+              <Button
+                size="sm"
+                variant={settings.contentGenerationLanguage === 'en' ? 'solid' : 'outline'}
+                colorPalette={settings.accentColor}
+                onClick={() => onContentLanguageChange?.('en')}
+              >
+                🇬🇧 English Priority (Video)
+              </Button>
+              <Button
+                size="sm"
+                variant={settings.contentGenerationLanguage === 'uk' ? 'solid' : 'outline'}
+                colorPalette={settings.accentColor}
+                onClick={() => onContentLanguageChange?.('uk')}
+              >
+                🇺🇦 Ukrainian (Video)
+              </Button>
+              <Button
+                size="sm"
+                variant={settings.contentGenerationLanguage === 'dual' ? 'solid' : 'outline'}
+                colorPalette={settings.accentColor}
+                onClick={() => onContentLanguageChange?.('dual')}
+              >
+                🌐 Dual EN+UK (Video)
+              </Button>
+            </HStack>
+            <Text fontSize="2xs" color="fg.muted" mt="1.5">
+              Визначає пріоритетну мову нейромережевих сценаріїв Gemini, озвучки Edge-TTS та SEO
+              тегів.
+            </Text>
           </Box>
 
           <Separator borderColor="border.subtle" />

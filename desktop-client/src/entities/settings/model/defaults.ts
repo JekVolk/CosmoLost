@@ -1,9 +1,11 @@
+import { DEFAULT_AGENT_PROFILES } from './schema';
 import type { DesktopSettings } from './types';
 
 export const DEFAULT_SETTINGS: DesktopSettings = {
   accentColor: 'blue',
   themeMode: 'dark',
   language: 'en',
+  contentGenerationLanguage: 'en',
   autoRefreshMetrics: true,
   refreshIntervalSec: 5,
   compactMode: false,
@@ -31,4 +33,5 @@ export const DEFAULT_SETTINGS: DesktopSettings = {
   runwayApiKey: '',
   cliInterceptionEnabled: true,
   cliBridgePort: 8089,
+  agentProfiles: DEFAULT_AGENT_PROFILES,
 };

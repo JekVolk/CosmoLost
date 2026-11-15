@@ -76,6 +76,11 @@ export interface SubtitleNodeData extends Record<string, unknown> {
   format: 'ASS' | 'SRT';
   highlightColor: string;
   wordsPerChunk: number;
+  isUppercase?: boolean;
+  highlightKeywords?: boolean;
+  presetName?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
 }
 
 export interface SafeZonePreviewNodeData extends Record<string, unknown> {

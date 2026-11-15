@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { tauriCommands } from '../src/shared/api';
 import {
   ImageGeneratorClient,
@@ -6,7 +7,6 @@ import {
   VideoGeneratorClient,
 } from '../src/shared/api/ai';
 import { CliConfigGenerator, CliInterceptor } from '../src/shared/lib/cli-bridge';
-import { describe, expect, it } from 'vitest';
 
 describe('CLI & Multi-LLM Integrations Engine', () => {
   describe('MultiLlmClient', () => {

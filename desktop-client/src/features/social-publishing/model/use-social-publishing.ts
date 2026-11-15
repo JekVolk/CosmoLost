@@ -8,7 +8,51 @@ export function useSocialPublishing() {
   const [publishFeedback, setPublishFeedback] = useState<string | null>(null);
 
   const currentProject = usePublicationStore((s) => s.currentProject);
+  const updateStatus = usePublicationStore((s) => s.updateStatus);
   const selectedConnectorIds = useConnectorStore((s) => s.selectedConnectorIds);
+
+  const autoPublishAll = async () => {
+    if (!currentProject) {
+      setPublishFeedback('Створіть або оберіть проект перед автопублікацією.');
+      return;
+    }
+
+    setIsPublishing(true);
+    setPublishFeedback(null);
+
+    const payload = {
+      projectId: currentProject.id,
+      videoFilePath: `C:\\Users\\CosmoCreator\\Videos\\CosmoLost\\${currentProject.id}.mp4`,
+      title: `${currentProject.artifactName}: Таємниця сигналу`,
+      seoCaption: currentProject.seoCaption,
+      pinComment: currentProject.pinComment,
+      privacyStatus: 'public' as const,
+    };
+
+    const results: string[] = [];
+
+    try {
+      await youtubeConnector.connect();
+      const yt = await youtubeConnector.publishVideo(payload);
+      if (yt.success) results.push(`YouTube (${yt.externalPostUrl})`);
+
+      await telegramConnector.connect();
+      const tg = await telegramConnector.publishVideo(payload);
+      if (tg.success) results.push(`Telegram (${tg.externalPostUrl})`);
+
+      const local = await localFolderConnector.publishVideo(payload);
+      if (local.success) results.push('OS Explorer');
+
+      updateStatus('PUBLISHED');
+      setPublishFeedback(`🚀 Авто-публікація завершена успішно: ${results.join(' • ')}`);
+    } catch (e) {
+      setPublishFeedback(
+        `Помилка автопублікації: ${e instanceof Error ? e.message : 'Unknown error'}`,
+      );
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   const publishToSelectedChannels = async () => {
     if (!currentProject) {
@@ -54,6 +98,10 @@ export function useSocialPublishing() {
         }
       }
 
+      if (results.length > 0) {
+        updateStatus('PUBLISHED');
+      }
+
       setPublishFeedback(`Успішно опрацьовано: ${results.join('; ')}`);
     } catch (e) {
       setPublishFeedback(`Помилка публікації: ${e instanceof Error ? e.message : 'Unknown error'}`);
@@ -78,6 +126,7 @@ export function useSocialPublishing() {
     isPublishing,
     publishFeedback,
     publishToSelectedChannels,
+    autoPublishAll,
     openLocalFolderDirectly,
     currentProject,
   };

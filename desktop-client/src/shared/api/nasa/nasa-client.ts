@@ -10,27 +10,15 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
     photos: [
       {
         nasaId: 'PIA22521',
-        title: "Opportunity's Final View (Perseverance Valley)",
+        title: 'Opportunity Panoramic View of Perseverance Valley',
         description:
           'Archival mosaic from the Panoramic Camera of NASA Mars Exploration Rover Opportunity in Perseverance Valley, Sol 5111.',
         mediaType: 'image',
         dateCreated: '2018-06-10',
         center: 'JPL',
-        thumbUrl: 'https://images-assets.nasa.gov/image/PIA22521/PIA22521~thumb.jpg',
+        thumbUrl: 'https://images-assets.nasa.gov/image/PIA22074/PIA22074~medium.jpg',
         fullResUrl: 'https://photojournal.jpl.nasa.gov/jpeg/PIA22521.jpg',
         aspectRatio: 1.33,
-      },
-      {
-        nasaId: 'PIA05215',
-        title: 'Opportunity at Endurance Crater',
-        description:
-          'View of the dramatic interior slopes of Endurance Crater taken by Opportunity.',
-        mediaType: 'image',
-        dateCreated: '2004-05-12',
-        center: 'JPL',
-        thumbUrl: 'https://images-assets.nasa.gov/image/PIA05215/PIA05215~thumb.jpg',
-        fullResUrl: 'https://photojournal.jpl.nasa.gov/jpeg/PIA05215.jpg',
-        aspectRatio: 1.5,
       },
     ],
     model3dGlbUrl:
@@ -51,15 +39,15 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
     name: 'Spirit Rover (MER-A)',
     photos: [
       {
-        nasaId: 'PIA11200',
-        title: 'Spirit Trapped in Soft Martian Sand at Troy',
+        nasaId: 'PIA03253',
+        title: 'Spirit Rover on Summit of Husband Hill',
         description:
-          'True-color image showing the sand trap at the site named Troy where Spirit remained stationary.',
+          'True-color view showing the Columbia Hills terrain explored by NASA Spirit rover.',
         mediaType: 'image',
-        dateCreated: '2009-05-01',
+        dateCreated: '2005-09-01',
         center: 'JPL',
-        thumbUrl: 'https://images-assets.nasa.gov/image/PIA11200/PIA11200~thumb.jpg',
-        fullResUrl: 'https://photojournal.jpl.nasa.gov/jpeg/PIA11200.jpg',
+        thumbUrl: 'https://images-assets.nasa.gov/image/PIA03253/PIA03253~medium.jpg',
+        fullResUrl: 'https://images-assets.nasa.gov/image/PIA03253/PIA03253~medium.jpg',
         aspectRatio: 1.33,
       },
     ],
@@ -81,15 +69,15 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
     name: 'Apollo 11 Lunar Module Eagle (Descent Stage)',
     photos: [
       {
-        nasaId: 'AS11-40-5903',
-        title: 'Lunar Module Eagle on the Moon Surface',
+        nasaId: 'as11-40-5927',
+        title: 'Apollo 11 Lunar Module Eagle standing on Mare Tranquillitatis',
         description:
-          'Astronaut Buzz Aldrin photographed near the leg of the Lunar Module Descent Stage at Tranquility Base.',
+          'Official NASA photograph of the Lunar Module Descent Stage at Tranquility Base.',
         mediaType: 'image',
         dateCreated: '1969-07-20',
         center: 'JSC',
-        thumbUrl: 'https://images-assets.nasa.gov/image/AS11-40-5903/AS11-40-5903~thumb.jpg',
-        fullResUrl: 'https://images-assets.nasa.gov/image/AS11-40-5903/AS11-40-5903~orig.jpg',
+        thumbUrl: 'https://images-assets.nasa.gov/image/as11-40-5927/as11-40-5927~medium.jpg',
+        fullResUrl: 'https://images-assets.nasa.gov/image/as11-40-5927/as11-40-5927~medium.jpg',
         aspectRatio: 1.0,
       },
     ],
@@ -100,9 +88,154 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
       dustTau: 0.0,
       batteryLevelPct: 100,
       coordinates: {
-        latitude: 0.67416,
-        longitude: 23.47314,
+        latitude: 0.67408,
+        longitude: 23.47297,
         locationName: 'Statio Tranquillitatis (Tranquility Base), Moon',
+      },
+    },
+  },
+  'apollo-11-descent-stage': {
+    artifactId: 'apollo-11-descent-stage',
+    name: 'Apollo 11 Lunar Module Descent Stage (Eagle)',
+    photos: [
+      {
+        nasaId: 'as11-40-5927',
+        title: 'Apollo 11 Lunar Module Eagle standing on Mare Tranquillitatis',
+        description:
+          'Official NASA photograph of the Lunar Module Descent Stage at Tranquility Base.',
+        mediaType: 'image',
+        dateCreated: '1969-07-20',
+        center: 'JSC',
+        thumbUrl: 'https://images-assets.nasa.gov/image/as11-40-5927/as11-40-5927~medium.jpg',
+        fullResUrl: 'https://images-assets.nasa.gov/image/as11-40-5927/as11-40-5927~medium.jpg',
+        aspectRatio: 1.0,
+      },
+    ],
+    model3dGlbUrl:
+      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Lunar%20Module/lunar_module.glb',
+    telemetrySnapshot: {
+      sol: 1,
+      dustTau: 0.0,
+      batteryLevelPct: 100,
+      coordinates: {
+        latitude: 0.67408,
+        longitude: 23.47297,
+        locationName: 'Tranquility Base (Mare Tranquillitatis), Moon',
+      },
+    },
+  },
+  'apollo-11-lrr': {
+    artifactId: 'apollo-11-lrr',
+    name: 'Apollo 11 Lunar Laser Ranging Retroreflector (LRRR)',
+    photos: [
+      {
+        nasaId: '6900957',
+        title: 'Apollo 11 Laser Ranging Retroreflector Experiment',
+        description:
+          'The 100-corner-cube quartz reflector deployed on the lunar surface, still operational.',
+        mediaType: 'image',
+        dateCreated: '1969-07-20',
+        center: 'JSC',
+        thumbUrl: 'https://images-assets.nasa.gov/image/6900957/6900957~medium.jpg',
+        fullResUrl: 'https://images-assets.nasa.gov/image/6900957/6900957~medium.jpg',
+        aspectRatio: 1.0,
+      },
+    ],
+    telemetrySnapshot: {
+      sol: 1,
+      dustTau: 0.0,
+      batteryLevelPct: 100,
+      coordinates: {
+        latitude: 0.67337,
+        longitude: 23.47309,
+        locationName: 'Tranquility Base, Moon',
+      },
+    },
+  },
+  'insight-lander': {
+    artifactId: 'insight-lander',
+    name: 'InSight Mars Lander',
+    photos: [
+      {
+        nasaId: 'PIA23014',
+        title: 'InSight Lander Selfie on Elysium Planitia',
+        description:
+          'Mosaic of images from the Instrument Deployment Camera showing solar panels and SEIS dome.',
+        mediaType: 'image',
+        dateCreated: '2018-12-06',
+        center: 'JPL',
+        thumbUrl: 'https://images-assets.nasa.gov/image/PIA23014/PIA23014~thumb.jpg',
+        fullResUrl: 'https://images-assets.nasa.gov/image/PIA23014/PIA23014~thumb.jpg',
+        aspectRatio: 1.33,
+      },
+    ],
+    model3dGlbUrl:
+      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/InSight/insight.glb',
+    telemetrySnapshot: {
+      sol: 1445,
+      dustTau: 3.5,
+      batteryLevelPct: 14.0,
+      coordinates: {
+        latitude: 4.5024,
+        longitude: 135.6234,
+        locationName: 'Elysium Planitia, Mars',
+      },
+    },
+  },
+  'ingenuity-helicopter': {
+    artifactId: 'ingenuity-helicopter',
+    name: 'Ingenuity Mars Helicopter (Ginny)',
+    photos: [
+      {
+        nasaId: 'PIA24836',
+        title: 'Ingenuity Mars Helicopter Standing in Jezero Crater',
+        description: 'Close-up photograph of Ingenuity taken by Mastcam-Z on Perseverance rover.',
+        mediaType: 'image',
+        dateCreated: '2021-04-05',
+        center: 'JPL',
+        thumbUrl: 'https://images-assets.nasa.gov/image/PIA24836/PIA24836~medium.jpg',
+        fullResUrl: 'https://images-assets.nasa.gov/image/PIA24836/PIA24836~medium.jpg',
+        aspectRatio: 1.33,
+      },
+    ],
+    model3dGlbUrl:
+      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Ingenuity/ingenuity.glb',
+    telemetrySnapshot: {
+      sol: 1042,
+      dustTau: 0.6,
+      batteryLevelPct: 80.0,
+      coordinates: {
+        latitude: 18.4447,
+        longitude: 77.4508,
+        locationName: 'Valinor Hills, Jezero Crater, Mars',
+      },
+    },
+  },
+  'sojourner-rover': {
+    artifactId: 'sojourner-rover',
+    name: 'Sojourner Rover (Mars Pathfinder)',
+    photos: [
+      {
+        nasaId: 'PIA01120',
+        title: 'Sojourner Rover and Yogi Rock at Ares Vallis',
+        description:
+          'First robotic rover on Mars examining rocks near Carl Sagan Memorial Station.',
+        mediaType: 'image',
+        dateCreated: '1997-07-06',
+        center: 'JPL',
+        thumbUrl: 'https://images-assets.nasa.gov/image/PIA01120/PIA01120~medium.jpg',
+        fullResUrl: 'https://images-assets.nasa.gov/image/PIA01120/PIA01120~medium.jpg',
+        aspectRatio: 1.33,
+      },
+    ],
+    telemetrySnapshot: {
+      sol: 83,
+      dustTau: 0.5,
+      batteryLevelPct: 20.0,
+      coordinates: {
+        latitude: 19.33,
+        longitude: 326.45,
+        locationName: 'Ares Vallis, Mars',
       },
     },
   },
@@ -156,22 +289,34 @@ export class NasaApiClient {
       });
 
       const items = response.data?.collection?.items || [];
-      return items.map((raw) => {
-        const d = raw.data?.[0];
-        const thumb =
-          raw.links?.find((l) => l.rel === 'preview')?.href ||
-          'https://images-assets.nasa.gov/image/PIA22521/PIA22521~thumb.jpg';
-        return {
-          nasaId: d?.nasa_id || 'unknown',
-          title: d?.title || query,
-          description: d?.description || '',
-          mediaType: 'image',
-          dateCreated: d?.date_created || new Date().toISOString(),
-          center: d?.center,
-          thumbUrl: thumb,
-          fullResUrl: thumb.replace('~thumb.', '~orig.'),
-        };
-      });
+      return items.map(
+        (raw: {
+          data?: Array<{
+            nasa_id: string;
+            title: string;
+            description?: string;
+            media_type: string;
+            date_created: string;
+            center?: string;
+          }>;
+          links?: Array<{ href: string; rel: string }>;
+        }) => {
+          const d = raw.data?.[0];
+          const thumb =
+            raw.links?.find((l: { rel: string; href: string }) => l.rel === 'preview')?.href ||
+            'https://images-assets.nasa.gov/image/PIA22521/PIA22521~thumb.jpg';
+          return {
+            nasaId: d?.nasa_id || 'unknown',
+            title: d?.title || query,
+            description: d?.description || '',
+            mediaType: 'image',
+            dateCreated: d?.date_created || new Date().toISOString(),
+            center: d?.center,
+            thumbUrl: thumb,
+            fullResUrl: thumb.replace('~thumb.', '~orig.'),
+          };
+        },
+      );
     } catch (e) {
       console.warn('NASA images API call failed, falling back to local catalog:', e);
       return MOCK_NASA_CATALOG['opportunity-rover']?.photos ?? [];
