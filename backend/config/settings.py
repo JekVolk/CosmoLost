@@ -24,13 +24,16 @@ if _env_path.exists():
 # Silenced system checks (urls.W005 is expected due to intentional alias routes for API compatibility)
 SILENCED_SYSTEM_CHECKS = ['urls.W005']
 
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+
 # Security & environment settings
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
-    'django-insecure-m!6m4)xc#03dcyfoymebe8gw=_b-5%csol^7hpdhoxlf))8o58',
+    'django-insecure-m!6m4)xc#03dcyfoymebe8gw=_b-5%csol^7hpdhoxlf))8o58' if DEBUG else '',
 )
-
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+if not DEBUG and not SECRET_KEY:
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured("DJANGO_SECRET_KEY environment variable is required in production (DEBUG=False).")
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -88,7 +91,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'config.middleware.SimpleCorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -183,6 +185,14 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '300/minute',
+        'user': '1200/minute',
+    },
 }
 
 # Channels & ASGI configuration

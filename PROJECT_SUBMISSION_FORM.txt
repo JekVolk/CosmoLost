@@ -1,0 +1,148 @@
+================================================================================
+NASA SPACE APPS CHALLENGE 2026 — OFFICIAL PROJECT SUBMISSION
+================================================================================
+
+Project Name
+--------------------------------------------------------------------------------
+Project NUOS SpaceLixtar — CosmoLost: The Ecosystem of Humanity's Planetary Heritage
+
+
+Summary *
+--------------------------------------------------------------------------------
+CosmoLost is an educational and scientific ecosystem dedicated to preserving and storytelling humanity's technological heritage across the Moon and Mars. While official NASA Planetary Data System (PDS) and NSSDCA catalogs rigorously archive discarded landers and rovers, these records remain fragmented and inaccessible to young learners and the public.
+
+To address this challenge, our team developed a three-tier platform:
+1. Interactive 3D Web Portal: Explores planetary surfaces via NASA Treks cartography, authentic 3D GLB models, verified coordinates, and emotional «Diary of the Last Sol» narratives.
+2. Desktop Content Factory: Employs Tauri, native FFmpeg, and neural voiceover (edge-tts) to transform mission data into engaging 1080x1920 educational short-form videos in under 30 seconds with zero cloud costs.
+3. FastMCP AI Gateway & Multiplayer Engine: Connects modern AI assistants directly to verified, hallucination-free NASA telemetry alongside real-time gamified planetary exploration.
+
+
+Project Links
+--------------------------------------------------------------------------------
+Project Demonstration *
+Link Url: https://github.com/JekVolk/CosmoLost#project-demonstration
+(Demonstration slide deck / 30-second walkthrough video hosted publicly on GitHub / YouTube / Google Drive without password or registration requirements)
+
+Project *
+Link Url: https://github.com/JekVolk/CosmoLost
+
+
+Project Information
+--------------------------------------------------------------------------------
+Project Details *
+
+1. What does it do or how does it work?
+CosmoLost operates as an interconnected, closed-loop ecosystem consisting of four primary components:
+- Interactive 3D Web Portal: Built with React 19, Three.js, and NASA Treks WMTS global mosaics. Users explore full 3D selenographic and planetocentric globes of the Moon and Mars, click on historical landing sites, view authentic 3D GLB spacecraft models from the official NASA 3D Asset Repository, inspect 360-degree photospheres in the AstroGuessr mini-game, and read scientifically grounded, emotionally resonant «Diary of the Last Sol» narratives.
+- Local Desktop Content Factory: A cross-platform desktop application built with Tauri v2 (Rust backend) and Chakra UI. It bundles an FFmpeg sidecar and Microsoft neural text-to-speech (edge-tts), compiling raw planetary telemetry, archival photos, kinetic subtitles, and bilingual (English/Ukrainian) voiceovers into polished 1080x1920 60fps vertical videos (YouTube Shorts/TikTok/Reels) in under 30 seconds—running entirely on the user's laptop without cloud rendering expenses.
+- Backend Ingestion & Real-Time Multiplayer Engine: Powered by Django 6.1, PostgreSQL 16, and Django Channels (WebSocket ASGI). It features an automated data loader syncing NASA PDS, NSSDCA Master Catalog, and JPL Photojournal APIs into a relational database. It also powers Zero-Knowledge real-time competitive multiplayer duels (AstroDuel) where player coordinates and weights are validated authoritative on the server side.
+- FastMCP AI Gateway: A standardized Model Context Protocol (MCP) server that provides 8 structured RPC tools for external AI agents (Claude, Gemini, Antigravity). This bridges AI models directly to peer-reviewed NASA records, eliminating hallucinations.
+
+2. What benefits does it have?
+- For Students and the General Public: Transforms dry technical tables into visual, interactive 3D exploration and poignant human narratives, making planetary history accessible to all ages.
+- For STEM Communicators & Educators: Reduces the time needed to research, script, narrate, and edit a scientifically accurate space video from 4+ hours down to 30 seconds of automated, local rendering.
+- For AI Researchers & Developers: Provides a verified, relational source-of-truth grounding for AI assistants querying Apollo, Viking, Spirit, Opportunity, Curiosity, and Perseverance mission details.
+
+3. What is the intended impact of the project?
+CosmoLost safeguards the historical and engineering legacy of humanity's lunar and Martian pioneers. By meeting younger generations where they spend time (short-form video platforms and interactive web 3D) and funneling them into deep exploration of NASA's planetary archives, CosmoLost bridges the gap between historical space data and modern STEM education.
+
+4. What tools, coding languages, hardware, or software did you use?
+- Languages: Python 3.12+, TypeScript, Rust, SQL, HTML5/CSS3.
+- Frontend: React 19, Vite, Three.js (@react-three/fiber, @react-three/drei), Chakra UI v3, Leaflet, TanStack React Query, Biome.
+- Desktop: Tauri v2, Rust 1.80+, FFmpeg (sidecar binary), edge-tts.
+- Backend: Django 6.1, Django REST Framework, Django Channels 4+ (ASGI / Daphne), SimpleJWT, social-auth-app-django, FastMCP.
+- Storage & Infrastructure: PostgreSQL 16, Redis, SQLite, Docker, GitHub Actions.
+- Testing: pytest, pytest-django, unittest, Channels WebsocketCommunicator (100% green test suite across 127 tests).
+
+5. How is your project creative?
+- Emotional Storytelling («Diary of the Last Sol»): Instead of treating deactivated rovers as inert space debris, each artifact tells its journey from its own perspective—from landing triumph to gradual dust accumulation and silent power depletion.
+- Zero-Cloud-Cost Architecture: Unlike typical video generation pipelines requiring expensive cloud GPU farms, CosmoLost utilizes client-side Rust and native FFmpeg sidecars to render full HD 60fps videos on student-grade laptops.
+- Zero-Knowledge Multiplayer: Gamified space exploration incorporates server-authoritative Zero-Knowledge verification, ensuring answers and secret coordinates cannot be inspected in client network requests during active rounds.
+- Direct AI Tool Integration (MCP): Directly connects LLMs to verified NASA catalogs via FastMCP tools rather than relying on noisy vector search or web scraping.
+
+6. What factors did your team consider?
+- Data Veracity: Every artifact profile strictly links to an official NASA catalog identifier (NSSDCA ID), verified geographic/selenographic coordinates, launch/landing dates, and source URLs.
+- Platform Independence: The web application is fully responsive on desktop and mobile browsers, while the desktop content factory runs locally across Windows, macOS, and Linux.
+- Social Media Safe Zones: The automated video generator incorporates «pillow-box» safe-zone margins, ensuring subtitles and mission badges are never obscured by TikTok or YouTube Shorts interface buttons.
+
+
+Use of Super Intelligence (SI) *
+--------------------------------------------------------------------------------
+Selected options:
+[X] Code generation / code assistance
+[X] Text generation / brainstorming
+[X] Translation / localization assistance
+[X] I did not use SI for NASA branding, logos, or flags
+
+Detailed Description of SI Utilization:
+- Code and Data: Google Antigravity, Claude, and Gemini foundation models were utilized during development to assist with architectural design, boilerplate scaffolding, asynchronous WebSocket state machine patterns, and comprehensive unit test generation. All generated code was reviewed, refactored, and verified by human developers, culminating in a robust 127-test automated test suite.
+- Audio and Text Narration: Microsoft Neural Text-to-Speech (edge-tts) was integrated locally into the desktop application to provide high-quality bilingual (Ukrainian and English) synthetic voice narration for the automated educational video generator.
+- Creative Scriptwriting: AI assistance was used to brainstorm stylistic variations for the first-person «Diary of the Last Sol» monologues based strictly on factual NASA mission timelines and anomaly reports.
+- Compliance Note: No NASA logos, flags, mission patches, or official NASA branding were generated or altered by AI tools. Archival photos and 3D spacecraft assets are authentic files retrieved from official NASA repositories.
+
+
+NASA Data *
+--------------------------------------------------------------------------------
+Link Text: NASA Treks Global Basemaps (Lunar & Mars Treks)
+Link Url: https://trek.nasa.gov
+
+Link Text: NASA Planetary Data System (PDS)
+Link Url: https://pds.nasa.gov
+
+Link Text: NASA Space Science Data Coordinated Archive (NSSDCA Master Catalog)
+Link Url: https://nssdc.gsfc.nasa.gov
+
+Link Text: NASA Open APIs (Mars Rover Photos API)
+Link Url: https://api.nasa.gov
+
+Link Text: NASA Image and Video Library
+Link Url: https://images.nasa.gov
+
+Link Text: NASA Jet Propulsion Laboratory (JPL) Photojournal
+Link Url: https://photojournal.jpl.nasa.gov
+
+Link Text: NASA 3D Asset Repository (Official Spacecraft GLB Models)
+Link Url: https://github.com/nasa/NASA-3D-Resources
+
+Link Text: NASA Lunar Reconnaissance Orbiter (LRO) Camera Archive
+Link Url: https://www.lroc.asu.edu
+
+Link Text: NASA Mars Exploration Program (Curiosity, Perseverance, Opportunity, Spirit, InSight)
+Link Url: https://mars.nasa.gov
+
+Link Text: Apollo Lunar Surface Journal (ALSJ Historical Records)
+Link Url: https://www.nasa.gov/history/alsj/
+
+
+Space Agency Partner & Other Data
+--------------------------------------------------------------------------------
+Link Text: Tauri Framework (Cross-platform native desktop runtime)
+Link Url: https://tauri.app
+
+Link Text: FFmpeg Multimedia Framework (Native sidecar video rendering engine)
+Link Url: https://ffmpeg.org
+
+Link Text: Microsoft Edge Neural Text-to-Speech (edge-tts)
+Link Url: https://github.com/rany2/edge-tts
+
+Link Text: Three.js 3D Web Graphics Library
+Link Url: https://threejs.org
+
+Link Text: FastMCP (Model Context Protocol Python SDK for LLM integration)
+Link Url: https://github.com/jlowin/fastmcp
+
+Link Text: Chakra UI (Modern accessible component system for React)
+Link Url: https://chakra-ui.com
+
+Link Text: Django & Django REST Framework (Python backend framework)
+Link Url: https://www.djangoproject.com
+
+Link Text: PostgreSQL Object-Relational Database System
+Link Url: https://www.postgresql.org
+
+Link Text: Leaflet & OpenStreetMap (Surface navigation and coordinate mapping)
+Link Url: https://leafletjs.com
+
+Link Text: YouTube Data API v3 & Telegram Bot API (Automated educational publishing)
+Link Url: https://developers.google.com/youtube/v3
+================================================================================

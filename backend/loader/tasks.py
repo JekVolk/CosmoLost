@@ -76,21 +76,3 @@ def sync_nasa_catalog_task(
     """Background task executed via django_tasks."""
     logger.info("Executing sync_nasa_catalog_task via django_tasks...")
     return run_nasa_sync(target_body=target_body, force=force, dry_run=dry_run)
-
-
-# Celery Compatibility (if celery is configured in environment)
-try:
-    from celery import shared_task
-
-    @shared_task(name='tasks.sync_nasa_hourly_catalog', bind=True, max_retries=2)
-    def sync_nasa_hourly_catalog(self, force: bool = False):
-        """Hourly periodic Celery task."""
-        logger.info("Starting hourly NASA catalog ingestion via Celery...")
-        try:
-            return run_nasa_sync(force=force)
-        except Exception as exc:
-            logger.error(f"Celery Ingest Task Failed: {exc}")
-            raise self.retry(exc=exc, countdown=300)
-
-except ImportError:
-    pass
