@@ -492,3 +492,26 @@ def test_rover_photos_fallback_to_curated_seeds():
     photos = service.sync_rover_photos('opportunity-rover', stats, dry_run=True)
     assert len(photos) > 0
     assert any('PIA23000' in p.nasa_id_or_pia for p in photos)
+
+
+def test_fetch_rover_photos_queries_official_nasa_images_api():
+    """Verify NASAClient.fetch_rover_photos queries official NASA Image Library when legacy endpoint is decommissioned."""
+    pool = NASATokenPool("TEST_KEY")
+    client = NASAClient(token_pool=pool)
+
+    mock_archive_results = [
+        {
+            'nasa_id': 'PIA05040',
+            'title': 'Spirit Stretches Out',
+            'description': 'Spirit rover hazard avoidance view',
+            'href': 'https://images-assets.nasa.gov/image/PIA05040/PIA05040~small.jpg',
+            'photographer': 'NASA/JPL-Caltech',
+        }
+    ]
+
+    with patch.object(client, 'search_archive_images', return_value=mock_archive_results) as mock_search:
+        photos = client.fetch_rover_photos(rover_name='spirit', limit=3)
+        assert len(photos) == 1
+        assert photos[0]['id'] == 'PIA05040'
+        assert photos[0]['img_src'] == 'https://images-assets.nasa.gov/image/PIA05040/PIA05040~small.jpg'
+        mock_search.assert_called_once_with(query='Spirit rover Mars', limit=3)

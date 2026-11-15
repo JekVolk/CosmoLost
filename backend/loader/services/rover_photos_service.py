@@ -15,6 +15,9 @@ logger = logging.getLogger('loader.services.rover_photos')
 KEY_ROVER_SOLS: Dict[str, tuple[str, int]] = {
     'opportunity-rover': ('opportunity', 5111),
     'spirit-rover': ('spirit', 2210),
+    'sojourner-rover': ('sojourner', 30),
+    'curiosity-rover': ('curiosity', 1000),
+    'perseverance-rover': ('perseverance', 500),
 }
 
 # Curated seed photos for offline fallback or when Mars Photos API is unavailable
@@ -74,16 +77,20 @@ class RoverPhotosIngestService:
         dry_run: bool = False,
     ) -> List[MediaDTO]:
         rover_info = KEY_ROVER_SOLS.get(artifact_id)
-        if not rover_info and not sol:
+        if not rover_info and not sol and not artifact_id.endswith('-rover'):
             return []
 
-        rover_name = rover_info[0] if rover_info else artifact_id.split('-')[0]
-        target_sol = sol if sol is not None else rover_info[1]
+        rover_name = rover_info[0] if rover_info else artifact_id.replace('-rover', '')
+        target_sol = sol if sol is not None else (rover_info[1] if rover_info else 0)
 
         logger.info(f"Fetching Mars Rover photos for {rover_name} on sol {target_sol}...")
         try:
             stats.api_calls_made += 1
-            raw_photos = self.client.fetch_rover_photos(rover_name=rover_name, sol=target_sol)
+            raw_photos = self.client.fetch_rover_photos(
+                rover_name=rover_name,
+                sol=target_sol,
+                limit=limit,
+            )
             media_dtos: List[MediaDTO] = []
 
             if raw_photos:

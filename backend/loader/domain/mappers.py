@@ -130,20 +130,31 @@ class NASAJsonMapper:
     @classmethod
     def rover_photo_to_media_dto(cls, photo: Dict[str, Any], artifact_id: str) -> MediaDTO:
         """
-        Maps a NASA Mars Rover API photo JSON object into MediaDTO.
+        Maps a NASA Mars Rover photo JSON object into MediaDTO safely.
+        Supports both legacy Mars Rover API and NASA Image & Video Library items.
         """
         camera = photo.get('camera', {}).get('name', 'PANCAM')
         sol = photo.get('sol', 0)
         img_src = cls.sanitize_url(photo.get('img_src', '').replace('http://', 'https://'))
-        photo_id = str(photo.get('id', ''))
+        photo_id = str(photo.get('id', '')).strip()
+        title = str(photo.get('title') or '').strip()
+        caption = title if title else f"Captured by {camera} on Sol {sol}."
+        credit = str(photo.get('photographer') or photo.get('credit') or 'NASA/JPL-Caltech').strip()
+
+        if photo_id.startswith('PIA') or photo_id.startswith('MARS-'):
+            nasa_id = photo_id
+        elif photo_id:
+            nasa_id = f"MARS-PHOTO-{photo_id}"
+        else:
+            nasa_id = f"ROVER-{artifact_id}-{sol}"
 
         return MediaDTO(
             artifact_id=artifact_id[:100],
             media_category="SURFACE_PHOTO",
             media_url=img_src[:500],
-            nasa_id_or_pia=f"MARS-PHOTO-{photo_id}"[:100] if photo_id else "",
-            caption=f"Captured by {camera} on Sol {sol}."[:500],
-            credit="NASA/JPL-Caltech"[:255],
+            nasa_id_or_pia=nasa_id[:100],
+            caption=caption[:500],
+            credit=credit[:255],
         )
 
     @classmethod
