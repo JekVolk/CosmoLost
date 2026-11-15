@@ -1,4 +1,5 @@
-import { Badge, Box, Button, HStack, Text, VStack } from '@chakra-ui/react';
+import { getContainerIconUrl } from '@/shared/lib';
+import { Badge, Box, Button, HStack, Image, Text, VStack } from '@chakra-ui/react';
 import type { ContainerSlot as ContainerSlotType } from '../api/container-repository';
 
 export interface ContainerSlotProps {
@@ -10,6 +11,7 @@ export interface ContainerSlotProps {
 export function ContainerSlot({ slot, onPlay, disabled = false }: ContainerSlotProps) {
   const isAvailable = Boolean(slot.container_type) && !slot.is_reserved;
   const isPartiallyUnsealed = slot.seal_progress === 50;
+  const iconUrl = getContainerIconUrl(slot.container_type, !slot.container_type);
 
   const handlePlayClick = () => {
     if (isAvailable && !disabled) {
@@ -52,6 +54,18 @@ export function ContainerSlot({ slot, onPlay, disabled = false }: ContainerSlotP
           </Badge>
         )}
       </HStack>
+
+      <Box display="flex" justifyContent="center" alignItems="center" py={2}>
+        <Image
+          src={iconUrl}
+          alt={slot.container_type || 'Locked container slot'}
+          width="72px"
+          height="72px"
+          objectFit="contain"
+          opacity={isAvailable ? 1 : 0.45}
+          filter={slot.is_reserved ? 'sepia(0.6)' : undefined}
+        />
+      </Box>
 
       <VStack align="start" gap={1}>
         <Text fontSize="md" fontWeight="bold" color="gray.100">

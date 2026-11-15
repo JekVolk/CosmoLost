@@ -159,6 +159,14 @@
   position: relative;
 }
 
+.miniMapCompact {
+  height: 220px;
+  min-height: 220px;
+  border: 1px solid rgba(86, 128, 233, 0.25);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
 .miniMapExpanded {
   position: absolute;
   right: 0;
@@ -210,6 +218,10 @@
   position: relative;
   overflow: hidden;
   background-color: #05070d;
+}
+
+.miniMapCompact .mapViewport {
+  min-height: 0;
 }
 
 .mapImageContainer {

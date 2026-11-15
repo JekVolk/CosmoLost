@@ -614,10 +614,20 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
       {modelLoadError && !loading && (
         <div
           style={{
-            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: '10px', zIndex: 20,
-            background: 'rgba(7, 11, 20, 0.92)', color: '#fca5a5',
-            fontFamily: 'var(--font-mono, monospace)', fontSize: '12px', textAlign: 'center', padding: '24px',
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            zIndex: 20,
+            background: 'rgba(7, 11, 20, 0.92)',
+            color: '#fca5a5',
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '12px',
+            textAlign: 'center',
+            padding: '24px',
           }}
         >
           <Box size={28} />

@@ -57,12 +57,32 @@ export const NASA_3D_MODEL_CDN_MAP: Record<string, string> = {
     'https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/mars-2020-perseverance-rover/Mars%202020%20Perseverance%20Rover.glb',
 };
 
+export const LOCAL_3D_MODELS: Record<string, string> = {
+  'apollo-11': '/assets/3d/artifacts/apollo_lunar_module.glb',
+  'apollo-lunar-module': '/assets/3d/artifacts/apollo_lunar_module.glb',
+  'curiosity-mastcam': '/assets/3d/artifacts/curiosity_mastcam.glb',
+  mastcam: '/assets/3d/artifacts/curiosity_mastcam.glb',
+  'voyager-golden-record': '/assets/3d/artifacts/voyager_golden_record.glb',
+  voyager: '/assets/3d/artifacts/voyager_golden_record.glb',
+  crate: '/assets/3d/artifacts/default_fallback_crate.glb',
+  default: '/assets/3d/artifacts/default_fallback_crate.glb',
+};
+
 /**
  * Resolves a valid working GLB model URL for an artifact.
- * Overrides known 404 URLs returned by legacy backend entries with authentic NASA 3D Resources paths.
+ * Overrides known 404 URLs returned by legacy backend entries with authentic NASA 3D Resources paths
+ * or bundled local GLB fallbacks.
  */
 export function resolveGlbModelUrl(artifactId: string, rawUrl?: string | null): string | null {
-  const normId = artifactId.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const normId = artifactId
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  // Check local assets first for explicit bundled models
+  if (LOCAL_3D_MODELS[normId]) {
+    return LOCAL_3D_MODELS[normId];
+  }
 
   // A verified NASA CDN URL supplied by the API is more authoritative than an ID alias.
   if (
@@ -86,7 +106,14 @@ export function resolveGlbModelUrl(artifactId: string, rawUrl?: string | null): 
     }
   }
 
-  // 3. Check rawUrl from backend
+  // 3. Fuzzy match in local models
+  for (const [key, localUrl] of Object.entries(LOCAL_3D_MODELS)) {
+    if (normId.includes(key) || key.includes(normId)) {
+      return localUrl;
+    }
+  }
+
+  // 4. Check rawUrl from backend
   if (rawUrl && typeof rawUrl === 'string' && rawUrl.trim().length > 0) {
     const lowerUrl = rawUrl.toLowerCase();
 
@@ -114,7 +141,7 @@ export function resolveGlbModelUrl(artifactId: string, rawUrl?: string | null): 
     }
 
     if (lowerUrl.includes('github') || lowerUrl.includes('raw.githubusercontent.com')) {
-      return null;
+      return LOCAL_3D_MODELS.default;
     }
 
     return rawUrl;
