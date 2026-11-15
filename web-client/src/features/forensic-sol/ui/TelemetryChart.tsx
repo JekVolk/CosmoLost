@@ -56,10 +56,10 @@ export const TelemetryChart: React.FC<TelemetryChartProps> = ({ data = [] }) => 
           textTransform="uppercase"
           letterSpacing="wider"
         >
-          ТЕЛЕМЕТРІЯ МІСІЇ (ЕНЕРГІЯ, ПИЛ, НАХИЛ)
+          MISSION TELEMETRY (POWER, DUST, TILT)
         </Text>
         <Text fontSize="3xs" color="gray.500">
-          Пил: tau×100 · Нахил: deg×10
+          Dust: tau × 100 · Tilt: deg × 10
         </Text>
       </Box>
 
@@ -80,9 +80,9 @@ export const TelemetryChart: React.FC<TelemetryChartProps> = ({ data = [] }) => 
           <Legend
             wrapperStyle={{ fontSize: '11px', paddingTop: '4px' }}
             formatter={(value: string) => {
-              if (value === 'power_wh') return 'Потужність (Wh)';
-              if (value === 'dust_tau_scaled') return 'Пил (tau × 100)';
-              if (value === 'tilt_deg_scaled') return 'Нахил (deg × 10)';
+              if (value === 'power_wh') return 'Power (Wh)';
+              if (value === 'dust_tau_scaled') return 'Dust (tau × 100)';
+              if (value === 'tilt_deg_scaled') return 'Tilt (deg × 10)';
               return value;
             }}
           />

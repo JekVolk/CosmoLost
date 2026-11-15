@@ -61,9 +61,9 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
   // Graceful fallback reward data if none provided by parent props
   const defaultArtifact: UnlockedArtifact = {
     id: 'unknown_artifact',
-    name: 'Камера навігації NavCam',
-    description: 'Оптичний сенсор високої чіткості для картографування поверхні.',
-    equipment_class: 'Оптика & Навігація',
+    name: 'NavCam Navigation Camera',
+    description: 'High-resolution optical sensor for surface mapping.',
+    equipment_class: 'Optics & Navigation',
     rarity: 'SPECIALIZED',
   };
 
@@ -126,7 +126,7 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
         {stage === 'shaking' ? (
           <VStack gap={4}>
             <Heading size="lg" color="yellow.400">
-              Відкриття контейнера...
+              Opening Container...
             </Heading>
             <motion.div
               animate={{
@@ -153,14 +153,14 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
             >
               <Image
                 src={containerImg}
-                alt="Контейнер"
+                alt="Container"
                 width="100px"
                 height="100px"
                 objectFit="contain"
               />
             </motion.div>
             <Text color="gray.400" fontSize="sm">
-              Зняття захисних пломб контейнера...
+              Removing the container's protective seals...
             </Text>
           </VStack>
         ) : (
@@ -181,7 +181,7 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
               w="100%"
             >
               <Heading size="md" color="white">
-                Новий артефакт розблоковано!
+                New Artifact Unlocked!
               </Heading>
 
               {/* Artifact visual asset with rarity glow */}
@@ -275,7 +275,7 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
                   <HStack justify="center" gap={2}>
                     <Image src={RP_TOKEN_ICON_URL} alt="RP Token" width="20px" height="20px" />
                     <Text color="yellow.300" fontSize="xs" fontWeight="medium">
-                      +{reward.rp_gained || 50} RP (Дублікат перетворено на Дослідницькі Бали)
+                      +{reward.rp_gained || 50} RP (Duplicate converted to Research Points)
                     </Text>
                   </HStack>
                 </Box>
@@ -291,7 +291,7 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
                   borderRadius="md"
                 >
                   <Text color="blue.300" fontSize="xs">
-                    Знято 50% пломби контейнера! Зіграйте ще один переможний раунд для відкриття.
+                    50% of the container seal has been removed! Win one more round to open it.
                   </Text>
                 </Box>
               )}
@@ -305,10 +305,10 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
                   color="gray.200"
                   onClick={handleGoToProfile}
                 >
-                  До профілю
+                  Go to Profile
                 </Button>
                 <Button flex={1} colorPalette="blue" variant="solid" onClick={handlePlayAgain}>
-                  Грати ще
+                  Play Again
                 </Button>
               </HStack>
             </VStack>

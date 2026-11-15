@@ -16,12 +16,12 @@ export interface MissionHangarPayload {
 
 const DEFAULT_CATEGORIES = ['Science', 'Propulsion', 'Communication', 'Power'];
 const DEFAULT_COMPONENTS: MissionComponent[] = [
-  { id: 'rtg', name: 'Радіоізотопний термоелектрогенератор (RTG)', icon: '⚛️' },
-  { id: 'mast_cam', name: 'MastCam (Камера щогли)', icon: '📷' },
-  { id: 'sky_crane', name: 'Ракетний кран (Sky Crane)', icon: '🚀' },
-  { id: 'hga_antenna', name: 'HGA Антена високого підсилення', icon: '📡' },
-  { id: 'spectrometer', name: 'APXS Спектрометр', icon: '🔬' },
-  { id: 'solar_array', name: 'Сонячні панелі UltraFlex', icon: '☀️' },
+  { id: 'rtg', name: 'Radioisotope Thermoelectric Generator (RTG)', icon: '⚛️' },
+  { id: 'mast_cam', name: 'MastCam (Mast Camera)', icon: '📷' },
+  { id: 'sky_crane', name: 'Sky Crane', icon: '🚀' },
+  { id: 'hga_antenna', name: 'High-Gain Antenna (HGA)', icon: '📡' },
+  { id: 'spectrometer', name: 'APXS Spectrometer', icon: '🔬' },
+  { id: 'solar_array', name: 'UltraFlex Solar Arrays', icon: '☀️' },
 ];
 
 export function useMissionHangar() {

@@ -22,11 +22,11 @@
   "paths": {
     "/celestial-bodies/": {
       "get": {
-        "summary": "Список небесних тіл",
-        "description": "Повертає параметри планет та тайли NASA Treks WMTS для Three.js сфери.",
+        "summary": "List celestial bodies",
+        "description": "Returns planetary parameters and NASA Treks WMTS tiles for the Three.js sphere.",
         "responses": {
           "200": {
-            "description": "Масив планет",
+            "description": "Array of planets",
             "content": {
               "application/json": {
                 "schema": {
@@ -45,7 +45,7 @@
     },
     "/celestial-bodies/{id}/": {
       "get": {
-        "summary": "Деталі небесного тіла",
+        "summary": "Celestial body details",
         "parameters": [
           {
             "name": "id",
@@ -77,8 +77,8 @@
     },
     "/artifacts/": {
       "get": {
-        "summary": "Каталог артефактів для Three.js сцени",
-        "description": "Отримання масиву точок артефактів із фільтрами та кластеризацією (<500м).",
+        "summary": "Artifact catalog for the Three.js scene",
+        "description": "Returns artifact locations with filters and clustering (<500 m).",
         "parameters": [
           {
             "name": "body",
@@ -165,8 +165,8 @@
     },
     "/artifacts/{id}/": {
       "get": {
-        "summary": "Повна картка артефакту",
-        "description": "Паспортні дані, монолог англійською (en-US), лінк на 3D-модель .glb, фото та наукові відкриття.",
+        "summary": "Full artifact details",
+        "description": "Technical details, an en-US monologue, a .glb 3D model link, photos, and scientific discoveries.",
         "parameters": [
           {
             "name": "id",
@@ -197,8 +197,8 @@
     },
     "/artifacts/{id}/waypoints/": {
       "get": {
-        "summary": "Маршрутні точки та телеметрія",
-        "description": "Хронологічний трек пересування ровера/дрона з показниками живлення та нахилу.",
+        "summary": "Waypoints and telemetry",
+        "description": "Chronological rover or drone track with power and tilt measurements.",
         "parameters": [
           {
             "name": "id",
@@ -229,7 +229,7 @@
     },
     "/artifacts/{id}/discoveries/": {
       "get": {
-        "summary": "Наукові відкриття та бортові прилади",
+        "summary": "Scientific discoveries and onboard instruments",
         "parameters": [
           {
             "name": "id",
@@ -260,7 +260,7 @@
     },
     "/artifacts/{id}/media/": {
       "get": {
-        "summary": "Архівні медіафайли NASA",
+        "summary": "NASA archival media",
         "parameters": [
           {
             "name": "id",
@@ -291,7 +291,7 @@
     },
     "/missions/": {
       "get": {
-        "summary": "Каталог місій запуску NASA",
+        "summary": "NASA mission catalog",
         "parameters": [
           {
             "name": "limit",
@@ -327,7 +327,7 @@
     },
     "/missions/{id}/": {
       "get": {
-        "summary": "Деталі місії та маніфест обладнання",
+        "summary": "Mission details and equipment manifest",
         "parameters": [
           {
             "name": "id",
@@ -358,7 +358,7 @@
     },
     "/community-publications/": {
       "get": {
-        "summary": "Список схвалених відео спільноти",
+        "summary": "List approved community videos",
         "parameters": [
           {
             "name": "mission_id",
@@ -413,7 +413,7 @@
         "operationId": "listCommunityPublications"
       },
       "post": {
-        "summary": "Подання ролика спільноти на модерацію",
+        "summary": "Submit a community video for moderation",
         "requestBody": {
           "required": true,
           "content": {
@@ -1012,7 +1012,7 @@
     },
     "responses": {
       "NotFound": {
-        "description": "Ресурс не знайдено",
+        "description": "Resource not found",
         "content": {
           "application/json": {
             "schema": {
@@ -1031,7 +1031,7 @@
         }
       },
       "BadRequest": {
-        "description": "Помилка валідації параметрів",
+        "description": "Parameter validation error",
         "content": {
           "application/json": {
             "schema": {

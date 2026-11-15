@@ -43,6 +43,7 @@ export const PlanetViewer: React.FC<PlanetViewerProps> = ({
       onSelectArtifact(artifact);
     }
     if (sceneRef.current) {
+      sceneRef.current.setSelectedArtifact(artifact);
       sceneRef.current.flyToArtifact(artifact, () => {
         if (sceneRef.current) {
           sceneRef.current.freezeControls();
@@ -68,10 +69,20 @@ export const PlanetViewer: React.FC<PlanetViewerProps> = ({
 
     if (onRegisterSceneActions) {
       onRegisterSceneActions({
-        flyTo: (art, onComplete) => scene.flyToArtifact(art, onComplete),
-        resetView: () => scene.resetView(),
+        flyTo: (art, onComplete) => {
+          scene.setSelectedArtifact(art);
+          scene.flyToArtifact(art, onComplete);
+        },
+        resetView: () => {
+          scene.setSelectedArtifact(null);
+          scene.resetView();
+        },
         toggleAutoRotate: () => scene.toggleAutoRotate(),
       });
+    }
+
+    if (selectedArtifact) {
+      scene.setSelectedArtifact(selectedArtifact);
     }
 
     return () => {
@@ -79,6 +90,12 @@ export const PlanetViewer: React.FC<PlanetViewerProps> = ({
       sceneRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (sceneRef.current) {
+      sceneRef.current.setSelectedArtifact(selectedArtifact || null);
+    }
+  }, [selectedArtifact]);
 
   useEffect(() => {
     if (sceneRef.current) {
@@ -108,7 +125,11 @@ export const PlanetViewer: React.FC<PlanetViewerProps> = ({
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-      <div ref={containerRef} className="planet-viewer-container" />
+      <div
+        ref={containerRef}
+        className="planet-viewer-container"
+        style={{ touchAction: 'none' }}
+      />
 
       {hoveredArtifact && hoverScreenPos && !selectedArtifact && (
         <HoverPreviewCard

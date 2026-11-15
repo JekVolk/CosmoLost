@@ -61,7 +61,7 @@ export const SurfaceMap: React.FC<SurfaceMapProps> = ({
       cursor={disabled ? 'not-allowed' : 'crosshair'}
       onClick={handleClick}
       boxShadow="inset 0 0 40px rgba(0, 0, 0, 0.7)"
-      aria-label="2D інтерактивна карта поверхні"
+      aria-label="2D interactive surface map"
     >
       {/* Real NASA Map Image or Graceful Fallback Grid */}
       {effectiveMapUrl && !imageError ? (
@@ -140,7 +140,7 @@ export const SurfaceMap: React.FC<SurfaceMapProps> = ({
               {planet.toUpperCase()} CARTA (2D NASA PROJECTION)
             </Text>
             <Text fontSize="2xs" color="gray.400">
-              Екватор (0°) та нульовий меридіан (0°) позначено осями. Клікніть для постановки піна.
+              The equator (0°) and prime meridian (0°) are marked by the axes. Click to place a pin.
             </Text>
           </Box>
         </Box>
@@ -162,7 +162,7 @@ export const SurfaceMap: React.FC<SurfaceMapProps> = ({
         <Text fontSize="2xs" color="gray.300" fontFamily="monospace">
           {pin
             ? `PIN: ${pin.lat.toFixed(2)}° N/S, ${pin.lon.toFixed(2)}° E/W`
-            : 'КЛІКНІТЬ НА КАРТУ ДЛЯ ВИБОРУ МІСЦЯ'}
+            : 'CLICK THE MAP TO SELECT A LOCATION'}
         </Text>
       </Box>
 

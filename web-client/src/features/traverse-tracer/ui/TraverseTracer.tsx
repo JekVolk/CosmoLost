@@ -8,13 +8,13 @@ export const TraverseTracer: React.FC = () => {
         <VStack align="start" gap={1}>
           <HStack gap={2}>
             <Heading size="md" color="white">
-              Traverse Tracer: Маршрут ровера
+              Traverse Tracer: Rover Route
             </Heading>
             <Badge colorPalette="gray">POST-MVP SKELETON</Badge>
           </HStack>
           <Text fontSize="xs" color="gray.400">
-            Відтворіть реальний маршрут ровера на карті поверхні за точками телеметрії (sol,
-            одометрія, висота).
+            Reconstruct the rover's actual route on the surface map using telemetry waypoints (sol,
+            odometry, and elevation).
           </Text>
         </VStack>
       </HStack>
@@ -37,16 +37,16 @@ export const TraverseTracer: React.FC = () => {
           🧭
         </Text>
         <Text fontSize="sm" color="gray.300" fontWeight="medium">
-          Інтерактивний трасувальник шляху ровера (Traverse Waypoints)
+          Interactive rover route tracker (Traverse Waypoints)
         </Text>
         <Text fontSize="xs" color="gray.500" maxW="460px" mt={1}>
-          Режим знаходиться на стадії інтеграції NASA Traverse waypoints API.
+          This mode is being prepared for integration with the NASA Traverse Waypoints API.
         </Text>
       </Box>
 
       <HStack justify="flex-end" w="100%">
         <Button colorPalette="blue" disabled cursor="not-allowed">
-          Режим у розробці
+          In Development
         </Button>
       </HStack>
     </VStack>

@@ -38,23 +38,22 @@ export const StatGuesser: React.FC = () => {
         <VStack align="start" gap={1}>
           <HStack gap={2}>
             <Heading size="md" color="white">
-              StatGuesser: АстроТерези
+              StatGuesser: Astro Balance
             </Heading>
-            <Badge colorPalette="yellow">ТЕРЕЗИ МАСИ</Badge>
+            <Badge colorPalette="yellow">MASS BALANCE</Badge>
           </HStack>
           <Text fontSize="xs" color="gray.400">
-            Збалансуйте терези: підберіть еталонні предмети, щоб зрівноважити масу космічного
-            апарата.
+            Balance the scales: choose reference objects to match the spacecraft's mass.
           </Text>
         </VStack>
 
         <HStack gap={2}>
           <Badge colorPalette="gray" size="sm">
-            Спроба: {attempts}
+            Attempt: {attempts}
           </Badge>
           {feedback === 'balanced' && (
             <Badge colorPalette="green" size="lg">
-              ✓ ІДЕАЛЬНИЙ БАЛАНС (+100)
+              ✓ PERFECT BALANCE (+100)
             </Badge>
           )}
         </HStack>
@@ -79,7 +78,7 @@ export const StatGuesser: React.FC = () => {
           textTransform="uppercase"
           letterSpacing="wider"
         >
-          ЦІЛЬОВИЙ АПАРАТ ПРОТИ ОБРАНИХ ПРЕДМЕТІВ
+          TARGET SPACECRAFT VS. SELECTED OBJECTS
         </Text>
 
         {/* Central Balance Beam Visual with dynamic tilt */}
@@ -140,7 +139,7 @@ export const StatGuesser: React.FC = () => {
                 {spacecraftName}
               </Text>
               <Text fontSize="2xs" color="gray.400">
-                Маса засекречена
+                Mass Classified
               </Text>
             </Box>
 
@@ -162,10 +161,10 @@ export const StatGuesser: React.FC = () => {
                 ⚖️
               </Text>
               <Text fontSize="xs" fontWeight="bold" color="yellow.300">
-                {currentTotalMassKg.toLocaleString()} кг
+                {currentTotalMassKg.toLocaleString()} kg
               </Text>
               <Text fontSize="2xs" color="gray.400">
-                Предметів: {selectedObjectIds.length}
+                Objects: {selectedObjectIds.length}
               </Text>
             </Box>
           </Box>
@@ -195,14 +194,14 @@ export const StatGuesser: React.FC = () => {
             }
           >
             <Heading size="sm" color={feedback === 'balanced' ? 'green.300' : 'white'} mb={1}>
-              {feedback === 'balanced' && '✓ ТЕРЕЗИ В ІДЕАЛЬНОМУ БАЛАНСІ!'}
-              {feedback === 'spacecraft_heavier' && '◄ Космічний апарат важчий (<)'}
-              {feedback === 'objects_heavier' && '► Обрані предмети важчі (>)'}
+              {feedback === 'balanced' && '✓ THE SCALES ARE PERFECTLY BALANCED!'}
+              {feedback === 'spacecraft_heavier' && '◄ The spacecraft is heavier (<)'}
+              {feedback === 'objects_heavier' && '► The selected objects are heavier (>)'}
             </Heading>
             <Text fontSize="xs" color="gray.300">
               {feedback === 'balanced'
-                ? 'Вітаємо! Ви досягли балансу в межах 1% допуску.'
-                : 'Спробуйте скоригувати набір предметів на шальці терезів.'}
+                ? 'Congratulations! You balanced the scales within a 1% margin.'
+                : 'Try adjusting the objects on the scale.'}
             </Text>
 
             {/* If not balanced and round not over: Prompt continue / stop */}
@@ -214,7 +213,7 @@ export const StatGuesser: React.FC = () => {
                   onClick={continueAttempt}
                   loading={isChecking}
                 >
-                  Продовжити зважування
+                  Continue Weighing
                 </Button>
                 <Button
                   size="sm"
@@ -223,7 +222,7 @@ export const StatGuesser: React.FC = () => {
                   color="gray.300"
                   onClick={stopAttempt}
                 >
-                  Завершити спробу (Stop)
+                  End Attempt (Stop)
                 </Button>
               </HStack>
             )}
@@ -242,10 +241,10 @@ export const StatGuesser: React.FC = () => {
               textTransform="uppercase"
               letterSpacing="wider"
             >
-              ПРЕДМЕТИ НА ПРАВІЙ ШАЛЬЦІ ТЕРЕЗІВ
+              OBJECTS ON THE RIGHT SCALE PAN
             </Text>
             <Text fontSize="xs" color="yellow.400" fontWeight="bold">
-              Всього: {currentTotalMassKg.toLocaleString()} кг
+              Total: {currentTotalMassKg.toLocaleString()} kg
             </Text>
           </HStack>
           <HStack gap={2} flexWrap="wrap">
@@ -262,9 +261,9 @@ export const StatGuesser: React.FC = () => {
                   borderRadius="full"
                   cursor={canEdit && !isChecking && !isRoundOver ? 'pointer' : 'default'}
                   onClick={() => canEdit && !isChecking && !isRoundOver && removeObject(id)}
-                  title="Клікніть, щоб зняти з терезів"
+                  title="Click to remove from the scale"
                 >
-                  {obj.icon} {obj.name} ({obj.mass_kg.toLocaleString()} кг) ✕
+                  {obj.icon} {obj.name} ({obj.mass_kg.toLocaleString()} kg) ✕
                 </Badge>
               );
             })}
@@ -275,7 +274,7 @@ export const StatGuesser: React.FC = () => {
       {/* Reference Objects Selection Grid */}
       <VStack align="start" gap={2} w="100%">
         <Text fontSize="xs" color="gray.400" textTransform="uppercase" letterSpacing="wider">
-          ДОСТУПНІ ЕТАЛОННІ ПРЕДМЕТИ (КЛІКНІТЬ ДЛЯ ДОДАВАННЯ/ВИДАЛЕННЯ):
+          AVAILABLE REFERENCE OBJECTS (CLICK TO ADD OR REMOVE):
         </Text>
         <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} gap={2.5} w="100%">
           {referenceObjects.map((obj) => {
@@ -313,7 +312,7 @@ export const StatGuesser: React.FC = () => {
                       {obj.name}
                     </Text>
                     <Text fontSize="3xs" color="gray.400">
-                      {obj.mass_kg.toLocaleString()} кг
+                      {obj.mass_kg.toLocaleString()} kg
                     </Text>
                   </VStack>
                 </HStack>
@@ -330,8 +329,8 @@ export const StatGuesser: React.FC = () => {
       <HStack justify="space-between" w="100%" pt={2} flexWrap="wrap" gap={3}>
         <Text fontSize="xs" color="gray.400">
           {selectedObjectIds.length === 0
-            ? 'Додайте предмети на шальку для зважування'
-            : `Поточна маса: ${currentTotalMassKg.toLocaleString()} кг`}
+            ? 'Add objects to the scale to weigh them'
+            : `Current mass: ${currentTotalMassKg.toLocaleString()} kg`}
         </Text>
 
         <Button
@@ -346,7 +345,7 @@ export const StatGuesser: React.FC = () => {
               : 'pointer'
           }
         >
-          {isChecking ? 'Зважування...' : 'Підтвердити зважування'}
+          {isChecking ? 'Weighing...' : 'Check Weight'}
         </Button>
       </HStack>
     </VStack>

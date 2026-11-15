@@ -7,7 +7,7 @@ import { TelemetryChart } from './TelemetryChart';
 export const ForensicSol: React.FC = () => {
   const { selected, select, isSubmitted, submit, payload } = useForensicSol();
 
-  const question = payload.question || 'Яка місія залишила цей телеметричний слід?';
+  const question = payload.question || 'Which mission left this telemetry signature?';
   const options =
     payload.options && payload.options.length > 0
       ? payload.options
@@ -20,9 +20,9 @@ export const ForensicSol: React.FC = () => {
         <VStack align="start" gap={1}>
           <HStack gap={2}>
             <Heading size="md" color="white">
-              ForensicSol: Детектив по даним
+              ForensicSol: Data Detective
             </Heading>
-            <Badge colorPalette="purple">ТЕЛЕМЕТРІЯ</Badge>
+            <Badge colorPalette="purple">TELEMETRY</Badge>
           </HStack>
           <Text fontSize="md" color="blue.200" fontWeight="medium">
             {question}
@@ -31,7 +31,7 @@ export const ForensicSol: React.FC = () => {
 
         {isSubmitted && (
           <Badge colorPalette="green" size="lg">
-            ✓ ВІДПОВІДЬ НАДІСЛАНО
+            ✓ ANSWER SUBMITTED
           </Badge>
         )}
       </HStack>
@@ -42,7 +42,7 @@ export const ForensicSol: React.FC = () => {
       {/* Answer Options */}
       <VStack align="start" gap={2} w="100%">
         <Text fontSize="xs" color="gray.400" textTransform="uppercase" letterSpacing="wider">
-          Оберіть варіант відповіді:
+          Select an answer:
         </Text>
         <AnswerOptions
           options={options}
@@ -57,14 +57,14 @@ export const ForensicSol: React.FC = () => {
         <Box>
           {selected ? (
             <Text fontSize="sm" color="gray.300">
-              Ваш вибір:{' '}
+              Your choice:{' '}
               <Text as="span" fontWeight="bold" color="blue.300">
                 {selected}
               </Text>
             </Text>
           ) : (
             <Text fontSize="sm" color="gray.500" fontStyle="italic">
-              Оберіть один із варіантів вище
+              Select one of the options above
             </Text>
           )}
         </Box>
@@ -77,7 +77,7 @@ export const ForensicSol: React.FC = () => {
           loading={isSubmitted}
           cursor={!selected || isSubmitted ? 'not-allowed' : 'pointer'}
         >
-          {isSubmitted ? 'Відповідь зафіксовано' : 'Підтвердити вибір (Buzzer)'}
+          {isSubmitted ? 'Answer Recorded' : 'Submit Answer (Buzzer)'}
         </Button>
       </HStack>
     </VStack>

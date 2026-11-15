@@ -13,3 +13,4 @@ export {
   ContainerSlot,
   type ContainerSlotProps,
 } from './ui/ContainerSlot';
+export { ContainerSlotView } from './ui/ContainerSlotView';

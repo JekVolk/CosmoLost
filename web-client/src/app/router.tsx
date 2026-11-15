@@ -6,7 +6,7 @@ import { ProfilePage } from '@/pages/profile';
 import type React from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },
   { path: '/connect', element: <McpConnectPage /> },
   { path: '/mcp', element: <McpConnectPage /> },

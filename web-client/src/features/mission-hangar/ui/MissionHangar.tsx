@@ -53,18 +53,18 @@ export const MissionHangar: React.FC = () => {
           <VStack align="start" gap={1}>
             <HStack gap={2}>
               <Heading size="md" color="white">
-                MissionHangar: Збери місію
+                MissionHangar: Assemble the Mission
               </Heading>
-              <Badge colorPalette="blue">DND КЛАСИФІКАЦІЯ</Badge>
+              <Badge colorPalette="blue">DRAG-AND-DROP CLASSIFICATION</Badge>
             </HStack>
             <Text fontSize="xs" color="gray.400">
-              Розподіліть апаратні модулі космічного апарата по відповідних інженерних категоріях.
+              Sort spacecraft hardware modules into the appropriate engineering categories.
             </Text>
           </VStack>
 
           {isSubmitted && (
             <Badge colorPalette="green" size="lg">
-              ✓ КОНФІГУРАЦІЮ ЗАФІКСОВАНО
+              ✓ CONFIGURATION LOCKED IN
             </Badge>
           )}
         </HStack>
@@ -86,17 +86,17 @@ export const MissionHangar: React.FC = () => {
               textTransform="uppercase"
               letterSpacing="wider"
             >
-              ДОСТУПНІ КОМПОНЕНТИ МІСІЇ ({unassignedComponents.length})
+              AVAILABLE MISSION COMPONENTS ({unassignedComponents.length})
             </Text>
             <Text fontSize="3xs" color="gray.500">
-              Перетягніть або скористайтесь кнопками швидкого призначення
+              Drag items or use the quick-assign buttons
             </Text>
           </HStack>
 
           {unassignedComponents.length === 0 ? (
             <Box p={3} textAlign="center" borderRadius="md" bg="gray.900">
               <Text fontSize="xs" color="green.400">
-                ✓ Всі компоненти розподілено по інженерних відсіках
+                ✓ All components have been assigned to engineering sections
               </Text>
             </Box>
           ) : (
@@ -138,8 +138,8 @@ export const MissionHangar: React.FC = () => {
         <HStack justify="space-between" w="100%" pt={2} flexWrap="wrap" gap={3}>
           <Text fontSize="xs" color="gray.400">
             {unassignedComponents.length > 0
-              ? `Залишилось нерозподілених компонентів: ${unassignedComponents.length}`
-              : 'Готово до фіксації конфігурації місії'}
+              ? `Unassigned components remaining: ${unassignedComponents.length}`
+              : 'Ready to lock in the mission configuration'}
           </Text>
 
           <Button
@@ -150,7 +150,7 @@ export const MissionHangar: React.FC = () => {
             loading={isSubmitted}
             cursor={isSubmitted ? 'not-allowed' : 'pointer'}
           >
-            {isSubmitted ? 'Конфігурацію надіслано' : 'Підтвердити збірку місії'}
+            {isSubmitted ? 'Configuration Submitted' : 'Confirm Mission Assembly'}
           </Button>
         </HStack>
       </VStack>

@@ -16,20 +16,20 @@ export const AstroGuessr: React.FC = () => {
         <VStack align="start" gap={1}>
           <HStack gap={2}>
             <Heading size="md" color="white">
-              AstroGuessr: Пошук координат
+              AstroGuessr: Find the Coordinates
             </Heading>
             <Badge colorPalette={planet.toUpperCase() === 'MARS' ? 'orange' : 'blue'}>
               {planet.toUpperCase()}
             </Badge>
           </HStack>
           <Text fontSize="xs" color="gray.400">
-            Вкажіть пін на карті поверхні, де знаходиться цільовий космічний апарат.
+            Place a pin on the surface map where the target spacecraft is located.
           </Text>
         </VStack>
 
         {isSubmitted && (
           <Badge colorPalette="green" size="lg">
-            ✓ ВІДПОВІДЬ НАДІСЛАНО
+            ✓ ANSWER SUBMITTED
           </Badge>
         )}
       </HStack>
@@ -51,14 +51,14 @@ export const AstroGuessr: React.FC = () => {
         <Box>
           {pin ? (
             <Text fontSize="sm" color="gray.300">
-              Обрані координати:{' '}
+              Selected coordinates:{' '}
               <Text as="span" fontWeight="bold" color="blue.300">
                 {pin.lat.toFixed(3)}° Lat, {pin.lon.toFixed(3)}° Lon
               </Text>
             </Text>
           ) : (
             <Text fontSize="sm" color="gray.500" fontStyle="italic">
-              Поставте пін на карті перед підтвердженням
+              Place a pin on the map before submitting
             </Text>
           )}
         </Box>
@@ -71,7 +71,7 @@ export const AstroGuessr: React.FC = () => {
           loading={isSubmitted}
           cursor={!pin || isSubmitted ? 'not-allowed' : 'pointer'}
         >
-          {isSubmitted ? 'Відповідь зафіксовано' : 'Підтвердити координати'}
+          {isSubmitted ? 'Answer Recorded' : 'Submit Coordinates'}
         </Button>
       </HStack>
     </VStack>

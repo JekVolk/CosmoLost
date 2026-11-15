@@ -12,10 +12,10 @@ interface CategoryZoneProps {
 }
 
 const CATEGORY_META: Record<string, { label: string; icon: string; color: string }> = {
-  Science: { label: 'Наукові прилади (Science)', icon: '🔬', color: 'purple' },
-  Propulsion: { label: 'Рушійна система & Посадка', icon: '🚀', color: 'orange' },
-  Communication: { label: "Зв'язок & Телеметрія", icon: '📡', color: 'blue' },
-  Power: { label: 'Живлення & Енергетика', icon: '⚡', color: 'yellow' },
+  Science: { label: 'Science Instruments', icon: '🔬', color: 'purple' },
+  Propulsion: { label: 'Propulsion & Landing', icon: '🚀', color: 'orange' },
+  Communication: { label: 'Communications & Telemetry', icon: '📡', color: 'blue' },
+  Power: { label: 'Power & Energy', icon: '⚡', color: 'yellow' },
 };
 
 export const CategoryZone: React.FC<CategoryZoneProps> = ({
@@ -77,7 +77,7 @@ export const CategoryZone: React.FC<CategoryZoneProps> = ({
             bg="rgba(0, 0, 0, 0.2)"
           >
             <Text fontSize="xs" color="gray.500" fontStyle="italic" textAlign="center">
-              Перетягніть компонент сюди
+              Drop a component here
             </Text>
           </Box>
         ) : (

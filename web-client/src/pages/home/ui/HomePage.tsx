@@ -17,14 +17,14 @@ export const HomePage: React.FC = () => {
           <Heading size="2xl" color="cyan.400">
             CosmoLost Hangar
           </Heading>
-          <Text color="gray.400">Дедуктивна космічна станція та орбітальні контейнери NASA</Text>
+          <Text color="gray.400">A space deduction station and NASA orbital containers</Text>
         </Box>
 
         <McpPromoBanner onConnect={() => navigate('/connect')} />
 
         <Box p={6} bg="#111622" borderRadius="lg" border="1px solid #1F293D">
           <Heading size="md" mb={4}>
-            Орбітальні Контейнери (Слоти 1–10)
+            Orbital Containers (Slots 1–10)
           </Heading>
           <Grid templateColumns="repeat(5, 1fr)" gap={3}>
             {Array.from({ length: 10 }).map((_, i) => (
@@ -35,7 +35,7 @@ export const HomePage: React.FC = () => {
             ))}
           </Grid>
           <Button colorPalette="cyan" size="lg" mt={6} w="full" onClick={() => navigate('/arena')}>
-            Перейти в Арену (Відкрити бій)
+            Go to Arena (Start a Match)
           </Button>
         </Box>
 

@@ -35,7 +35,7 @@ export const LocationHint: React.FC<LocationHintProps> = ({
           {mediaUrl && !imageError ? (
             <img
               src={mediaUrl}
-              alt="Підказка місця"
+              alt="Location hint"
               onError={() => setImageError(true)}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
@@ -72,12 +72,12 @@ export const LocationHint: React.FC<LocationHintProps> = ({
               textTransform="uppercase"
               letterSpacing="wider"
             >
-              ПІДКАЗКА РОЗВІДКИ · {planet}
+              RECONNAISSANCE HINT · {planet}
             </Text>
           </HStack>
           <Text fontSize="sm" color="gray.200">
             {hintText ||
-              'Визначте координати місця посадки або знаходження апарата на карті поверхні.'}
+              'Identify the coordinates of the landing site or the artifact location on the surface map.'}
           </Text>
         </VStack>
       </HStack>
