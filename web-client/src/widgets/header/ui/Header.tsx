@@ -1,8 +1,8 @@
 import React from 'react';
 import type { PlanetId } from '../../../entities/planet/model/types';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Gamepad2 } from 'lucide-react';
 
-export type AppView = 'map' | 'catalog' | 'community';
+export type AppView = 'map' | 'catalog' | 'community' | 'astro-guessr' | 'arena';
 
 interface HeaderProps {
   currentPlanetId: PlanetId;
@@ -11,6 +11,7 @@ interface HeaderProps {
   currentView: AppView;
   onSelectView: (view: AppView) => void;
   onOpenAbout: () => void;
+  isLiveApi?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -20,6 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   currentView,
   onSelectView,
   onOpenAbout,
+  isLiveApi = false,
 }) => {
   const isMars = currentPlanetId === 'mars';
   const themeAccent = isMars ? '#f97316' : '#00F0FF';
@@ -65,6 +67,29 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
         <button
           type="button"
+          className={`cosmo-nav-link ${currentView === 'astro-guessr' ? 'active' : ''}`}
+          style={{
+            '--link-accent': themeAccent,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            color: currentView === 'astro-guessr' ? themeAccent : undefined,
+          } as React.CSSProperties}
+          onClick={() => onSelectView('astro-guessr')}
+        >
+          <Gamepad2 size={13} />
+          <span>AstroGuessr 360°</span>
+        </button>
+        <button
+          type="button"
+          className={`cosmo-nav-link ${currentView === 'arena' ? 'active' : ''}`}
+          style={{ '--link-accent': themeAccent } as React.CSSProperties}
+          onClick={() => onSelectView('arena')}
+        >
+          Arena
+        </button>
+        <button
+          type="button"
           className="cosmo-nav-link"
           onClick={onOpenAbout}
         >
@@ -92,11 +117,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        <div className="cosmo-mcp-badge">
-          <Sparkles size={11} className="text-cyan-400" />
-          <span className="cosmo-mcp-label">AI GATEWAY (MCP)</span>
-          <span className="cosmo-pulse-dot" />
-          <span className="cosmo-mcp-status">SYNCED</span>
+        <div className="cosmo-mcp-badge" title={isLiveApi ? 'Connected to live OpenAPI backend' : 'Using cached offline OpenAPI layer'}>
+          <Sparkles size={11} style={{ color: isLiveApi ? '#22c55e' : '#00F0FF' }} />
+          <span className="cosmo-mcp-label">OPENAPI API</span>
+          <span className="cosmo-pulse-dot" style={{ backgroundColor: isLiveApi ? '#22c55e' : '#38bdf8', boxShadow: `0 0 6px ${isLiveApi ? '#22c55e' : '#38bdf8'}` }} />
+          <span className="cosmo-mcp-status" style={{ color: isLiveApi ? '#22c55e' : '#38bdf8' }}>
+            {isLiveApi ? 'LIVE API' : 'CACHED'}
+          </span>
         </div>
 
         <div className="cosmo-theme-tag">

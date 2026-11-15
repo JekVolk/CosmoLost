@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import type { SpaceArtifact, PlanetId } from '../../../entities/planet/model/types';
+import type { SpaceArtifact, PlanetId, PlanetConfig } from '../../../entities/planet/model/types';
 import { PLANETS } from '../../../entities/planet/model/planetData';
 import { portalApi } from '../../../shared/api/portalApi';
 import type { CommunityPublication, PlatformType } from '../../../shared/api/types';
-import { Sparkles, Plus, Play, ExternalLink, ShieldCheck, Heart, Eye, CheckCircle2, X, Search } from 'lucide-react';
+import { validateVideoUrl, getEmbeddableVideoUrl } from '../../../shared/lib/videoUrl';
+import { Sparkles, Plus, Play, ExternalLink, ShieldCheck, Heart, Eye, CheckCircle2, X, Search, AlertTriangle } from 'lucide-react';
 
 interface CommunityVideosPageProps {
   onOpenArtifact: (artifact: SpaceArtifact, planetId: PlanetId) => void;
+  planets?: Record<PlanetId, PlanetConfig>;
 }
 
-export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpenArtifact }) => {
+export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpenArtifact, planets }) => {
   const [publications, setPublications] = useState<CommunityPublication[]>([]);
   const [filterPlanet, setFilterPlanet] = useState<'all' | 'moon' | 'mars'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,6 +29,7 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [urlValidationError, setUrlValidationError] = useState<string | null>(null);
 
   const loadPublications = () => {
     portalApi.listCommunityPublications().then((resp) => {
@@ -42,8 +45,8 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
   }, []);
 
   const allArtifacts = [
-    ...PLANETS.moon.artifacts.map((a) => ({ ...a, planet: 'moon' as PlanetId })),
-    ...PLANETS.mars.artifacts.map((a) => ({ ...a, planet: 'mars' as PlanetId })),
+    ...((planets?.moon?.artifacts || PLANETS.moon.artifacts) || []).map((a: SpaceArtifact) => ({ ...a, planet: 'moon' as PlanetId })),
+    ...((planets?.mars?.artifacts || PLANETS.mars.artifacts) || []).map((a: SpaceArtifact) => ({ ...a, planet: 'mars' as PlanetId })),
   ];
 
   const filteredPubs = publications.filter((pub) => {
@@ -62,16 +65,43 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
     return true;
   });
 
+  const handleVideoUrlChange = (newUrl: string) => {
+    setFormData((prev) => {
+      const updated = { ...prev, video_url: newUrl };
+      if (newUrl.trim()) {
+        const val = validateVideoUrl(newUrl);
+        if (val.isValid && val.platform) {
+          updated.platform_type = val.platform;
+          setUrlValidationError(null);
+        } else if (!val.isValid) {
+          setUrlValidationError(val.error || 'Invalid video link');
+        }
+      } else {
+        setUrlValidationError(null);
+      }
+      return updated;
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.video_url || !formData.author_name) return;
+
+    // Strict URL validation: accept only YouTube, Instagram, TikTok, and verified video platforms
+    const validation = validateVideoUrl(formData.video_url);
+    if (!validation.isValid) {
+      setUrlValidationError(validation.error || 'Please provide a valid video link from YouTube, Instagram, TikTok, or Vimeo.');
+      return;
+    }
+
     setIsSubmitting(true);
+    setUrlValidationError(null);
     try {
       await portalApi.submitCommunityPublication({
         title: formData.title,
         author_name: formData.author_name,
-        platform_type: formData.platform_type,
-        video_url: formData.video_url,
+        platform_type: validation.platform || formData.platform_type,
+        video_url: validation.cleanUrl || formData.video_url,
         source_references: formData.source_references,
         mission_id: formData.mission_id,
         artifact_id: formData.artifact_id,
@@ -90,6 +120,7 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
           mission_id: 'Mars Exploration Rover',
           artifact_id: 'opportunity-mer-b',
         });
+        setUrlValidationError(null);
       }, 1500);
     } catch {
       alert('Failed to submit publication.');
@@ -149,13 +180,7 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
             <div className="pen-featured-video-card">
               <div className="pen-featured-player-wrap">
                 <iframe
-                  src={
-                    currentFeatured.video_url.includes('youtube.com/embed')
-                      ? currentFeatured.video_url
-                      : currentFeatured.video_url.includes('watch?v=')
-                      ? currentFeatured.video_url.replace('watch?v=', 'embed/')
-                      : 'https://www.youtube.com/embed/g2qTz20d15M'
-                  }
+                  src={getEmbeddableVideoUrl(currentFeatured.video_url)}
                   title={currentFeatured.title}
                   className="pen-featured-iframe"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -374,14 +399,35 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                 </div>
 
                 <div className="pen-form-field">
-                  <label>Video URL / Embed Link</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <label style={{ margin: 0 }}>Video URL / Link (YouTube, Instagram, TikTok, etc.)</label>
+                    <span style={{ fontSize: '10.5px', color: '#94a3b8' }}>Only verified video platforms</span>
+                  </div>
                   <input
                     type="url"
                     required
                     value={formData.video_url}
-                    onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                    placeholder="https://www.youtube.com/watch?v=..."
+                    onChange={(e) => handleVideoUrlChange(e.target.value)}
+                    placeholder="https://www.youtube.com/watch?v=... or https://www.tiktok.com/@... or Instagram reel"
+                    style={{
+                      borderColor: urlValidationError ? '#ef4444' : formData.video_url && !urlValidationError ? '#10b981' : undefined,
+                    }}
                   />
+                  {urlValidationError ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '5px', color: '#f87171', fontSize: '11px' }}>
+                      <AlertTriangle size={12} />
+                      <span>{urlValidationError}</span>
+                    </div>
+                  ) : formData.video_url.trim() ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '5px', color: '#34d399', fontSize: '11px' }}>
+                      <CheckCircle2 size={12} />
+                      <span>Valid {formData.platform_type} video link detected</span>
+                    </div>
+                  ) : (
+                    <div style={{ fontSize: '10.5px', color: '#64748b', marginTop: '4px' }}>
+                      Accepted formats: YouTube (video, shorts, youtu.be), Instagram (reels, p), TikTok (videos, vm), Vimeo, NASA Media.
+                    </div>
+                  )}
                 </div>
 
                 <div className="pen-form-field">

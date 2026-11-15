@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { portalApi } from '../../../shared/api/portalApi';
+import type { ArtifactDetail, TraverseWaypoint, ArtifactMedia } from '../../../shared/api/types';
 import type { SpaceArtifact, PlanetConfig } from '../../../entities/planet/model/types';
+import { PhotosphereViewer } from '../../../shared/ui/photosphere-viewer';
 import { CommunityPublicationsSection } from './CommunityPublicationsSection';
+import { ScientificTelemetryBlock } from './ScientificTelemetryBlock';
+import { Model3DViewer, resolveGlbModelUrl } from '../../../features/artifact-3d-viewer';
 import {
   ArrowLeft,
   MapPin,
@@ -18,6 +23,8 @@ import {
   Camera,
   Maximize2,
   X,
+  Box,
+  Compass,
 } from 'lucide-react';
 
 interface DossierPageProps {
@@ -34,6 +41,62 @@ export const DossierPage: React.FC<DossierPageProps> = ({
   const isMars = planet.id === 'mars';
   const themeColor = isMars ? '#f97316' : '#38bdf8';
   const [isPhotoExpanded, setIsPhotoExpanded] = useState(false);
+  const [viewMode, setViewMode] = useState<'3d' | 'photo'>('3d');
+  const [liveDetail, setLiveDetail] = useState<ArtifactDetail | null>(null);
+  const [liveWaypoints, setLiveWaypoints] = useState<TraverseWaypoint[]>([]);
+  const [mediaItems, setMediaItems] = useState<ArtifactMedia[]>([]);
+  const [isPanoramaOpen, setIsPanoramaOpen] = useState(false);
+  const [selectedPanorama, setSelectedPanorama] = useState<ArtifactMedia | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function fetchApiArtifact() {
+      try {
+        const [detail, waypoints, media] = await Promise.all([
+          portalApi.getArtifactDetail(artifact.id),
+          portalApi.getArtifactWaypoints(artifact.id),
+          portalApi.getArtifactMedia(artifact.id),
+        ]);
+
+        if (!active) return;
+        if (detail) setLiveDetail(detail);
+        if (waypoints && waypoints.length > 0) setLiveWaypoints(waypoints);
+        if (media && media.length > 0) setMediaItems(media);
+      } catch {
+        // Keep cached artifact data if the live API is unavailable.
+      }
+    }
+
+    fetchApiArtifact();
+
+    return () => {
+      active = false;
+    };
+  }, [artifact.id]);
+
+  const panoramas = mediaItems.filter(
+    (item) =>
+      item.media_category === 'PANORAMA' ||
+      item.caption?.toLowerCase().includes('360') ||
+      item.caption?.toLowerCase().includes('panorama')
+  );
+  const activePanorama = selectedPanorama || panoramas[0] || null;
+
+  const displayedMonologue = liveDetail?.first_person_monologue || artifact.firstPersonMonologue;
+  const displayedCause = liveDetail?.cause_of_deactivation || artifact.whyAbandoned;
+  const rawModel3dUrl = liveDetail?.model_3d_url || artifact.model3dUrl;
+  const effectiveModel3dUrl = resolveGlbModelUrl(artifact.id, rawModel3dUrl);
+  const effectiveWaypoints = liveWaypoints.length > 0
+    ? liveWaypoints.map((w) => ({
+        solOrStep: w.sol_or_step,
+        lat: w.latitude,
+        lon: w.longitude,
+        odometryM: (w as any).odometry_m ?? (w as any).odometryM ?? (w.sol_or_step * 250),
+        title: (w.telemetry_snapshot as any)?.stepName || `Waypoint ${w.sol_or_step}`,
+        storySnippet: w.story_snippet || undefined,
+      }))
+    : artifact.traversePath || [];
 
   return (
     <div className="dossier-page">
@@ -172,6 +235,31 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                   </span>
                 )}
 
+                {effectiveModel3dUrl && (
+                  <a
+                    href={effectiveModel3dUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Direct verified NASA 3D Resources GLB Asset"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      color: '#22c55e',
+                      background: 'rgba(34, 197, 94, 0.12)',
+                      border: '1px solid rgba(34, 197, 94, 0.35)',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Sparkles size={12} />
+                    <span>3D GLB Model</span>
+                  </a>
+                )}
+
                 {artifact.massKg && (
                   <span
                     style={{
@@ -221,51 +309,161 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               </div>
             </div>
 
-            {}
-            {artifact.imageUrl && (
-              <div className="dossier-photo-container">
+            {/* Media Presentation Area: 3D GLB Model & Archival Photo */}
+            <div className="dossier-photo-container" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {/* Mode Switcher Tabs & 360 Panorama CTA */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  flexWrap: 'wrap',
+                }}
+              >
                 <div
-                  className="dossier-photo-frame"
-                  onClick={() => setIsPhotoExpanded(true)}
-                  style={{ borderColor: `${themeColor}50` }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'rgba(15, 23, 42, 0.9)',
+                    padding: '4px',
+                    borderRadius: '10px',
+                    border: '1px solid #1e293b',
+                    width: 'fit-content',
+                  }}
                 >
-                  <img
-                    src={artifact.imageUrl}
-                    alt={artifact.name}
-                    className="dossier-photo-img"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = 'none';
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('3d')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      fontSize: '11.5px',
+                      fontFamily: 'var(--font-mono, monospace)',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      border: 'none',
+                      transition: 'all 0.2s ease',
+                      background: viewMode === '3d' ? `${themeColor}25` : 'transparent',
+                      color: viewMode === '3d' ? themeColor : '#94a3b8',
                     }}
-                  />
-                  {}
-                  <div className="dossier-photo-hud-top">
-                    <span className="photo-hud-tag" style={{ color: themeColor }}>
-                      <Camera size={12} /> ARCHIVAL RECON PHOTO
-                    </span>
+                  >
+                    <Box size={13} />
+                    <span>3D DIGITAL TWIN (GLB)</span>
+                  </button>
+
+                  {artifact.imageUrl && (
                     <button
                       type="button"
-                      className="photo-expand-btn"
-                      title="View Fullscreen"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsPhotoExpanded(true);
+                      onClick={() => setViewMode('photo')}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '6px 12px',
+                        borderRadius: '8px',
+                        fontSize: '11.5px',
+                        fontFamily: 'var(--font-mono, monospace)',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        border: 'none',
+                        transition: 'all 0.2s ease',
+                        background: viewMode === 'photo' ? `${themeColor}25` : 'transparent',
+                        color: viewMode === 'photo' ? themeColor : '#94a3b8',
                       }}
                     >
-                      <Maximize2 size={13} />
+                      <Camera size={13} />
+                      <span>ARCHIVAL 2D PHOTO</span>
                     </button>
-                  </div>
-                  <div className="dossier-photo-hud-bottom">
-                    <span className="photo-credit-tag">{artifact.agency} MISSION ARCHIVE</span>
-                    <span className="photo-hint-tag">Click to expand</span>
-                  </div>
+                  )}
                 </div>
+
+                {panoramas.length > 0 && (
+                  <button
+                    type="button"
+                    className={`btn-open-360 ${isMars ? 'mars' : 'moon'}`}
+                    onClick={() => {
+                      setSelectedPanorama(panoramas[0]);
+                      setIsPanoramaOpen(true);
+                    }}
+                    title="Open interactive 360° spherical surface panorama"
+                  >
+                    <Compass size={14} style={{ color: themeColor }} />
+                    <span>360° INTERACTIVE SURFACE PANORAMA</span>
+                  </button>
+                )}
               </div>
-            )}
+
+              {/* View Content */}
+              {viewMode === '3d' ? (
+                <Model3DViewer
+                  artifact={artifact}
+                  modelUrl={effectiveModel3dUrl}
+                  themeColor={themeColor}
+                />
+              ) : (
+                artifact.imageUrl && (
+                  <div
+                    className="dossier-photo-frame"
+                    onClick={() => setIsPhotoExpanded(true)}
+                    style={{ borderColor: `${themeColor}50` }}
+                  >
+                    <img
+                      src={artifact.imageUrl}
+                      alt={artifact.name}
+                      className="dossier-photo-img"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = 'none';
+                      }}
+                    />
+                    <div className="dossier-photo-hud-top">
+                      <span className="photo-hud-tag" style={{ color: themeColor }}>
+                        <Camera size={12} /> ARCHIVAL RECON PHOTO
+                      </span>
+                      <button
+                        type="button"
+                        className="photo-expand-btn"
+                        title="View Fullscreen"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsPhotoExpanded(true);
+                        }}
+                      >
+                        <Maximize2 size={13} />
+                      </button>
+                    </div>
+                    <div className="dossier-photo-hud-bottom">
+                      <span className="photo-credit-tag">{artifact.agency} MISSION ARCHIVE</span>
+                      {panoramas.length > 0 ? (
+                        <button
+                          type="button"
+                          className={`btn-open-360 ${isMars ? 'mars' : 'moon'}`}
+                          style={{ padding: '4px 10px', fontSize: '10.5px' }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedPanorama(panoramas[0]);
+                            setIsPanoramaOpen(true);
+                          }}
+                        >
+                          <Compass size={12} />
+                          <span>OPEN 360° VIEW</span>
+                        </button>
+                      ) : (
+                        <span className="photo-hint-tag">Click to expand</span>
+                      )}
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
           </div>
         </div>
 
         {}
-        {artifact.firstPersonMonologue && (
+        {displayedMonologue && (
           <div
             className="cosmo-glass"
             style={{
@@ -299,7 +497,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                 margin: 0,
               }}
             >
-              "{artifact.firstPersonMonologue}"
+              "{displayedMonologue}"
             </p>
           </div>
         )}
@@ -328,7 +526,14 @@ export const DossierPage: React.FC<DossierPageProps> = ({
           </div>
         )}
 
-        {}
+        {/* NASA Scientific Telemetry & Atmospheric Environment Block */}
+        <ScientificTelemetryBlock
+          planet={planet}
+          artifact={artifact}
+          themeColor={themeColor}
+        />
+
+        {/* Main Grid: 2-column detailed breakdown */}
         <div className="dossier-grid">
           {}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -347,7 +552,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                 <AlertTriangle size={18} style={{ color: '#f59e0b' }} />
                 <span>Why It Remained (Abandoned but Not Forgotten)</span>
               </h3>
-              <p className="dossier-text">{artifact.whyAbandoned}</p>
+              <p className="dossier-text">{displayedCause}</p>
             </div>
 
             {}
@@ -388,7 +593,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
             )}
 
             {}
-            {artifact.traversePath && artifact.traversePath.length > 0 && (
+            {effectiveWaypoints.length > 0 && (
               <div className="cosmo-glass dossier-block">
                 <h3 className="dossier-block-title">
                   <Navigation size={18} style={{ color: themeColor }} />
@@ -396,7 +601,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                 </h3>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {artifact.traversePath.map((step, idx) => (
+                  {effectiveWaypoints.map((step, idx) => (
                     <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                       <div
                         style={{
@@ -649,6 +854,19 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               </div>
             </div>
           </div>
+        )}
+
+        {/* 360° Photosphere Viewer Modal */}
+        {isPanoramaOpen && activePanorama && (
+          <PhotosphereViewer
+            isOpen={isPanoramaOpen}
+            onClose={() => setIsPanoramaOpen(false)}
+            imageUrl={activePanorama.media_url}
+            caption={activePanorama.caption || `${artifact.name} 360° Surface Panorama`}
+            nasaIdOrPia={activePanorama.nasa_id_or_pia || artifact.nssdcaId}
+            credit={activePanorama.credit || `${artifact.agency} / NASA Archive`}
+            planetTheme={isMars ? 'mars' : 'moon'}
+          />
         )}
       </div>
     </div>

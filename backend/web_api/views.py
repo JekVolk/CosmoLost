@@ -175,9 +175,9 @@ def artifacts_list(request):
         )
 
     try:
-        limit = int(request.query_params.get('limit', 50))
+        limit = int(request.query_params.get('limit', 250))
     except (TypeError, ValueError):
-        limit = 50
+        limit = 250
 
     try:
         offset = int(request.query_params.get('offset', 0))
@@ -273,9 +273,9 @@ def missions_list(request):
         qs = qs.filter(agency__iexact=agency)
 
     try:
-        limit = int(request.query_params.get('limit', 50))
+        limit = int(request.query_params.get('limit', 250))
     except (TypeError, ValueError):
-        limit = 50
+        limit = 250
 
     try:
         offset = int(request.query_params.get('offset', 0))
