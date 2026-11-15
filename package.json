@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "npm run dev --prefix web-client",
     "build": "npm run build --prefix web-client",
-    "preview": "npm run preview --prefix web-client"
+    "preview": "npm run preview --prefix web-client",
+    "dev:desktop": "pnpm --filter desktop-client dev",
+    "build:desktop": "pnpm --filter desktop-client build",
+    "tauri:dev": "pnpm --filter desktop-client tauri:dev",
+    "test:desktop": "pnpm --filter desktop-client test",
+    "check:desktop": "pnpm --filter desktop-client check"
   }
 }
 
