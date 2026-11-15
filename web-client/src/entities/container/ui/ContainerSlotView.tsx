@@ -25,7 +25,7 @@ export const ContainerSlotView: React.FC<{
     >
       <Image
         src={iconUrl}
-        alt={isReady ? 'Готовий контейнер' : 'Заблокований контейнерний слот'}
+        alt={isReady ? 'Available container' : 'Locked container slot'}
         width="48px"
         height="48px"
         mx="auto"
@@ -33,7 +33,7 @@ export const ContainerSlotView: React.FC<{
         objectFit="contain"
       />
       <Text fontSize="xs" color={isReady ? 'cyan.200' : 'gray.400'} fontWeight="medium">
-        Слот #{slot.slot_index + 1}
+        Slot #{slot.slot_index + 1}
       </Text>
     </Box>
   );

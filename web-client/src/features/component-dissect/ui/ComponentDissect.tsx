@@ -8,12 +8,12 @@ export const ComponentDissect: React.FC = () => {
         <VStack align="start" gap={1}>
           <HStack gap={2}>
             <Heading size="md" color="white">
-              Component Dissect: Анатомія вузлів
+              Component Dissect: Component Anatomy
             </Heading>
             <Badge colorPalette="gray">POST-MVP SKELETON</Badge>
           </HStack>
           <Text fontSize="xs" color="gray.400">
-            Визначте інженерну функцію вузла за кресленням або рендером деталі апарата.
+            Identify a component's engineering function from a spacecraft blueprint or rendering.
           </Text>
         </VStack>
       </HStack>
@@ -36,16 +36,16 @@ export const ComponentDissect: React.FC = () => {
           🔬
         </Text>
         <Text fontSize="sm" color="gray.300" fontWeight="medium">
-          Інженерний аналізатор підсистем космічних апаратів
+          Spacecraft subsystem engineering analyzer
         </Text>
         <Text fontSize="xs" color="gray.500" maxW="460px" mt={1}>
-          Режим знаходиться на стадії формування бази інженерних креслень та схем.
+          This mode is being prepared with a database of engineering blueprints and diagrams.
         </Text>
       </Box>
 
       <HStack justify="flex-end" w="100%">
         <Button colorPalette="blue" disabled cursor="not-allowed">
-          Режим у розробці
+          In Development
         </Button>
       </HStack>
     </VStack>

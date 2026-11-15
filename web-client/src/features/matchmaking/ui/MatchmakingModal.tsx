@@ -60,7 +60,7 @@ export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen }) =>
         textAlign="center"
       >
         <Heading size="lg" color="white">
-          Пошук суперника
+          Searching for an Opponent
         </Heading>
 
         {/* Pulsating radar circle with Framer Motion */}
@@ -116,7 +116,7 @@ export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen }) =>
               {seconds}s
             </Text>
             <Text fontSize="2xs" color="gray.400" textTransform="uppercase" letterSpacing="wider">
-              Очікування
+              Waiting
             </Text>
           </Box>
         </Box>
@@ -124,13 +124,13 @@ export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen }) =>
         <VStack gap={1}>
           <Text color="gray.300" fontSize="sm">
             {isBotFallback
-              ? 'Підбір автономного суперника (Бот)...'
-              : 'Сканування орбіти та пошук гравця...'}
+              ? 'Finding an automated opponent (bot)...'
+              : 'Scanning orbit for a player...'}
           </Text>
           <Text color="gray.500" fontSize="xs">
             {seconds <= 8
-              ? `Максимальний час очікування: 8 секунд (${8 - Math.min(seconds, 8)}s залишилось)`
-              : 'Завершення підключення до матчу...'}
+              ? `Maximum wait: 8 seconds (${8 - Math.min(seconds, 8)}s remaining)`
+              : 'Finishing match connection...'}
           </Text>
         </VStack>
       </VStack>

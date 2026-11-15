@@ -8,13 +8,13 @@ export const ScaleMatcher: React.FC = () => {
         <VStack align="start" gap={1}>
           <HStack gap={2}>
             <Heading size="md" color="white">
-              Scale Matcher: Порівняння масштабів
+              Scale Matcher: Compare Sizes
             </Heading>
             <Badge colorPalette="gray">POST-MVP SKELETON</Badge>
           </HStack>
           <Text fontSize="xs" color="gray.400">
-            3D порівняння розмірів об&apos;єктів — більший, менший або рівний відомому земному
-            еталону.
+            Compare object sizes in 3D: larger than, smaller than, or equal to a known Earth-based
+            reference.
           </Text>
         </VStack>
       </HStack>
@@ -37,16 +37,16 @@ export const ScaleMatcher: React.FC = () => {
           📐
         </Text>
         <Text fontSize="sm" color="gray.300" fontWeight="medium">
-          3D візуалізатор порівняння габаритів
+          3D object size comparison
         </Text>
         <Text fontSize="xs" color="gray.500" maxW="460px" mt={1}>
-          Режим знаходиться на стадії калібрування 3D масштабів еталонних моделей.
+          This mode is being prepared for 3D reference model calibration.
         </Text>
       </Box>
 
       <HStack justify="flex-end" w="100%">
         <Button colorPalette="blue" disabled cursor="not-allowed">
-          Режим у розробці
+          In Development
         </Button>
       </HStack>
     </VStack>

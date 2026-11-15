@@ -8,12 +8,12 @@ export const ShadowProjector: React.FC = () => {
         <VStack align="start" gap={1}>
           <HStack gap={2}>
             <Heading size="md" color="white">
-              Shadow Projector: Сонячний годинник
+              Shadow Projector: Sundial
             </Heading>
             <Badge colorPalette="gray">POST-MVP SKELETON</Badge>
           </HStack>
           <Text fontSize="xs" color="gray.400">
-            Визначте час доби та сезон на планеті за довжиною тіні та кутом сонячного світла.
+            Determine the time of day and season on a planet from the shadow length and sunlight angle.
           </Text>
         </VStack>
       </HStack>
@@ -36,16 +36,16 @@ export const ShadowProjector: React.FC = () => {
           ☀️
         </Text>
         <Text fontSize="sm" color="gray.300" fontWeight="medium">
-          Інтерактивна 3D/2D проекція тіней космічного апарата
+          Interactive 3D/2D spacecraft shadow projection
         </Text>
         <Text fontSize="xs" color="gray.500" maxW="460px" mt={1}>
-          Режим знаходиться на стадії підготовки перевірених ефемерид NASA NAIF SPICE.
+          This mode is being prepared with verified NASA NAIF SPICE ephemerides.
         </Text>
       </Box>
 
       <HStack justify="flex-end" w="100%">
         <Button colorPalette="blue" disabled cursor="not-allowed">
-          Режим у розробці
+          In Development
         </Button>
       </HStack>
     </VStack>

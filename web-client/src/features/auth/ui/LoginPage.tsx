@@ -50,7 +50,7 @@ export const LoginPage: React.FC = () => {
             CosmoLost Game Hub
           </Heading>
           <Text color="gray.400" fontSize="sm">
-            Ігровий модуль дослідження сонячної системи та змагань на Арені
+            Explore the solar system and compete in the Arena
           </Text>
         </VStack>
 
@@ -63,11 +63,11 @@ export const LoginPage: React.FC = () => {
           borderColor="gray.700"
         >
           <Text color="cyan.300" fontSize="xs" fontWeight="semibold" mb={1}>
-            Вхід потрібен лише для ігор:
+            Sign-in is only required for games:
           </Text>
           <Text color="gray.300" fontSize="xs">
-            Авторизація потрібна для збереження ELO-рейтингу, відкриття артефактів та дуелей.
-            Досліджувати 3D-карту та каталог можна вільно без авторизації.
+            Sign-in is required to save your ELO rating, unlock artifacts, and play duels. You can
+            explore the 3D map and catalog without signing in.
           </Text>
         </Box>
 
@@ -107,7 +107,7 @@ export const LoginPage: React.FC = () => {
                 fill="#EA4335"
               />
             </svg>
-            Увійти через Google
+            Sign in with Google
           </Button>
         </form>
 
@@ -118,7 +118,7 @@ export const LoginPage: React.FC = () => {
           size="md"
           onClick={() => navigate('/')}
         >
-          <ArrowLeft size={16} /> Повернутися до дослідження (3D Portal)
+          <ArrowLeft size={16} /> Back to Exploration (3D Portal)
         </Button>
       </VStack>
     </Box>

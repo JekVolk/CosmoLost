@@ -8,13 +8,12 @@ export const MissionStack: React.FC = () => {
         <VStack align="start" gap={1}>
           <HStack gap={2}>
             <Heading size="md" color="white">
-              Mission Stack: Хронологія місії
+              Mission Stack: Mission Timeline
             </Heading>
             <Badge colorPalette="gray">POST-MVP SKELETON</Badge>
           </HStack>
           <Text fontSize="xs" color="gray.400">
-            Впорядкуйте ключові віхи та події космічної місії у правильній хронологічній
-            послідовності.
+            Arrange key milestones and events from a space mission in chronological order.
           </Text>
         </VStack>
       </HStack>
@@ -37,16 +36,16 @@ export const MissionStack: React.FC = () => {
           ⏳
         </Text>
         <Text fontSize="sm" color="gray.300" fontWeight="medium">
-          DnD-сортувальник хронології місій
+          Drag-and-drop mission timeline
         </Text>
         <Text fontSize="xs" color="gray.500" maxW="460px" mt={1}>
-          Режим знаходиться на стадії структуризації таймлайнів історичних місій.
+          This mode is being prepared with timelines for historical missions.
         </Text>
       </Box>
 
       <HStack justify="flex-end" w="100%">
         <Button colorPalette="blue" disabled cursor="not-allowed">
-          Режим у розробці
+          In Development
         </Button>
       </HStack>
     </VStack>

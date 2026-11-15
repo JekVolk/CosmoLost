@@ -9,7 +9,7 @@ export interface GoogleLoginButtonProps extends ButtonProps {
 }
 
 export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
-  children = 'Увійти через Google',
+  children = 'Sign in with Google',
   formStyle,
   ...buttonProps
 }) => {

@@ -18,14 +18,14 @@ export interface StatGuesserPayload {
 export type StatGuesserFeedback = 'spacecraft_heavier' | 'objects_heavier' | 'balanced' | null;
 
 const DEFAULT_REFERENCE_OBJECTS: ReferenceObject[] = [
-  { id: 'car', name: 'Легковий автомобіль', mass_kg: 1500, icon: '🚗' },
-  { id: 'elephant', name: 'Африканський слон', mass_kg: 5000, icon: '🐘' },
-  { id: 'washing_machine', name: 'Пральна машина', mass_kg: 70, icon: '🧺' },
-  { id: 'refrigerator', name: 'Холодильник', mass_kg: 85, icon: '🧊' },
-  { id: 'piano', name: 'Рояль', mass_kg: 400, icon: '🎹' },
-  { id: 'bus', name: 'Міський автобус', mass_kg: 12000, icon: '🚌' },
-  { id: 'school_bus', name: 'Шкільний автобус', mass_kg: 9000, icon: '🚍' },
-  { id: 'bicycle', name: 'Велосипед', mass_kg: 15, icon: '🚲' },
+  { id: 'car', name: 'Passenger car', mass_kg: 1500, icon: '🚗' },
+  { id: 'elephant', name: 'African elephant', mass_kg: 5000, icon: '🐘' },
+  { id: 'washing_machine', name: 'Washing machine', mass_kg: 70, icon: '🧺' },
+  { id: 'refrigerator', name: 'Refrigerator', mass_kg: 85, icon: '🧊' },
+  { id: 'piano', name: 'Piano', mass_kg: 400, icon: '🎹' },
+  { id: 'bus', name: 'City bus', mass_kg: 12000, icon: '🚌' },
+  { id: 'school_bus', name: 'School bus', mass_kg: 9000, icon: '🚍' },
+  { id: 'bicycle', name: 'Bicycle', mass_kg: 15, icon: '🚲' },
 ];
 
 export function useStatGuesser() {
@@ -170,7 +170,7 @@ export function useStatGuesser() {
     isChecking,
     canEdit,
     isRoundOver,
-    spacecraftName: payload.spacecraft_name || 'Марсохід Perseverance',
+    spacecraftName: payload.spacecraft_name || 'Perseverance rover',
     spacecraftImageUrl: payload.spacecraft_image_url,
     toggleObject,
     addObject,

@@ -82,7 +82,7 @@ export const ComponentCard: React.FC<ComponentCardProps> = ({
               color="red.300"
               fontSize="2xs"
               _hover={{ bg: 'red.900', color: 'white' }}
-              title="Прибрати з категорії"
+              title="Remove from category"
             >
               ✕
             </Box>
@@ -101,7 +101,7 @@ export const ComponentCard: React.FC<ComponentCardProps> = ({
                   color="gray.400"
                   fontSize="3xs"
                   _hover={{ bg: 'blue.800', color: 'white' }}
-                  title={`Перемістити до ${cat}`}
+                  title={`Move to ${cat}`}
                 >
                   {cat.slice(0, 3)}
                 </Box>

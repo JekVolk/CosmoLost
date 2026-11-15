@@ -8,7 +8,7 @@ export const MissionHangarGame: React.FC<{ payload?: Record<string, unknown> }> 
         Mission Hangar DnD
       </Text>
       <Text fontSize="sm" color="gray.400">
-        Розподіл наукових модулів місії за функціональними відсіками
+        Sort mission science modules into functional sections
       </Text>
     </Box>
   );

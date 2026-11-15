@@ -8,7 +8,7 @@ export const ForensicSolGame: React.FC<{ payload?: Record<string, unknown> }> = 
         ForensicSol Telemetry
       </Text>
       <Text fontSize="sm" color="gray.400">
-        Аналіз графіків сонячної генерації, пилу та кута нахилу
+        Analyze solar power, dust, and tilt charts
       </Text>
     </Box>
   );

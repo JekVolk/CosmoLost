@@ -40,7 +40,7 @@ export function useMatchmaking() {
         });
       } catch (err) {
         console.error('Failed to start matchmaking:', err);
-        setError(err instanceof Error ? err.message : 'Не вдалося розпочати пошук матчу');
+        setError(err instanceof Error ? err.message : 'Failed to start matchmaking');
         setPhase('IDLE');
       } finally {
         setIsLoading(false);

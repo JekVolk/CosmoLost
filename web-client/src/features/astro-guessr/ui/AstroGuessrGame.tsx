@@ -8,7 +8,7 @@ export const AstroGuessrGame: React.FC<{ payload?: Record<string, unknown> }> = 
         AstroGuessr 360°
       </Text>
       <Text fontSize="sm" color="gray.400">
-        Панорамний огляд місцевості NASA та встановлення піна на карті
+        Explore NASA panoramas and place a pin on the map
       </Text>
     </Box>
   );
