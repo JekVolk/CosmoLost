@@ -14,6 +14,7 @@ urlpatterns = [
     path('artifacts/<str:pk>/waypoints/', views.artifact_waypoints, name='artifact-waypoints'),
     path('artifacts/<str:pk>/discoveries/', views.artifact_discoveries, name='artifact-discoveries'),
     path('artifacts/<str:pk>/media/', views.artifact_media, name='artifact-media'),
+    path('media-proxy/', views.media_proxy, name='media-proxy'),
 
     # Missions
     path('missions/', views.missions_list, name='missions-list'),
