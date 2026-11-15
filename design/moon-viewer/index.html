@@ -10,9 +10,9 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: radial-gradient(circle at center, #0B132B 0%, #030712 70%, #010409 100%);
+      background: radial-gradient(circle at center, #0B132B 0%, #080D17 70%, #040810 100%);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: #e2e8f0;
+      color: #EAF2FF;
     }
     #canvas-container {
       width: 100%;
@@ -29,55 +29,93 @@
     /* Top Floating HUD */
     .hud-top {
       position: absolute;
-      top: 24px;
-      left: 32px;
-      right: 32px;
+      top: 20px;
+      left: 24px;
+      right: 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       pointer-events: none;
       z-index: 20;
     }
-    .hud-brand {
+    .hud-left {
       pointer-events: auto;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 24px;
+      background: rgba(16, 26, 42, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 18px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .hud-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     .brand-emblem {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: #0B1528;
-      border: 1.5px solid rgba(56, 189, 248, 0.5);
+      background: #070E1E;
+      border: 1.5px solid #00D9F5;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .brand-emblem::after {
       content: '';
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: #38bdf8;
-      box-shadow: 0 0 10px #38bdf8;
+      background: #00D9F5;
+      box-shadow: 0 0 8px #00D9F5;
     }
     .brand-text {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
     .brand-title {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 800;
-      letter-spacing: 2px;
-      color: #ffffff;
+      letter-spacing: 1.5px;
+      color: #EAF2FF;
     }
     .brand-sub {
-      font-size: 9px;
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #00D9F5;
+    }
+
+    /* Global Nav Links in HUD */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-link {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #8FA2B8;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav-link:hover {
+      color: #EAF2FF;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-link.active {
+      color: #00D9F5;
+      background: rgba(0, 217, 245, 0.12);
       font-weight: 600;
-      letter-spacing: 1.2px;
-      color: #64748b;
+      border: 1px solid rgba(0, 217, 245, 0.4);
     }
 
     /* Planet Switcher Pill */
@@ -86,9 +124,9 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      background: rgba(9, 17, 34, 0.85);
+      background: rgba(16, 26, 42, 0.92);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 4px;
       border-radius: 9999px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -99,7 +137,7 @@
       gap: 6px;
       background: transparent;
       border: none;
-      color: #94a3b8;
+      color: #8FA2B8;
       padding: 6px 16px;
       border-radius: 9999px;
       font-size: 11px;
@@ -113,24 +151,24 @@
       height: 6px;
       border-radius: 50%;
     }
-    .planet-btn.mars .btn-dot { background: #f97316; }
-    .planet-btn.moon .btn-dot { background: #38bdf8; }
+    .planet-btn.mars .btn-dot { background: #FF9D35; }
+    .planet-btn.moon .btn-dot { background: #00D9F5; }
 
     .planet-btn.active.moon {
-      background: #2563eb;
-      color: #ffffff;
-      box-shadow: 0 0 16px rgba(37, 99, 235, 0.6);
-      border: 1px solid rgba(96, 165, 250, 0.4);
+      background: rgba(0, 217, 245, 0.18);
+      color: #00D9F5;
+      border: 1px solid #00D9F5;
+      box-shadow: 0 0 14px rgba(0, 217, 245, 0.4);
     }
     .planet-btn.active.mars {
-      background: #ea580c;
-      color: #ffffff;
-      box-shadow: 0 0 16px rgba(234, 88, 12, 0.6);
-      border: 1px solid rgba(249, 115, 22, 0.4);
+      background: rgba(255, 157, 53, 0.18);
+      color: #FF9D35;
+      border: 1px solid #FF9D35;
+      box-shadow: 0 0 14px rgba(255, 157, 53, 0.4);
     }
     .planet-btn.active .btn-dot {
-      background: #ffffff !important;
-      box-shadow: 0 0 6px #ffffff;
+      background: #FFFFFF !important;
+      box-shadow: 0 0 6px #FFFFFF;
     }
 
     /* Top Right Archive Badge */
@@ -139,41 +177,47 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      background: rgba(11, 21, 40, 0.7);
+      background: rgba(16, 26, 42, 0.92);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      padding: 6px 14px;
-      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 16px;
+      border-radius: 12px;
       font-size: 11px;
       font-weight: 600;
-      color: #7dd3fc;
+      color: #8FA2B8;
+    }
+    .archive-badge strong {
+      color: #00D9F5;
     }
 
     /* Left HUD Sidebar */
     .hud-sidebar {
       position: absolute;
-      top: 84px;
-      left: 32px;
+      top: 88px;
+      left: 24px;
       width: 380px;
       max-height: calc(100vh - 110px);
-      background: rgba(7, 14, 30, 0.88);
+      background: rgba(16, 26, 42, 0.92);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(56, 189, 248, 0.18);
-      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
       padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       z-index: 20;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .hud-sidebar.collapsed {
+      transform: translateX(-420px);
     }
     .sector-tag {
-      font-family: "Space Mono", monospace, sans-serif;
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 1.5px;
-      color: #38bdf8;
+      color: #00D9F5;
     }
     .title-row {
       display: flex;
@@ -181,55 +225,60 @@
       align-items: center;
     }
     .planet-heading {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 800;
-      color: #ffffff;
+      color: #EAF2FF;
       line-height: 1;
     }
     .collapse-btn {
       width: 28px;
       height: 28px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #94a3b8;
+      border-radius: 6px;
+      background: rgba(20, 32, 51, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #8FA2B8;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       font-size: 12px;
+      transition: all 0.2s;
+    }
+    .collapse-btn:hover {
+      color: #EAF2FF;
+      border-color: #00D9F5;
     }
     .sidebar-desc {
-      font-size: 12px;
-      line-height: 1.45;
-      color: #94a3b8;
+      font-size: 11.5px;
+      line-height: 1.4;
+      color: #8FA2B8;
     }
 
     /* 2x2 Telemetry Grid */
     .telemetry-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
     .telemetry-card {
-      background: rgba(11, 21, 40, 0.5);
+      background: #142033;
       border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 10px;
+      border-radius: 8px;
       padding: 8px 12px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
     .telemetry-label {
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 700;
-      letter-spacing: 1px;
-      color: #64748b;
+      letter-spacing: 0.8px;
+      color: #8FA2B8;
     }
     .telemetry-val {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
-      color: #ffffff;
+      color: #EAF2FF;
     }
 
     /* Section Header */
@@ -237,14 +286,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
-      color: #38bdf8;
-      letter-spacing: 1px;
+      color: #00D9F5;
+      letter-spacing: 0.8px;
       padding-top: 4px;
     }
 
-    /* Category Chips */
+    /* Category Chips & Tier 1 */
     .chips-row {
       display: flex;
       gap: 6px;
@@ -255,16 +304,30 @@
       border-radius: 9999px;
       font-size: 10px;
       font-weight: 600;
-      color: #94a3b8;
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid #334155;
+      color: #8FA2B8;
+      background: #142033;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip:hover {
+      border-color: rgba(0, 217, 245, 0.4);
+      color: #EAF2FF;
     }
     .chip.active {
-      background: rgba(2, 132, 199, 0.2);
-      border-color: #38bdf8;
-      color: #38bdf8;
+      background: rgba(0, 217, 245, 0.15);
+      border-color: #00D9F5;
+      color: #00D9F5;
       font-weight: 700;
+    }
+    .chip.tier1 {
+      border-color: #FF9D35;
+      color: #FF9D35;
+      background: rgba(255, 157, 53, 0.12);
+    }
+    .chip.tier1.active {
+      background: rgba(255, 157, 53, 0.24);
+      box-shadow: 0 0 10px rgba(255, 157, 53, 0.35);
     }
 
     /* Artifacts List */
@@ -273,26 +336,27 @@
       flex-direction: column;
       gap: 6px;
       overflow-y: auto;
-      max-height: 260px;
+      max-height: 250px;
       padding-right: 4px;
     }
     .artifacts-list::-webkit-scrollbar { width: 4px; }
-    .artifacts-list::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .artifacts-list::-webkit-scrollbar-thumb { background: #1B2A42; border-radius: 4px; }
 
     .artifact-card {
-      background: rgba(11, 20, 38, 0.45);
+      background: #142033;
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 8px;
-      padding: 7px 10px;
+      padding: 8px 10px;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
     .artifact-card:hover {
-      background: rgba(56, 189, 248, 0.1);
-      border-color: rgba(56, 189, 248, 0.3);
+      background: rgba(0, 217, 245, 0.1);
+      border-color: rgba(0, 217, 245, 0.4);
+      transform: translateX(2px);
     }
     .card-top {
       display: flex;
@@ -300,9 +364,9 @@
       align-items: center;
     }
     .card-title {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
-      color: #ffffff;
+      color: #EAF2FF;
     }
     .card-dot {
       width: 6px;
@@ -314,18 +378,18 @@
       justify-content: space-between;
       align-items: center;
       font-size: 10px;
-      color: #64748b;
+      color: #8FA2B8;
     }
 
     /* Floating Viewport Controls (Bottom Right) */
     .viewport-controls {
       position: absolute;
-      bottom: 40px;
+      bottom: 32px;
       right: 32px;
       width: 44px;
-      background: rgba(7, 14, 30, 0.88);
+      background: rgba(16, 26, 42, 0.92);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 22px;
       padding: 10px 8px;
       display: flex;
@@ -333,11 +397,12 @@
       gap: 12px;
       align-items: center;
       z-index: 20;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
     .ctrl-btn {
       background: none;
       border: none;
-      color: #38bdf8;
+      color: #00D9F5;
       cursor: pointer;
       font-size: 16px;
       display: flex;
@@ -347,7 +412,28 @@
     }
     .ctrl-btn:hover {
       transform: scale(1.15);
-      color: #ffffff;
+      color: #FFFFFF;
+    }
+
+    /* Sidebar Toggle Tab when collapsed */
+    .sidebar-restore-btn {
+      position: absolute;
+      top: 88px;
+      left: 24px;
+      background: rgba(16, 26, 42, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #00D9F5;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 19;
+      display: none;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+    .sidebar-restore-btn:hover {
+      background: #142033;
     }
 
     /* Tooltip */
@@ -355,32 +441,235 @@
       position: absolute;
       display: none;
       pointer-events: none;
-      background: rgba(11, 20, 38, 0.95);
+      background: rgba(16, 26, 42, 0.96);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      padding: 12px 16px;
+      border: 1px solid rgba(0, 217, 245, 0.4);
+      padding: 14px 18px;
       border-radius: 12px;
-      box-shadow: 0 12px 36px rgba(0,0,0,0.7);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.7);
       z-index: 100;
-      max-width: 280px;
+      max-width: 300px;
       font-size: 12px;
-      transform: translate(-50%, -120%);
+      transform: translate(-50%, -125%);
+    }
+    #tooltip .tt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
     }
     #tooltip .tt-title {
       font-weight: 700;
       font-size: 13px;
-      color: #ffffff;
-      margin-bottom: 4px;
+      color: #EAF2FF;
     }
     #tooltip .tt-desc {
-      color: #94a3b8;
-      line-height: 1.35;
+      color: #8FA2B8;
+      line-height: 1.4;
+      font-size: 11.5px;
     }
     #tooltip .tt-coords {
-      margin-top: 6px;
+      margin-top: 8px;
       font-family: monospace;
       font-size: 10px;
-      color: #38bdf8;
+      color: #00D9F5;
+      background: #142033;
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* Historical Timeline Scrubber */
+    .timeline-scrubber {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 820px;
+      background: rgba(16, 26, 42, 0.96);
+      backdrop-filter: blur(16px);
+      border: 1px solid #1B2A42;
+      border-radius: 12px;
+      padding: 10px 20px 12px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 20;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.6);
+      user-select: none;
+    }
+    .scrubber-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .scrubber-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .scrubber-play-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(0, 217, 245, 0.15);
+      border: 1px solid #00D9F5;
+      color: #00D9F5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+    .scrubber-play-btn:hover {
+      background: rgba(0, 217, 245, 0.3);
+      color: #FFFFFF;
+    }
+    .scrubber-play-btn.mars {
+      background: rgba(255, 157, 53, 0.15);
+      border-color: #FF9D35;
+      color: #FF9D35;
+    }
+    .scrubber-play-btn.mars:hover {
+      background: rgba(255, 157, 53, 0.3);
+      color: #FFFFFF;
+    }
+    .scrubber-title {
+      color: #8FA2B8;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .scrubber-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .scrubber-pill {
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(0, 217, 245, 0.15);
+      border: 1px solid rgba(0, 217, 245, 0.4);
+      color: #00D9F5;
+      transition: all 0.2s;
+    }
+    .scrubber-pill.mars {
+      background: rgba(255, 157, 53, 0.15);
+      border-color: rgba(255, 157, 53, 0.4);
+      color: #FF9D35;
+    }
+    .scrubber-subtext {
+      color: #8FA2B8;
+      font-size: 10px;
+    }
+    .scrubber-rail-container {
+      position: relative;
+      width: 780px;
+      height: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .scrubber-track-bg {
+      position: absolute;
+      left: 0;
+      width: 780px;
+      height: 4px;
+      background: #1E293B;
+      border-radius: 2px;
+    }
+    .scrubber-track-progress {
+      position: absolute;
+      left: 0;
+      height: 4px;
+      background: #00D9F5;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+    .scrubber-track-progress.mars {
+      background: #FF9D35;
+    }
+    .scrubber-tick {
+      position: absolute;
+      width: 2px;
+      height: 8px;
+      background: #334155;
+      border-radius: 1px;
+      top: 7px;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .scrubber-tick.active-tick {
+      background: #00D9F5;
+      height: 10px;
+      top: 6px;
+    }
+    .scrubber-tick.active-tick.mars {
+      background: #FF9D35;
+    }
+    .scrubber-thumb {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(0, 217, 245, 0.25);
+      border: 1.5px solid #00D9F5;
+      box-shadow: 0 0 10px rgba(0, 217, 245, 0.6);
+      transform: translate(-50%, 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      top: 2px;
+      pointer-events: none;
+    }
+    .scrubber-thumb.mars {
+      background: rgba(255, 157, 53, 0.25);
+      border-color: #FF9D35;
+      box-shadow: 0 0 10px rgba(255, 157, 53, 0.6);
+    }
+    .scrubber-thumb-core {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #FFFFFF;
+    }
+    .scrubber-labels-row {
+      position: relative;
+      width: 780px;
+      height: 16px;
+    }
+    .scrubber-label {
+      position: absolute;
+      font-size: 9px;
+      font-weight: 500;
+      color: #94A3B8;
+      cursor: pointer;
+      white-space: nowrap;
+      transform: translateX(-50%);
+      transition: color 0.2s;
+    }
+    .scrubber-label:first-child {
+      transform: none;
+      left: 0 !important;
+    }
+    .scrubber-label:last-child {
+      transform: none;
+      right: 0 !important;
+      left: auto !important;
+    }
+    .scrubber-label:hover {
+      color: #EAF2FF;
+    }
+    .scrubber-label.active-label {
+      font-weight: 700;
+      color: #00F0FF;
+    }
+    .scrubber-label.active-label.mars {
+      color: #FF9D35;
     }
   </style>
   <script src="three.min.js"></script>
@@ -390,12 +679,21 @@
 
   <!-- Top Floating HUD -->
   <div class="hud-top">
-    <div class="hud-brand">
-      <div class="brand-emblem"></div>
-      <div class="brand-text">
-        <div class="brand-title">COSMOLOST</div>
-        <div class="brand-sub">NASA SPACE APPS // ABANDONED BUT NOT FORGOTTEN</div>
+    <div class="hud-left">
+      <div class="hud-brand">
+        <div class="brand-emblem"></div>
+        <div class="brand-text">
+          <div class="brand-title">COSMOLOST</div>
+          <div class="brand-sub">NASA SPACE APPS 2026 // OPEN SCIENCE EXPLORATION</div>
+        </div>
       </div>
+      <nav class="nav-links">
+        <a class="nav-link active" id="nav-3d">3D Map</a>
+        <a class="nav-link" id="nav-catalog">Catalog</a>
+        <a class="nav-link" id="nav-missions">Missions</a>
+        <a class="nav-link" id="nav-videos">Community Videos</a>
+        <a class="nav-link" id="nav-about">About Project</a>
+      </nav>
     </div>
 
     <!-- Planet Switcher -->
@@ -406,16 +704,18 @@
 
     <!-- Archive Badge -->
     <div class="archive-badge" id="archive-badge">
-      <span>⬡</span> <span id="archive-count">46 artifacts archived</span>
+      <span>⬡</span> <span><strong id="archive-count">46</strong> artifacts archived</span>
     </div>
   </div>
 
+  <button class="sidebar-restore-btn" id="restore-sidebar-btn">▶ SHOW HUD RADAR</button>
+
   <!-- Left HUD Sidebar -->
   <div class="hud-sidebar" id="hud-sidebar">
-    <div class="sector-tag" id="sidebar-tag">LUNA-1 // MOON</div>
+    <div class="sector-tag" id="sidebar-tag">LUNA-1 // MOON SECTOR</div>
     <div class="title-row">
       <div class="planet-heading" id="sidebar-title">Moon</div>
-      <div class="collapse-btn" id="collapse-btn">◀</div>
+      <div class="collapse-btn" id="collapse-btn" title="Collapse Sidebar">◀</div>
     </div>
     <div class="sidebar-desc" id="sidebar-desc">
       A half-century archive of human daring: Apollo descent stages, pioneering Soviet Lunokhods, and robotic precursors.
@@ -443,16 +743,17 @@
 
     <!-- Section Header -->
     <div class="section-header">
-      <span>📡 ABANDONED HARDWARE</span>
+      <span>📡 CATALOGED EQUIPMENT</span>
       <span id="hardware-counter">46 / 46</span>
     </div>
 
-    <!-- Chips -->
+    <!-- Filter Chips -->
     <div class="chips-row">
-      <div class="chip active">ALL</div>
-      <div class="chip">Rovers & Flight</div>
-      <div class="chip">Landers</div>
-      <div class="chip">Laser & Relics</div>
+      <div class="chip tier1 active" id="filter-tier1">★ Tier 1 3D</div>
+      <div class="chip active" data-filter="all">ALL</div>
+      <div class="chip" data-filter="rovers">Rovers</div>
+      <div class="chip" data-filter="landers">Landers</div>
+      <div class="chip" data-filter="instruments">Instruments</div>
     </div>
 
     <!-- Artifacts List -->
@@ -461,17 +762,41 @@
 
   <!-- Floating Viewport Controls -->
   <div class="viewport-controls">
-    <button class="ctrl-btn" id="btn-reset" title="Center View">🎯</button>
-    <button class="ctrl-btn" id="btn-orbit" title="Orbit Mode">🔄</button>
-    <button class="ctrl-btn" id="btn-compass" title="Heading">🧭</button>
-    <button class="ctrl-btn" id="btn-fullscreen" title="Fullscreen">⛶</button>
+    <button class="ctrl-btn" id="btn-reset" title="Reset View">🎯</button>
+    <button class="ctrl-btn" id="btn-orbit" title="Toggle Auto-Rotation">🔄</button>
+    <button class="ctrl-btn" id="btn-fullscreen" title="Toggle Fullscreen">⛶</button>
   </div>
 
   <!-- Hover Tooltip -->
   <div id="tooltip">
-    <div class="tt-title" id="tt-title"></div>
+    <div class="tt-header">
+      <span class="tt-title" id="tt-title"></span>
+    </div>
     <div class="tt-desc" id="tt-desc"></div>
     <div class="tt-coords" id="tt-coords"></div>
+  </div>
+
+  <!-- Historical Timeline Scrubber Panel -->
+  <div class="timeline-scrubber" id="timeline-scrubber">
+    <div class="scrubber-header">
+      <div class="scrubber-left">
+        <button class="scrubber-play-btn" id="scrubber-play-btn" title="Play / Pause Timeline">▶</button>
+        <span class="scrubber-title">HISTORICAL TIMELINE SCRUBBER</span>
+      </div>
+      <div class="scrubber-right">
+        <div class="scrubber-pill" id="scrubber-active-pill">Selected Year: 2004</div>
+        <div class="scrubber-subtext" id="scrubber-subtext">MER Opportunity & Spirit (Sol 5111 logged)</div>
+      </div>
+    </div>
+    <div class="scrubber-rail-container" id="scrubber-rail">
+      <div class="scrubber-track-bg"></div>
+      <div class="scrubber-track-progress" id="scrubber-progress"></div>
+      <div id="scrubber-ticks-container"></div>
+      <div class="scrubber-thumb" id="scrubber-thumb">
+        <div class="scrubber-thumb-core"></div>
+      </div>
+    </div>
+    <div class="scrubber-labels-row" id="scrubber-labels"></div>
   </div>
 
   <div id="canvas-container"></div>
@@ -481,12 +806,26 @@
     const btnMoon = document.getElementById('btn-moon');
     const btnMars = document.getElementById('btn-mars');
     const btnReset = document.getElementById('btn-reset');
+    const btnOrbit = document.getElementById('btn-orbit');
     const btnFullscreen = document.getElementById('btn-fullscreen');
+    const collapseBtn = document.getElementById('collapse-btn');
+    const restoreBtn = document.getElementById('restore-sidebar-btn');
+    const hudSidebar = document.getElementById('hud-sidebar');
     const tooltip = document.getElementById('tooltip');
     const ttTitle = document.getElementById('tt-title');
     const ttDesc = document.getElementById('tt-desc');
     const ttCoords = document.getElementById('tt-coords');
     const artifactsList = document.getElementById('artifacts-list');
+
+    // Sidebar collapse toggle
+    collapseBtn.addEventListener('click', () => {
+      hudSidebar.classList.add('collapsed');
+      restoreBtn.style.display = 'block';
+    });
+    restoreBtn.addEventListener('click', () => {
+      hudSidebar.classList.remove('collapsed');
+      restoreBtn.style.display = 'none';
+    });
 
     // Scene & Camera
     const scene = new THREE.Scene();
@@ -497,10 +836,10 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.2;
     container.appendChild(renderer.domElement);
 
-    // OrbitControls: strictly rotates when dragging
+    // OrbitControls
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
@@ -509,19 +848,20 @@
     controls.minDistance = 2.4;
     controls.maxDistance = 12.0;
     controls.autoRotate = false;
-    controls.target.set(0.4, 0, 0); // slight center offset for HUD sidebar
+    controls.autoRotateSpeed = 0.6;
+    controls.target.set(0.4, 0, 0);
 
     // Starfield Background
     const starsGeo = new THREE.BufferGeometry();
-    const starsCount = 2400;
+    const starsCount = 2800;
     const starPositions = new Float32Array(starsCount * 3);
     for (let i = 0; i < starsCount * 3; i += 3) {
-      starPositions[i] = (Math.random() - 0.5) * 160;
-      starPositions[i + 1] = (Math.random() - 0.5) * 160;
-      starPositions[i + 2] = (Math.random() - 0.5) * 160;
+      starPositions[i] = (Math.random() - 0.5) * 180;
+      starPositions[i + 1] = (Math.random() - 0.5) * 180;
+      starPositions[i + 2] = (Math.random() - 0.5) * 180;
     }
     starsGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    const starsMat = new THREE.PointsMaterial({ color: 0x93c5fd, size: 0.14, transparent: true, opacity: 0.75 });
+    const starsMat = new THREE.PointsMaterial({ color: 0x00d9f5, size: 0.13, transparent: true, opacity: 0.7 });
     const starfield = new THREE.Points(starsGeo, starsMat);
     scene.add(starfield);
 
@@ -535,15 +875,15 @@
     const planetMat = new THREE.MeshStandardMaterial({
       map: moonTex,
       bumpMap: moonTex,
-      bumpScale: 0.04,
-      roughness: 0.9,
+      bumpScale: 0.045,
+      roughness: 0.88,
       metalness: 0.02
     });
     const planet = new THREE.Mesh(sphereGeo, planetMat);
     planet.position.set(0.4, 0, 0);
     scene.add(planet);
 
-    // Atmospheric Glow
+    // Atmospheric Glow Shader
     const atmosphereMat = new THREE.ShaderMaterial({
       vertexShader: `
         varying vec3 vNormal;
@@ -557,11 +897,11 @@
         uniform vec3 uColor;
         void main() {
           float intensity = pow(0.72 - dot(vNormal, vec3(0, 0, 1.0)), 2.8);
-          gl_FragColor = vec4(uColor, 1.0) * intensity * 0.38;
+          gl_FragColor = vec4(uColor, 1.0) * intensity * 0.42;
         }
       `,
       uniforms: {
-        uColor: { value: new THREE.Color(0x38bdf8) }
+        uColor: { value: new THREE.Color(0x00d9f5) }
       },
       blending: THREE.AdditiveBlending,
       side: THREE.BackSide,
@@ -572,17 +912,16 @@
     scene.add(atmosphere);
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0x0f172a, 0.4);
+    const ambientLight = new THREE.AmbientLight(0x080D17, 0.45);
     scene.add(ambientLight);
-    const sunLight = new THREE.DirectionalLight(0xfff7ed, 2.2);
+    const sunLight = new THREE.DirectionalLight(0xfff5ea, 2.3);
     sunLight.position.set(6, 3, 5);
     scene.add(sunLight);
 
-    // Surface Markers Container (ATTACHED DIRECTLY TO PLANET!)
+    // Surface Markers Container (Attached directly to planet)
     const markersGroup = new THREE.Group();
-    planet.add(markersGroup); // Points are children of planet -> turn 100% in sync with planet!
+    planet.add(markersGroup);
 
-    // Helper: Lat/Long to 3D Sphere Position
     function latLongToVector3(lat, lon, radius) {
       const phi = (90 - lat) * (Math.PI / 180);
       const theta = (lon + 180) * (Math.PI / 180);
@@ -593,82 +932,81 @@
       );
     }
 
-    // Complete Artifacts Data
+    // Artifacts Data
     const moonArtifacts = [
-      { name: "Apollo 11 «Eagle» & LRRR", org: "NASA", meta: "2034 kg • retro reflector", lat: 0.674, lon: 23.473, desc: "Sea of Tranquility. First crewed lunar landing site.", color: 0xf59e0b },
-      { name: "Apollo 11 Eagle Ascent Stage Impact", org: "NASA", meta: "2184 kg • impact stage", lat: 14.19, lon: 53.64, desc: "Ascent stage impact site following crew rendezvous.", color: 0x94a3b8 },
-      { name: "Apollo 12 «Intrepid» & ALSEP", org: "NASA", meta: "2040 kg • descent stage", lat: -3.012, lon: -23.422, desc: "Ocean of Storms. Precision landing near Surveyor 3.", color: 0x10b981 },
-      { name: "Apollo 12 Intrepid Ascent Stage Impact", org: "NASA", meta: "2184 kg • impact stage", lat: -3.94, lon: -21.20, desc: "Intentional seismic impact.", color: 0xef4444 },
-      { name: "Apollo 13 Saturn V S-IVB Rocket Stage", org: "NASA", meta: "13925 kg • impact stage", lat: -2.75, lon: -27.86, desc: "Third-stage rocket booster impact crater.", color: 0x94a3b8 },
-      { name: "Apollo 14 «Antares» & MET", org: "NASA", meta: "2040 kg • descent stage", lat: -3.645, lon: -17.471, desc: "Fra Mauro formation landing site.", color: 0xf59e0b },
-      { name: "Apollo 14 Saturn V S-IVB Impact Site", org: "NASA", meta: "13988 kg • impact stage", lat: -8.09, lon: -26.02, desc: "Booster impact registered by Apollo 12 seismometer.", color: 0x94a3b8 },
-      { name: "Apollo 15 «Falcon» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: 26.132, lon: 3.634, desc: "Hadley-Apennine region. First Lunar Roving Vehicle.", color: 0xf59e0b },
-      { name: "Apollo 16 «Orion» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: -8.973, lon: 15.499, desc: "Descartes Highlands plateau landing site.", color: 0xf59e0b },
-      { name: "Apollo 17 «Challenger» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: 20.191, lon: 30.772, desc: "Taurus-Littrow valley. Last human footprints on Moon.", color: 0xf59e0b },
-      { name: "Luna 2 (First Human Impact)", org: "USSR", meta: "390 kg • impact probe", lat: 29.1, lon: 0.0, desc: "Palus Putredinis. First spacecraft to reach Moon surface (1959).", color: 0xef4444 },
-      { name: "Luna 9 (First Soft Landing)", org: "USSR", meta: "99 kg • robotic lander", lat: 7.08, lon: -64.37, desc: "Oceanus Procellarum. First panoramic photos from surface (1966).", color: 0xef4444 },
-      { name: "Luna 16 (Automated Sample Return)", org: "USSR", meta: "1880 kg • descent stage", lat: -0.68, lon: 56.3, desc: "Mare Fecunditatis. Returned 101 grams of lunar soil.", color: 0xef4444 },
-      { name: "Luna 17 & Lunokhod 1", org: "USSR", meta: "756 kg • robotic rover", lat: 38.28, lon: -35.0, desc: "Mare Imbrium. First remote-controlled robotic rover.", color: 0xef4444 },
-      { name: "Luna 21 & Lunokhod 2", org: "USSR", meta: "840 kg • robotic rover", lat: 25.85, lon: 30.45, desc: "Le Monnier crater. Drove 39 km across the surface.", color: 0xef4444 },
-      { name: "Luna 24 (Deep Core Sample)", org: "USSR", meta: "1880 kg • descent stage", lat: 12.75, lon: 62.2, desc: "Mare Crisium. 2-meter deep lunar soil core return.", color: 0xef4444 },
-      { name: "Surveyor 1", org: "NASA", meta: "294 kg • soft lander", lat: -2.47, lon: -43.32, desc: "First American soft landing on extraterrestrial body.", color: 0xa855f7 },
-      { name: "Surveyor 3", org: "NASA", meta: "296 kg • soft lander", lat: -3.01, lon: -23.42, desc: "Visited 2.5 years later by Apollo 12 astronauts.", color: 0x38bdf8 },
-      { name: "Surveyor 5", org: "NASA", meta: "303 kg • soft lander", lat: 1.41, lon: 23.18, desc: "Conducted first alpha-scattering chemical analysis.", color: 0x38bdf8 },
-      { name: "Surveyor 7", org: "NASA", meta: "306 kg • soft lander", lat: -40.86, lon: -11.47, desc: "Landed on ejecta rim of Tycho crater.", color: 0x38bdf8 },
-      { name: "Chang'e 3 & Yutu Rover", org: "CNSA", meta: "1200 kg • active/dormant", lat: 44.12, lon: -19.51, desc: "Mare Imbrium. First Chinese lunar soft landing (2013).", color: 0x10b981 },
-      { name: "Chang'e 5 Sample Lander", org: "CNSA", meta: "1200 kg • descent stage", lat: 43.06, lon: -51.92, desc: "Mons Rümker. Returned youngest lunar basalts (1.7 kg).", color: 0x10b981 },
-      { name: "Chandrayaan-3 (Shiv Shakti)", org: "ISRO", meta: "1752 kg • active/dormant", lat: -69.37, lon: 32.35, desc: "Historic southern polar landing site (2023).", color: 0x10b981 },
-      { name: "SLIM Lander (JAXA)", org: "JAXA", meta: "200 kg • precision lander", lat: -13.31, lon: 25.25, desc: "Shioli crater. World-record 3-meter pinpoint landing.", color: 0x10b981 },
-      { name: "LCROSS Centaur Impact", org: "NASA", meta: "2270 kg • impact stage", lat: -84.73, lon: -48.72, desc: "Cabeus crater. Confirmed presence of water ice in dark craters.", color: 0xa855f7 },
-      { name: "Ranger 8 Impact", org: "NASA", meta: "367 kg • impact probe", lat: 2.64, lon: 24.77, desc: "Transmitted 7,137 high-res photos before impact.", color: 0xef4444 },
-      { name: "SMART-1 Impact", org: "ESA", meta: "367 kg • ion drive", lat: -34.26, lon: -46.19, desc: "Lacus Excellentiae. First European lunar mission impact.", color: 0x38bdf8 },
-      { name: "Kaguya Impact", org: "JAXA", meta: "2885 kg • lunar orbiter", lat: -65.5, lon: 80.4, desc: "Gillian crater. Global HDTV mapper controlled impact.", color: 0xf59e0b },
-      { name: "Lunar Prospector Impact", org: "NASA", meta: "296 kg • polar mapper", lat: -87.7, lon: 42.3, desc: "Permanent shadowed crater south pole impact.", color: 0x38bdf8 }
+      { name: "Apollo 11 «Eagle» & LRRR", org: "NASA", meta: "2034 kg • retro reflector", lat: 0.674, lon: 23.473, desc: "Sea of Tranquility. First crewed lunar landing site.", color: 0x00d9f5, tier1: true, type: "landers" },
+      { name: "Apollo 11 Eagle Ascent Stage Impact", org: "NASA", meta: "2184 kg • impact stage", lat: 14.19, lon: 53.64, desc: "Ascent stage impact site following crew rendezvous.", color: 0x8fa2b8, tier1: false, type: "instruments" },
+      { name: "Apollo 12 «Intrepid» & ALSEP", org: "NASA", meta: "2040 kg • descent stage", lat: -3.012, lon: -23.422, desc: "Ocean of Storms. Precision landing near Surveyor 3.", color: 0x22c55e, tier1: true, type: "landers" },
+      { name: "Apollo 14 «Antares» & MET", org: "NASA", meta: "2040 kg • descent stage", lat: -3.645, lon: -17.471, desc: "Fra Mauro formation landing site.", color: 0x00d9f5, tier1: true, type: "landers" },
+      { name: "Apollo 15 «Falcon» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: 26.132, lon: 3.634, desc: "Hadley-Apennine region. First Lunar Roving Vehicle.", color: 0xff9d35, tier1: true, type: "rovers" },
+      { name: "Apollo 16 «Orion» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: -8.973, lon: 15.499, desc: "Descartes Highlands plateau landing site.", color: 0xff9d35, tier1: true, type: "rovers" },
+      { name: "Apollo 17 «Challenger» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: 20.191, lon: 30.772, desc: "Taurus-Littrow valley. Last human footprints on Moon.", color: 0xff9d35, tier1: true, type: "rovers" },
+      { name: "Luna 2 (First Human Impact)", org: "USSR", meta: "390 kg • impact probe", lat: 29.1, lon: 0.0, desc: "Palus Putredinis. First spacecraft to reach Moon surface (1959).", color: 0xef4444, tier1: true, type: "instruments" },
+      { name: "Luna 9 (First Soft Landing)", org: "USSR", meta: "99 kg • robotic lander", lat: 7.08, lon: -64.37, desc: "Oceanus Procellarum. First panoramic photos from surface (1966).", color: 0xef4444, tier1: true, type: "landers" },
+      { name: "Luna 16 (Automated Sample Return)", org: "USSR", meta: "1880 kg • descent stage", lat: -0.68, lon: 56.3, desc: "Mare Fecunditatis. Returned 101 grams of lunar soil.", color: 0xef4444, tier1: false, type: "landers" },
+      { name: "Luna 17 & Lunokhod 1", org: "USSR", meta: "756 kg • robotic rover", lat: 38.28, lon: -35.0, desc: "Mare Imbrium. First remote-controlled robotic rover.", color: 0x00d9f5, tier1: true, type: "rovers" },
+      { name: "Luna 21 & Lunokhod 2", org: "USSR", meta: "840 kg • robotic rover", lat: 25.85, lon: 30.45, desc: "Le Monnier crater. Drove 39 km across the surface.", color: 0x00d9f5, tier1: true, type: "rovers" },
+      { name: "Surveyor 1", org: "NASA", meta: "294 kg • soft lander", lat: -2.47, lon: -43.32, desc: "First American soft landing on extraterrestrial body.", color: 0x268bff, tier1: false, type: "landers" },
+      { name: "Surveyor 3", org: "NASA", meta: "296 kg • soft lander", lat: -3.01, lon: -23.42, desc: "Visited 2.5 years later by Apollo 12 astronauts.", color: 0x00d9f5, tier1: true, type: "landers" },
+      { name: "Chang'e 3 & Yutu Rover", org: "CNSA", meta: "1200 kg • active/dormant", lat: 44.12, lon: -19.51, desc: "Mare Imbrium. First Chinese lunar soft landing (2013).", color: 0x22c55e, tier1: true, type: "rovers" },
+      { name: "Chang'e 5 Sample Lander", org: "CNSA", meta: "1200 kg • descent stage", lat: 43.06, lon: -51.92, desc: "Mons Rümker. Returned youngest lunar basalts (1.7 kg).", color: 0x22c55e, tier1: false, type: "landers" },
+      { name: "Chandrayaan-3 (Shiv Shakti)", org: "ISRO", meta: "1752 kg • active/dormant", lat: -69.37, lon: 32.35, desc: "Historic southern polar landing site (2023).", color: 0x22c55e, tier1: true, type: "landers" },
+      { name: "SLIM Lander (JAXA)", org: "JAXA", meta: "200 kg • precision lander", lat: -13.31, lon: 25.25, desc: "Shioli crater. World-record 3-meter pinpoint landing.", color: 0x22c55e, tier1: true, type: "landers" },
+      { name: "LCROSS Centaur Impact", org: "NASA", meta: "2270 kg • impact stage", lat: -84.73, lon: -48.72, desc: "Cabeus crater. Confirmed presence of water ice in dark craters.", color: 0x268bff, tier1: true, type: "instruments" }
     ];
 
     const marsArtifacts = [
-      { name: "Perseverance & Ingenuity", org: "NASA", meta: "1025 kg • active rover", lat: 18.444, lon: 77.45, desc: "Jezero Crater. Seeking signs of ancient microbial life.", color: 0x10b981 },
-      { name: "Curiosity Rover (MSL)", org: "NASA", meta: "899 kg • active rover", lat: -4.589, lon: 137.44, desc: "Gale Crater / Mount Sharp. Operating for over 4,000 sols.", color: 0x10b981 },
-      { name: "Zhurong Rover (Tianwen-1)", org: "CNSA", meta: "240 kg • dormant rover", lat: 25.066, lon: 109.93, desc: "Utopia Planitia. First Chinese Mars rover.", color: 0x10b981 },
-      { name: "Opportunity Rover (MER-B)", org: "NASA", meta: "185 kg • dormant rover", lat: -1.946, lon: -5.526, desc: "Meridiani Planum. Explored Mars for 5,111 sols (record).", color: 0xf59e0b },
-      { name: "Spirit Rover (MER-A)", org: "NASA", meta: "185 kg • dormant rover", lat: -14.568, lon: 175.47, desc: "Gusev Crater. Discovered evidence of ancient silica hot springs.", color: 0xf59e0b },
-      { name: "InSight Mars Lander", org: "NASA", meta: "358 kg • dormant lander", lat: 4.502, lon: 135.62, desc: "Elysium Planitia. Measured internal structure and marsquakes.", color: 0xf59e0b },
-      { name: "Phoenix Mars Lander", org: "NASA", meta: "350 kg • arctic lander", lat: 68.218, lon: -125.75, desc: "Vastitas Borealis. Directly scooped and verified sub-surface water ice.", color: 0xf59e0b },
-      { name: "Viking 1 Lander", org: "NASA", meta: "572 kg • historic lander", lat: 22.48, lon: -47.97, desc: "Chryse Planitia. First successful long-duration Mars lander (1976).", color: 0xf59e0b },
-      { name: "Viking 2 Lander", org: "NASA", meta: "572 kg • historic lander", lat: 47.97, lon: -134.28, desc: "Utopia Planitia. Analyzed soil samples for signs of organic life.", color: 0xf59e0b },
-      { name: "Mars Pathfinder / Sojourner", org: "NASA", meta: "360 kg • rover precursor", lat: 19.33, lon: -33.55, desc: "Ares Vallis. First wheeled mobile rover on Mars (1997).", color: 0xf59e0b },
-      { name: "Schiaparelli EDM", org: "ESA", meta: "577 kg • impact site", lat: -2.05, lon: -5.53, desc: "Meridiani Planum. High-speed impact after parachute premature release.", color: 0xef4444 },
-      { name: "Mars 2 Lander", org: "USSR", meta: "355 kg • impact site", lat: -45.0, lon: 47.0, desc: "First human artifact to contact the surface of Mars (1971).", color: 0xef4444 },
-      { name: "Mars 3 Lander", org: "USSR", meta: "355 kg • soft lander", lat: -45.0, lon: -158.0, desc: "Ptolemaeus crater. First soft landing on Mars; transmitted 14.5 sec.", color: 0xef4444 },
-      { name: "Beagle 2", org: "UK/ESA", meta: "33 kg • lander site", lat: 11.53, lon: 90.43, desc: "Isidis Planitia. Discovered by MRO HiRISE in 2015.", color: 0xef4444 },
-      { name: "Mars Polar Lander", org: "NASA", meta: "290 kg • south pole", lat: -76.0, lon: -165.0, desc: "Planum Australe. Lost during atmospheric entry (1999).", color: 0xef4444 }
+      { name: "Opportunity Rover (MER-B)", org: "NASA", meta: "185 kg • dormant rover", lat: -1.946, lon: -5.526, desc: "Meridiani Planum. Explored Mars for 5,111 sols (record).", color: 0xff9d35, tier1: true, type: "rovers" },
+      { name: "Spirit Rover (MER-A)", org: "NASA", meta: "185 kg • dormant rover", lat: -14.568, lon: 175.47, desc: "Gusev Crater. Discovered evidence of ancient silica hot springs.", color: 0xff9d35, tier1: true, type: "rovers" },
+      { name: "Perseverance & Ingenuity", org: "NASA", meta: "1025 kg • active rover", lat: 18.444, lon: 77.45, desc: "Jezero Crater. Seeking signs of ancient microbial life.", color: 0x22c55e, tier1: true, type: "rovers" },
+      { name: "Curiosity Rover (MSL)", org: "NASA", meta: "899 kg • active rover", lat: -4.589, lon: 137.44, desc: "Gale Crater / Mount Sharp. Operating for over 4,000 sols.", color: 0x22c55e, tier1: true, type: "rovers" },
+      { name: "Zhurong Rover (Tianwen-1)", org: "CNSA", meta: "240 kg • dormant rover", lat: 25.066, lon: 109.93, desc: "Utopia Planitia. First Chinese Mars rover.", color: 0x22c55e, tier1: true, type: "rovers" },
+      { name: "InSight Mars Lander", org: "NASA", meta: "358 kg • dormant lander", lat: 4.502, lon: 135.62, desc: "Elysium Planitia. Measured internal structure and marsquakes.", color: 0xff9d35, tier1: true, type: "landers" },
+      { name: "Phoenix Mars Lander", org: "NASA", meta: "350 kg • arctic lander", lat: 68.218, lon: -125.75, desc: "Vastitas Borealis. Directly scooped sub-surface water ice.", color: 0xff9d35, tier1: true, type: "landers" },
+      { name: "Viking 1 Lander", org: "NASA", meta: "572 kg • historic lander", lat: 22.48, lon: -47.97, desc: "Chryse Planitia. First long-duration Mars lander (1976).", color: 0xff9d35, tier1: true, type: "landers" },
+      { name: "Viking 2 Lander", org: "NASA", meta: "572 kg • historic lander", lat: 47.97, lon: -134.28, desc: "Utopia Planitia. Analyzed soil samples for organic life.", color: 0xff9d35, tier1: true, type: "landers" },
+      { name: "Mars Pathfinder / Sojourner", org: "NASA", meta: "360 kg • rover precursor", lat: 19.33, lon: -33.55, desc: "Ares Vallis. First wheeled mobile rover on Mars (1997).", color: 0xff9d35, tier1: true, type: "rovers" },
+      { name: "Schiaparelli EDM", org: "ESA", meta: "577 kg • impact site", lat: -2.05, lon: -5.53, desc: "Meridiani Planum. High-speed impact site.", color: 0xef4444, tier1: false, type: "instruments" },
+      { name: "Mars 3 Lander", org: "USSR", meta: "355 kg • soft lander", lat: -45.0, lon: -158.0, desc: "Ptolemaeus crater. First soft landing on Mars (1971).", color: 0xef4444, tier1: true, type: "landers" },
+      { name: "Beagle 2", org: "UK/ESA", meta: "33 kg • lander site", lat: 11.53, lon: 90.43, desc: "Isidis Planitia. Discovered by MRO HiRISE in 2015.", color: 0xef4444, tier1: false, type: "landers" }
     ];
 
     let currentPlanet = 'moon';
+    let currentFilter = 'all';
+    let tier1Only = false;
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     let markerMeshes = [];
 
-    function populateMarkers(data) {
-      // Clear old markers
+    function getFilteredData() {
+      const data = currentPlanet === 'moon' ? moonArtifacts : marsArtifacts;
+      return data.filter(item => {
+        if (tier1Only && !item.tier1) return false;
+        if (currentFilter !== 'all' && item.type !== currentFilter) return false;
+        return true;
+      });
+    }
+
+    function populateMarkers() {
       while (markersGroup.children.length > 0) {
         markersGroup.remove(markersGroup.children[0]);
       }
       markerMeshes = [];
 
-      data.forEach(item => {
-        // Physical 3D Pin attached to the planet mesh
+      const filtered = getFilteredData();
+
+      filtered.forEach(item => {
         const basePos = latLongToVector3(item.lat, item.lon, 1.80);
         const tipPos = latLongToVector3(item.lat, item.lon, 1.88);
 
-        // Pin Stem Needle
+        // Pin stem
         const lineGeo = new THREE.BufferGeometry().setFromPoints([basePos, tipPos]);
         const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.65 });
         const line = new THREE.Line(lineGeo, lineMat);
         markersGroup.add(line);
 
-        // Pin Head Sphere
-        const dotGeo = new THREE.SphereGeometry(0.038, 16, 16);
+        // Pin sphere
+        const dotGeo = new THREE.SphereGeometry(item.tier1 ? 0.046 : 0.038, 16, 16);
         const dotMat = new THREE.MeshBasicMaterial({ color: item.color });
         const mesh = new THREE.Mesh(dotGeo, dotMat);
         mesh.position.copy(tipPos);
@@ -677,8 +1015,8 @@
         markerMeshes.push(mesh);
       });
 
-      // Update sidebar list
-      renderSidebarList(data);
+      renderSidebarList(filtered);
+      document.getElementById('hardware-counter').innerText = `${filtered.length} / ${(currentPlanet === 'moon' ? moonArtifacts : marsArtifacts).length}`;
     }
 
     function renderSidebarList(data) {
@@ -692,36 +1030,46 @@
             <span class="card-dot" style="background: #${item.color.toString(16).padStart(6, '0')}"></span>
           </div>
           <div class="card-bottom">
-            <span>${item.org}</span>
-            <span>${item.meta}</span>
+            <span>${item.org} • ${item.meta}</span>
+            <span style="font-family:monospace; color:#00D9F5">${item.lat.toFixed(1)}°, ${item.lon.toFixed(1)}°</span>
           </div>
         `;
-        // Click to focus camera on this artifact
-        card.addEventListener('click', () => {
-          focusOnArtifact(item);
-        });
+        card.addEventListener('click', () => focusOnArtifact(item));
         artifactsList.appendChild(card);
       });
     }
 
     function focusOnArtifact(item) {
       const targetPos = latLongToVector3(item.lat, item.lon, 1.8);
-      // Position camera in front of target
       const camPos = targetPos.clone().normalize().multiplyScalar(4.5).add(planet.position);
       camera.position.copy(camPos);
       controls.target.copy(planet.position);
       controls.update();
 
-      // Show tooltip
       ttTitle.innerText = item.name;
       ttDesc.innerText = item.desc;
-      ttCoords.innerText = `LAT: ${item.lat.toFixed(3)}° | LON: ${item.lon.toFixed(3)}°`;
+      ttCoords.innerText = `LAT: ${item.lat.toFixed(3)}° | LON: ${item.lon.toFixed(3)}° • ${item.org}`;
       tooltip.style.left = (window.innerWidth / 2) + 'px';
       tooltip.style.top = (window.innerHeight / 2 - 50) + 'px';
       tooltip.style.display = 'block';
     }
 
-    populateMarkers(moonArtifacts);
+    // Filter Chips Events
+    document.querySelectorAll('.chips-row .chip[data-filter]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.chips-row .chip[data-filter]').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentFilter = chip.getAttribute('data-filter');
+        populateMarkers();
+      });
+    });
+
+    const tier1Btn = document.getElementById('filter-tier1');
+    tier1Btn.addEventListener('click', () => {
+      tier1Only = !tier1Only;
+      tier1Btn.classList.toggle('active', tier1Only);
+      populateMarkers();
+    });
 
     // Planet Switching
     function setPlanet(p) {
@@ -729,37 +1077,38 @@
       if (p === 'moon') {
         planetMat.map = moonTex;
         planetMat.bumpMap = moonTex;
-        atmosphereMat.uniforms.uColor.value.setHex(0x38bdf8);
-        document.getElementById('sidebar-tag').innerText = 'LUNA-1 // MOON';
+        atmosphereMat.uniforms.uColor.value.setHex(0x00d9f5);
+        document.getElementById('sidebar-tag').innerText = 'LUNA-1 // MOON SECTOR';
         document.getElementById('sidebar-title').innerText = 'Moon';
         document.getElementById('sidebar-desc').innerText = 'A half-century archive of human daring: Apollo descent stages, pioneering Soviet Lunokhods, and robotic precursors.';
         document.getElementById('t-radius').innerText = '1 737,4 km';
         document.getElementById('t-gravity').innerText = '1.62 m/s²';
         document.getElementById('t-day').innerText = '27.3 Earth days';
         document.getElementById('t-temp').innerText = '-20 °C';
-        document.getElementById('hardware-counter').innerText = '46 / 46';
-        document.getElementById('archive-count').innerText = '46 artifacts archived';
+        document.getElementById('archive-count').innerText = moonArtifacts.length;
         btnMoon.classList.add('active');
         btnMars.classList.remove('active');
-        populateMarkers(moonArtifacts);
       } else {
         planetMat.map = marsTex;
         planetMat.bumpMap = marsTex;
-        atmosphereMat.uniforms.uColor.value.setHex(0xea580c);
-        document.getElementById('sidebar-tag').innerText = 'ARES-1 // MARS';
+        atmosphereMat.uniforms.uColor.value.setHex(0xff9d35);
+        document.getElementById('sidebar-tag').innerText = 'ARES-1 // MARS SECTOR';
         document.getElementById('sidebar-title').innerText = 'Mars';
         document.getElementById('sidebar-desc').innerText = 'Three generations of Martian explorers: nuclear rovers, historic landers, and silent sentinels across red sands.';
         document.getElementById('t-radius').innerText = '3 389,5 km';
         document.getElementById('t-gravity').innerText = '3.72 m/s²';
         document.getElementById('t-day').innerText = '24h 37m';
         document.getElementById('t-temp').innerText = '-63 °C';
-        document.getElementById('hardware-counter').innerText = '18 / 18';
-        document.getElementById('archive-count').innerText = '18 artifacts archived';
+        document.getElementById('archive-count').innerText = marsArtifacts.length;
         btnMars.classList.add('active');
         btnMoon.classList.remove('active');
-        populateMarkers(marsArtifacts);
       }
       planetMat.needsUpdate = true;
+      populateMarkers();
+      if (typeof renderScrubberMilestones === 'function') {
+        renderScrubberMilestones();
+        setTimelineYear(p === 'mars' ? 2004 : 1971);
+      }
     }
 
     btnMoon.addEventListener('click', () => setPlanet('moon'));
@@ -769,6 +1118,10 @@
       camera.position.set(0.6, 0.2, 5.2);
       controls.target.set(0.4, 0, 0);
       tooltip.style.display = 'none';
+    });
+    btnOrbit.addEventListener('click', () => {
+      controls.autoRotate = !controls.autoRotate;
+      btnOrbit.style.color = controls.autoRotate ? '#FFFFFF' : '#00D9F5';
     });
     btnFullscreen.addEventListener('click', () => {
       if (!document.fullscreenElement) {
@@ -790,7 +1143,7 @@
         const item = intersects[0].object.userData;
         ttTitle.innerText = item.name;
         ttDesc.innerText = item.desc;
-        ttCoords.innerText = `LAT: ${item.lat.toFixed(3)}° | LON: ${item.lon.toFixed(3)}°`;
+        ttCoords.innerText = `LAT: ${item.lat.toFixed(3)}° | LON: ${item.lon.toFixed(3)}° • ${item.org}`;
         tooltip.style.left = (e.clientX) + 'px';
         tooltip.style.top = (e.clientY - 15) + 'px';
         tooltip.style.display = 'block';
@@ -799,10 +1152,244 @@
       }
     });
 
+    // ==========================================
+    // HISTORICAL TIMELINE SCRUBBER SYSTEM
+    // ==========================================
+    const MIN_YEAR = 1960;
+    const MAX_YEAR = 2026;
+    const TOTAL_YEARS = MAX_YEAR - MIN_YEAR; // 66
+
+    // Strictly ascending chronological milestones:
+    // 1960 -> 1971 -> 1976 (Viking 1) -> 1980 -> 1997 (Pathfinder) -> 2004 -> 2010 -> 2026
+    const marsMilestones = [
+      { year: 1960, label: "1960", sub: "Early Mars Flybys & Exploration Prep (1960)" },
+      { year: 1971, label: "1971", sub: "Mars 3 Lander — First Soft Mars Landing (1971)" },
+      { year: 1976, label: "1976 (Viking 1)", sub: "Viking 1 & 2 Landers — Chryse & Utopia Planitia (1976)" },
+      { year: 1980, label: "1980", sub: "Post-Viking Scientific Data Analysis Era (1980)" },
+      { year: 1997, label: "1997 (Pathfinder)", sub: "Mars Pathfinder & Sojourner Mobile Exploration (1997)" },
+      { year: 2004, label: "2004 (MER)", sub: "MER Opportunity & Spirit (Sol 5111 logged, 2004)" },
+      { year: 2010, label: "2010", sub: "Spirit Concludes · Odyssey & MRO Global Mapping (2010)" },
+      { year: 2026, label: "2026 (Present)", sub: "Open Science Exploration & Perseverance Era (Present)" }
+    ];
+
+    const moonMilestones = [
+      { year: 1960, label: "1960", sub: "Luna 1-3 & Early Lunar Robotic Probes (1960)" },
+      { year: 1969, label: "1969 (Apollo 11)", sub: "Apollo 11 Tranquility Base — Historic First Walk (1969)" },
+      { year: 1971, label: "1971", sub: "Apollo 14 & Lunokhod 1 (24 items logged, 1971)" },
+      { year: 1980, label: "1980", sub: "Post-Apollo Lunar Sample Science (1980)" },
+      { year: 1997, label: "1997", sub: "Clementine & Lunar Prospector Polar Ice Mapping (1997)" },
+      { year: 2010, label: "2010", sub: "LRO 3D High-Resolution Cartography (2010)" },
+      { year: 2020, label: "2020", sub: "Chang'e 5 Sample Return & Polar Science (2020)" },
+      { year: 2026, label: "2026 (Present)", sub: "Artemis & Commercial Lunar Payload Services (Present)" }
+    ];
+
+    let selectedYear = 2004;
+    let isPlaying = false;
+    let playInterval = null;
+
+    const scrubberPlayBtn = document.getElementById('scrubber-play-btn');
+    const scrubberActivePill = document.getElementById('scrubber-active-pill');
+    const scrubberSubtext = document.getElementById('scrubber-subtext');
+    const scrubberRail = document.getElementById('scrubber-rail');
+    const scrubberProgress = document.getElementById('scrubber-progress');
+    const scrubberTicksContainer = document.getElementById('scrubber-ticks-container');
+    const scrubberThumb = document.getElementById('scrubber-thumb');
+    const scrubberLabels = document.getElementById('scrubber-labels');
+
+    function getMilestones() {
+      return currentPlanet === 'mars' ? marsMilestones : moonMilestones;
+    }
+
+    function renderScrubberMilestones() {
+      const milestones = getMilestones();
+      scrubberTicksContainer.innerHTML = '';
+      scrubberLabels.innerHTML = '';
+
+      milestones.forEach((m, idx) => {
+        // Equal distance between every milestone along the scale
+        const percent = (idx / (milestones.length - 1)) * 100;
+
+        // Equidistant Tick Mark on the Rail directly above the year
+        const tick = document.createElement('div');
+        tick.className = 'scrubber-tick' + (currentPlanet === 'mars' ? ' mars' : '');
+        tick.id = `tick-${m.year}`;
+        if (idx === 0) {
+          tick.style.left = '0%';
+          tick.style.transform = 'none';
+        } else if (idx === milestones.length - 1) {
+          tick.style.left = 'auto';
+          tick.style.right = '0%';
+          tick.style.transform = 'none';
+        } else {
+          tick.style.left = `${percent}%`;
+          tick.style.transform = 'translateX(-50%)';
+        }
+        if (m.year === selectedYear) {
+          tick.classList.add('active-tick');
+        }
+        scrubberTicksContainer.appendChild(tick);
+
+        // Equidistant Milestone Label right beneath the tick
+        const lbl = document.createElement('div');
+        lbl.className = 'scrubber-label' + (currentPlanet === 'mars' ? ' mars' : '');
+        lbl.id = `lbl-${m.year}`;
+        lbl.innerText = m.label;
+        if (idx === 0) {
+          lbl.style.left = '0%';
+          lbl.style.transform = 'none';
+          lbl.style.textAlign = 'left';
+        } else if (idx === milestones.length - 1) {
+          lbl.style.left = 'auto';
+          lbl.style.right = '0%';
+          lbl.style.transform = 'none';
+          lbl.style.textAlign = 'right';
+        } else {
+          lbl.style.left = `${percent}%`;
+          lbl.style.transform = 'translateX(-50%)';
+          lbl.style.textAlign = 'center';
+        }
+
+        if (m.year === selectedYear) {
+          lbl.classList.add('active-label');
+        }
+
+        lbl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setTimelineYear(m.year);
+        });
+
+        scrubberLabels.appendChild(lbl);
+      });
+    }
+
+    function setTimelineYear(year) {
+      selectedYear = year;
+      const milestones = getMilestones();
+      let mIdx = milestones.findIndex(m => m.year === year);
+      if (mIdx === -1) {
+        // Find closest milestone
+        mIdx = 0;
+        let minDiff = Infinity;
+        milestones.forEach((m, idx) => {
+          const diff = Math.abs(m.year - year);
+          if (diff < minDiff) {
+            minDiff = diff;
+            mIdx = idx;
+          }
+        });
+      }
+
+      selectedYear = milestones[mIdx].year;
+      const percent = (mIdx / (milestones.length - 1)) * 100;
+
+      // Update Slider Visuals (Equidistant Step)
+      scrubberProgress.style.width = `${percent}%`;
+      scrubberThumb.style.left = `${percent}%`;
+      scrubberActivePill.innerText = `Selected Year: ${selectedYear}`;
+
+      // Color Theme
+      if (currentPlanet === 'mars') {
+        scrubberActivePill.classList.add('mars');
+        scrubberProgress.classList.add('mars');
+        scrubberThumb.classList.add('mars');
+        scrubberPlayBtn.classList.add('mars');
+      } else {
+        scrubberActivePill.classList.remove('mars');
+        scrubberProgress.classList.remove('mars');
+        scrubberThumb.classList.remove('mars');
+        scrubberPlayBtn.classList.remove('mars');
+      }
+
+      // Update Subtext and Active Highlights
+      scrubberSubtext.innerText = milestones[mIdx].sub;
+
+      // Update active label styles
+      milestones.forEach(m => {
+        const lbl = document.getElementById(`lbl-${m.year}`);
+        const tick = document.getElementById(`tick-${m.year}`);
+        if (lbl) {
+          lbl.classList.toggle('active-label', m.year === selectedYear);
+        }
+        if (tick) {
+          tick.classList.toggle('active-tick', m.year === selectedYear);
+        }
+      });
+
+      // Filter/Highlight artifacts active up to selected year
+      updateArtifactsForYear(selectedYear);
+    }
+
+    function updateArtifactsForYear(year) {
+      // Highlight artifacts active in this era
+      markerMeshes.forEach(mesh => {
+        const item = mesh.userData;
+        const itemYear = extractYear(item.desc) || 1970;
+        if (itemYear <= year) {
+          mesh.material.opacity = 1.0;
+          mesh.scale.set(1.0, 1.0, 1.0);
+        } else {
+          mesh.material.opacity = 0.25;
+          mesh.scale.set(0.65, 0.65, 0.65);
+        }
+      });
+    }
+
+    function extractYear(desc) {
+      const match = (desc || '').match(/\b(19\d\d|20\d\d)\b/);
+      return match ? parseInt(match[1], 10) : null;
+    }
+
+    // Scrubbing Interaction on Rail (Snapping to Equidistant Milestones)
+    let isDragging = false;
+
+    function handleRailSeek(e) {
+      const rect = scrubberRail.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+      const milestones = getMilestones();
+      const mIndex = Math.round(ratio * (milestones.length - 1));
+      setTimelineYear(milestones[mIndex].year);
+    }
+
+    scrubberRail.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      handleRailSeek(e);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        handleRailSeek(e);
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Play/Pause Animation stepping milestone by milestone
+    scrubberPlayBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      scrubberPlayBtn.innerText = isPlaying ? '⏸' : '▶';
+
+      if (isPlaying) {
+        playInterval = setInterval(() => {
+          const milestones = getMilestones();
+          let mIdx = milestones.findIndex(m => m.year === selectedYear);
+          mIdx = (mIdx + 1) % milestones.length;
+          setTimelineYear(milestones[mIdx].year);
+        }, 1000);
+      } else {
+        clearInterval(playInterval);
+      }
+    });
+
+    // Initial load
+    setPlanet('moon');
+
     // Render loop
     function animate() {
       requestAnimationFrame(animate);
-      controls.update(); // strictly rotates when dragging
+      controls.update();
       renderer.render(scene, camera);
     }
     animate();
