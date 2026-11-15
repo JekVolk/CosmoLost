@@ -1,3 +1,4 @@
+import { McpPromoBanner } from '@/features/mcp-promo';
 import {
   Calendar,
   ExternalLink,
@@ -17,10 +18,15 @@ import type { PlanetConfig, PlanetId, SpaceArtifact } from '../../../entities/pl
 interface CatalogPageProps {
   onOpenDossier: (artifact: SpaceArtifact, planetId: PlanetId) => void;
   onBackToMap: () => void;
+  onOpenMcp?: () => void;
   planets?: Record<PlanetId, PlanetConfig>;
 }
 
-export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets = PLANETS }) => {
+export const CatalogPage: React.FC<CatalogPageProps> = ({
+  onOpenDossier,
+  onOpenMcp,
+  planets = PLANETS,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlanet, setSelectedPlanet] = useState<'all' | 'moon' | 'mars'>('all');
   const [selectedType, setSelectedType] = useState<string>('all');
@@ -29,10 +35,10 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
   const allArtifactsWithPlanet = useMemo(() => {
     const list: { artifact: SpaceArtifact; planetId: PlanetId }[] = [];
     (planets.moon?.artifacts || []).forEach((art) =>
-      list.push({ artifact: art, planetId: 'moon' }),
+      list.push({ artifact: art, planetId: 'moon' })
     );
     (planets.mars?.artifacts || []).forEach((art) =>
-      list.push({ artifact: art, planetId: 'mars' }),
+      list.push({ artifact: art, planetId: 'mars' })
     );
     return list;
   }, [planets]);
@@ -128,6 +134,8 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
               <span className="pen-metric-lbl">MARTIAN SITES</span>
             </div>
           </div>
+
+          <McpPromoBanner onConnect={onOpenMcp} style={{ margin: '20px 0 10px' }} />
         </div>
 
         <div className="pen-catalog-toolbar">

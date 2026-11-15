@@ -4,9 +4,10 @@ import type React from 'react';
 interface AboutModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenMcp?: () => void;
 }
 
-export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
+export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose, onOpenMcp }) => {
   if (!isOpen) return null;
 
   return (
@@ -63,6 +64,31 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                   Integrated FastMCP backend with real-time video community feeds, structured
                   artifact specs, and automated telemetry search.
                 </p>
+                {onOpenMcp && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenMcp();
+                    }}
+                    style={{
+                      marginTop: '8px',
+                      background: 'rgba(0, 217, 245, 0.12)',
+                      border: '1px solid rgba(0, 217, 245, 0.4)',
+                      borderRadius: '6px',
+                      padding: '4px 10px',
+                      color: '#00F0FF',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    <span>Open MCP Connect Portal →</span>
+                  </button>
+                )}
               </div>
             </div>
 

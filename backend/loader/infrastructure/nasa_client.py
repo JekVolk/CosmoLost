@@ -228,3 +228,32 @@ class NASAClient:
         except Exception as e:
             logger.warning(f"Could not load MMGIS layer {url}: {e}")
             return {}
+
+    def fetch_live_rover_manifests(self) -> List[Dict[str, Any]]:
+        """
+        Dynamically fetches rover mission manifests from api.nasa.gov / mars-photos API.
+        Returns live operational statuses, launch dates, landing dates, and max_sols.
+        """
+        rovers = ['curiosity', 'perseverance', 'opportunity', 'spirit']
+        manifests = []
+        for r in rovers:
+            try:
+                data = self.fetch_rover_manifest(r)
+                manifest = data.get('photo_manifest', {})
+                if manifest and manifest.get('name'):
+                    manifests.append(manifest)
+            except Exception as e:
+                logger.warning(f"Could not fetch live manifest for {r}: {e}")
+        return manifests
+
+    def search_archive_mission_metadata(self, mission_query: str) -> Optional[Dict[str, Any]]:
+        """
+        Queries NASA Image & Video Library for canonical mission description and metadata.
+        """
+        try:
+            items = self.search_archive_images(query=f"{mission_query} mission", limit=1)
+            if items:
+                return items[0]
+        except Exception as e:
+            logger.warning(f"Error querying archive for mission {mission_query}: {e}")
+        return None

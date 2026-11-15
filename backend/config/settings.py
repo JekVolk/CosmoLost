@@ -39,7 +39,7 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         'DJANGO_ALLOWED_HOSTS',
-        'localhost,127.0.0.1,0.0.0.0,backend,testserver,cosmolost.lihtar.org,.lihtar.org',
+        'localhost,127.0.0.1,0.0.0.0,backend,testserver,cosmolost.lihtar.org,.lihtar.org,cosmolost.lixtar.org,.lixtar.org',
     ).split(',')
     if host.strip()
 ]
@@ -48,10 +48,14 @@ CSRF_TRUSTED_ORIGINS = [
     host.strip()
     for host in os.environ.get(
         'DJANGO_CSRF_TRUSTED_ORIGINS',
-        'http://localhost:9088,http://127.0.0.1:9088,http://testserver:9088,http://localhost:8000,http://127.0.0.1:8000,http://testserver:8000,http://backend:8000,https://cosmolost.lihtar.org,http://cosmolost.lihtar.org',
+        'http://localhost:9088,http://127.0.0.1:9088,http://testserver:9088,http://localhost:8000,http://127.0.0.1:8000,http://testserver:8000,http://backend:8000,https://cosmolost.lihtar.org,http://cosmolost.lihtar.org,https://cosmolost.lixtar.org,http://cosmolost.lixtar.org',
     ).split(',')
     if host.strip()
 ]
+
+# The public gateway terminates TLS and forwards the original scheme to Django.
+# OAuth must use that public HTTPS scheme when constructing Google's callback URI.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 

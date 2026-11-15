@@ -9,10 +9,11 @@ import {
   Video,
   X,
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import type { PlanetId } from '../../../entities/planet/model/types';
 
-export type AppView = 'map' | 'catalog' | 'community' | 'astro-guessr' | 'arena';
+export type AppView = 'map' | 'catalog' | 'community' | 'astro-guessr' | 'arena' | 'connect';
 
 interface HeaderProps {
   currentPlanetId: PlanetId;
@@ -56,7 +57,18 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       <header className="cosmo-header-pen">
-        <button type="button" className="cosmo-nav-brand" onClick={() => onSelectView('map')}>
+        <button
+          type="button"
+          className="cosmo-nav-brand"
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            textAlign: 'left',
+            cursor: 'pointer',
+          }}
+          onClick={() => onSelectView('map')}
+        >
           <div className="cosmo-emblem-wrap">
             <div className="cosmo-emblem-diamond" style={{ borderColor: themeAccent }}>
               <div className="cosmo-emblem-core" style={{ backgroundColor: themeAccent }} />
@@ -119,6 +131,14 @@ export const Header: React.FC<HeaderProps> = ({
           >
             Arena
           </button>
+          <button
+            type="button"
+            className={`cosmo-nav-link ${currentView === 'connect' ? 'active' : ''}`}
+            style={{ '--link-accent': '#00D9F5' } as React.CSSProperties}
+            onClick={() => onSelectView('connect')}
+          >
+            MCP Connect
+          </button>
           <a
             href="/game"
             className="cosmo-nav-link"
@@ -162,10 +182,15 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
-          <div
+          <button
+            type="button"
             className="cosmo-mcp-badge"
+            onClick={() => onSelectView('connect')}
+            style={{ cursor: 'pointer', background: 'none', border: 'none', font: 'inherit' }}
             title={
-              isLiveApi ? 'Connected to live OpenAPI backend' : 'Using cached offline OpenAPI layer'
+              isLiveApi
+                ? 'Connected to live OpenAPI backend · Click to open MCP Connect'
+                : 'Using cached offline OpenAPI layer · Click to open MCP Connect'
             }
           >
             <Sparkles size={11} style={{ color: isLiveApi ? '#22c55e' : '#00F0FF' }} />
@@ -180,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="cosmo-mcp-status" style={{ color: isLiveApi ? '#22c55e' : '#38bdf8' }}>
               {isLiveApi ? 'LIVE API' : 'CACHED'}
             </span>
-          </div>
+          </button>
 
           <div className="cosmo-theme-tag">{artifactCount} ITEMS</div>
 
@@ -297,6 +322,21 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="cosmo-mobile-nav-desc">Spacecraft challenges & telemetry</div>
             </div>
             {currentView === 'arena' && <span className="cosmo-mobile-nav-pill">ACTIVE</span>}
+          </button>
+
+          <button
+            type="button"
+            className={`cosmo-mobile-nav-item ${currentView === 'connect' ? 'active' : ''}`}
+            onClick={() => handleNav(() => onSelectView('connect'))}
+          >
+            <div className="cosmo-mobile-nav-icon" style={{ color: '#00D9F5' }}>
+              <Sparkles size={18} />
+            </div>
+            <div className="cosmo-mobile-nav-text">
+              <div className="cosmo-mobile-nav-label">MCP Connect</div>
+              <div className="cosmo-mobile-nav-desc">Connect AI tools to space data</div>
+            </div>
+            {currentView === 'connect' && <span className="cosmo-mobile-nav-pill">ACTIVE</span>}
           </button>
 
           <a

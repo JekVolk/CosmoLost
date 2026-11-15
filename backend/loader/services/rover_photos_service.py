@@ -58,6 +58,26 @@ CURATED_SEED_ROVER_PHOTOS: Dict[str, List[MediaDTO]] = {
             credit='NASA/JPL-Caltech/Cornell',
         ),
     ],
+    'curiosity-rover': [
+        MediaDTO(
+            artifact_id='curiosity-rover',
+            media_category='SURFACE_PHOTO',
+            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA19808.jpg',
+            nasa_id_or_pia='PIA19808-curiosity-buckskin',
+            caption='Curiosity self-portrait at Buckskin drilling site in Gale Crater with Mount Sharp behind.',
+            credit='NASA/JPL-Caltech/MSSS',
+        ),
+    ],
+    'perseverance-rover': [
+        MediaDTO(
+            artifact_id='perseverance-rover',
+            media_category='SURFACE_PHOTO',
+            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA24658.jpg',
+            nasa_id_or_pia='PIA24658-percy-ingenuity',
+            caption='Perseverance rover taking selfie with Ingenuity helicopter at Van Zyl Overlook in Jezero Crater.',
+            credit='NASA/JPL-Caltech/MSSS',
+        ),
+    ],
 }
 
 
