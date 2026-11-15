@@ -1,12 +1,17 @@
 from datetime import timedelta
+from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from social_core.actions import do_auth
+from social_django.utils import psa
 
 from core.models import Artifact
 from game.models import (
@@ -304,3 +309,15 @@ class GoogleAuthCallbackView(APIView):
 
     def post(self, request):
         return self.get(request)
+
+
+@never_cache
+@csrf_exempt
+@psa('social:complete')
+def social_auth_begin(request, backend):
+    """
+    Support both POST and GET for social login initiation without CSRF blocks.
+    Allows standard HTML <form method="POST" action="/auth/login/<backend>/"> from frontend.
+    """
+    return do_auth(request.backend, redirect_name=REDIRECT_FIELD_NAME, user=request.user)
+
