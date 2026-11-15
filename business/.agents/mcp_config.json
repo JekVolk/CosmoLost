@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "gemini-notebook-remote": {
+      "url": "https://notebook.googleapis.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${GEMINI_NOTEBOOK_ACCESS_TOKEN}",
+        "x-goog-user-project": "${GOOGLE_CLOUD_PROJECT}"
+      }
+    },
+    "gemini-notebook-bridge": {
+      "command": "python",
+      "args": [
+        ".agents/plugins/gemini-notebook/scripts/gemini_notebook_bridge.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}

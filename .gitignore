@@ -6,10 +6,17 @@ dist-ssr/
 .env
 .env.local
 .env.*.local
+*.env
+!*.env.example
+*.env.local
 desktop-client/.env
 desktop-client/node_modules/
 desktop-client/dist/
 desktop-client/src-tauri/target/
+
+# Python
+__pycache__/
+*.py[cod]
 
 # Local documents and handbooks
 *.pdf
