@@ -54,6 +54,8 @@ export function ScriptGeneratorPanel() {
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
   const [batchFeedback, setBatchFeedback] = useState<string | null>(null);
 
+  const selectedTemplate = serverTemplates.find((template) => template.id === selectedRubric);
+
   const handleCopyScript = async () => {
     if (!currentProject) return;
     const ok = await copyScriptToClipboard(currentProject);
@@ -149,31 +151,61 @@ export function ScriptGeneratorPanel() {
           </Text>
 
           {/* SMM Templates from Backend / Fallbacks */}
-          <Flex wrap="wrap" gap="2">
-            {serverTemplates.map((template) => {
-              const isSelected = selectedRubric === template.id;
-              return (
-                <Button
-                  key={template.id}
-                  size="sm"
-                  variant={isSelected ? 'solid' : 'outline'}
-                  colorPalette={isSelected ? 'teal' : 'gray'}
-                  onClick={() => setSelectedRubric(template.id)}
+          <Box p="3" borderRadius="lg" bg="bg.subtle" borderWidth="1px" borderColor="border.subtle">
+            <Flex align="center" gap="3" wrap="wrap">
+              <Text fontSize="xs" fontWeight="bold" color="fg" whiteSpace="nowrap">
+                Рубрика
+              </Text>
+              <Box flex="1" minW="240px" position="relative">
+                <select
+                  aria-label="Контент-рубрика"
+                  value={selectedRubric}
+                  onChange={(event) => {
+                    setSelectedRubric(event.target.value);
+                    if (event.target.value === 'chronicles') setIsSeries(true);
+                  }}
+                  style={{
+                    width: '100%',
+                    minHeight: '34px',
+                    padding: '0 32px 0 10px',
+                    borderRadius: '6px',
+                    border: '1px solid var(--chakra-colors-border-emphasized)',
+                    background: 'var(--chakra-colors-bg-panel)',
+                    color: 'var(--chakra-colors-fg)',
+                    fontSize: 'var(--chakra-font-sizes-sm)',
+                  }}
                 >
-                  {template.rubric_name}
-                  <Badge
-                    size="xs"
-                    ml="1.5"
-                    px="2"
-                    py="0.5"
-                    borderRadius="md"
-                    colorPalette={isSelected ? 'white' : 'teal'}
-                  >
-                    {template.target_duration_sec}с
-                  </Badge>
-                </Button>
-              );
-            })}
+                  {serverTemplates.map((template) => (
+                    <option key={template.id} value={template.id}>
+                      {template.rubric_name} · {template.target_duration_sec}с
+                    </option>
+                  ))}
+                </select>
+              </Box>
+              <Badge colorPalette="teal" size="sm" variant="subtle" px="2">
+                {selectedTemplate?.target_duration_sec ?? 40}с
+              </Badge>
+            </Flex>
+            <Flex align="center" gap="1.5" mt="2" wrap="wrap">
+              <Text fontSize="xs" color="fg.muted" mr="1">
+                Структура:
+              </Text>
+              <Badge size="xs" colorPalette="orange" variant="subtle">
+                Хук 0–3с
+              </Badge>
+              <Text fontSize="xs" color="fg.muted">
+                →
+              </Text>
+              <Badge size="xs" colorPalette="blue" variant="subtle">
+                М’ясо 3–32с
+              </Badge>
+              <Text fontSize="xs" color="fg.muted">
+                →
+              </Text>
+              <Badge size="xs" colorPalette="purple" variant="subtle">
+                Loop CTA 32–40с
+              </Badge>
+            </Flex>
             <Button
               size="sm"
               variant={selectedRubric === 'chronicles' ? 'solid' : 'outline'}
@@ -196,7 +228,7 @@ export function ScriptGeneratorPanel() {
                 Хроніки
               </Badge>
             </Button>
-          </Flex>
+          </Box>
 
           {/* Magnetic Power Words (0-3s Viral Hook Trigger) */}
           <Box p="3" borderRadius="lg" bg="bg.subtle" borderWidth="1px" borderColor="border.subtle">
@@ -449,7 +481,14 @@ export function ScriptGeneratorPanel() {
 
           {/* Serial Content / Smart Recommendation Card */}
           {nextTopicSuggestion && (
-            <Box p="4" borderRadius="lg" bg="teal.950" borderWidth="1px" borderColor="teal.700">
+            <Box
+              p="4"
+              borderRadius="lg"
+              bg="teal.950"
+              borderWidth="1px"
+              borderColor="teal.700"
+              color="teal.50"
+            >
               <VStack align="stretch" gap="2">
                 <HStack justify="space-between">
                   <Text fontWeight="semibold" fontSize="xs" color="teal.200">
@@ -459,7 +498,7 @@ export function ScriptGeneratorPanel() {
                     {nextTopicSuggestion.suggested_artifact_name}
                   </Badge>
                 </HStack>
-                <Text fontSize="xs" color="fg" fontStyle="italic">
+                <Text fontSize="xs" color="teal.50" fontStyle="italic">
                   &ldquo;{nextTopicSuggestion.narrative_bridge}&rdquo;
                 </Text>
                 <Text fontSize="xs" color="teal.100">
@@ -468,7 +507,7 @@ export function ScriptGeneratorPanel() {
                   </Text>{' '}
                   {nextTopicSuggestion.suggested_hook}
                 </Text>
-                <Text fontSize="xs" color="fg.muted">
+                <Text fontSize="xs" color="teal.100">
                   <Text as="span" fontWeight="bold">
                     Pin Comment:
                   </Text>{' '}
