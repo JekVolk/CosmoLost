@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 interface OAuthResponse {
   access?: string;
+  refresh?: string;
   token?: string;
+  callsign?: string;
   user?: {
     callsign: string;
     elo_rating: number;
@@ -26,7 +28,7 @@ export const OAuthCallback: React.FC = () => {
     async function completeAuth() {
       try {
         // Exchange session/cookie for JWT via secure endpoint (never from URL query params)
-        const data = await httpClient.post<OAuthResponse>('/api/game/auth/google/done/');
+        const data = await httpClient.get<OAuthResponse>('/api/game/auth/google/done/');
         if (!active) return;
 
         const token = data.access || data.token;
@@ -36,7 +38,11 @@ export const OAuthCallback: React.FC = () => {
 
         if (data.user) {
           setUser(data.user);
-        } else if (token) {
+        } else if (data.callsign) {
+          setUser({ callsign: data.callsign, elo_rating: 1000 });
+        }
+
+        if (token) {
           try {
             const me = await userRepository.getMe();
             if (active && me) {

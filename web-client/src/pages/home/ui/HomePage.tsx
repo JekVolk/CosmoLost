@@ -12,7 +12,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { CalendarCheck, Compass, Gift, Play, Shield, Sparkles, Trophy } from 'lucide-react';
+import { CalendarCheck, Compass, Gift, LogOut, Play, Shield, Sparkles, Trophy } from 'lucide-react';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
   const { slots, next_fill_at, fetchSlots, claimDaily, isLoading } = useContainerStore();
   const { startMatchmaking } = useMatchmaking();
 
@@ -148,14 +149,22 @@ export const HomePage: React.FC = () => {
                 Profile & Showcase
               </Button>
 
-              <Button
-                variant="outline"
-                colorPalette="cyan"
-                size="lg"
-                onClick={() => navigate('/portal')}
-              >
+              <Button variant="outline" colorPalette="cyan" size="lg" onClick={() => navigate('/')}>
                 <Compass size={18} />
                 3D Explorer
+              </Button>
+
+              <Button
+                variant="ghost"
+                colorPalette="red"
+                size="lg"
+                onClick={() => {
+                  logout();
+                  navigate('/');
+                }}
+              >
+                <LogOut size={18} />
+                Logout
               </Button>
             </HStack>
           </Flex>

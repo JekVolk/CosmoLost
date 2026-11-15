@@ -1,7 +1,11 @@
 import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react';
+import { ArrowLeft } from 'lucide-react';
 import type React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
+
   const handleGoogleLogin = () => {
     window.location.href = '/auth/login/google-oauth2/';
   };
@@ -22,14 +26,14 @@ export const LoginPage: React.FC = () => {
         borderRadius="xl"
         border="1px solid"
         borderColor="gray.800"
-        maxW="420px"
+        maxW="440px"
         w="100%"
         boxShadow="0 8px 32px rgba(0, 0, 0, 0.4)"
         textAlign="center"
       >
         <VStack gap={2}>
           <Heading size="xl" color="white" fontWeight="bold">
-            CosmoLost
+            CosmoLost Game Hub
           </Heading>
           <Text color="gray.400" fontSize="sm">
             Ігровий модуль дослідження сонячної системи та змагань на Арені
@@ -44,8 +48,12 @@ export const LoginPage: React.FC = () => {
           border="1px solid"
           borderColor="gray.700"
         >
+          <Text color="cyan.300" fontSize="xs" fontWeight="semibold" mb={1}>
+            Вхід потрібен лише для ігор:
+          </Text>
           <Text color="gray.300" fontSize="xs">
-            Увійдіть для збереження прогресу, ELO-рейтингу, відкриття артефактів та участі в дуелях.
+            Авторизація потрібна для збереження ELO-рейтингу, відкриття артефактів та дуелей.
+            Досліджувати 3D-карту та каталог можна вільно без авторизації.
           </Text>
         </Box>
 
@@ -84,6 +92,16 @@ export const LoginPage: React.FC = () => {
             />
           </svg>
           Увійти через Google
+        </Button>
+
+        <Button
+          w="100%"
+          variant="outline"
+          colorPalette="gray"
+          size="md"
+          onClick={() => navigate('/')}
+        >
+          <ArrowLeft size={16} /> Повернутися до дослідження (3D Portal)
         </Button>
       </VStack>
     </Box>

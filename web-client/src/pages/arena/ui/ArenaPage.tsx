@@ -17,15 +17,24 @@ export const ArenaPage: React.FC = () => {
   const opponent = useMatchStore((s) => s.opponent);
   const chestEarned = useMatchStore((s) => s.chest_earned);
   const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token);
 
   const { startMatchmaking, isLoading } = useMatchmaking();
 
   const handleStartMatch = () => {
+    if (!token) {
+      navigate('/login', { state: { from: { pathname: '/arena' } } });
+      return;
+    }
     startMatchmaking(0);
   };
 
   const handlePlayAgain = () => {
     resetMatch();
+    if (!token) {
+      navigate('/login', { state: { from: { pathname: '/arena' } } });
+      return;
+    }
     startMatchmaking(0);
   };
 
@@ -36,7 +45,7 @@ export const ArenaPage: React.FC = () => {
 
   const handleReturnHome = () => {
     resetMatch();
-    navigate('/');
+    navigate('/game');
   };
 
   const isWin = myScore >= opponentScore;
@@ -184,7 +193,7 @@ export const ArenaPage: React.FC = () => {
             size="sm"
             color="gray.400"
             alignSelf="flex-start"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/game')}
           >
             <ArrowLeft size={16} /> Command Center
           </Button>

@@ -301,3 +301,6 @@ class GoogleAuthCallbackView(APIView):
             'refresh': str(refresh),
             'callsign': profile.callsign,
         })
+
+    def post(self, request):
+        return self.get(request)
