@@ -1,0 +1,329 @@
+NASA Data *
+In order to be eligible for a Global Award, you must use NASA data or resources.
+
+For "Link Text," please input the name of the resource. Please list all NASA data or resources used in your project.
+
+Important: Make sure your link is formatted using the entire URL, for example: https://www.spaceappschallenge.org.
+
+Link Text
+Link Url
+NASA Treks Global Basemaps 
+https://trek.nasa.gov
+
+NASA Planetary Data System (PDS)
+https://pds.nasa.gov
+
+NASA Space Science Data Coordinated Archive 
+https://nssdc.gsfc.nasa.gov
+
+NASA Open APIs (Mars Rover Photos API)
+https://api.nasa.gov
+
+NASA Image and Video Library
+https://images.nasa.gov
+
+NASA Jet Propulsion Laboratory (JPL) Photojournal
+https://photojournal.jpl.nasa.gov
+
+NASA 3D Asset Repository
+https://github.com/nasa/NASA-3D-Resources
+
+NASA Lunar Reconnaissance Orbiter (LRO) Camera Archive
+https://www.lroc.asu.edu
+
+NASA Mars Exploration Program
+https://mars.nasa.gov
+
+Apollo Lunar Surface Journal
+https://www.nasa.gov/history/alsj/
+
+
+Add New Link
+Space Agency Partner & Other Data
+In addition to NASA data, please list all other data, resources, or tools used in your project from Space Agency Partners or other sources.
+
+Resources should include any code, text, and images (even if they are open source or freely available) that you used when creating your project. If you are using any copyrighted materials, make sure you have permission to use them. All links must be publicly accessible.
+
+For "Link Text", please input the name of the data or resource.
+
+Important: Make sure your link is formatted using the entire URL, for example: https://www.spaceappschallenge.org.
+
+Link Text
+Link Url
+Tauri Framework
+https://tauri.app
+
+FFmpeg Multimedia Framework
+https://ffmpeg.org
+
+Microsoft Edge Neural Text-to-Speech
+https://github.com/rany2/edge-tts
+
+Three.js 3D Web Graphics Library
+https://threejs.org
+
+FastMCP
+https://github.com/jlowin/fastmcp
+
+Chakra UI
+https://chakra-ui.com
+
+Django & Django REST Framework
+https://www.djangoproject.com
+
+PostgreSQL Object-Relational Database System
+https://www.postgresql.org
+
+Leaflet & OpenStreetMap
+https://leafletjs.com
+
+YouTube Data API v3 & Telegram Bot API 
+https://developers.google.com/youtube/v3
+
+
+================================================================================
+          DETAILED TECHNICAL ENDPOINTS & SCIENTIFIC ARCHIVES AUDIT
+================================================================================
+
+1. NASA OPEN APIs & PROGRAMMATIC ENDPOINTS
+--------------------------------------------------------------------------------
+NASA Open Data API Portal:
+https://api.nasa.gov/
+
+NASA API Key Registration & Documentation:
+https://api.nasa.gov/#signUp
+
+NASA Mars Rover Photos & Manifests API:
+https://api.nasa.gov/mars-photos/api/v1/manifests/curiosity
+https://api.nasa.gov/mars-photos/api/v1/manifests/perseverance
+https://api.nasa.gov/mars-photos/api/v1/manifests/opportunity
+https://api.nasa.gov/mars-photos/api/v1/manifests/spirit
+https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos
+https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/photos
+https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos
+https://api.nasa.gov/mars-photos/api/v1/rovers/spirit/photos
+
+NASA Image and Video Library REST API:
+https://images-api.nasa.gov/
+https://images-api.nasa.gov/search?q=apollo&media_type=image
+https://images-api.nasa.gov/search?q=mars%20rover&media_type=image
+
+NASA Astronomy Picture of the Day (APOD) API:
+https://api.nasa.gov/planetary/apod
+
+NASA TechPort API (Space Technology Projects):
+https://api.nasa.gov/techport/api/projects
+
+NASA JPL SSD/CNEOS Horizons System API (Ephemeris & Deep Space Trajectories):
+https://ssd.jpl.nasa.gov/api/horizons.api
+https://ssd.jpl.nasa.gov/horizons/
+
+
+2. NASA MMGIS TELEMETRY, TRAVERSE PATHS & WAYPOINTS (GEOJSON)
+--------------------------------------------------------------------------------
+NASA Mars 2020 (Perseverance Rover) Traverse Path GeoJSON:
+https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_traverse.json
+
+NASA Mars 2020 (Perseverance Rover) Waypoints GeoJSON:
+https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json
+
+NASA Mars Science Laboratory (Curiosity Rover) Waypoints GeoJSON:
+https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json
+
+NASA Mars Science Laboratory (Curiosity Rover) Traverse Path GeoJSON:
+https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_traverse.json
+
+NASA MMGIS Mars Web Portal:
+https://mars.nasa.gov/maps/explore-terrains/
+
+
+3. NASA OFFICIAL MISSION & HARDWARE MASTER CATALOGS (NSSDCA)
+--------------------------------------------------------------------------------
+NASA Space Science Data Coordinated Archive (NSSDCA) Master Catalog:
+https://nssdc.gsfc.nasa.gov/nmc/SpacecraftQuery.jsp
+
+NASA Chronology of Lunar Exploration (All US, USSR & International Missions):
+https://nssdc.gsfc.nasa.gov/planetary/lunar/lunartimeline.html
+https://nssdc.gsfc.nasa.gov/planetary/chronology_lunar.html
+
+NASA Chronology of Mars Exploration (All US, USSR, ESA, CNSA, ISRO Missions):
+https://nssdc.gsfc.nasa.gov/planetary/chronology_mars.html
+
+NASA Apollo Program Master Mission Catalog & ALSEP Experiments:
+https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo.html
+
+NASA Soviet Lunar Missions Archive (Luna 1-24, Lunokhod 1-2):
+https://nssdc.gsfc.nasa.gov/planetary/lunar/soviet_lunar.html
+
+NASA Soviet Mars Missions Archive (Mars 2, 3, 6, Phobos 2):
+https://nssdc.gsfc.nasa.gov/planetary/mars/soviet_mars.html
+
+NASA Catalogue of Manmade Material on the Moon:
+https://www.nasa.gov/wp-content/uploads/2023/07/archeology-catalog-manmade-material-on-the-moon.pdf
+
+
+4. NASA PLANETARY DATA SYSTEM (PDS) & SCIENTIFIC ARCHIVES
+--------------------------------------------------------------------------------
+NASA Planetary Data System (PDS) Main Portal:
+https://pds.nasa.gov/
+
+NASA PDS Geosciences Node (Washington University in St. Louis):
+https://pds-geosciences.wustl.edu/
+https://pds-geosciences.wustl.edu/missions/mer/
+https://pds-geosciences.wustl.edu/missions/msl/
+
+NASA PDS Analyst's Notebook (Spirit, Opportunity, Curiosity, Perseverance, InSight, Apollo):
+https://an.rsl.wustl.edu/
+https://an.rsl.wustl.edu/mer/
+https://an.rsl.wustl.edu/msl/
+https://an.rsl.wustl.edu/m20/
+
+NASA PDS Cartography and Imaging Sciences Node:
+https://pds-imaging.jpl.nasa.gov/
+
+NASA / USGS Gazetteer of Planetary Nomenclature (Official IAU Coordinates):
+https://planetarynames.wr.usgs.gov/
+https://planetarynames.wr.usgs.gov/Page/MOON/target
+https://planetarynames.wr.usgs.gov/Page/MARS/target
+
+
+5. NASA CARTOGRAPHY, GIS & SOLAR SYSTEM TREKS (WMTS TILE SERVICES)
+--------------------------------------------------------------------------------
+NASA Solar System Treks Main Portal:
+https://trek.nasa.gov/
+
+NASA Moon Trek Interactive 2D/3D Portal:
+https://trek.nasa.gov/moon/
+
+NASA Mars Trek Interactive 2D/3D Portal:
+https://trek.nasa.gov/mars/
+
+NASA Moon Trek Global Mosaic Tile Service (LRO WAC Mosaic 303m/pixel):
+https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303P_100m/1.0.0/
+https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02/1.0.0/default/default028mm/
+
+NASA Mars Trek Global Mosaic Tile Service (Viking MDIM21 Color Mosaic 232m/pixel):
+https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/
+
+NASA Mars Elevation DEM (Mars Global Surveyor MOLA 463m/pixel):
+https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_DEM_mosaic_global_463m/1.0.0/default/default028mm/
+
+NASA Moon Digital Elevation Model (LRO LOLA DEM):
+https://trek.nasa.gov/tiles/Moon/EQ/LRO_LOLA_DEM_SPolar875_10m/1.0.0/
+
+
+6. NASA 3D RESOURCES, ROVER & LANDER HARDWARE MODELS
+--------------------------------------------------------------------------------
+NASA 3D Resources Portal (Official 3D Assets):
+https://science.nasa.gov/3d-resources/
+https://nasa3d.arc.nasa.gov/
+
+NASA Official 3D Resources GitHub Repository:
+https://github.com/nasa/NASA-3D-Resources
+https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/
+
+Key Hardware 3D Models in NASA Repository:
+- Apollo Lunar Module (Eagle / Descent Stage):
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Apollo%20Lunar%20Module
+- Apollo Lunar Roving Vehicle (LRV):
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Apollo%20Lunar%20Rover
+- Mars Exploration Rover (Spirit & Opportunity):
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Mars%20Exploration%20Rover
+- Mars Science Laboratory (Curiosity Rover):
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Curiosity
+- Mars 2020 (Perseverance Rover):
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Perseverance
+- Mars Helicopter (Ingenuity):
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Ingenuity
+- Viking Lander:
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Viking%20Lander
+- InSight Mars Lander:
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/InSight
+- Voyager Spacecraft:
+  https://github.com/nasa/NASA-3D-Resources/tree/master/3D%20Models/Voyager
+
+
+7. NASA HIGH-RESOLUTION CAMERA ARCHIVES (SURFACE HARDWARE SPOTTED FROM ORBIT)
+--------------------------------------------------------------------------------
+NASA / ASU Lunar Reconnaissance Orbiter Camera (LROC):
+https://www.lroc.asu.edu/
+https://lroc.sese.asu.edu/
+
+LROC Featured Sites (High-Res Apollo, Surveyor, Luna, Lunokhod Hardware & Tracks):
+https://www.lroc.asu.edu/featured_sites
+https://www.lroc.asu.edu/featured_sites#ApolloSites
+https://www.lroc.asu.edu/featured_sites#SurveyorSites
+https://www.lroc.asu.edu/featured_sites#LunaSites
+
+NASA / University of Arizona Mars Reconnaissance Orbiter HiRISE:
+https://hirise.lpl.arizona.edu/
+
+HiRISE Hardware on Mars Gallery (Opportunity, Spirit, InSight, Curiosity, Perseverance, Ingenuity, Viking, Beagle 2):
+https://hirise.lpl.arizona.edu/releases/spacecraft/
+https://hirise.lpl.arizona.edu/media/scenes/mer.php
+https://hirise.lpl.arizona.edu/media/scenes/msl.php
+https://hirise.lpl.arizona.edu/media/scenes/m20.php
+
+
+8. NASA IMAGERY, PHOTOJOURNAL & MULTIMEDIA REPOSITORIES
+--------------------------------------------------------------------------------
+NASA JPL Photojournal (Planetary Imagery Repository):
+https://photojournal.jpl.nasa.gov/
+https://photojournal.jpl.nasa.gov/target/Moon
+https://photojournal.jpl.nasa.gov/target/Mars
+
+NASA Image and Video Library:
+https://images.nasa.gov/
+
+NASA Mars Exploration Program Multimedia Gallery:
+https://mars.nasa.gov/multimedia/images/
+
+NASA History Division — Apollo Lunar Surface Journal (ALSJ):
+https://www.nasa.gov/history/alsj/
+https://history.nasa.gov/alsj/
+
+
+9. NASA OFFICIAL EXPLORATION PROGRAM PORTALS
+--------------------------------------------------------------------------------
+NASA Mars Exploration Program:
+https://mars.nasa.gov/
+
+NASA Mars 2020 (Perseverance Rover & Ingenuity Helicopter):
+https://mars.nasa.gov/mars2020/
+
+NASA Mars Science Laboratory (Curiosity Rover):
+https://mars.nasa.gov/msl/
+
+NASA Mars Exploration Rovers (Spirit & Opportunity):
+https://mars.nasa.gov/mer/
+
+NASA InSight Mars Lander:
+https://mars.nasa.gov/insight/
+
+NASA Moon Exploration Portal:
+https://science.nasa.gov/moon/
+
+NASA Mars Exploration Portal:
+https://science.nasa.gov/mars/
+
+NASA Lunar Reconnaissance Orbiter (LRO) Mission Page:
+https://science.nasa.gov/mission/lunar-reconnaissance-orbiter/
+
+NASA Artemis Program:
+https://www.nasa.gov/artemis-program/
+
+
+10. NASA OPEN DATA, OPEN SOURCE & DEVELOPER PORTALS
+--------------------------------------------------------------------------------
+NASA Open Data Portal:
+https://data.nasa.gov/
+
+NASA Open Source Software Catalog:
+https://code.nasa.gov/
+
+NASA GitHub Organization:
+https://github.com/nasa
+
+NASA Jet Propulsion Laboratory (JPL) GitHub:
+https://github.com/nasa-jpl
+================================================================================
