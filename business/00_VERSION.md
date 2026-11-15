@@ -9,8 +9,8 @@
 
 | Параметр | Значення |
 | :--- | :--- |
-| **Поточна версія** | **`v0.5.8`** |
-| **Статус версії** | `APPROVED (Серверна БД 8 таблиць, Community Publications, Розмежування Сервер vs Local-First Десктоп)` |
+| **Поточна версія** | **`v0.6.1`** |
+| **Статус версії** | `APPROVED (Повний інженерний пакет NASA Data Loader / Ingest Worker: Clean Architecture, багатотокенний пул NASA з ротацією на 429, дельта-оновлення SHA-256, 8 таблиць)` |
 | **Дата випуску** | 2026-11-14 |
 | **Власник специфікації** | Product Lead & System Architect |
 | **Основна мова вебпорталу**| **English (en-US)** (з локалізацією українською uk-UA) |
@@ -28,7 +28,51 @@
 
 ## Журнал змін (Changelog)
 
-### [v0.5.8] — 2026-11-14 (Серверна БД 8 таблиць, Community Publications, Розмежування Сервер vs Local-First Десктоп)
+### [v0.6.1] — 2026-11-14 (Покроковий інженерний TASK для NASA Data Loader & Ingest Worker: Clean Architecture, багатотокенний пул NASA, ротація на 429, дельта-оновлення SHA-256)
+* **Додано**:
+  * **Вичерпне технічне завдання для Data / Backend розробника модуля `loader`**:
+    * [`spec/06_architecture/TASK_NASA_INGEST_LOADER_GUIDE.md`](spec/06_architecture/TASK_NASA_INGEST_LOADER_GUIDE.md) — детальний інженерний гайд із готовим кодом та Clean Layered Architecture:
+      * **Багатотокенний пул NASA (`TokenPoolManager`)**: підтримка кількох ключів у `NASA_API_KEYS`, авторотація токенів при отриманні HTTP 429 / 403, відстеження заголовків квоти `X-RateLimit-Remaining` та експоненційний бекоф.
+      * **Розділення на шари (Clean Layered Architecture)**: `NASAClient` ➔ чисто доменні `DTO` (dataclass без ORM) ➔ `SyncStateStore` (дельта-трекінг хешів SHA-256 у Redis / JSON) ➔ `DjangoNASAIngestRepository` ➔ атомарне збереження у 8 моделей `core/models.py`.
+      * **Трекінг змін та дельта-інгест**: порівняння контрольних сум, фіксація створених, оновлених та пропущених сутностей без навантаження на БД.
+      * **Django Management команда**: `python manage.py run_ingest` з прапорцями `--daemon`, `--interval 3600`, `--target moon|mars`, `--force`, `--dry-run` та форматованим ASCII-звітом.
+      * **Сумісність із Docker воркером та Celery**: повна інтеграція з контейнером `cosmolost-ingest-worker` та альтернативним періодичним таском Celery (`tasks.py`).
+      * **Модульні тести**: Pytest-сьюти для перевірки ротації токенів, ідемпотентності репозиторію та валідації DTO.
+* **Архітектурні особливості**:
+  * **Суворе дотримання 8 серверних таблиць**: жодної нової моделі в Django ORM! Усі артефакти, місії, фото та телеметрія зберігаються виключно в наявних таблицях `core/models.py`.
+  * **Захист від блокувань на хакатоні**: підтримка аварійного режиму `NASA_ENABLE_MOCK_FALLBACK=True` для стабільної роботи без падінь навіть при повному блекауті API NASA.
+
+### [v0.6.0] — 2026-11-14 (Автономний інфраструктурний TASK для DevOps / Сисадміна: 8 контейнерів, Ingestion NASA, бекапи, гнучкі домени)
+* **Додано**:
+  * **Вичерпне технічне завдання для DevOps / Системного адміністратора**:
+    * [`spec/06_architecture/TASK_DEVOPS_SYSADMIN_GUIDE.md`](spec/06_architecture/TASK_DEVOPS_SYSADMIN_GUIDE.md) — повністю автономний покроковий інженерний гайд («без води для новачка»):
+      * Топологія 8 контейнерів (`postgres:16`, `redis:7`, `backend` Django 6.1 Gunicorn, `mcp-server` FastMCP SSE, `ingest-worker` щогодинний NASA крон, `web-client` SPA, `gateway` Nginx, `db-backup` pg_dump).
+      * Вбудована повна специфікація `.env` із плейсхолдерами безпеки (без зашитих доменів).
+      * Вбудований повний маніфест `docker-compose.yml`.
+      * Вбудовані Dockerfiles (backend, mcp, web), Nginx reverse proxy конфіг (із підтримкою SSE `proxy_buffering off`) та скрипти `entrypoint.sh` і `backup.sh`.
+      * Покроковий план: UFW налаштування (22, 80, 443), міграції, створення superuser, перевірка 8 обов'язкових таблиць БД, curl smoke-тести та аварійне відновлення БД (Disaster Recovery).
+* **Архітектурні особливості**:
+  * **Повна свобода щодо доменів та SSL**: домени не хардкодяться, сисадмін сам прописує свої домени у DNS та підключає сертифікати через Certbot чи Cloudflare.
+  * **Суворе дотримання 8 таблиць БД**: жодних сторонніх сервісів чи нових таблиць Django.
+
+### [v0.5.9] — 2026-11-14 (2 окремі MD-файли OpenAPI: Portal API та Editor/FastMCP API, строго 8 таблиць PostgreSQL, без нових моделей Django)
+* **Додано**:
+  * **Покрокові інженерні та дизайн-гайди для команди («без води для новачка»)**:
+    * [`design/00_DESIGNER_BRIEF_HANDOFF.md`](../design/00_DESIGNER_BRIEF_HANDOFF.md) — повноцінний бриф передачі завдань дизайнерці (Віолетта) з покроковим планом та готовими матеріалами.
+    * [`design/01_TASK_DESIGN_PORTAL_WEB.md`](../design/01_TASK_DESIGN_PORTAL_WEB.md) — ТЗ дизайну Вебпорталу (Three.js сфера, плаваючі фільтри, Drawer з 3D .glb, каталог, відеогалерея).
+    * [`design/02_TASK_DESIGN_EDITOR_DESKTOP.md`](../design/02_TASK_DESIGN_EDITOR_DESKTOP.md) — ТЗ дизайну Десктопного Редактора (спліт-редактор, Safe Zones 9:16, Pillow-box, PNGTuber аватар).
+    * [`design/03_PAGE_LAYOUTS_AND_MISSION_SPEC.md`](../design/03_PAGE_LAYOUTS_AND_MISSION_SPEC.md) — анатомія та wireframe сторінки місії (`/missions/:id`) за 6 блоками з полями з бази даних.
+    * [`design/04_DESIGN_SYSTEM_TOKENS_AND_ICONS.md`](../design/04_DESIGN_SYSTEM_TOKENS_AND_ICONS.md) — готова дизайн-система: 4/8px сітка, точні неонові блюри (Cyan/Amber), радіуси Chakra UI v3, 10 іконок NASA Lucide.
+    * [`spec/06_architecture/TASK_API_PORTAL_AND_EDITOR_GUIDE.md`](spec/06_architecture/TASK_API_PORTAL_AND_EDITOR_GUIDE.md) — інструкція для розробника Portal API та Editor API на Django REST Framework із готовими серіалізаторами, контролерами та повним набором тестів Pytest.
+    * [`spec/06_architecture/TASK_MCP_SERVER_AND_TOOLS_GUIDE.md`](spec/06_architecture/TASK_MCP_SERVER_AND_TOOLS_GUIDE.md) — окрема постановка задачі для розробника ШІ-інтеграцій: серверний FastMCP (8 тулзів до Django ORM без RAG), конфігурація для Claude/Cursor та тести Pytest.
+  * **Розділення на 2 окремі MD-файли зі специфікаціями OpenAPI 3.1**:
+    1. [`spec/06_architecture/OPENAPI_PORTAL_API.md`](spec/06_architecture/OPENAPI_PORTAL_API.md) — вичерпний контракт публічного Web Portal API (Three.js сфера, координати, кластеризація, фільтри, картка об'єкта, наукові відкриття, публікації спільноти).
+    2. [`spec/06_architecture/OPENAPI_EDITOR_API.md`](spec/06_architecture/OPENAPI_EDITOR_API.md) — контракт Редактора «Фабрики контенту», 8 серверних FastMCP інструментів для ШІ, завантажувача NASA та нативних Desktop MCP/Tauri IPC.
+  * **Рішення щодо БД Django (Anti-Bloat / No New Models)**:
+    * Відхилено додавання будь-яких нових моделей до Django ORM.
+    * Серверна база даних PostgreSQL строго зберігає **8 затверджених таблиць**.
+    * Усі чернетки монтажу, слайди та локальні проекти зберігаються **виключно Local-First на машині автора** (`%APPDATA%/CosmoLost/`), а бекенд повертає верифіковані дані NASA без створення нових таблиць.
+  * **Майстер-протокол та матриця трасування**: збережено файл [`spec/06_architecture/API_DATABASE_PROTOCOL_SPECIFICATION.md`](spec/06_architecture/API_DATABASE_PROTOCOL_SPECIFICATION.md) та єдиний [`spec/06_architecture/openapi.yaml`](spec/06_architecture/openapi.yaml).
 * **Додано**:
   * **Чітке розмежування сховищ (Серверна БД vs Local-First Десктоп)**:
     * Серверна база даних PostgreSQL містить строго **8 таблиць**: 7 базових таблиць космічних знань (`CELESTIAL_BODIES`, `MISSIONS`, `ARTIFACTS`, `TRAVERSE_WAYPOINTS`, `SCIENTIFIC_DISCOVERIES`, `ARTIFACT_MEDIA`) та 1 таблицю для роликів спільноти (`COMMUNITY_PUBLICATIONS`).

@@ -66,7 +66,7 @@ export const SystemInfoCardView: React.FC<SystemInfoCardViewProps> = ({
           <Heading size="sm" color="fg">
             Tauri Native Metrics
           </Heading>
-          <Badge colorPalette="teal" variant="subtle" size="sm">
+          <Badge colorPalette="teal" variant="subtle" size="sm" px="2.5" py="0.5" borderRadius="md">
             {metrics?.status ?? 'online'}
           </Badge>
         </HStack>

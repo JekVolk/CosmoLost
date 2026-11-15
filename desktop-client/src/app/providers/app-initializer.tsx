@@ -1,5 +1,17 @@
+import { useSchedulerStore } from '@/entities/scheduler';
 import { useSettingsStore } from '@/entities/settings';
-import { tauriCommands, tauriWindowApi } from '@/shared/api';
+import {
+  geminiAi,
+  imageGeneratorClient,
+  multiLlmClient,
+  musicGeneratorClient,
+  tauriCommands,
+  tauriWindowApi,
+  telegramConnector,
+  videoGeneratorClient,
+  youtubeConnector,
+} from '@/shared/api';
+import { cliInterceptor } from '@/shared/lib/cli-bridge';
 import { useDiagnosticsStore } from '@/shared/lib/diagnostics/diagnostics-store';
 import { desktopMcpBridge } from '@/shared/lib/mcp';
 import { Box, Flex, Heading, Text, VStack } from '@/shared/ui';
@@ -12,10 +24,61 @@ export const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // 1. Eagerly register MCP Desktop bridge
+    // 1. Eagerly register MCP Desktop bridge and live state providers
+    desktopMcpBridge.registerStateProviders({
+      getSettings: () => useSettingsStore.getState().settings,
+      getTasks: () => useSchedulerStore.getState().tasks,
+    });
     if (typeof window !== 'undefined' && !window.__COSMOLOST_MCP__) {
       window.__COSMOLOST_MCP__ = desktopMcpBridge;
     }
+
+    // 2. Synchronize external API keys and connector credentials to shared services
+    const syncCredentials = () => {
+      const s = useSettingsStore.getState().settings;
+      if (s.geminiApiKey) {
+        geminiAi.setApiKey(s.geminiApiKey);
+      }
+      multiLlmClient.setCredentials({
+        geminiApiKey: s.geminiApiKey,
+        claudeApiKey: s.claudeApiKey,
+        openaiApiKey: s.openaiApiKey,
+        customLlmEndpoint: s.customLlmEndpoint,
+        defaultClaudeModel: s.claudeModel,
+        defaultOpenAiModel: s.openaiModel,
+      });
+      imageGeneratorClient.setCredentials({
+        openaiApiKey: s.openaiApiKey,
+        geminiApiKey: s.geminiApiKey,
+        defaultProvider: s.imageProvider,
+      });
+      videoGeneratorClient.setCredentials({
+        runwayApiKey: s.runwayApiKey,
+        defaultProvider: s.videoProvider,
+      });
+      musicGeneratorClient.setCredentials({
+        sunoApiKey: s.sunoApiKey,
+        defaultProvider: s.musicProvider,
+      });
+      cliInterceptor.setInterceptionActive(s.cliInterceptionEnabled);
+      cliInterceptor.setPort(s.cliBridgePort);
+
+      if (s.telegramBotToken && s.telegramChatId) {
+        telegramConnector.connect({
+          botToken: s.telegramBotToken,
+          chatId: s.telegramChatId,
+        });
+      }
+      if (s.youtubeConnected || s.youtubeAuthCode) {
+        youtubeConnector.connect({
+          token: 'oauth_pkce_authenticated',
+          authCode: s.youtubeAuthCode,
+          clientId: s.youtubeClientId,
+        });
+      }
+    };
+    syncCredentials();
+    const unsubSettings = useSettingsStore.subscribe(syncCredentials);
 
     // 2. Global unhandled promise rejection interceptor
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
@@ -70,6 +133,7 @@ export const AppInitializer: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsReady(true);
 
     return () => {
+      unsubSettings();
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
       window.removeEventListener('error', handleGlobalError);
       window.removeEventListener('online', handleOnline);

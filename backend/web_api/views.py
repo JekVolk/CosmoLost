@@ -375,3 +375,20 @@ def community_publications_view(request):
                 status=status.HTTP_201_CREATED,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def portal_stats(request):
+    """
+    Catalog statistics endpoint returning counts of celestial bodies, missions,
+    artifacts, waypoints, discoveries, and media items.
+    """
+    return Response({
+        'celestial_bodies': CelestialBody.objects.count(),
+        'missions': Mission.objects.count(),
+        'artifacts': Artifact.objects.count(),
+        'waypoints': TraverseWaypoint.objects.count(),
+        'discoveries': ScientificDiscovery.objects.count(),
+        'media': ArtifactMedia.objects.count(),
+    })

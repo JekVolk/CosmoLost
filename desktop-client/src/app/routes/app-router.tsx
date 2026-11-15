@@ -5,6 +5,9 @@ import { Navigate, createHashRouter } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
 
 const HomePage = React.lazy(() => import('@/pages/home').then((m) => ({ default: m.HomePage })));
+const ContentFactoryPage = React.lazy(() =>
+  import('@/pages/content-factory').then((m) => ({ default: m.ContentFactoryPage })),
+);
 const FsdArchitecturePage = React.lazy(() =>
   import('@/pages/fsd').then((m) => ({ default: m.FsdArchitecturePage })),
 );
@@ -35,11 +38,15 @@ export const appRouter = createHashRouter([
     children: [
       {
         index: true,
-        element: <Navigate to={ROUTES.OVERVIEW} replace />,
+        element: <Navigate to={ROUTES.CONTENT_FACTORY} replace />,
       },
       {
         path: ROUTES.OVERVIEW,
         element: withSuspense(HomePage),
+      },
+      {
+        path: ROUTES.CONTENT_FACTORY,
+        element: withSuspense(ContentFactoryPage),
       },
       {
         path: ROUTES.FSD,

@@ -604,3 +604,39 @@ def test_url_compatibility_routes(api_client, sample_data):
     assert res_web.status_code == status.HTTP_200_OK
 
     assert res_v1.data == res_web.data
+
+
+# =============================================================================
+# STATS AND ROOT API TESTS
+# =============================================================================
+
+@pytest.mark.django_db
+def test_portal_stats_endpoint(api_client, sample_data):
+    """Verify /api/v1/portal/stats/ and /api/web/stats/ return catalog statistics."""
+    res = api_client.get('/api/v1/portal/stats/')
+    assert res.status_code == status.HTTP_200_OK
+    data = res.json()
+    assert 'celestial_bodies' in data
+    assert 'missions' in data
+    assert 'artifacts' in data
+    assert 'waypoints' in data
+    assert 'discoveries' in data
+    assert 'media' in data
+    assert data['celestial_bodies'] == 2
+    assert data['missions'] == 2
+
+    res_compat = api_client.get('/api/web/stats/')
+    assert res_compat.status_code == status.HTTP_200_OK
+    assert res_compat.json() == data
+
+
+@pytest.mark.django_db
+def test_api_root_endpoint(api_client):
+    """Verify /api/ returns JSON index of available endpoints with status 200."""
+    res = api_client.get('/api/')
+    assert res.status_code == status.HTTP_200_OK
+    data = res.json()
+    assert data['name'] == 'CosmoLost Backend API'
+    assert data['status'] == 'healthy'
+    assert 'portal' in data['endpoints']
+    assert 'editor' in data['endpoints']

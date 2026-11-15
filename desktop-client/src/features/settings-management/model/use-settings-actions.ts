@@ -1,6 +1,7 @@
 import { useSchedulerStore } from '@/entities/scheduler';
 import {
   type AccentColor,
+  type ContentGenerationLanguage,
   type Language,
   type ThemeMode,
   settingsRepository,
@@ -23,6 +24,7 @@ export function useSettingsActions() {
     setAccentColor,
     setThemeMode,
     setLanguage,
+    setContentGenerationLanguage,
     setAutoRefresh,
     setRefreshInterval,
     toggleCompactMode,
@@ -220,6 +222,8 @@ export function useSettingsActions() {
     setAccentColor: (color: AccentColor) => setAccentColor(color),
     setThemeMode: (mode: ThemeMode) => setThemeMode(mode),
     setLanguage: (lang: Language) => setLanguage(lang),
+    setContentGenerationLanguage: (lang: ContentGenerationLanguage) =>
+      setContentGenerationLanguage(lang),
     toggleAutoRefresh: () => setAutoRefresh(!settings.autoRefreshMetrics),
     setRefreshInterval: (sec: number) => setRefreshInterval(sec),
     toggleCompactMode,

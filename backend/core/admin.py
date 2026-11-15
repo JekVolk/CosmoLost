@@ -1,6 +1,10 @@
 from django.contrib import admin, messages
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
+from unfold.decorators import action as unfold_action
+from unfold.enums import ActionVariant
 
 from .models import (
     Artifact,
@@ -38,6 +42,23 @@ class CelestialBodyAdmin(ModelAdmin):
     list_filter = ('coordinate_system_type',)
     warn_unsaved_form = True
     actions = ['sync_selected_bodies']
+    actions_list = ['trigger_full_ingest_action']
+
+    @unfold_action(description=_('Sync NASA Catalog (Full Ingest)'), icon='sync', variant=ActionVariant.PRIMARY)
+    def trigger_full_ingest_action(self, request):
+        from loader.tasks import sync_nasa_catalog_task
+        task_result = sync_nasa_catalog_task.enqueue(force=True)
+        ret = task_result.return_value or {}
+        self.message_user(
+            request,
+            _(
+                f"Full NASA Ingest completed: {ret.get('celestial_bodies_new', 0)} bodies, "
+                f"{ret.get('artifacts_new', 0)} new artifacts, {ret.get('artifacts_updated', 0)} updated. "
+                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}."
+            ),
+            level=messages.SUCCESS,
+        )
+        return redirect(reverse('admin:core_celestialbody_changelist'))
 
     @admin.action(description=_('Sync hardware for selected celestial bodies from NASA'))
     def sync_selected_bodies(self, request, queryset):
@@ -63,6 +84,23 @@ class MissionAdmin(ModelAdmin):
     search_fields = ('id', 'name', 'agency', 'nssdca_id')
     list_filter = ('agency',)
     warn_unsaved_form = True
+    actions_list = ['trigger_full_ingest_action']
+
+    @unfold_action(description=_('Sync NASA Catalog (Full Ingest)'), icon='sync', variant=ActionVariant.PRIMARY)
+    def trigger_full_ingest_action(self, request):
+        from loader.tasks import sync_nasa_catalog_task
+        task_result = sync_nasa_catalog_task.enqueue(force=True)
+        ret = task_result.return_value or {}
+        self.message_user(
+            request,
+            _(
+                f"Full NASA Ingest completed: {ret.get('celestial_bodies_new', 0)} bodies, "
+                f"{ret.get('artifacts_new', 0)} new artifacts, {ret.get('artifacts_updated', 0)} updated. "
+                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}."
+            ),
+            level=messages.SUCCESS,
+        )
+        return redirect(reverse('admin:core_mission_changelist'))
 
 
 @admin.register(Artifact)
@@ -91,6 +129,22 @@ class ArtifactAdmin(ModelAdmin):
     warn_unsaved_form = True
     inlines = [ArtifactMediaInline, TraverseWaypointInline, ScientificDiscoveryInline]
     actions = ['sync_selected_artifacts', 'force_full_sync']
+    actions_list = ['trigger_full_ingest_action']
+
+    @unfold_action(description=_('Sync NASA Catalog (Full Ingest)'), icon='sync', variant=ActionVariant.PRIMARY)
+    def trigger_full_ingest_action(self, request):
+        from loader.tasks import sync_nasa_catalog_task
+        task_result = sync_nasa_catalog_task.enqueue(force=True)
+        ret = task_result.return_value or {}
+        self.message_user(
+            request,
+            _(
+                f"Full NASA Ingest completed: {ret.get('artifacts_new', 0)} new, {ret.get('artifacts_updated', 0)} updated. "
+                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}."
+            ),
+            level=messages.SUCCESS,
+        )
+        return redirect(reverse('admin:core_artifact_changelist'))
 
     @admin.action(description=_('Sync selected artifacts with NASA APIs'))
     def sync_selected_artifacts(self, request, queryset):
