@@ -736,7 +736,7 @@
                       "id": "S7V3Q",
                       "name": "Pill Label",
                       "fill": "#00F0FF",
-                      "content": "КОСМІЧНІ ДАНІ У ТВОЄМУ ЧАТ-БОТІ",
+                      "content": "SPACE DATA IN YOUR AI CHATBOT",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "700",
@@ -751,7 +751,7 @@
                   "fill": "#EAF2FF",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Навчи свій ШІ досліджувати космос",
+                  "content": "Teach Your AI to Explore Space",
                   "lineHeight": 1.15,
                   "fontFamily": "Inter",
                   "fontSize": 40,
@@ -764,7 +764,7 @@
                   "fill": "#8FA2B8",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Підключи CosmoLost і досліджуй загублені космічні апарати, місії та відкриття за допомогою свого AI-помічника.",
+                  "content": "Connect CosmoLost to explore lost spacecraft, historic missions, and discoveries with your AI assistant.",
                   "lineHeight": 1.5,
                   "fontFamily": "Inter",
                   "fontSize": 16
@@ -805,7 +805,7 @@
                           "id": "ACZCm",
                           "name": "Btn Text",
                           "fill": "#080D17",
-                          "content": "Підключити свій ШІ",
+                          "content": "Connect Your AI",
                           "fontFamily": "Inter",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -817,7 +817,7 @@
                       "id": "ouBA8",
                       "name": "Sub CTA Hint",
                       "fill": "#5A6E85",
-                      "content": "Безкоштовно · Без встановлення програм",
+                      "content": "Open standard · Client setup guide",
                       "fontFamily": "Inter",
                       "fontSize": 13,
                       "fontWeight": "500"
@@ -1007,7 +1007,7 @@
                       "id": "Q2xYe3",
                       "name": "Prompt Bubble Text",
                       "fill": "#EAF2FF",
-                      "content": "«Де зараз марсохід Perseverance?»",
+                      "content": "“Where is the Perseverance rover right now?”",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
@@ -1063,7 +1063,7 @@
                   "id": "dEoQv",
                   "name": "Select Title",
                   "fill": "#EAF2FF",
-                  "content": "Яким ШІ ти користуєшся?",
+                  "content": "Which AI do you use?",
                   "fontFamily": "Inter",
                   "fontSize": 24,
                   "fontWeight": "800"
@@ -1073,7 +1073,7 @@
                   "id": "Jusq4",
                   "name": "Select Subtitle",
                   "fill": "#8FA2B8",
-                  "content": "Обери свій сервіс, щоб отримати коротку та зрозумілу інструкцію підключення:",
+                  "content": "Select your preferred service for a step-by-step setup guide:",
                   "fontFamily": "Inter",
                   "fontSize": 14
                 }
@@ -1149,7 +1149,7 @@
                               "id": "TLfqq",
                               "name": "Reco Text",
                               "fill": "#00F0FF",
-                              "content": "Рекомендовано",
+                              "content": "Recommended",
                               "fontFamily": "Inter",
                               "fontSize": 10,
                               "fontWeight": "700"
@@ -1175,7 +1175,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Найпростіший спосіб: працює прямо в браузері без коду та програм.",
+                      "content": "Reference setup guide for connecting compatible browser-based AI interfaces.",
                       "lineHeight": 1.4,
                       "fontFamily": "Inter",
                       "fontSize": 12
@@ -1210,7 +1210,7 @@
                           "id": "gVqqs",
                           "name": "Pill Text",
                           "fill": "#00F0FF",
-                          "content": "Обрано для перегляду",
+                          "content": "Selected guide",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -1307,7 +1307,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Підключення через конфігураційний файл у застосунку Claude Desktop.",
+                      "content": "Connect via configuration file in the Claude Desktop app.",
                       "lineHeight": 1.4,
                       "fontFamily": "Inter",
                       "fontSize": 12
@@ -1329,7 +1329,7 @@
                           "id": "rTMMs",
                           "name": "Hint Text",
                           "fill": "#8FA2B8",
-                          "content": "Натисни для інструкції",
+                          "content": "Click for guide",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "500"
@@ -1400,7 +1400,7 @@
                               "id": "skzLL",
                               "name": "Badge Text",
                               "fill": "#8FA2B8",
-                              "content": "Для розробників",
+                              "content": "For Developers",
                               "fontFamily": "Inter",
                               "fontSize": 10,
                               "fontWeight": "600"
@@ -1414,7 +1414,7 @@
                       "id": "rt8MT",
                       "name": "Other Title",
                       "fill": "#EAF2FF",
-                      "content": "Cursor & інші клієнти",
+                      "content": "Cursor & Other Clients",
                       "fontFamily": "Inter",
                       "fontSize": 16,
                       "fontWeight": "700"
@@ -1426,7 +1426,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Cursor, LibreChat, Open WebUI та будь-які клієнти з підтримкою MCP SSE.",
+                      "content": "Cursor, LibreChat, Open WebUI, and any client supporting MCP SSE.",
                       "lineHeight": 1.4,
                       "fontFamily": "Inter",
                       "fontSize": 12
@@ -1448,7 +1448,7 @@
                           "id": "r2Ha5Q",
                           "name": "Hint Text",
                           "fill": "#8FA2B8",
-                          "content": "Натисни для інструкції",
+                          "content": "Click for guide",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "500"
@@ -1506,7 +1506,7 @@
                       "id": "eAJSj",
                       "name": "Instruction Title",
                       "fill": "#EAF2FF",
-                      "content": "Інструкція підключення до Google Gemini",
+                      "content": "Google Gemini Connection Guide",
                       "fontFamily": "Inter",
                       "fontSize": 18,
                       "fontWeight": "700"
@@ -1543,7 +1543,7 @@
                       "id": "yxllN",
                       "name": "Tag Text",
                       "fill": "#00F0FF",
-                      "content": "Підключення за 1 хвилину",
+                      "content": "Setup guide",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -1597,7 +1597,7 @@
                           "id": "o10Wii",
                           "name": "URL Label",
                           "fill": "#8FA2B8",
-                          "content": "Адреса сервера CosmoLost:",
+                          "content": "CosmoLost Server URL:",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "500"
@@ -1645,7 +1645,7 @@
                       "id": "a04o2J",
                       "name": "Copy Label",
                       "fill": "#080D17",
-                      "content": "Скопіювати посилання",
+                      "content": "Copy URL",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "700"
@@ -1710,7 +1710,7 @@
                           "id": "ER4ac",
                           "name": "Step 1 Text",
                           "fill": "#EAF2FF",
-                          "content": "Скопіюй адресу вище",
+                          "content": "Copy the Server URL",
                           "fontFamily": "Inter",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -1724,7 +1724,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Натисни кнопку «Скопіювати посилання» у рядку вище. Посилання на базу CosmoLost збережеться в буфер обміну.",
+                      "content": "Click the “Copy URL” button above. The CosmoLost server endpoint will be copied to your clipboard.",
                       "lineHeight": 1.4,
                       "fontFamily": "Inter",
                       "fontSize": 12
@@ -1781,7 +1781,7 @@
                           "id": "oJcgA",
                           "name": "Step 2 Text",
                           "fill": "#EAF2FF",
-                          "content": "Відкрий Gemini Connectors",
+                          "content": "Open Gemini Connectors",
                           "fontFamily": "Inter",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -1795,7 +1795,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Перейди на офіційну сторінку налаштувань конекторів Google Gemini у новій вкладці браузера:",
+                      "content": "Go to the official Google Gemini Connectors settings page in a new browser tab:",
                       "lineHeight": 1.4,
                       "fontFamily": "Inter",
                       "fontSize": 12
@@ -1831,7 +1831,7 @@
                           "id": "GjrKW",
                           "name": "Open Label",
                           "fill": "#EAF2FF",
-                          "content": "Відкрити Gemini Connectors",
+                          "content": "Open Gemini Connectors",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -1890,7 +1890,7 @@
                           "id": "Q2o22",
                           "name": "Step 3 Text",
                           "fill": "#EAF2FF",
-                          "content": "Натисни «+ Інша» та встав",
+                          "content": "Click “+ Add” and paste",
                           "fontFamily": "Inter",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -1904,7 +1904,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "У вікні налаштувань натисни «+ Інша», встав скопійовану адресу та натисни «Далі». Готово!",
+                      "content": "In settings, select “+ Add custom connector”, paste the server URL, and complete the prompt.",
                       "lineHeight": 1.4,
                       "fontFamily": "Inter",
                       "fontSize": 12
@@ -1937,7 +1937,7 @@
                           "id": "CsiXs",
                           "name": "Success Text",
                           "fill": "#22C55E",
-                          "content": "Космос підключено до чату",
+                          "content": "Connection configured",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -1977,7 +1977,7 @@
                   "id": "qJFmU",
                   "name": "Notice Text",
                   "fill": "#8FA2B8",
-                  "content": "Примітка: для Google Gemini підключення працює прямо у браузері без коду. Для Claude та Cursor доступна швидка конфігурація.",
+                  "content": "Note: Setup requirements and MCP availability depend on your client environment. Configuration guides are also available for Claude and Cursor.",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "500"
@@ -2016,7 +2016,7 @@
                       "id": "F9bQS6",
                       "name": "Section Title",
                       "fill": "#EAF2FF",
-                      "content": "Перевір, на що здатен твій ШІ",
+                      "content": "See What Your AI Can Do",
                       "fontFamily": "Inter",
                       "fontSize": 24,
                       "fontWeight": "800"
@@ -2026,7 +2026,7 @@
                       "id": "o9aFR",
                       "name": "Section Subtitle",
                       "fill": "#8FA2B8",
-                      "content": "Скопіюй будь-яке запитання та надішли його своєму асистенту в чат:",
+                      "content": "Copy any prompt and ask your AI assistant in chat:",
                       "fontFamily": "Inter",
                       "fontSize": 14
                     }
@@ -2063,7 +2063,7 @@
                       "id": "k2jEd",
                       "name": "Chat Label",
                       "fill": "#EAF2FF",
-                      "content": "Відкрити чат Gemini",
+                      "content": "Open Gemini Chat",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "700"
@@ -2093,7 +2093,7 @@
                 {
                   "type": "frame",
                   "id": "k8bYd",
-                  "name": "Prompt Card: МІСЯЦЬ · АРТЕФАКТИ",
+                  "name": "Prompt Card: MOON · ARTIFACTS",
                   "width": 336,
                   "fill": "#101A2AF0",
                   "cornerRadius": 14,
@@ -2127,7 +2127,7 @@
                               "id": "CAmSC",
                               "name": "Cat Text",
                               "fill": "#00D9F5",
-                              "content": "МІСЯЦЬ · АРТЕФАКТИ",
+                              "content": "MOON · ARTIFACTS",
                               "fontFamily": "Inter",
                               "fontSize": 10,
                               "fontWeight": "700"
@@ -2164,7 +2164,7 @@
                           "fill": "#EAF2FF",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "«Знайди загублені космічні апарати на Місяці.»",
+                          "content": "“Find lost spacecraft on the Moon.”",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
                           "fontSize": 13,
@@ -2201,7 +2201,7 @@
                           "id": "i3Fh5",
                           "name": "Copy Label",
                           "fill": "#EAF2FF",
-                          "content": "Скопіювати запит",
+                          "content": "Copy Prompt",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -2213,7 +2213,7 @@
                 {
                   "type": "frame",
                   "id": "b9U2p0",
-                  "name": "Prompt Card: ІСТОРІЯ · МІСІЇ",
+                  "name": "Prompt Card: HISTORY · MISSIONS",
                   "width": 336,
                   "fill": "#101A2AF0",
                   "cornerRadius": 14,
@@ -2247,7 +2247,7 @@
                               "id": "zA3mM",
                               "name": "Cat Text",
                               "fill": "#268BFF",
-                              "content": "ІСТОРІЯ · МІСІЇ",
+                              "content": "HISTORY · MISSIONS",
                               "fontFamily": "Inter",
                               "fontSize": 10,
                               "fontWeight": "700"
@@ -2284,7 +2284,7 @@
                           "fill": "#EAF2FF",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "«Розкажи історію місії Apollo 11.»",
+                          "content": "“Tell the story of the Apollo 11 mission.”",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
                           "fontSize": 13,
@@ -2321,7 +2321,7 @@
                           "id": "zMel2",
                           "name": "Copy Label",
                           "fill": "#EAF2FF",
-                          "content": "Скопіювати запит",
+                          "content": "Copy Prompt",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -2333,7 +2333,7 @@
                 {
                   "type": "frame",
                   "id": "gZhjB",
-                  "name": "Prompt Card: МАРС · ДОСЛІДЖЕННЯ",
+                  "name": "Prompt Card: MARS · EXPLORATION",
                   "width": 336,
                   "fill": "#101A2AF0",
                   "cornerRadius": 14,
@@ -2367,7 +2367,7 @@
                               "id": "VoZzq",
                               "name": "Cat Text",
                               "fill": "#FF9D35",
-                              "content": "МАРС · ДОСЛІДЖЕННЯ",
+                              "content": "MARS · EXPLORATION",
                               "fontFamily": "Inter",
                               "fontSize": 10,
                               "fontWeight": "700"
@@ -2404,7 +2404,7 @@
                           "fill": "#EAF2FF",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "«Які космічні апарати досліджували Марс?»",
+                          "content": "“Which spacecraft explored Mars?”",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
                           "fontSize": 13,
@@ -2441,7 +2441,7 @@
                           "id": "YY2Wc",
                           "name": "Copy Label",
                           "fill": "#EAF2FF",
-                          "content": "Скопіювати запит",
+                          "content": "Copy Prompt",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -2453,7 +2453,7 @@
                 {
                   "type": "frame",
                   "id": "clZVq",
-                  "name": "Prompt Card: НАУКА · ВІДКРИТТЯ",
+                  "name": "Prompt Card: SCIENCE · DISCOVERIES",
                   "width": 336,
                   "fill": "#101A2AF0",
                   "cornerRadius": 14,
@@ -2487,7 +2487,7 @@
                               "id": "CDT12",
                               "name": "Cat Text",
                               "fill": "#00F0FF",
-                              "content": "НАУКА · ВІДКРИТТЯ",
+                              "content": "SCIENCE · DISCOVERIES",
                               "fontFamily": "Inter",
                               "fontSize": 10,
                               "fontWeight": "700"
@@ -2524,7 +2524,7 @@
                           "fill": "#EAF2FF",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "«Покажи цікаві наукові відкриття.»",
+                          "content": "“Show exciting scientific discoveries.”",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
                           "fontSize": 13,
@@ -2561,7 +2561,7 @@
                           "id": "lsLUp",
                           "name": "Copy Label",
                           "fill": "#EAF2FF",
-                          "content": "Скопіювати запит",
+                          "content": "Copy Prompt",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -2596,7 +2596,7 @@
                   "id": "LC46g",
                   "name": "FAQ Title",
                   "fill": "#EAF2FF",
-                  "content": "Часті запитання",
+                  "content": "Frequently Asked Questions",
                   "fontFamily": "Inter",
                   "fontSize": 24,
                   "fontWeight": "800"
@@ -2606,7 +2606,7 @@
                   "id": "yeMnG",
                   "name": "FAQ Subtitle",
                   "fill": "#8FA2B8",
-                  "content": "Найважливіше про безпеку, роботу та використання CosmoLost MCP:",
+                  "content": "Key details about security, reliability, and using CosmoLost MCP:",
                   "fontFamily": "Inter",
                   "fontSize": 14
                 }
@@ -2623,7 +2623,7 @@
                 {
                   "type": "frame",
                   "id": "psEH9",
-                  "name": "FAQ: Що таке MCP?",
+                  "name": "FAQ: What is MCP?",
                   "width": 688,
                   "fill": "#101A2AF0",
                   "cornerRadius": 12,
@@ -2655,7 +2655,7 @@
                           "id": "h8Nlh8",
                           "name": "Question Text",
                           "fill": "#EAF2FF",
-                          "content": "Що таке MCP?",
+                          "content": "What is MCP?",
                           "fontFamily": "Inter",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -2669,7 +2669,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Model Context Protocol (MCP) — це простий та безпечний спосіб дати штучному інтелекту доступ до достовірної бази CosmoLost, щоб він знав точні факти про космос.",
+                      "content": "Model Context Protocol (MCP) is an open standard that gives your AI direct access to verified CosmoLost data, ensuring accurate facts about space exploration.",
                       "lineHeight": 1.45,
                       "fontFamily": "Inter",
                       "fontSize": 13
@@ -2679,7 +2679,7 @@
                 {
                   "type": "frame",
                   "id": "O2HswC",
-                  "name": "FAQ: Чи потрібно щось встановлювати?",
+                  "name": "FAQ: Do I need to install anything?",
                   "width": 688,
                   "fill": "#101A2AF0",
                   "cornerRadius": 12,
@@ -2711,7 +2711,7 @@
                           "id": "JD12T",
                           "name": "Question Text",
                           "fill": "#EAF2FF",
-                          "content": "Чи потрібно щось встановлювати?",
+                          "content": "Do I need to install anything?",
                           "fontFamily": "Inter",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -2725,7 +2725,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Ні! Для більшості користувачів усе працює прямо у веб-браузері (наприклад, у Google Gemini). Ніяких додаткових програм чи складних налаштувань.",
+                      "content": "Setup depends on your AI client. Web-based interfaces connect via the endpoint URL, while desktop assistants (like Claude or Cursor) require adding the server to their configuration file.",
                       "lineHeight": 1.45,
                       "fontFamily": "Inter",
                       "fontSize": 13
@@ -2745,7 +2745,7 @@
                 {
                   "type": "frame",
                   "id": "KOVgI",
-                  "name": "FAQ: Чи безкоштовне підключення?",
+                  "name": "FAQ: Is the connection free?",
                   "width": 688,
                   "fill": "#101A2AF0",
                   "cornerRadius": 12,
@@ -2777,7 +2777,7 @@
                           "id": "f39GbQ",
                           "name": "Question Text",
                           "fill": "#EAF2FF",
-                          "content": "Чи безкоштовне підключення?",
+                          "content": "Is the connection free?",
                           "fontFamily": "Inter",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -2791,7 +2791,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Так, CosmoLost — це відкрита некомерційна освітня ініціатива (Open Science). Підключення та всі запити повністю безкоштовні для кожного.",
+                      "content": "CosmoLost is an open-science educational project developed for NASA Space Apps. Access to public endpoints and data is provided for research and community exploration under open-access principles.",
                       "lineHeight": 1.45,
                       "fontFamily": "Inter",
                       "fontSize": 13
@@ -2801,7 +2801,7 @@
                 {
                   "type": "frame",
                   "id": "M6E7Rj",
-                  "name": "FAQ: Як відключити MCP?",
+                  "name": "FAQ: How do I disconnect MCP?",
                   "width": 688,
                   "fill": "#101A2AF0",
                   "cornerRadius": 12,
@@ -2833,7 +2833,7 @@
                           "id": "L14VR",
                           "name": "Question Text",
                           "fill": "#EAF2FF",
-                          "content": "Як відключити MCP?",
+                          "content": "How do I disconnect MCP?",
                           "fontFamily": "Inter",
                           "fontSize": 14,
                           "fontWeight": "700"
@@ -2847,7 +2847,7 @@
                       "fill": "#8FA2B8",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "У будь-який момент ти можеш вимкнути або видалити конектор прямо в налаштуваннях свого чат-бота (у Gemini — розділ Connectors) в один клік.",
+                      "content": "You can disable or remove the connector at any time directly in your AI client's settings or configuration file.",
                       "lineHeight": 1.45,
                       "fontFamily": "Inter",
                       "fontSize": 13
@@ -3068,7 +3068,7 @@
                   "id": "Invn1",
                   "name": "Banner Title",
                   "fill": "#EAF2FF",
-                  "content": "А ти вже навчив свій ШІ досліджувати космос?",
+                  "content": "Have you taught your AI to explore space yet?",
                   "fontFamily": "Inter",
                   "fontSize": 16,
                   "fontWeight": "800"
@@ -3078,7 +3078,7 @@
                   "id": "Ezh9y",
                   "name": "Banner Subtitle",
                   "fill": "#8FA2B8",
-                  "content": "Спробуй CosmoLost MCP та відкрий космічні дані у своєму AI-помічнику.",
+                  "content": "Try CosmoLost MCP and unlock rich cosmic exploration data in your AI assistant.",
                   "fontFamily": "Inter",
                   "fontSize": 13
                 }
@@ -3115,7 +3115,7 @@
               "id": "AH6L3",
               "name": "Btn Text",
               "fill": "#080D17",
-              "content": "Спробувати MCP",
+              "content": "Try MCP",
               "fontFamily": "Inter",
               "fontSize": 13,
               "fontWeight": "700"
