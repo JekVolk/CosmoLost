@@ -1107,16 +1107,13 @@ export class PlanetScene {
 
       this.lastPointerPos = { x: e.clientX, y: e.clientY };
 
-      const isCoarse =
-        e.pointerType === 'touch' ||
-        (typeof window !== 'undefined' &&
-          ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+      const isTouch = e.pointerType === 'touch';
       const baseDist = this.currentPlanet.radius * 2.6;
       const zoomFactor = THREE.MathUtils.clamp(this.cameraDistance / baseDist, 0.22, 1.0);
-      const speed = zoomFactor * (isCoarse ? 0.0036 : 0.0019);
+      const speed = zoomFactor * (isTouch ? 0.0020 : 0.0014);
 
       this.applyRotation(dx * speed, dy * speed);
-      this.angularVelocity.set(dx * speed * 0.75, dy * speed * 0.75);
+      this.angularVelocity.set(dx * speed * 0.45, dy * speed * 0.45);
       return;
     }
 
@@ -1310,7 +1307,7 @@ export class PlanetScene {
     this.cameraDistance = THREE.MathUtils.lerp(
       this.cameraDistance,
       this.targetCameraDistance,
-      0.12,
+      0.08,
     );
     this.camera.position.set(0, 0, this.cameraDistance);
     this.camera.lookAt(0, 0, 0);
@@ -1318,19 +1315,19 @@ export class PlanetScene {
     if (!this.isPointerDown && !this.isGliding) {
       if (this.angularVelocity.lengthSq() > 0.0000001) {
         this.applyRotation(this.angularVelocity.x, this.angularVelocity.y);
-        this.angularVelocity.multiplyScalar(0.92);
+        this.angularVelocity.multiplyScalar(0.86);
       } else if (this.isAutoRotating) {
-        this.applyRotation(0.001, 0);
+        this.applyRotation(0.00065, 0);
       }
     }
 
     if (this.isGliding && this.glideTargetQuat) {
-      this.planetGroup.quaternion.slerp(this.glideTargetQuat, 0.085);
+      this.planetGroup.quaternion.slerp(this.glideTargetQuat, 0.055);
       if (this.glideTargetDist) {
         this.targetCameraDistance = THREE.MathUtils.lerp(
           this.targetCameraDistance,
           this.glideTargetDist,
-          0.085,
+          0.055,
         );
       }
 
