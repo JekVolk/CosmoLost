@@ -1,6 +1,7 @@
+import { useSettingsStore } from '@/entities/settings';
 import { ROUTES } from '@/shared/config';
-import { Badge, Box, Button, Heading, Text, VStack } from '@/shared/ui';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { Badge, Box, Button, HStack, Heading, Text, VStack } from '@/shared/ui';
+import { AlertCircle, ArrowLeft, Home } from 'lucide-react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 export const NotFoundPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const accentColor = useSettingsStore((s) => s.settings.accentColor);
 
   return (
     <Box display="flex" alignItems="center" justifyContent="center" height="100%" p="8">
@@ -22,15 +24,21 @@ export const NotFoundPage: React.FC = () => {
         <Text color="fg.muted" fontSize="sm">
           {t('notFound.desc')}
         </Text>
-        <Button
-          colorPalette="blue"
-          variant="solid"
-          size="sm"
-          onClick={() => navigate(ROUTES.OVERVIEW)}
-        >
-          <ArrowLeft size={16} />
-          {t('notFound.backHome')}
-        </Button>
+        <HStack gap="3" pt="2">
+          <Button variant="outline" colorPalette="gray" size="sm" onClick={() => navigate(-1)}>
+            <ArrowLeft size={16} />
+            Назад
+          </Button>
+          <Button
+            colorPalette={accentColor}
+            variant="solid"
+            size="sm"
+            onClick={() => navigate(ROUTES.OVERVIEW)}
+          >
+            <Home size={16} />
+            {t('notFound.backHome')}
+          </Button>
+        </HStack>
       </VStack>
     </Box>
   );

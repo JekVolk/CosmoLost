@@ -1,12 +1,13 @@
-import React from 'react';
-import { X, Sparkles, ExternalLink, Globe, Database, Cpu, Award } from 'lucide-react';
+import { Award, Cpu, Database, ExternalLink, Globe, Sparkles, X } from 'lucide-react';
+import type React from 'react';
 
 interface AboutModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenMcp?: () => void;
 }
 
-export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
+export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose, onOpenMcp }) => {
   if (!isOpen) return null;
 
   return (
@@ -27,7 +28,9 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
 
         <div className="pen-about-body">
           <p className="pen-about-lead">
-            <strong>CosmoLost</strong> is an interactive digital preservation portal and 3D telemetry explorer documenting abandoned, defunct, and historic space hardware resting across the lunar surface and martian terrain.
+            <strong>CosmoLost</strong> is an interactive digital preservation portal and 3D
+            telemetry explorer documenting abandoned, defunct, and historic space hardware resting
+            across the lunar surface and martian terrain.
           </p>
 
           <div className="pen-about-grid">
@@ -35,7 +38,10 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               <Globe size={18} className="text-cyan-400" />
               <div>
                 <h4>Interactive Celestial Exploration</h4>
-                <p>True-to-scale 3D planetary models with high-resolution USGS/LROC textures, atmosphere shaders, and collision-free coordinate mapping.</p>
+                <p>
+                  True-to-scale 3D planetary models with high-resolution USGS/LROC textures,
+                  atmosphere shaders, and collision-free coordinate mapping.
+                </p>
               </div>
             </div>
 
@@ -43,7 +49,10 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               <Database size={18} className="text-cyan-400" />
               <div>
                 <h4>Verified Archival Telemetry</h4>
-                <p>Curated from NASA Planetary Data System (PDS), JPL Mission Archives, NSSDCA Master Catalog, and orbital imagery.</p>
+                <p>
+                  Curated from NASA Planetary Data System (PDS), JPL Mission Archives, NSSDCA Master
+                  Catalog, and orbital imagery.
+                </p>
               </div>
             </div>
 
@@ -51,7 +60,35 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               <Cpu size={18} className="text-cyan-400" />
               <div>
                 <h4>AI Gateway & OpenAPI Portal</h4>
-                <p>Integrated FastMCP backend with real-time video community feeds, structured artifact specs, and automated telemetry search.</p>
+                <p>
+                  Integrated FastMCP backend with real-time video community feeds, structured
+                  artifact specs, and automated telemetry search.
+                </p>
+                {onOpenMcp && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenMcp();
+                    }}
+                    style={{
+                      marginTop: '8px',
+                      background: 'rgba(0, 217, 245, 0.12)',
+                      border: '1px solid rgba(0, 217, 245, 0.4)',
+                      borderRadius: '6px',
+                      padding: '4px 10px',
+                      color: '#00F0FF',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    <span>Open MCP Connect Portal →</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -59,7 +96,10 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
               <Award size={18} className="text-cyan-400" />
               <div>
                 <h4>Preserving Space Heritage</h4>
-                <p>Protecting historical sites like Apollo 11 Tranquility Base, Lunokhod rovers, Spirit, and Opportunity from being forgotten.</p>
+                <p>
+                  Protecting historical sites like Apollo 11 Tranquility Base, Lunokhod rovers,
+                  Spirit, and Opportunity from being forgotten.
+                </p>
               </div>
             </div>
           </div>

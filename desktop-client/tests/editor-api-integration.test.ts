@@ -1,9 +1,119 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { artifactRepository } from '../src/entities/artifact';
 import { contentTemplateRepository } from '../src/entities/content-template';
 import { axiosClient, editorApiClient, portalApiClient } from '../src/shared/api';
 
+const MOCK_TEMPLATES = [
+  {
+    id: 'last-sol-drama',
+    rubric_name: "Останній день на зв'язку (Драма та згасання)",
+    target_duration_sec: 40,
+    safe_zone_preset: 'PILLOWBOX_9_16',
+    slide_structure: [
+      { slide_index: 1, type: 'HOOK', duration_sec: 3.5, safe_zone_layout: 'FULLSCREEN_AVATAR' },
+      {
+        slide_index: 2,
+        type: 'B_ROLL_FACTS',
+        duration_sec: 14.0,
+        safe_zone_layout: 'CORNER_AVATAR_CENTER_3D',
+      },
+      {
+        slide_index: 3,
+        type: 'DRAMA_PEAK',
+        duration_sec: 16.5,
+        safe_zone_layout: 'TELEMETRY_HUD_SPLIT',
+      },
+      {
+        slide_index: 4,
+        type: 'SEAMLESS_LOOP_CTA',
+        duration_sec: 6.0,
+        safe_zone_layout: 'CTA_QR_PORTAL',
+      },
+    ],
+  },
+  {
+    id: 'dictionary-explain',
+    rubric_name: 'Як це працює? (Наука для школярів)',
+    target_duration_sec: 35,
+    safe_zone_preset: 'PILLOWBOX_9_16',
+    slide_structure: [],
+  },
+  {
+    id: 'lunar-secrets',
+    rubric_name: 'Таємниці Місяця',
+    target_duration_sec: 40,
+    safe_zone_preset: 'PILLOWBOX_9_16',
+    slide_structure: [],
+  },
+];
+
+const MOCK_ASSET_BUNDLE = {
+  artifact_id: 'opportunity-rover',
+  name: 'Opportunity Rover (MER-B)',
+  celestial_body: 'mars',
+  tts_script: {
+    uk: '15 років на Марсі. Замість 90 запланованих днів...',
+    en: '15 years on Mars. Instead of 90 planned days...',
+  },
+  seo_caption: {
+    line1_hook: 'Марсохід, що відмовився здаватися!',
+    line2_seo: 'Історія Opportunity Rover (MER-B) у CosmoLost',
+    line3_tags: '#марсохід #космос #марс #наука #cosmolost',
+  },
+  pin_comment: 'Яка деталь у долі Opportunity вражає вас найбільше?',
+  high_res_photos: ['https://images-assets.nasa.gov/image/PIA22074/PIA22074~medium.jpg'],
+};
+
+const MOCK_PORTAL_ARTIFACTS = {
+  total: 3,
+  results: [
+    {
+      id: 'opportunity-rover',
+      name: 'Opportunity Rover (MER-B)',
+      celestial_body: 'mars',
+      coordinates: { latitude: -1.9462, longitude: 354.4734, location_name: 'Perseverance Valley' },
+      preview_image_url: 'https://images-assets.nasa.gov/image/PIA22074/PIA22074~medium.jpg',
+      media: [],
+    },
+    {
+      id: 'spirit-rover',
+      name: 'Spirit Rover (MER-A)',
+      celestial_body: 'mars',
+      coordinates: { latitude: -14.5684, longitude: 175.4726, location_name: 'Gusev Crater' },
+      preview_image_url: 'https://images-assets.nasa.gov/image/PIA03253/PIA03253~medium.jpg',
+      media: [],
+    },
+    {
+      id: 'apollo-11-lm-eagle',
+      name: 'Apollo 11 Lunar Module Eagle',
+      celestial_body: 'moon',
+      coordinates: { latitude: 0.674, longitude: 23.472, location_name: 'Mare Tranquillitatis' },
+      preview_image_url:
+        'https://images-assets.nasa.gov/image/as11-40-5927/as11-40-5927~medium.jpg',
+      media: [],
+    },
+  ],
+};
+
 describe('CosmoLost Desktop API Integration (Axios & React Query Architecture)', () => {
+  beforeEach(() => {
+    vi.spyOn(axiosClient, 'get').mockImplementation(async (url: string) => {
+      if (url.includes('/assets/')) {
+        return MOCK_ASSET_BUNDLE;
+      }
+      if (url.includes('/api/v1/editor/templates/last-sol-drama/')) {
+        return MOCK_TEMPLATES[0];
+      }
+      if (url.includes('/api/v1/editor/templates/')) {
+        return MOCK_TEMPLATES;
+      }
+      if (url.includes('/api/v1/portal/artifacts/')) {
+        return MOCK_PORTAL_ARTIFACTS;
+      }
+      return {};
+    });
+  });
+
   describe('1. Axios HTTP Client & Interceptors', () => {
     it('is configured with proper base URL and headers', () => {
       expect(axiosClient).toBeDefined();

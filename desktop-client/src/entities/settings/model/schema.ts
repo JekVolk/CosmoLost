@@ -114,6 +114,7 @@ export const DesktopSettingsSchema = z.object({
   compactMode: z.boolean().default(false),
   soundEnabled: z.boolean().default(false),
   developerMode: z.boolean().default(false),
+  renderTimeoutSec: z.number().int().min(30).max(300).default(40),
   lastExportedAt: z.string().nullable().default(null),
   // Integrations & Social Connectors
   youtubeClientId: z.string().default(''),
@@ -138,6 +139,9 @@ export const DesktopSettingsSchema = z.object({
   runwayApiKey: z.string().default(''),
   cliInterceptionEnabled: z.boolean().default(true),
   cliBridgePort: z.number().int().min(1024).max(65535).default(8089),
+  generativeProxyEndpoint: z.string().default('http://localhost:8000/v1'),
+  generativeProxyAuthToken: z.string().default(''),
+  generativeDevMode: z.boolean().default(true),
   agentProfiles: z.array(AgentProfileSchema).default(DEFAULT_AGENT_PROFILES),
 });
 

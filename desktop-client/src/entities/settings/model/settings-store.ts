@@ -75,6 +75,14 @@ export const useSettingsStore = create<SettingsState>()(
           },
         })),
 
+      setRenderTimeoutSec: (renderTimeoutSec: number) =>
+        set((state) => ({
+          settings: {
+            ...state.settings,
+            renderTimeoutSec,
+          },
+        })),
+
       updateSettings: (partial: Partial<DesktopSettings>) => {
         if (partial.language) {
           i18n.changeLanguage(partial.language);

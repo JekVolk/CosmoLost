@@ -2981,6 +2981,337 @@
               "fontWeight": "600"
             }
           ]
+        },
+        {
+          "type": "frame",
+          "id": "uUWAt",
+          "x": 996,
+          "y": 1482,
+          "name": "Floating Update Announcement Card (v2.4 Release)",
+          "clip": true,
+          "width": 420,
+          "height": 224,
+          "fill": "#15294ff5",
+          "cornerRadius": 14,
+          "stroke": "#00D9F560",
+          "strokeWidth": 1.5,
+          "effect": [
+            {
+              "type": "shadow",
+              "shadowType": "outer",
+              "color": "#000000B0",
+              "offset": {
+                "x": 0,
+                "y": 12
+              },
+              "blur": 40
+            },
+            {
+              "type": "shadow",
+              "shadowType": "outer",
+              "color": "#00F0FF25",
+              "blur": 24
+            }
+          ],
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            14,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ovYTF",
+              "name": "Card Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YMWAK",
+                  "name": "Head Left",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "tXxr2",
+                      "name": "Icon Box",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "#00F0FF18",
+                      "cornerRadius": 8,
+                      "stroke": "#00F0FF60",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Ec713",
+                          "name": "Ico",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "sparkles",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xDVba",
+                      "name": "Text Stack",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Xmy0f",
+                          "name": "Tag Row",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "jDwGs",
+                              "name": "Badge",
+                              "fill": "#00D9F5",
+                              "content": "UPDATE RELEASE · v2.4",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 9,
+                              "fontWeight": "800",
+                              "letterSpacing": 0.6
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "BiyNF",
+                              "name": "Pulse Dot",
+                              "fill": "#22C55E",
+                              "width": 6,
+                              "height": 6
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "NtX4t",
+                          "name": "Title",
+                          "fill": "#EAF2FF",
+                          "content": "CosmoLost MCP v2.4 is Live!",
+                          "fontFamily": "Inter",
+                          "fontSize": 13.5,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iapjj",
+                  "name": "Close Button (Touch 32x32)",
+                  "width": 32,
+                  "height": 32,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "a8Gze",
+                      "name": "Close Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "x",
+                      "library": "lucide",
+                      "fill": "#8FA2B8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "uh6Hf",
+              "name": "Features Box",
+              "width": "fill_container",
+              "fill": "#142033",
+              "cornerRadius": 8,
+              "stroke": "#1B2A42",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 5,
+              "padding": [
+                8,
+                10
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "JtcnF",
+                  "name": "Bullet",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "l7hNA",
+                      "name": "I",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "zap",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q694R",
+                      "name": "T",
+                      "fill": "#CBD5E1",
+                      "content": "1-Click setup for Cursor, Claude Desktop & ChatGPT",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pcsHw",
+                  "name": "Bullet",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "HA9wW",
+                      "name": "I",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "satellite",
+                      "library": "lucide",
+                      "fill": "#FF9D35"
+                    },
+                    {
+                      "type": "text",
+                      "id": "YKw0c",
+                      "name": "T",
+                      "fill": "#CBD5E1",
+                      "content": "Real-time 3D telemetry query tools for 142+ landing sites",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EAkB0",
+                  "name": "Bullet",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "D2BI7",
+                      "name": "I",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "database",
+                      "library": "lucide",
+                      "fill": "#22C55E"
+                    },
+                    {
+                      "type": "text",
+                      "id": "E4mhz",
+                      "name": "T",
+                      "fill": "#CBD5E1",
+                      "content": "Live NASA PDS & JPL Horizons ephemeris synchronization",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "oTi9z",
+              "name": "Card Action Buttons",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qtrCx",
+                  "name": "Primary CTA",
+                  "width": "fill_container",
+                  "height": 36,
+                  "fill": "#00D9F5",
+                  "cornerRadius": 6,
+                  "stroke": "#00D9F5",
+                  "strokeWidth": 1,
+                  "gap": 6,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "ZKECb",
+                      "name": "Zap",
+                      "width": 13,
+                      "height": 13,
+                      "icon": "zap",
+                      "library": "lucide",
+                      "fill": "#080D17"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ichEI",
+                      "name": "Txt",
+                      "fill": "#080D17",
+                      "content": "Try MCP v2.4 Now",
+                      "fontFamily": "Inter",
+                      "fontSize": 11.5,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "k64rc0",
+                  "name": "Secondary Action",
+                  "height": 36,
+                  "fill": "#142033",
+                  "cornerRadius": 6,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "I6DvPZ",
+                      "name": "Txt",
+                      "fill": "#00D9F5",
+                      "content": "Changelog ↗",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -3129,6 +3460,228 @@
               "icon": "arrow-right",
               "library": "lucide",
               "fill": "#080D17"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "z83qL",
+      "x": 24,
+      "y": -280,
+      "name": "Component · Platform Update Promo Banner (What's New in v2.4)",
+      "reusable": true,
+      "width": 1392,
+      "height": 110,
+      "fill": "#101A2AF8",
+      "cornerRadius": 14,
+      "stroke": "#00F0FF60",
+      "strokeWidth": 1.5,
+      "padding": [
+        16,
+        24
+      ],
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "WLUlv",
+          "name": "Banner Left Group",
+          "gap": 18,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "J3mrU4",
+              "name": "Update Emblem Box",
+              "width": 52,
+              "height": 52,
+              "fill": "#070E1E",
+              "cornerRadius": 12,
+              "stroke": "#00F0FF",
+              "strokeWidth": 1.5,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "VC7jF",
+                  "name": "Rocket Icon",
+                  "width": 24,
+                  "height": 24,
+                  "icon": "rocket",
+                  "library": "lucide",
+                  "fill": "#00F0FF"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "c6EXU",
+              "name": "Banner Text Stack",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QB5f5",
+                  "name": "Tag Row",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RoGxo",
+                      "name": "Version Badge",
+                      "fill": "#00F0FF20",
+                      "cornerRadius": 4,
+                      "stroke": "#00F0FF60",
+                      "strokeWidth": 1,
+                      "padding": [
+                        2,
+                        6
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "dbRx7",
+                          "name": "V Text",
+                          "fill": "#00F0FF",
+                          "content": "UPDATE v2.4 IS LIVE",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 9.5,
+                          "fontWeight": "800",
+                          "letterSpacing": 0.6
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g7m9e",
+                      "name": "New Features Pill",
+                      "fill": "#FF9D3518",
+                      "cornerRadius": 4,
+                      "stroke": "#FF9D3550",
+                      "strokeWidth": 1,
+                      "padding": [
+                        2,
+                        6
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "sZttb",
+                          "name": "N Text",
+                          "fill": "#FF9D35",
+                          "content": "REAL-TIME TELEMETRY & CLAUDE INTEGRATION",
+                          "fontFamily": "Inter",
+                          "fontSize": 9.5,
+                          "fontWeight": "700",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "V31hk",
+                  "name": "Banner Title",
+                  "fill": "#EAF2FF",
+                  "content": "CosmoLost MCP v2.4: Real-Time Planetary Telemetry & Cursor Integration",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "800",
+                  "letterSpacing": -0.2
+                },
+                {
+                  "type": "text",
+                  "id": "vtpwX",
+                  "name": "Banner Subtitle",
+                  "fill": "#8FA2B8",
+                  "content": "Now with live 3D coordinates, instant 1-click configs for Cursor & Claude Desktop, and NASA PDS sync.",
+                  "fontFamily": "Inter",
+                  "fontSize": 12.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "fnDDI",
+          "name": "Banner Actions Group",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "N6dOB",
+              "name": "Changelog Button",
+              "height": 42,
+              "fill": "#142033",
+              "cornerRadius": 8,
+              "stroke": "#1B2A42",
+              "strokeWidth": 1,
+              "gap": 6,
+              "padding": [
+                0,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "M4zXR",
+                  "name": "Txt",
+                  "fill": "#00D9F5",
+                  "content": "What's New in v2.4 →",
+                  "fontFamily": "Inter",
+                  "fontSize": 12.5,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "F8ZHm",
+              "name": "Update Config CTA Button",
+              "height": 42,
+              "fill": "#00D9F5",
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": [
+                0,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "B35Q1m",
+                  "name": "Sparkle",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "sparkles",
+                  "library": "lucide",
+                  "fill": "#080D17"
+                },
+                {
+                  "type": "text",
+                  "id": "vdmf3",
+                  "name": "Btn Text",
+                  "fill": "#080D17",
+                  "content": "Connect v2.4 ⚡",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "800"
+                }
+              ]
             }
           ]
         }

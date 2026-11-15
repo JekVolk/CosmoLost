@@ -1,15 +1,32 @@
-import React, { useState, useMemo } from 'react';
-import type { SpaceArtifact, PlanetId, PlanetConfig } from '../../../entities/planet/model/types';
+import { McpPromoBanner } from '@/features/mcp-promo';
+import {
+  Calendar,
+  ExternalLink,
+  Filter,
+  MapPin,
+  Rocket,
+  RotateCcw,
+  Search,
+  Sparkles,
+  X,
+} from 'lucide-react';
+import type React from 'react';
+import { useMemo, useState } from 'react';
 import { PLANETS } from '../../../entities/planet/model/planetData';
-import { Search, X, Sparkles, Filter, ExternalLink, Calendar, MapPin, Rocket, RotateCcw } from 'lucide-react';
+import type { PlanetConfig, PlanetId, SpaceArtifact } from '../../../entities/planet/model/types';
 
 interface CatalogPageProps {
   onOpenDossier: (artifact: SpaceArtifact, planetId: PlanetId) => void;
   onBackToMap: () => void;
+  onOpenMcp?: () => void;
   planets?: Record<PlanetId, PlanetConfig>;
 }
 
-export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets = PLANETS }) => {
+export const CatalogPage: React.FC<CatalogPageProps> = ({
+  onOpenDossier,
+  onOpenMcp,
+  planets = PLANETS,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlanet, setSelectedPlanet] = useState<'all' | 'moon' | 'mars'>('all');
   const [selectedType, setSelectedType] = useState<string>('all');
@@ -17,8 +34,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
 
   const allArtifactsWithPlanet = useMemo(() => {
     const list: { artifact: SpaceArtifact; planetId: PlanetId }[] = [];
-    (planets.moon?.artifacts || []).forEach((art) => list.push({ artifact: art, planetId: 'moon' }));
-    (planets.mars?.artifacts || []).forEach((art) => list.push({ artifact: art, planetId: 'mars' }));
+    (planets.moon?.artifacts || []).forEach((art) =>
+      list.push({ artifact: art, planetId: 'moon' })
+    );
+    (planets.mars?.artifacts || []).forEach((art) =>
+      list.push({ artifact: art, planetId: 'mars' })
+    );
     return list;
   }, [planets]);
 
@@ -27,33 +48,51 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
   const marsCount = planets.mars?.artifacts?.length || 0;
 
   const filtered = useMemo(() => {
-    return allArtifactsWithPlanet.filter(({ artifact, planetId }) => {
-      if (selectedPlanet !== 'all' && planetId !== selectedPlanet) return false;
-      if (selectedType !== 'all') {
-        if (selectedType === 'rover' && artifact.type !== 'rover' && artifact.type !== 'helicopter') return false;
-        if (selectedType === 'lander' && artifact.type !== 'lander' && artifact.type !== 'descent_stage') return false;
-        if (selectedType === 'science' && artifact.type !== 'retro_reflector' && artifact.type !== 'instrument' && artifact.type !== 'sample_depot') return false;
-        if (selectedType === 'impact' && artifact.type !== 'impact_stage') return false;
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        return (
-          artifact.name.toLowerCase().includes(q) ||
-          artifact.mission.toLowerCase().includes(q) ||
-          artifact.agency.toLowerCase().includes(q) ||
-          artifact.locationName.toLowerCase().includes(q) ||
-          (artifact.country && artifact.country.toLowerCase().includes(q))
-        );
-      }
-      return true;
-    }).sort((a, b) => {
-      if (sortBy === 'mass-desc') {
-        return (b.artifact.massKg || 0) - (a.artifact.massKg || 0);
-      }
-      const dateA = new Date(a.artifact.landingDate).getTime() || 0;
-      const dateB = new Date(b.artifact.landingDate).getTime() || 0;
-      return sortBy === 'date-desc' ? dateB - dateA : dateA - dateB;
-    });
+    return allArtifactsWithPlanet
+      .filter(({ artifact, planetId }) => {
+        if (selectedPlanet !== 'all' && planetId !== selectedPlanet) return false;
+        if (selectedType !== 'all') {
+          if (
+            selectedType === 'rover' &&
+            artifact.type !== 'rover' &&
+            artifact.type !== 'helicopter'
+          )
+            return false;
+          if (
+            selectedType === 'lander' &&
+            artifact.type !== 'lander' &&
+            artifact.type !== 'descent_stage'
+          )
+            return false;
+          if (
+            selectedType === 'science' &&
+            artifact.type !== 'retro_reflector' &&
+            artifact.type !== 'instrument' &&
+            artifact.type !== 'sample_depot'
+          )
+            return false;
+          if (selectedType === 'impact' && artifact.type !== 'impact_stage') return false;
+        }
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase().trim();
+          return (
+            artifact.name.toLowerCase().includes(q) ||
+            artifact.mission.toLowerCase().includes(q) ||
+            artifact.agency.toLowerCase().includes(q) ||
+            artifact.locationName.toLowerCase().includes(q) ||
+            (artifact.country && artifact.country.toLowerCase().includes(q))
+          );
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'mass-desc') {
+          return (b.artifact.massKg || 0) - (a.artifact.massKg || 0);
+        }
+        const dateA = new Date(a.artifact.landingDate).getTime() || 0;
+        const dateB = new Date(b.artifact.landingDate).getTime() || 0;
+        return sortBy === 'date-desc' ? dateB - dateA : dateA - dateB;
+      });
   }, [allArtifactsWithPlanet, selectedPlanet, selectedType, searchQuery, sortBy]);
 
   const clearFilters = () => {
@@ -75,7 +114,8 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
           </div>
           <h1 className="pen-catalog-title">Artifact Catalog</h1>
           <p className="pen-catalog-subtitle">
-            Comprehensive archive of historical space mission hardware, rovers, landers, and scientific experiments abandoned across Lunar and Martian soil.
+            Comprehensive archive of historical space mission hardware, rovers, landers, and
+            scientific experiments abandoned across Lunar and Martian soil.
           </p>
 
           <div className="pen-metrics-bar">
@@ -94,6 +134,8 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
               <span className="pen-metric-lbl">MARTIAN SITES</span>
             </div>
           </div>
+
+          <McpPromoBanner onConnect={onOpenMcp} style={{ margin: '20px 0 10px' }} />
         </div>
 
         <div className="pen-catalog-toolbar">
@@ -176,11 +218,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
             <strong>{filtered.length}</strong> artifacts found
           </div>
           {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="pen-clear-filters-btn"
-            >
+            <button type="button" onClick={clearFilters} className="pen-clear-filters-btn">
               <RotateCcw size={12} />
               <span>Clear filters</span>
             </button>
@@ -192,11 +230,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
             <div className="pen-empty-icon">🛰️</div>
             <h3>No artifacts matched your criteria</h3>
             <p>Try resetting the search terms or changing planet & equipment filters.</p>
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="pen-btn-primary"
-            >
+            <button type="button" onClick={clearFilters} className="pen-btn-primary">
               Reset Filters
             </button>
           </div>
@@ -232,9 +266,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
                       <span className={`pen-planet-badge ${isMars ? 'mars' : 'moon'}`}>
                         {planetId.toUpperCase()}
                       </span>
-                      <span className="pen-agency-badge">
-                        {artifact.agency}
-                      </span>
+                      <span className="pen-agency-badge">{artifact.agency}</span>
                     </div>
                   </div>
 

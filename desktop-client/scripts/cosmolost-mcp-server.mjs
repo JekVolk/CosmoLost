@@ -59,8 +59,7 @@ function getDesktopState() {
   const settingsData = readJsonFile(settingsFile);
   const tasksData = readJsonFile(tasksFile);
 
-  const settings =
-    settingsData?.state?.settings ||
+  const settings = settingsData?.state?.settings ||
     settingsData?.['cosmolost-app-settings']?.settings ||
     settingsData?.settings ||
     settingsData || {
@@ -70,39 +69,38 @@ function getDesktopState() {
       autoRefreshMetrics: true,
     };
 
-  const tasks =
-    tasksData?.state?.tasks ||
+  const tasks = tasksData?.state?.tasks ||
     tasksData?.tasks ||
     settingsData?.['cosmolost-scheduler-tasks']?.tasks ||
     settingsData?.state?.tasks || [
-    {
-      id: 'ipc-health-check',
-      name: 'IPC Rust Core Ping Check',
-      intervalSec: 10,
-      enabled: true,
-      status: 'idle',
-      lastRunTime: null,
-      errorCount: 0,
-    },
-    {
-      id: 'system-metrics-poller',
-      name: 'Hardware & OS Metrics Poller',
-      intervalSec: 15,
-      enabled: true,
-      status: 'idle',
-      lastRunTime: null,
-      errorCount: 0,
-    },
-    {
-      id: 'runtime-cache-cleaner',
-      name: 'Temporary Cache Garbage Collector',
-      intervalSec: 30,
-      enabled: false,
-      status: 'paused',
-      lastRunTime: null,
-      errorCount: 0,
-    },
-  ];
+      {
+        id: 'ipc-health-check',
+        name: 'IPC Rust Core Ping Check',
+        intervalSec: 10,
+        enabled: true,
+        status: 'idle',
+        lastRunTime: null,
+        errorCount: 0,
+      },
+      {
+        id: 'system-metrics-poller',
+        name: 'Hardware & OS Metrics Poller',
+        intervalSec: 15,
+        enabled: true,
+        status: 'idle',
+        lastRunTime: null,
+        errorCount: 0,
+      },
+      {
+        id: 'runtime-cache-cleaner',
+        name: 'Temporary Cache Garbage Collector',
+        intervalSec: 30,
+        enabled: false,
+        status: 'paused',
+        lastRunTime: null,
+        errorCount: 0,
+      },
+    ];
 
   return {
     storeDir,
@@ -131,14 +129,7 @@ const TOOLS = [
       properties: {
         route: {
           type: 'string',
-          enum: [
-            '/overview',
-            '/fsd',
-            '/ipc',
-            '/scheduler',
-            '/mcp',
-            '/settings',
-          ],
+          enum: ['/overview', '/fsd', '/ipc', '/scheduler', '/mcp', '/settings'],
           description: 'Target route path to navigate to',
         },
       },
@@ -167,8 +158,7 @@ const TOOLS = [
   },
   {
     name: 'cosmolost_trigger_scheduler_task',
-    description:
-      'Triggers immediate execution of a scheduled routine in CosmoLost Desktop.',
+    description: 'Triggers immediate execution of a scheduled routine in CosmoLost Desktop.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -192,8 +182,7 @@ const TOOLS = [
   },
   {
     name: 'cosmolost_get_diagnostics',
-    description:
-      'Fetches runtime diagnostics, desktop store status, and error logs.',
+    description: 'Fetches runtime diagnostics, desktop store status, and error logs.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -210,8 +199,7 @@ const TOOLS = [
   },
   {
     name: 'search_artifacts',
-    description:
-      'Search space artifacts across the Moon and Mars from NASA records.',
+    description: 'Search space artifacts across the Moon and Mars from NASA records.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -231,7 +219,13 @@ const TOOLS = [
         artifact_id: { type: 'string', description: 'Artifact slug (e.g. opportunity-rover)' },
         rubric_id: {
           type: 'string',
-          enum: ['last-sol-drama', 'tech-explain', 'dictionary-30s', 'crash-test', 'build-in-public'],
+          enum: [
+            'last-sol-drama',
+            'tech-explain',
+            'dictionary-30s',
+            'crash-test',
+            'build-in-public',
+          ],
         },
         language: { type: 'string', enum: ['uk', 'en'], default: 'uk' },
         enable_pngtuber: { type: 'boolean', default: true },
@@ -275,12 +269,44 @@ const TOOLS = [
       properties: {
         rubric_id: {
           type: 'string',
-          enum: ['last-sol-drama', 'tech-explain', 'dictionary-30s', 'crash-test', 'build-in-public'],
+          enum: [
+            'last-sol-drama',
+            'tech-explain',
+            'dictionary-30s',
+            'crash-test',
+            'build-in-public',
+          ],
         },
         count: { type: 'number', minimum: 1, maximum: 10, default: 5 },
         language: { type: 'string', enum: ['uk', 'en'], default: 'uk' },
       },
       required: ['rubric_id', 'count'],
+    },
+  },
+  {
+    name: 'suggest_next_video_topic',
+    description:
+      'Generates contextual serialized recommendation for the next video topic with narrative bridge, hook, and pin comment based on selection_reason.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        artifact_id: { type: 'string', description: 'Current artifact slug' },
+        rubric_id: {
+          type: 'string',
+          enum: [
+            'last-sol-drama',
+            'tech-explain',
+            'dictionary-30s',
+            'crash-test',
+            'build-in-public',
+          ],
+        },
+        selection_reason: {
+          type: 'string',
+          description: 'Author reasoning for selecting the current artifact',
+        },
+      },
+      required: ['artifact_id'],
     },
   },
   {
@@ -292,7 +318,8 @@ const TOOLS = [
       properties: {
         command: {
           type: 'string',
-          description: 'Raw command string (e.g. "status", "ping", "generate --artifact opportunity-rover")',
+          description:
+            'Raw command string (e.g. "status", "ping", "generate --artifact opportunity-rover")',
         },
       },
       required: ['command'],
@@ -378,7 +405,7 @@ function handleToolCall(name, args = {}) {
       const mode = args.mode || settings.themeMode || 'dark';
       const accent = args.accent || settings.accentColor || 'blue';
       const settingsFile = path.join(storeDir, 'cosmolost-settings.json');
-      
+
       const updatedSettings = {
         ...settings,
         themeMode: mode,
@@ -444,7 +471,8 @@ function handleToolCall(name, args = {}) {
           type: 'ROVER',
           status: 'DORMANT',
           last_sol: 5111,
-          description: 'Mars exploration rover operating from 2004 to 2018 in Meridiani Planum and Endeavour Crater.',
+          description:
+            'Mars exploration rover operating from 2004 to 2018 in Meridiani Planum and Endeavour Crater.',
         },
         {
           id: 'spirit-rover',
@@ -453,7 +481,8 @@ function handleToolCall(name, args = {}) {
           type: 'ROVER',
           status: 'DORMANT',
           last_sol: 2210,
-          description: 'Twin rover of Opportunity trapped in soft sand at Troy inside Gusev Crater.',
+          description:
+            'Twin rover of Opportunity trapped in soft sand at Troy inside Gusev Crater.',
         },
         {
           id: 'apollo-11-lm-eagle',
@@ -553,6 +582,29 @@ function handleToolCall(name, args = {}) {
       };
     }
 
+    case 'suggest_next_video_topic': {
+      const artifactId = args.artifact_id || 'opportunity-rover';
+      const rubricId = args.rubric_id || 'last-sol-drama';
+      const reason = args.selection_reason || 'Наукове відкриття та спадщина місії';
+      const isOpp = artifactId.includes('opportunity');
+
+      return {
+        success: true,
+        currentArtifactId: artifactId,
+        rubricId,
+        selectionReason: reason,
+        suggestedArtifactId: isOpp ? 'spirit-rover' : 'apollo-11-lm-eagle',
+        suggestedArtifactName: isOpp ? 'Spirit Rover (MER-A)' : 'Apollo 11 Lunar Module (Eagle)',
+        suggestedRubricId: rubricId,
+        suggestedHook: isOpp
+          ? 'Як брат-близнюк Spirit застряг у смертельній пастці Troy?'
+          : 'Чому спускний ступінь Аполлон-11 залишився на Місяці назавжди?',
+        narrativeBridge: `Поки ${artifactId} здійснював подорож, інший апарат боровся за виживання в інших умовах...`,
+        recommendedPinComment:
+          'Який космічний апарат ви б повернули на Землю першим? Пишіть у коментарях! 👇',
+      };
+    }
+
     case 'cosmolost_cli_intercept': {
       const cmd = (args.command || '').trim();
       const isPing = cmd.toLowerCase().includes('ping');
@@ -577,7 +629,13 @@ function handleToolCall(name, args = {}) {
       return {
         success: true,
         provider,
-        model: args.model || (provider === 'claude' ? 'claude-3-5-sonnet' : provider === 'openai' ? 'gpt-4o' : 'gemini-1.5-flash'),
+        model:
+          args.model ||
+          (provider === 'claude'
+            ? 'claude-3-5-sonnet'
+            : provider === 'openai'
+              ? 'gpt-4o'
+              : 'gemini-1.5-flash'),
         text: `[CosmoLost Multi-LLM Bridge (${provider.toUpperCase()})]: Generated viral response for: "${prompt.slice(0, 80)}"`,
         tokensUsed: 64,
       };

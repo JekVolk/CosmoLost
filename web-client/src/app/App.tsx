@@ -1,25 +1,36 @@
-import React, { useState, useRef, useEffect } from 'react';
-import type { PlanetId, SpaceArtifact, PlanetConfig } from '../entities/planet/model/types';
+import { McpConnectPage } from '@/pages/mcp-connect';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PLANETS } from '../entities/planet/model/planetData';
-import {
-  portalApi,
-  apiArtifactSummaryToSpaceArtifact,
-  apiArtifactDetailToSpaceArtifact,
-} from '../shared/api/portalApi';
-import { Header, type AppView } from '../widgets/header/ui/Header';
-import { PlanetViewer } from '../widgets/planet-viewer/ui/PlanetViewer';
-import { PlanetTelemetry } from '../widgets/planet-telemetry/ui/PlanetTelemetry';
+import type { PlanetConfig, PlanetId, SpaceArtifact } from '../entities/planet/model/types';
+import { AstroGuessrGame } from '../features/astro-guessr-360';
 import { ViewControls } from '../features/view-controls/ui/ViewControls';
-import { DossierPage } from '../widgets/dossier/ui/DossierPage';
+import { ArenaPage } from '../pages/arena';
+import {
+  apiArtifactDetailToSpaceArtifact,
+  apiArtifactSummaryToSpaceArtifact,
+  portalApi,
+} from '../shared/api/portalApi';
+import { AboutModal } from '../widgets/about/ui/AboutModal';
 import { CatalogPage } from '../widgets/catalog/ui/CatalogPage';
 import { CommunityVideosPage } from '../widgets/community/ui/CommunityVideosPage';
-import { AstroGuessrGame } from '../features/astro-guessr-360';
-import { AboutModal } from '../widgets/about/ui/AboutModal';
+import { DossierPage } from '../widgets/dossier/ui/DossierPage';
+import { type AppView, Header } from '../widgets/header/ui/Header';
+import { PlanetTelemetry } from '../widgets/planet-telemetry/ui/PlanetTelemetry';
+import { PlanetViewer } from '../widgets/planet-viewer/ui/PlanetViewer';
+import { AppProviders } from './providers';
 import './styles/global.css';
 
 export const App: React.FC = () => {
   const [currentPlanetId, setCurrentPlanetId] = useState<PlanetId>('mars');
-  const [currentView, setCurrentView] = useState<AppView>('map');
+  const [currentView, setCurrentView] = useState<AppView>(() => {
+    const path = window.location.pathname;
+    const params = new URLSearchParams(window.location.search);
+    if (path === '/connect' || path === '/mcp' || params.get('view') === 'connect') {
+      return 'connect';
+    }
+    return 'map';
+  });
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [showMarkers, setShowMarkers] = useState(true);
   const [activeArtifact, setActiveArtifact] = useState<SpaceArtifact | null>(null);
@@ -88,13 +99,16 @@ export const App: React.FC = () => {
     const planetParam = (params.get('planet') as PlanetId) || 'mars';
 
     if (artifactId) {
-      portalApi.getArtifactDetail(artifactId).then((detail) => {
-        if (detail) {
-          const art = apiArtifactDetailToSpaceArtifact(detail, planetParam);
-          setStandaloneDossier({ artifact: art, planetId: planetParam });
-          setCurrentPlanetId(planetParam);
-        }
-      }).catch(() => {});
+      portalApi
+        .getArtifactDetail(artifactId)
+        .then((detail) => {
+          if (detail) {
+            const art = apiArtifactDetailToSpaceArtifact(detail, planetParam);
+            setStandaloneDossier({ artifact: art, planetId: planetParam });
+            setCurrentPlanetId(planetParam);
+          }
+        })
+        .catch(() => {});
     }
 
     const handlePopState = () => {
@@ -102,15 +116,18 @@ export const App: React.FC = () => {
       const popArtId = popParams.get('artifact');
       const popPlanet = (popParams.get('planet') as PlanetId) || 'mars';
       if (popArtId) {
-        portalApi.getArtifactDetail(popArtId).then((detail) => {
-          if (detail) {
-            setStandaloneDossier({
-              artifact: apiArtifactDetailToSpaceArtifact(detail, popPlanet),
-              planetId: popPlanet,
-            });
-            setCurrentPlanetId(popPlanet);
-          }
-        }).catch(() => {});
+        portalApi
+          .getArtifactDetail(popArtId)
+          .then((detail) => {
+            if (detail) {
+              setStandaloneDossier({
+                artifact: apiArtifactDetailToSpaceArtifact(detail, popPlanet),
+                planetId: popPlanet,
+              });
+              setCurrentPlanetId(popPlanet);
+            }
+          })
+          .catch(() => {});
       } else {
         setStandaloneDossier(null);
       }
@@ -136,12 +153,15 @@ export const App: React.FC = () => {
     setStandaloneDossier({ artifact, planetId: pId });
     window.history.pushState({}, '', `?artifact=${artifact.id}&planet=${pId}`);
 
-    portalApi.getArtifactDetail(artifact.id).then((detail) => {
-      if (detail) {
-        const detailedArtifact = apiArtifactDetailToSpaceArtifact(detail, pId);
-        setStandaloneDossier({ artifact: detailedArtifact, planetId: pId });
-      }
-    }).catch(() => {});
+    portalApi
+      .getArtifactDetail(artifact.id)
+      .then((detail) => {
+        if (detail) {
+          const detailedArtifact = apiArtifactDetailToSpaceArtifact(detail, pId);
+          setStandaloneDossier({ artifact: detailedArtifact, planetId: pId });
+        }
+      })
+      .catch(() => {});
   };
 
   const handleSelectArtifactFromList = (artifact: SpaceArtifact) => {
@@ -168,14 +188,16 @@ export const App: React.FC = () => {
   if (standaloneDossier) {
     const pConfig = planets[standaloneDossier.planetId] || PLANETS[standaloneDossier.planetId];
     return (
-      <DossierPage
-        artifact={standaloneDossier.artifact}
-        planet={pConfig}
-        onBackToMap={() => {
-          window.history.pushState({}, '', window.location.pathname);
-          setStandaloneDossier(null);
-        }}
-      />
+      <AppProviders>
+        <DossierPage
+          artifact={standaloneDossier.artifact}
+          planet={pConfig}
+          onBackToMap={() => {
+            window.history.pushState({}, '', window.location.pathname);
+            setStandaloneDossier(null);
+          }}
+        />
+      </AppProviders>
     );
   }
 
@@ -183,90 +205,129 @@ export const App: React.FC = () => {
   const themeAccent = isMars ? '#f97316' : '#00F0FF';
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      <Header
-        currentPlanetId={currentPlanetId}
-        onSelectPlanet={(id) => {
-          setCurrentPlanetId(id);
-          setActiveArtifact(null);
-        }}
-        artifactCount={currentPlanet.artifacts.length}
-        currentView={currentView}
-        onSelectView={(view) => {
-          setCurrentView(view);
-          if (view !== 'map') {
+    <AppProviders>
+      <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+        <Header
+          currentPlanetId={currentPlanetId}
+          onSelectPlanet={(id) => {
+            setCurrentPlanetId(id);
             setActiveArtifact(null);
-          }
-        }}
-        onOpenAbout={() => setIsAboutOpen(true)}
-        isLiveApi={apiOnline}
-      />
+          }}
+          artifactCount={currentPlanet?.artifacts?.length || 0}
+          currentView={currentView}
+          onSelectView={(view) => {
+            setCurrentView(view);
+            if (view !== 'map') {
+              setActiveArtifact(null);
+            }
+          }}
+          onOpenAbout={() => setIsAboutOpen(true)}
+          isLiveApi={apiOnline}
+        />
 
-      {currentView === 'map' && (
-        <>
-          <PlanetViewer
-            planet={currentPlanet}
-            onOpenDossier={(art) => handleOpenDossier(art, currentPlanetId)}
-            isAutoRotating={isAutoRotating}
-            showMarkers={showMarkers}
-            selectedArtifact={activeArtifact}
-            onSelectArtifact={setActiveArtifact}
-            filteredArtifactIds={filteredArtifactIds}
-            onRegisterSceneActions={(actions) => {
-              sceneActionsRef.current = actions;
+        {currentView === 'map' && currentPlanet && (
+          <>
+            <PlanetViewer
+              planet={currentPlanet}
+              onOpenDossier={(art) => handleOpenDossier(art, currentPlanetId)}
+              isAutoRotating={isAutoRotating}
+              showMarkers={showMarkers}
+              selectedArtifact={activeArtifact}
+              onSelectArtifact={setActiveArtifact}
+              filteredArtifactIds={filteredArtifactIds}
+              onRegisterSceneActions={(actions) => {
+                sceneActionsRef.current = actions;
+              }}
+            />
+
+            <PlanetTelemetry
+              planet={currentPlanet}
+              onSelectArtifact={handleSelectArtifactFromList}
+              activeArtifactId={activeArtifact?.id}
+              onFilteredIdsChange={setFilteredArtifactIds}
+            />
+
+            <ViewControls
+              isAutoRotating={isAutoRotating}
+              onToggleAutoRotate={handleToggleAutoRotate}
+              onResetView={handleResetView}
+              showMarkers={showMarkers}
+              onToggleMarkers={() => setShowMarkers((prev) => !prev)}
+              planetColor={themeAccent}
+            />
+          </>
+        )}
+
+        {currentView === 'catalog' && (
+          <CatalogPage
+            onOpenDossier={(art, pId) => handleOpenDossier(art, pId)}
+            onBackToMap={() => setCurrentView('map')}
+            onOpenMcp={() => setCurrentView('connect')}
+            planets={planets}
+          />
+        )}
+
+        {currentView === 'community' && (
+          <CommunityVideosPage
+            onOpenArtifact={(art, pId) => {
+              setCurrentPlanetId(pId);
+              handleOpenDossier(art, pId);
+            }}
+            onOpenMcp={() => setCurrentView('connect')}
+            planets={planets}
+          />
+        )}
+
+        {currentView === 'astro-guessr' && (
+          <AstroGuessrGame
+            onExit={() => setCurrentView('map')}
+            onOpenDossier={(art, pId) => {
+              setCurrentPlanetId(pId);
+              handleOpenDossier(art, pId);
             }}
           />
+        )}
 
-          <PlanetTelemetry
-            planet={currentPlanet}
-            onSelectArtifact={handleSelectArtifactFromList}
-            activeArtifactId={activeArtifact?.id}
-            onFilteredIdsChange={setFilteredArtifactIds}
-          />
+        {currentView === 'arena' && (
+          <div style={{ padding: '80px 20px 20px', height: '100vh', overflowY: 'auto' }}>
+            <ArenaPage />
+          </div>
+        )}
 
-          <ViewControls
-            isAutoRotating={isAutoRotating}
-            onToggleAutoRotate={handleToggleAutoRotate}
-            onResetView={handleResetView}
-            showMarkers={showMarkers}
-            onToggleMarkers={() => setShowMarkers((prev) => !prev)}
-            planetColor={themeAccent}
-          />
-        </>
-      )}
+        {currentView === 'connect' && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 60,
+              overflowY: 'auto',
+            }}
+          >
+            <McpConnectPage
+              onNavigate={(view) => {
+                setCurrentView(view);
+                if (view !== 'connect') {
+                  window.history.pushState(
+                    {},
+                    '',
+                    window.location.pathname === '/connect' ? '/' : window.location.pathname
+                  );
+                }
+              }}
+              onOpenAbout={() => setIsAboutOpen(true)}
+            />
+          </div>
+        )}
 
-      {currentView === 'catalog' && (
-        <CatalogPage
-          onOpenDossier={(art, pId) => handleOpenDossier(art, pId)}
-          onBackToMap={() => setCurrentView('map')}
-          planets={planets}
+        <AboutModal
+          isOpen={isAboutOpen}
+          onClose={() => setIsAboutOpen(false)}
+          onOpenMcp={() => setCurrentView('connect')}
         />
-      )}
-
-      {currentView === 'community' && (
-        <CommunityVideosPage
-          onOpenArtifact={(art, pId) => {
-            setCurrentPlanetId(pId);
-            handleOpenDossier(art, pId);
-          }}
-          planets={planets}
-        />
-      )}
-
-      {currentView === 'astro-guessr' && (
-        <AstroGuessrGame
-          onExit={() => setCurrentView('map')}
-          onOpenDossier={(art, pId) => {
-            setCurrentPlanetId(pId);
-            handleOpenDossier(art, pId);
-          }}
-        />
-      )}
-
-      <AboutModal
-        isOpen={isAboutOpen}
-        onClose={() => setIsAboutOpen(false)}
-      />
-    </div>
+      </div>
+    </AppProviders>
   );
 };

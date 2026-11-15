@@ -29,6 +29,7 @@ export const SettingsPage: React.FC = () => {
     setThemeMode,
     setLanguage,
     setContentGenerationLanguage,
+    setRenderTimeoutSec,
     toggleAutoRefresh,
     setRefreshInterval,
     toggleCompactMode,
@@ -73,6 +74,7 @@ export const SettingsPage: React.FC = () => {
           onThemeModeChange={setThemeMode}
           onLanguageChange={setLanguage}
           onContentLanguageChange={setContentGenerationLanguage}
+          onRenderTimeoutChange={setRenderTimeoutSec}
           onToggleAutoRefresh={toggleAutoRefresh}
           onIntervalChange={setRefreshInterval}
           onToggleCompact={toggleCompactMode}
