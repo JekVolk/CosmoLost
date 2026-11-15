@@ -15,6 +15,9 @@ desktop-client/dist/
 desktop-client/src-tauri/target/
 desktop-client/src-tauri/binaries/*.exe
 desktop-client/src-tauri/binaries/*.pdb
+desktop-client/artifacts/
+artifacts/
+*.zip
 
 # OAuth client secrets & credentials (Zero-Trust BYOK)
 client_secret*.json
