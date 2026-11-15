@@ -1,5 +1,7 @@
 import { Badge, Box, Button, Card, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useMediaEngine } from '../model/use-media-engine';
+import { ShortsSplitScreenStudio } from './ShortsSplitScreenStudio';
+import { SubtitleCustomizerSection } from './SubtitleCustomizerSection';
 
 export function MediaEnginePanel() {
   const {
@@ -23,7 +25,7 @@ export function MediaEnginePanel() {
           <Text fontWeight="semibold" fontSize="lg" color="fg">
             Медіа-Конвеєр (Edge-TTS + FFmpeg Sidecar)
           </Text>
-          <Badge colorPalette="blue" variant="subtle">
+          <Badge colorPalette="blue" variant="subtle" size="xs" px="2.5" py="0.5" borderRadius="md">
             60 FPS • 1080x1920
           </Badge>
         </Flex>
@@ -31,63 +33,29 @@ export function MediaEnginePanel() {
 
       <Card.Body>
         <VStack align="stretch" gap="4">
-          <VStack align="stretch" gap="2">
-            <Text fontSize="sm" fontWeight="medium" color="fg">
-              Нейронний голос диктора (Edge-TTS з автоприскоренням 1.1x та Jump-Cut):
-            </Text>
-            <Flex wrap="wrap" gap="2">
-              {voices.map((v) => {
-                const isSelected = selectedVoice === v.id;
-                return (
-                  <Button
-                    key={v.id}
-                    size="xs"
-                    variant={isSelected ? 'solid' : 'outline'}
-                    colorPalette={isSelected ? 'blue' : 'gray'}
-                    onClick={() => setSelectedVoice(v.id as typeof selectedVoice)}
-                  >
-                    {v.name}
-                  </Button>
-                );
-              })}
-            </Flex>
-          </VStack>
+          {/* 9:16 Split-Screen & Emotional Character Studio (Primary Viewport) */}
+          <ShortsSplitScreenStudio />
 
-          <VStack align="stretch" gap="2">
-            <HStack justify="space-between">
-              <Text fontSize="sm" fontWeight="medium" color="fg">
-                Rust Watchdog таймаут рендерингу (для слабких GPU/CPU):
-              </Text>
-              <Badge colorPalette="yellow" size="sm">
-                {renderTimeoutSec} секунд
-              </Badge>
-            </HStack>
-            <HStack gap="2">
-              {[30, 40, 60, 90, 120, 180].map((sec) => (
-                <Button
-                  key={sec}
-                  size="xs"
-                  variant={renderTimeoutSec === sec ? 'solid' : 'outline'}
-                  colorPalette={renderTimeoutSec === sec ? 'yellow' : 'gray'}
-                  onClick={() => setRenderTimeout(sec)}
-                >
-                  {sec}с {sec === 40 ? '(GPU)' : sec === 120 ? '(CPU)' : ''}
-                </Button>
-              ))}
-            </HStack>
-            <Text fontSize="xs" color="fg.muted">
-              Запобігає передчасному вбиванню рендерингу під час обробки важких фільтрів Pillow-box
-              та Кена Бернса.
-            </Text>
-          </VStack>
-
-          <HStack gap="3" pt="2">
-            <Button colorPalette="blue" loading={isSynthesizing} onClick={synthesizeAudio}>
-              Синтезувати Озвучку (Jump-Cut)
+          {/* Quick Render Action Buttons */}
+          <HStack gap="3" pt="1">
+            <Button
+              colorPalette="teal"
+              size="md"
+              loading={isRendering}
+              onClick={renderFfmpegVideo}
+              flex="1"
+              fontWeight="semibold"
+            >
+              🎬 Змонтувати ролик FFmpeg (1080x1920)
             </Button>
-
-            <Button colorPalette="teal" loading={isRendering} onClick={renderFfmpegVideo}>
-              Змонтувати ролик FFmpeg (1080x1920)
+            <Button
+              colorPalette="blue"
+              size="md"
+              variant="outline"
+              loading={isSynthesizing}
+              onClick={synthesizeAudio}
+            >
+              🎙️ Синтезувати Озвучку
             </Button>
           </HStack>
 
@@ -119,6 +87,64 @@ export function MediaEnginePanel() {
               </Text>
             </Box>
           )}
+
+          {/* Contrast Kinetic Subtitles Customizer */}
+          <SubtitleCustomizerSection />
+
+          {/* Speech & Audio Engine Details */}
+          <VStack align="stretch" gap="2" pt="1">
+            <Text
+              fontSize="xs"
+              fontWeight="semibold"
+              color="fg.muted"
+              textTransform="uppercase"
+              letterSpacing="wider"
+            >
+              Нейронний голос диктора (Edge-TTS 1.1x Jump-Cut):
+            </Text>
+            <Flex wrap="wrap" gap="1.5">
+              {voices.map((v) => {
+                const isSelected = selectedVoice === v.id;
+                return (
+                  <Button
+                    key={v.id}
+                    size="xs"
+                    variant={isSelected ? 'solid' : 'outline'}
+                    colorPalette={isSelected ? 'blue' : 'gray'}
+                    onClick={() => setSelectedVoice(v.id as typeof selectedVoice)}
+                  >
+                    {v.name}
+                  </Button>
+                );
+              })}
+            </Flex>
+          </VStack>
+
+          {/* Rust Watchdog timeout */}
+          <VStack align="stretch" gap="1.5" pt="1">
+            <HStack justify="space-between">
+              <Text fontSize="xs" fontWeight="medium" color="fg.muted">
+                Rust Watchdog таймаут рендерингу:
+              </Text>
+              <Badge colorPalette="yellow" size="xs" px="2" py="0.5" borderRadius="md">
+                {renderTimeoutSec}с{' '}
+                {renderTimeoutSec === 40 ? '(GPU)' : renderTimeoutSec === 120 ? '(CPU)' : ''}
+              </Badge>
+            </HStack>
+            <HStack gap="1.5">
+              {[30, 40, 60, 90, 120, 180].map((sec) => (
+                <Button
+                  key={sec}
+                  size="2xs"
+                  variant={renderTimeoutSec === sec ? 'solid' : 'outline'}
+                  colorPalette={renderTimeoutSec === sec ? 'yellow' : 'gray'}
+                  onClick={() => setRenderTimeout(sec)}
+                >
+                  {sec}с
+                </Button>
+              ))}
+            </HStack>
+          </VStack>
         </VStack>
       </Card.Body>
     </Card.Root>

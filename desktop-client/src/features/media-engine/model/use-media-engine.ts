@@ -3,15 +3,18 @@ import { edgeTts, tauriCommands } from '@/shared/api';
 import { useState } from 'react';
 
 export function useMediaEngine() {
+  const { currentProject, setRenderTimeout, updateStatus } = usePublicationStore();
+
   const [selectedVoice, setSelectedVoice] = useState<
     'uk-UA-OstapNeural' | 'uk-UA-PolinaNeural' | 'en-US-GuyNeural' | 'en-US-JennyNeural'
-  >('uk-UA-OstapNeural');
+  >(() => {
+    return currentProject?.contentLanguage === 'uk' ? 'uk-UA-OstapNeural' : 'en-US-GuyNeural';
+  });
   const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [isRendering, setIsRendering] = useState(false);
   const [renderProgress, setRenderProgress] = useState<number | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  const { currentProject, setRenderTimeout, updateStatus } = usePublicationStore();
   const renderTimeoutSec = currentProject?.renderTimeoutSec || 40;
 
   const synthesizeAudio = async () => {
