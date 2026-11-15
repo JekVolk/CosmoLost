@@ -3,6 +3,7 @@ import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { resolveGlbModelUrl } from '../model/cdnModels';
 import type { Model3DViewerProps } from '../types';
@@ -299,6 +300,9 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
 
     if (candidateUrl) {
       const loader = new GLTFLoader();
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('/draco/');
+      loader.setDRACOLoader(dracoLoader);
       loader.load(
         candidateUrl,
         (gltf) => {
