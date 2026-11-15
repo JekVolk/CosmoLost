@@ -13,6 +13,7 @@ import {
   Film,
   Flame,
   Globe,
+  Layers,
   RefreshCw,
   Sparkles,
 } from 'lucide-react';
@@ -44,10 +45,14 @@ export function ScriptGeneratorPanel() {
     setSeriesPart,
     seriesTotalParts,
     setSeriesTotalParts,
+    createProjectFromSuggestion,
+    batchGenerate5Reels,
+    batchQueue,
     currentProject,
   } = useScriptGenerator();
 
   const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
+  const [batchFeedback, setBatchFeedback] = useState<string | null>(null);
 
   const handleCopyScript = async () => {
     if (!currentProject) return;
@@ -323,6 +328,24 @@ export function ScriptGeneratorPanel() {
               Розумний підбір наступної теми
             </Button>
 
+            {/* REQ-FAC-11: Batch Production Mode */}
+            <Button
+              colorPalette="yellow"
+              variant="subtle"
+              loading={isGenerating}
+              onClick={async () => {
+                const task = await batchGenerate5Reels();
+                setBatchFeedback(
+                  `📦 Запущено пакетну генерацію ${task.totalCount} роликів у чергу!`,
+                );
+                setTimeout(() => setBatchFeedback(null), 5000);
+              }}
+              title="Створити пакет із 5 роликів у стіл за поточною рубрикою"
+            >
+              <Layers size={14} />
+              Пакет із 5 роликів
+            </Button>
+
             <Button
               size="sm"
               variant="ghost"
@@ -334,6 +357,46 @@ export function ScriptGeneratorPanel() {
               Синхронізація NASA
             </Button>
           </Flex>
+
+          {/* Batch Queue Status Indicator */}
+          {batchQueue && (
+            <Box
+              p="3"
+              borderRadius="lg"
+              bg="yellow.950/40"
+              borderWidth="1px"
+              borderColor="yellow.700"
+            >
+              <Flex justify="space-between" align="center">
+                <HStack gap="2">
+                  <Layers size={15} color="#eab308" />
+                  <Text fontSize="xs" fontWeight="bold" color="yellow.200">
+                    Черга пакетної генерації: {batchQueue.completedCount} / {batchQueue.totalCount}{' '}
+                    роликів
+                  </Text>
+                </HStack>
+                <Badge size="xs" colorPalette="yellow">
+                  {batchQueue.status}
+                </Badge>
+              </Flex>
+            </Box>
+          )}
+
+          {batchFeedback && (
+            <HStack
+              px="3"
+              py="2"
+              borderRadius="md"
+              bg="yellow.950"
+              borderWidth="1px"
+              borderColor="yellow.700"
+              gap="2"
+            >
+              <Text fontSize="xs" color="yellow.200">
+                {batchFeedback}
+              </Text>
+            </HStack>
+          )}
 
           {/* Script File Export & Clipboard Tools */}
           <Box p="3" borderRadius="lg" bg="teal.950/40" borderWidth="1px" borderColor="teal.800">
@@ -411,6 +474,19 @@ export function ScriptGeneratorPanel() {
                   </Text>{' '}
                   {nextTopicSuggestion.recommended_pin_comment}
                 </Text>
+                <HStack justify="flex-end" pt="1">
+                  <Button
+                    size="xs"
+                    colorPalette="teal"
+                    variant="solid"
+                    onClick={() => {
+                      createProjectFromSuggestion();
+                    }}
+                  >
+                    <Sparkles size={12} />
+                    Створити проєкт за цією темою
+                  </Button>
+                </HStack>
               </VStack>
             </Box>
           )}

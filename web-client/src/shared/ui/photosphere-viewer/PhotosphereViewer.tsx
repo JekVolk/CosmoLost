@@ -13,6 +13,7 @@ import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import styles from './PhotosphereViewer.module.css';
+import { API_BASE_URL } from '../../api/portalApi';
 import type { PhotosphereViewerProps } from './types';
 
 function getCompassHeading(azimuthDeg: number): string {
@@ -195,8 +196,12 @@ export const PhotosphereViewer: React.FC<PhotosphereViewerProps> = ({
 
     let isSubscribed = true;
 
+    const textureUrl = imageUrl.startsWith('http')
+      ? `${API_BASE_URL}/media-proxy/?url=${encodeURIComponent(imageUrl)}`
+      : imageUrl;
+
     textureLoader.load(
-      imageUrl,
+      textureUrl,
       (texture) => {
         if (!isSubscribed) {
           texture.dispose();
@@ -237,7 +242,7 @@ export const PhotosphereViewer: React.FC<PhotosphereViewerProps> = ({
           setIsLoading(false);
           setLoadError('Failed to load 360° spherical texture from NASA archive.');
         };
-        img.src = imageUrl;
+        img.src = textureUrl;
       },
     );
 

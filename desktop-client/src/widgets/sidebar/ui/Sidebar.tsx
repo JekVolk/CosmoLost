@@ -59,6 +59,7 @@ export const Sidebar: React.FC = () => {
           px="3"
           onClick={() => navigate(ROUTES.CONTENT_FACTORY)}
           title="Фабрика контенту та редактор Shorts"
+          aria-label="Фабрика контенту та редактор Shorts"
         >
           <Clapperboard size={18} />
           {!compactMode && (
@@ -91,6 +92,7 @@ export const Sidebar: React.FC = () => {
           px="3"
           onClick={() => navigate(ROUTES.OVERVIEW)}
           title="Всі проєкти та чернетки"
+          aria-label="Всі проєкти та чернетки"
         >
           <FolderKanban size={18} />
           {!compactMode && (
@@ -123,6 +125,7 @@ export const Sidebar: React.FC = () => {
           px="3"
           onClick={() => navigate(ROUTES.OVERVIEW)}
           title="Створити новий проєкт або обрати новий артефакт"
+          aria-label="Створити ролик"
         >
           <Plus size={16} />
           {!compactMode && (
@@ -146,7 +149,7 @@ export const Sidebar: React.FC = () => {
             gap="1"
           >
             <HStack gap="1.5">
-              <Sparkles size={13} color="#f59e0b" />
+              <Sparkles size={13} color="var(--chakra-colors-yellow-500)" />
               <Text fontSize="2xs" fontWeight="bold" color="fg">
                 SMM Рекомендація
               </Text>
@@ -168,6 +171,7 @@ export const Sidebar: React.FC = () => {
           px="3"
           onClick={() => navigate(ROUTES.SETTINGS)}
           title={t('nav.settings')}
+          aria-label={t('nav.settings')}
         >
           <Settings size={18} />
           {!compactMode && (

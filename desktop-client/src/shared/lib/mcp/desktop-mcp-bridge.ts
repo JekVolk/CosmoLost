@@ -253,6 +253,34 @@ class DesktopMcpBridge implements DesktopMcpBridgeApi {
           status: 'QUEUED',
         };
       }
+      case 'suggest_next_video_topic': {
+        const artifactId = String(
+          args.artifact_id || args.current_artifact_id || 'opportunity-rover',
+        );
+        const rubricId = String(args.rubric_id || 'last-sol-drama');
+        const reason = String(args.selection_reason || 'Наукове відкриття та дослідження планет');
+
+        return {
+          success: true,
+          currentArtifactId: artifactId,
+          rubricId,
+          selectionReason: reason,
+          suggestedArtifactId:
+            artifactId === 'opportunity-rover' ? 'spirit-rover' : 'apollo-11-lm-eagle',
+          suggestedArtifactName:
+            artifactId === 'opportunity-rover'
+              ? 'Spirit Rover (MER-A)'
+              : 'Apollo 11 Lunar Module (Eagle)',
+          suggestedRubricId: rubricId,
+          suggestedHook:
+            artifactId === 'opportunity-rover'
+              ? 'Як брат-близнюк Spirit застряг у смертельній пастці Troy?'
+              : 'Чому спускний ступінь Аполлон-11 залишився на Місяці назавжди?',
+          narrativeBridge: `Поки ${artifactId} виконував свою місію, на іншій ділянці розгорталася ще більш драматична історія...`,
+          recommendedPinComment:
+            'Який космічний апарат ви б повернули на Землю першим? Пишіть у коментарях! 👇',
+        };
+      }
       default:
         throw new Error(`Unknown desktop MCP bridge tool: ${toolName}`);
     }

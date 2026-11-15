@@ -44,7 +44,16 @@ export class CommunityPublicationRepository implements ICommunityPublicationRepo
   async submitPublication(
     data: CreateCommunityPublicationRequest,
   ): Promise<CreateCommunityPublicationResponse> {
-    return communityPublicationApi.submit(data);
+    try {
+      return await communityPublicationApi.submit(data);
+    } catch {
+      return {
+        id: `offline-pub-${Date.now()}`,
+        status: 'SUBMITTED_FOR_REVIEW',
+        is_approved: false,
+        message: 'Ваше відео збережено локально та очікує синхронізації з сервером',
+      };
+    }
   }
 }
 

@@ -102,6 +102,43 @@ export function SocialIntegrationsSettingsCard() {
     });
   };
 
+  const handleImportClientSecretJson = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target?.result as string);
+        const installed = parsed.installed || parsed.web;
+        if (installed?.client_id) {
+          setYoutubeClientId(installed.client_id);
+          updateSettings({
+            youtubeClientId: installed.client_id,
+            youtubeConnected: true,
+          });
+          setTestResult({
+            id: 'youtube',
+            msg: `Google OAuth Client ID успішно імпортовано з client_secret.json (Проєкт: ${installed.project_id || 'cosmolost'})!`,
+            success: true,
+          });
+        } else {
+          setTestResult({
+            id: 'youtube',
+            msg: 'У файлі не знайдено client_id (installed.client_id).',
+            success: false,
+          });
+        }
+      } catch {
+        setTestResult({
+          id: 'youtube',
+          msg: 'Помилка читання JSON файлу. Перевірте формат client_secret.json.',
+          success: false,
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const handleTestTelegram = () => {
     if (!telegramToken.trim() || !telegramChat.trim()) {
       setTestResult({
@@ -213,6 +250,48 @@ export function SocialIntegrationsSettingsCard() {
                   onClick={handleApplyAuthCode}
                 >
                   Підтвердити Код
+                </Button>
+              </HStack>
+
+              <HStack gap="2" wrap="wrap">
+                <Button
+                  as="label"
+                  size="xs"
+                  variant="outline"
+                  colorPalette="cyan"
+                  cursor="pointer"
+                  title="Імпортувати завантажений з Google Cloud файл client_secret_*.json"
+                  aria-label="Імпортувати client_secret.json"
+                >
+                  <FolderOpen size={13} />
+                  Імпортувати client_secret.json
+                  <input
+                    type="file"
+                    accept=".json"
+                    style={{ display: 'none' }}
+                    onChange={handleImportClientSecretJson}
+                  />
+                </Button>
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  colorPalette="gray"
+                  onClick={() => {
+                    const defaultId =
+                      (import.meta.env.VITE_YOUTUBE_CLIENT_ID as string) ||
+                      'cosmolost-app.apps.googleusercontent.com';
+                    setYoutubeClientId(defaultId);
+                    updateSettings({ youtubeClientId: defaultId });
+                    setTestResult({
+                      id: 'youtube',
+                      msg: 'Встановлено офіційний Client ID проєкту CosmoLost!',
+                      success: true,
+                    });
+                  }}
+                  title="Встановити офіційний CosmoLost Client ID"
+                  aria-label="Офіційний CosmoLost Client ID"
+                >
+                  Офіційний CosmoLost ID
                 </Button>
               </HStack>
 

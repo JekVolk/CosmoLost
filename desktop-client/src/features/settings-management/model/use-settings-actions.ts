@@ -30,6 +30,7 @@ export function useSettingsActions() {
     toggleCompactMode,
     toggleSound,
     toggleDeveloperMode,
+    setRenderTimeoutSec,
     updateSettings,
     resetSettings,
   } = useSettingsStore();
@@ -224,6 +225,7 @@ export function useSettingsActions() {
     setLanguage: (lang: Language) => setLanguage(lang),
     setContentGenerationLanguage: (lang: ContentGenerationLanguage) =>
       setContentGenerationLanguage(lang),
+    setRenderTimeoutSec: (sec: number) => setRenderTimeoutSec(sec),
     toggleAutoRefresh: () => setAutoRefresh(!settings.autoRefreshMetrics),
     setRefreshInterval: (sec: number) => setRefreshInterval(sec),
     toggleCompactMode,

@@ -52,19 +52,19 @@ export function useMediaEngine() {
     setRenderProgress(10);
     updateStatus('RENDERING');
 
+    let unlisten: (() => void) | undefined;
     try {
-      // Simulate progress ticks
-      const timer = setInterval(() => {
-        setRenderProgress((prev) => (prev && prev < 90 ? prev + 25 : prev));
-      }, 300);
+      unlisten = await tauriCommands.listenVideoRenderProgress((progress) => {
+        setRenderProgress(progress.progress);
+      });
 
       const res = await tauriCommands.renderVideoFfmpeg({
         project_id: currentProject.id,
+        input_video_path: currentProject.localVideoPath,
+        audio_path: currentProject.localAudioPath,
         render_timeout_sec: renderTimeoutSec,
         fps: 60,
       });
-
-      clearInterval(timer);
       setRenderProgress(100);
       updateStatus('READY');
       setStatusMessage(
@@ -76,6 +76,7 @@ export function useMediaEngine() {
         `Помилка рендерингу: ${e instanceof Error ? e.message : 'Watchdog timeout'}`,
       );
     } finally {
+      unlisten?.();
       setIsRendering(false);
     }
   };

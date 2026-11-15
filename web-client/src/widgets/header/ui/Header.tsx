@@ -2,7 +2,7 @@ import { Gamepad2, Sparkles, Swords } from 'lucide-react';
 import type React from 'react';
 import type { PlanetId } from '../../../entities/planet/model/types';
 
-export type AppView = 'map' | 'catalog' | 'community' | 'astro-guessr';
+export type AppView = 'map' | 'catalog' | 'community' | 'astro-guessr' | 'arena';
 
 interface HeaderProps {
   currentPlanetId: PlanetId;
@@ -81,6 +81,14 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Gamepad2 size={13} />
           <span>AstroGuessr 360°</span>
+        </button>
+        <button
+          type="button"
+          className={`cosmo-nav-link ${currentView === 'arena' ? 'active' : ''}`}
+          style={{ '--link-accent': themeAccent } as React.CSSProperties}
+          onClick={() => onSelectView('arena')}
+        >
+          Arena
         </button>
         <a
           href="/game"

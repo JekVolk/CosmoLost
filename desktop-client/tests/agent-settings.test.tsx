@@ -102,11 +102,15 @@ describe('Agent Studio, AI Profiles & Export Service', () => {
     fireEvent.click(saveBtn);
 
     // Verify notification appeared
-    expect(screen.getByText(/Профіль агента \[CosmoFactChecker\] успішно збережено/i)).toBeDefined();
+    expect(
+      screen.getByText(/Профіль агента \[CosmoFactChecker\] успішно збережено/i),
+    ).toBeDefined();
 
     // Verify store has the updated prompt
     const savedAgents = useSettingsStore.getState().settings.agentProfiles;
     const updated = savedAgents?.find((a) => a.id === 'fact_checker');
-    expect(updated?.systemPrompt).toBe('Custom audited system prompt for strict astrophysics facts.');
+    expect(updated?.systemPrompt).toBe(
+      'Custom audited system prompt for strict astrophysics facts.',
+    );
   });
 });

@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import { listen } from '@tauri-apps/api/event';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 
 export interface SystemInfo {
@@ -33,9 +34,21 @@ export interface PlatformConnectorDto {
 
 export interface RenderVideoParams {
   project_id: string;
+  input_video_path?: string;
+  audio_path?: string;
+  subtitle_path?: string;
+  avatar_path?: string;
   render_timeout_sec?: number;
   fps?: number;
   quality_crf?: number;
+  duration_sec?: number;
+}
+
+export interface RenderProgress {
+  task_id: string;
+  progress: number;
+  frame: number | null;
+  time: string | null;
 }
 
 export interface RenderVideoResult {
@@ -241,11 +254,7 @@ export const tauriCommands = {
    */
   renderVideoFfmpeg: async (params: RenderVideoParams): Promise<RenderVideoResult> => {
     if (typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window) {
-      try {
-        return await invoke<RenderVideoResult>('render_video_ffmpeg', { params });
-      } catch {
-        // Fallback
-      }
+      return await invoke<RenderVideoResult>('render_video_ffmpeg', { params });
     }
     const outputPath = `C:\\Users\\CosmoCreator\\Videos\\CosmoLost\\${params.project_id}_rendered.mp4`;
     return {
@@ -255,6 +264,15 @@ export const tauriCommands = {
       file_size_bytes: 18450000,
       status: 'COMPLETED',
     };
+  },
+
+  listenVideoRenderProgress: async (handler: (progress: RenderProgress) => void) => {
+    if (typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window) {
+      return await listen<RenderProgress>('video-render-progress', (event) =>
+        handler(event.payload),
+      );
+    }
+    return () => undefined;
   },
 
   /**

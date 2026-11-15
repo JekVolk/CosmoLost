@@ -6,14 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
     "lint": "biome lint src",
     "format": "biome format --write src",
     "check": "biome check --write src",
-    "test": "vitest run",
-    "preview": "vite preview"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.8.3",
+    "@chakra-ui/react": "^3.38.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -40,6 +41,7 @@
     "jsdom": "^26.0.0",
     "typescript": "^5.7.3",
     "vite": "^6.1.0",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.5"
   }
 }

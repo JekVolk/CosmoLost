@@ -38,6 +38,10 @@ export function useScriptGenerator() {
     updateSeo,
     setMagnetWord: updateStoreMagnet,
     setSeriesInfo,
+    setNextTopicSuggestion: updateStoreNextTopic,
+    createProjectFromSuggestion,
+    batchGenerateProjects,
+    batchQueue,
   } = usePublicationStore();
 
   const loadAssetBundle = async () => {
@@ -209,6 +213,7 @@ export function useScriptGenerator() {
           currentProject?.selectionReason || 'Завершення контакту та історичні дані місії',
       });
       setNextTopicSuggestion(resp);
+      updateStoreNextTopic(resp.suggested_artifact_id, resp.suggested_hook);
     } catch {
       // Fallback to local AI generator if backend fails
       const fallback = await geminiAi.recommendNextTopic({
@@ -216,14 +221,33 @@ export function useScriptGenerator() {
         currentRubricId: selectedRubric as SmmRubricType,
         selectionReason: currentProject?.selectionReason,
       });
-      setNextTopicSuggestion({
+      const fallbackData = {
         suggested_artifact_id: fallback.suggestedArtifactId,
         suggested_artifact_name: fallback.suggestedArtifactName,
         narrative_bridge: fallback.narrativeBridge,
         suggested_hook: fallback.suggestedHook,
         suggested_rubric_id: fallback.suggestedRubricId,
         recommended_pin_comment: fallback.recommendedPinComment,
-      });
+      };
+      setNextTopicSuggestion(fallbackData);
+      updateStoreNextTopic(fallback.suggestedArtifactId, fallback.suggestedHook);
+    }
+  };
+
+  const batchGenerate5Reels = async () => {
+    setIsGenerating(true);
+    try {
+      const artifactsList = [
+        { id: 'opportunity-rover', name: 'Opportunity Rover (MER-B)' },
+        { id: 'spirit-rover', name: 'Spirit Rover (MER-A)' },
+        { id: 'insight-mars-lander', name: 'InSight Mars Lander' },
+        { id: 'apollo-11-lm-eagle', name: 'Apollo 11 Lunar Module (Eagle)' },
+        { id: 'apollo-15-lrv-1', name: 'Apollo 15 Lunar Roving Vehicle' },
+      ];
+      const task = batchGenerateProjects(artifactsList, selectedRubric as SmmRubricType);
+      return task;
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -267,6 +291,9 @@ export function useScriptGenerator() {
     setSeriesPart,
     seriesTotalParts,
     setSeriesTotalParts,
+    createProjectFromSuggestion,
+    batchGenerate5Reels,
+    batchQueue,
     currentProject,
   };
 }

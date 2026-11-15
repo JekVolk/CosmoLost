@@ -543,7 +543,7 @@ export const portalApi = {
         mediaList.push({
           id: 'media-oppy-panorama',
           media_category: 'PANORAMA',
-          media_url: 'https://photojournal.jpl.nasa.gov/jpeg/PIA18604.jpg',
+          media_url: 'https://images-assets.nasa.gov/image/PIA22074/PIA22074~medium.jpg',
           nasa_id_or_pia: 'PIA18604',
           caption:
             'Opportunity 360-degree color panorama from Wdowiak Ridge overlooking Endeavour Crater.',
@@ -553,7 +553,7 @@ export const portalApi = {
         mediaList.push({
           id: 'media-spirit-panorama',
           media_category: 'PANORAMA',
-          media_url: 'https://photojournal.jpl.nasa.gov/jpeg/PIA01907.jpg',
+          media_url: 'https://images-assets.nasa.gov/image/PIA01907/PIA01907~medium.jpg',
           nasa_id_or_pia: 'PIA01907',
           caption: 'Spirit 360-degree panorama from the summit of Husband Hill, Gusev Crater.',
           credit: 'NASA/JPL-Caltech/Cornell',
@@ -562,7 +562,7 @@ export const portalApi = {
         mediaList.push({
           id: 'media-apollo11-panorama',
           media_category: 'PANORAMA',
-          media_url: 'https://photojournal.jpl.nasa.gov/jpeg/PIA14545.jpg',
+          media_url: 'https://images-assets.nasa.gov/image/6900957/6900957~medium.jpg',
           nasa_id_or_pia: 'PIA14545',
           caption: 'Apollo 11 Tranquility Base 360-degree lunar surface panorama.',
           credit: 'NASA / Neil Armstrong & Buzz Aldrin Archive',

@@ -19,6 +19,7 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
   const [isWireframe, setIsWireframe] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [modelSource, setModelSource] = useState<string>('NASA 3D CDN GLB');
+  const [modelLoadError, setModelLoadError] = useState<string | null>(null);
 
   const controlsRef = useRef<OrbitControls | null>(null);
   const isAutoRotatingRef = useRef<boolean>(isAutoRotating);
@@ -296,6 +297,7 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
 
     setLoading(true);
     setLoadProgress(0);
+    setModelLoadError(null);
 
     if (candidateUrl) {
       const loader = new GLTFLoader();
@@ -345,7 +347,8 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
           }
         },
         () => {
-          // If remote GLB network fetch fails, fallback seamlessly to procedural
+          setLoading(false);
+          setModelLoadError('NASA GLB model could not be loaded. Displaying procedural model.');
           buildProceduralModel(artifact.type);
         },
       );
@@ -607,6 +610,21 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
           <span style={{ fontSize: '11px', color: '#94a3b8' }}>
             {loadProgress > 0 ? `${loadProgress}% LOADED` : 'SYNCHRONIZING MESH...'}
           </span>
+        </div>
+      )}
+
+      {modelLoadError && !loading && (
+        <div
+          style={{
+            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: '10px', zIndex: 20,
+            background: 'rgba(7, 11, 20, 0.92)', color: '#fca5a5',
+            fontFamily: 'var(--font-mono, monospace)', fontSize: '12px', textAlign: 'center', padding: '24px',
+          }}
+        >
+          <Box size={28} />
+          <strong>NASA 3D MODEL UNAVAILABLE</strong>
+          <span style={{ color: '#94a3b8' }}>{modelLoadError}</span>
         </div>
       )}
 

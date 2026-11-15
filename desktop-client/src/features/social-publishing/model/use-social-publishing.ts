@@ -9,6 +9,8 @@ export function useSocialPublishing() {
 
   const currentProject = usePublicationStore((s) => s.currentProject);
   const updateStatus = usePublicationStore((s) => s.updateStatus);
+  const updateDispatch = usePublicationStore((s) => s.updateDispatch);
+  const setExternalPostUrl = usePublicationStore((s) => s.setExternalPostUrl);
   const selectedConnectorIds = useConnectorStore((s) => s.selectedConnectorIds);
 
   const autoPublishAll = async () => {
@@ -22,7 +24,9 @@ export function useSocialPublishing() {
 
     const payload = {
       projectId: currentProject.id,
-      videoFilePath: `C:\\Users\\CosmoCreator\\Videos\\CosmoLost\\${currentProject.id}.mp4`,
+      videoFilePath:
+        currentProject.localVideoPath ||
+        `C:\\Users\\CosmoCreator\\Videos\\CosmoLost\\${currentProject.id}.mp4`,
       title: `${currentProject.artifactName}: Таємниця сигналу`,
       seoCaption: currentProject.seoCaption,
       pinComment: currentProject.pinComment,
@@ -34,14 +38,51 @@ export function useSocialPublishing() {
     try {
       await youtubeConnector.connect();
       const yt = await youtubeConnector.publishVideo(payload);
-      if (yt.success) results.push(`YouTube (${yt.externalPostUrl})`);
+      if (yt.success) {
+        results.push(`YouTube (${yt.externalPostUrl})`);
+        updateDispatch({
+          id: `disp-yt-${Date.now()}`,
+          projectId: currentProject.id,
+          connectorId: 'youtube-shorts',
+          platformType: 'YOUTUBE_SHORTS',
+          dispatchStatus: 'PUBLISHED',
+          pinCommentStatus: 'PINNED',
+          externalPostId: yt.externalPostId,
+          externalPostUrl: yt.externalPostUrl,
+          dispatchedAt: new Date().toISOString(),
+        });
+      }
 
       await telegramConnector.connect();
       const tg = await telegramConnector.publishVideo(payload);
-      if (tg.success) results.push(`Telegram (${tg.externalPostUrl})`);
+      if (tg.success) {
+        results.push(`Telegram (${tg.externalPostUrl})`);
+        updateDispatch({
+          id: `disp-tg-${Date.now()}`,
+          projectId: currentProject.id,
+          connectorId: 'telegram-channel',
+          platformType: 'TELEGRAM_CHANNEL',
+          dispatchStatus: 'PUBLISHED',
+          pinCommentStatus: 'NOT_APPLICABLE',
+          externalPostId: tg.externalPostId,
+          externalPostUrl: tg.externalPostUrl,
+          dispatchedAt: new Date().toISOString(),
+        });
+      }
 
       const local = await localFolderConnector.publishVideo(payload);
-      if (local.success) results.push('OS Explorer');
+      if (local.success) {
+        results.push('OS Explorer');
+        updateDispatch({
+          id: `disp-local-${Date.now()}`,
+          projectId: currentProject.id,
+          connectorId: 'local-folder-export',
+          platformType: 'LOCAL_FOLDER',
+          dispatchStatus: 'MANUAL_EXPORTED',
+          pinCommentStatus: 'MANUAL_COPIED',
+          dispatchedAt: new Date().toISOString(),
+        });
+      }
 
       updateStatus('PUBLISHED');
       setPublishFeedback(`🚀 Авто-публікація завершена успішно: ${results.join(' • ')}`);
@@ -65,7 +106,9 @@ export function useSocialPublishing() {
 
     const payload = {
       projectId: currentProject.id,
-      videoFilePath: `C:\\Users\\CosmoCreator\\Videos\\CosmoLost\\${currentProject.id}.mp4`,
+      videoFilePath:
+        currentProject.localVideoPath ||
+        `C:\\Users\\CosmoCreator\\Videos\\CosmoLost\\${currentProject.id}.mp4`,
       title: `${currentProject.artifactName}: Таємниця сигналу`,
       seoCaption: currentProject.seoCaption,
       pinComment: currentProject.pinComment,
@@ -80,6 +123,17 @@ export function useSocialPublishing() {
         const res = await youtubeConnector.publishVideo(payload);
         if (res.success) {
           results.push(`YouTube Shorts (${res.externalPostUrl})`);
+          updateDispatch({
+            id: `disp-yt-${Date.now()}`,
+            projectId: currentProject.id,
+            connectorId: 'youtube-shorts',
+            platformType: 'YOUTUBE_SHORTS',
+            dispatchStatus: 'PUBLISHED',
+            pinCommentStatus: 'PINNED',
+            externalPostId: res.externalPostId,
+            externalPostUrl: res.externalPostUrl,
+            dispatchedAt: new Date().toISOString(),
+          });
         }
       }
 
@@ -88,6 +142,17 @@ export function useSocialPublishing() {
         const res = await telegramConnector.publishVideo(payload);
         if (res.success) {
           results.push(`Telegram (${res.externalPostUrl})`);
+          updateDispatch({
+            id: `disp-tg-${Date.now()}`,
+            projectId: currentProject.id,
+            connectorId: 'telegram-channel',
+            platformType: 'TELEGRAM_CHANNEL',
+            dispatchStatus: 'PUBLISHED',
+            pinCommentStatus: 'NOT_APPLICABLE',
+            externalPostId: res.externalPostId,
+            externalPostUrl: res.externalPostUrl,
+            dispatchedAt: new Date().toISOString(),
+          });
         }
       }
 
@@ -95,6 +160,15 @@ export function useSocialPublishing() {
         const res = await localFolderConnector.publishVideo(payload);
         if (res.success) {
           results.push('Нативний експорт у провідник (SEO скопійовано в буфер)');
+          updateDispatch({
+            id: `disp-local-${Date.now()}`,
+            projectId: currentProject.id,
+            connectorId: 'local-folder-export',
+            platformType: 'LOCAL_FOLDER',
+            dispatchStatus: 'MANUAL_EXPORTED',
+            pinCommentStatus: 'MANUAL_COPIED',
+            dispatchedAt: new Date().toISOString(),
+          });
         }
       }
 
@@ -114,12 +188,48 @@ export function useSocialPublishing() {
     if (!currentProject) return;
     await localFolderConnector.publishVideo({
       projectId: currentProject.id,
-      videoFilePath: '',
+      videoFilePath: currentProject.localVideoPath || '',
       title: currentProject.artifactName,
       seoCaption: currentProject.seoCaption,
       pinComment: currentProject.pinComment,
     });
+    updateDispatch({
+      id: `disp-local-${Date.now()}`,
+      projectId: currentProject.id,
+      connectorId: 'local-folder-export',
+      platformType: 'LOCAL_FOLDER',
+      dispatchStatus: 'MANUAL_EXPORTED',
+      pinCommentStatus: 'MANUAL_COPIED',
+      dispatchedAt: new Date().toISOString(),
+    });
     setPublishFeedback('Провідник відкрито. SEO-пакет скопійовано в буфер обміну.');
+  };
+
+  const markPublishedManually = (url: string) => {
+    if (!currentProject) return;
+    const cleanUrl = url.trim();
+    if (!cleanUrl) {
+      setPublishFeedback('Введіть коректну веб-адресу опублікованого відео (TikTok, Reels, тощо).');
+      return;
+    }
+
+    setExternalPostUrl(cleanUrl);
+    updateDispatch({
+      id: `disp-manual-${Date.now()}`,
+      projectId: currentProject.id,
+      connectorId: 'manual-link',
+      platformType: cleanUrl.includes('tiktok')
+        ? 'TIKTOK'
+        : cleanUrl.includes('instagram')
+          ? 'INSTAGRAM_REELS'
+          : 'OTHER',
+      dispatchStatus: 'PUBLISHED',
+      pinCommentStatus: 'MANUAL_COPIED',
+      externalPostUrl: cleanUrl,
+      dispatchedAt: new Date().toISOString(),
+    });
+
+    setPublishFeedback(`✅ Ролик позначено як опублікований вручну: ${cleanUrl}`);
   };
 
   return {
@@ -128,6 +238,7 @@ export function useSocialPublishing() {
     publishToSelectedChannels,
     autoPublishAll,
     openLocalFolderDirectly,
+    markPublishedManually,
     currentProject,
   };
 }

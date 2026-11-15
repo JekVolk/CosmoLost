@@ -60,7 +60,12 @@ export const NASA_3D_MODEL_CDN_MAP: Record<string, string> = {
  * Overrides known 404 URLs returned by legacy backend entries with authentic NASA 3D Resources paths.
  */
 export function resolveGlbModelUrl(artifactId: string, rawUrl?: string | null): string | null {
-  const normId = artifactId.toLowerCase();
+  const normId = artifactId.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  // A verified URL supplied by the API is more authoritative than an ID alias.
+  if (rawUrl && /^https:\/\/.+\.glb(?:$|[?#])/i.test(rawUrl.trim())) {
+    return rawUrl.trim();
+  }
 
   // 1. Direct match in verified NASA CDN map
   if (NASA_3D_MODEL_CDN_MAP[normId]) {
