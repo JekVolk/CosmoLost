@@ -1,0 +1,6 @@
+{
+  "name": "gemini-notebook-sync",
+  "description": "Local workspace integration with Google Gemini Notebook API (MCP). Enables LLMs to create notebooks, sync business specs, ingest sources, and monitor ingestion status.",
+  "version": "1.0.0",
+  "author": "Space Ліхтар"
+}

@@ -1,0 +1,43 @@
+import type { ScheduledTask } from './schema';
+
+export const DEFAULT_SCHEDULED_TASKS: ScheduledTask[] = [
+  {
+    id: 'ipc-health-check',
+    name: 'IPC Rust Core Ping Check',
+    type: 'ping',
+    intervalSec: 10,
+    enabled: true,
+    status: 'idle',
+    lastRunAt: null,
+    nextRunAt: null,
+    runCount: 0,
+    lastDurationMs: null,
+    lastResult: null,
+  },
+  {
+    id: 'system-metrics-poller',
+    name: 'Hardware & OS Metrics Poller',
+    type: 'system-info',
+    intervalSec: 15,
+    enabled: true,
+    status: 'idle',
+    lastRunAt: null,
+    nextRunAt: null,
+    runCount: 0,
+    lastDurationMs: null,
+    lastResult: null,
+  },
+  {
+    id: 'runtime-cache-cleaner',
+    name: 'Temporary Cache Garbage Collector',
+    type: 'cache-clean',
+    intervalSec: 30,
+    enabled: false,
+    status: 'paused',
+    lastRunAt: null,
+    nextRunAt: null,
+    runCount: 0,
+    lastDurationMs: null,
+    lastResult: null,
+  },
+];

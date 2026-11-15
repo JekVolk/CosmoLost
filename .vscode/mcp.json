@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "cosmolost": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "${workspaceFolder}/backend",
+        "python",
+        "mcp/server.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1",
+        "DJANGO_SETTINGS_MODULE": "config.settings"
+      }
+    }
+  }
+}

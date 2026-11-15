@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <title>COSMOLOST · 3D Planetary Map (Moon & Mars)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #0B132B 0%, #030712 70%, #010409 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #e2e8f0;
+    }
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: grab;
+    }
+    #canvas-container:active {
+      cursor: grabbing;
+    }
+
+    /* Top Floating HUD */
+    .hud-top {
+      position: absolute;
+      top: 24px;
+      left: 32px;
+      right: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      z-index: 20;
+    }
+    .hud-brand {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-emblem {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #0B1528;
+      border: 1.5px solid rgba(56, 189, 248, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-emblem::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ffffff;
+    }
+    .brand-sub {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      color: #64748b;
+    }
+
+    /* Planet Switcher Pill */
+    .planet-switcher {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(9, 17, 34, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 4px;
+      border-radius: 9999px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .planet-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .planet-btn .btn-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .planet-btn.mars .btn-dot { background: #f97316; }
+    .planet-btn.moon .btn-dot { background: #38bdf8; }
+
+    .planet-btn.active.moon {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 0 16px rgba(37, 99, 235, 0.6);
+      border: 1px solid rgba(96, 165, 250, 0.4);
+    }
+    .planet-btn.active.mars {
+      background: #ea580c;
+      color: #ffffff;
+      box-shadow: 0 0 16px rgba(234, 88, 12, 0.6);
+      border: 1px solid rgba(249, 115, 22, 0.4);
+    }
+    .planet-btn.active .btn-dot {
+      background: #ffffff !important;
+      box-shadow: 0 0 6px #ffffff;
+    }
+
+    /* Top Right Archive Badge */
+    .archive-badge {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(11, 21, 40, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #7dd3fc;
+    }
+
+    /* Left HUD Sidebar */
+    .hud-sidebar {
+      position: absolute;
+      top: 84px;
+      left: 32px;
+      width: 380px;
+      max-height: calc(100vh - 110px);
+      background: rgba(7, 14, 30, 0.88);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 20;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+    }
+    .sector-tag {
+      font-family: "Space Mono", monospace, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #38bdf8;
+    }
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .planet-heading {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+    }
+    .collapse-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .sidebar-desc {
+      font-size: 12px;
+      line-height: 1.45;
+      color: #94a3b8;
+    }
+
+    /* 2x2 Telemetry Grid */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .telemetry-card {
+      background: rgba(11, 21, 40, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .telemetry-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #64748b;
+    }
+    .telemetry-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 1px;
+      padding-top: 4px;
+    }
+
+    /* Category Chips */
+    .chips-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid #334155;
+      cursor: pointer;
+    }
+    .chip.active {
+      background: rgba(2, 132, 199, 0.2);
+      border-color: #38bdf8;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+
+    /* Artifacts List */
+    .artifacts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+      max-height: 260px;
+      padding-right: 4px;
+    }
+    .artifacts-list::-webkit-scrollbar { width: 4px; }
+    .artifacts-list::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+    .artifact-card {
+      background: rgba(11, 20, 38, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 7px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .artifact-card:hover {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .card-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: #64748b;
+    }
+
+    /* Floating Viewport Controls (Bottom Right) */
+    .viewport-controls {
+      position: absolute;
+      bottom: 40px;
+      right: 32px;
+      width: 44px;
+      background: rgba(7, 14, 30, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 22px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      z-index: 20;
+    }
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+    .ctrl-btn:hover {
+      transform: scale(1.15);
+      color: #ffffff;
+    }
+
+    /* Tooltip */
+    #tooltip {
+      position: absolute;
+      display: none;
+      pointer-events: none;
+      background: rgba(11, 20, 38, 0.95);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.7);
+      z-index: 100;
+      max-width: 280px;
+      font-size: 12px;
+      transform: translate(-50%, -120%);
+    }
+    #tooltip .tt-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    #tooltip .tt-desc {
+      color: #94a3b8;
+      line-height: 1.35;
+    }
+    #tooltip .tt-coords {
+      margin-top: 6px;
+      font-family: monospace;
+      font-size: 10px;
+      color: #38bdf8;
+    }
+  </style>
+  <script src="three.min.js"></script>
+  <script src="OrbitControls.js"></script>
+</head>
+<body>
+
+  <!-- Top Floating HUD -->
+  <div class="hud-top">
+    <div class="hud-brand">
+      <div class="brand-emblem"></div>
+      <div class="brand-text">
+        <div class="brand-title">COSMOLOST</div>
+        <div class="brand-sub">NASA SPACE APPS // ABANDONED BUT NOT FORGOTTEN</div>
+      </div>
+    </div>
+
+    <!-- Planet Switcher -->
+    <div class="planet-switcher">
+      <button class="planet-btn mars" id="btn-mars"><span class="btn-dot"></span> MARS</button>
+      <button class="planet-btn active moon" id="btn-moon"><span class="btn-dot"></span> MOON</button>
+    </div>
+
+    <!-- Archive Badge -->
+    <div class="archive-badge" id="archive-badge">
+      <span>⬡</span> <span id="archive-count">46 artifacts archived</span>
+    </div>
+  </div>
+
+  <!-- Left HUD Sidebar -->
+  <div class="hud-sidebar" id="hud-sidebar">
+    <div class="sector-tag" id="sidebar-tag">LUNA-1 // MOON</div>
+    <div class="title-row">
+      <div class="planet-heading" id="sidebar-title">Moon</div>
+      <div class="collapse-btn" id="collapse-btn">◀</div>
+    </div>
+    <div class="sidebar-desc" id="sidebar-desc">
+      A half-century archive of human daring: Apollo descent stages, pioneering Soviet Lunokhods, and robotic precursors.
+    </div>
+
+    <!-- 2x2 Telemetry -->
+    <div class="telemetry-grid">
+      <div class="telemetry-card">
+        <div class="telemetry-label">RADIUS</div>
+        <div class="telemetry-val" id="t-radius">1 737,4 km</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label">GRAVITY</div>
+        <div class="telemetry-val" id="t-gravity">1.62 m/s²</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label">DAY LENGTH</div>
+        <div class="telemetry-val" id="t-day">27.3 Earth days</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label">AVG TEMP</div>
+        <div class="telemetry-val" id="t-temp">-20 °C</div>
+      </div>
+    </div>
+
+    <!-- Section Header -->
+    <div class="section-header">
+      <span>📡 ABANDONED HARDWARE</span>
+      <span id="hardware-counter">46 / 46</span>
+    </div>
+
+    <!-- Chips -->
+    <div class="chips-row">
+      <div class="chip active">ALL</div>
+      <div class="chip">Rovers & Flight</div>
+      <div class="chip">Landers</div>
+      <div class="chip">Laser & Relics</div>
+    </div>
+
+    <!-- Artifacts List -->
+    <div class="artifacts-list" id="artifacts-list"></div>
+  </div>
+
+  <!-- Floating Viewport Controls -->
+  <div class="viewport-controls">
+    <button class="ctrl-btn" id="btn-reset" title="Center View">🎯</button>
+    <button class="ctrl-btn" id="btn-orbit" title="Orbit Mode">🔄</button>
+    <button class="ctrl-btn" id="btn-compass" title="Heading">🧭</button>
+    <button class="ctrl-btn" id="btn-fullscreen" title="Fullscreen">⛶</button>
+  </div>
+
+  <!-- Hover Tooltip -->
+  <div id="tooltip">
+    <div class="tt-title" id="tt-title"></div>
+    <div class="tt-desc" id="tt-desc"></div>
+    <div class="tt-coords" id="tt-coords"></div>
+  </div>
+
+  <div id="canvas-container"></div>
+
+  <script>
+    const container = document.getElementById('canvas-container');
+    const btnMoon = document.getElementById('btn-moon');
+    const btnMars = document.getElementById('btn-mars');
+    const btnReset = document.getElementById('btn-reset');
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    const tooltip = document.getElementById('tooltip');
+    const ttTitle = document.getElementById('tt-title');
+    const ttDesc = document.getElementById('tt-desc');
+    const ttCoords = document.getElementById('tt-coords');
+    const artifactsList = document.getElementById('artifacts-list');
+
+    // Scene & Camera
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0.6, 0.2, 5.2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    container.appendChild(renderer.domElement);
+
+    // OrbitControls: strictly rotates when dragging
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.rotateSpeed = 0.85;
+    controls.zoomSpeed = 1.0;
+    controls.minDistance = 2.4;
+    controls.maxDistance = 12.0;
+    controls.autoRotate = false;
+    controls.target.set(0.4, 0, 0); // slight center offset for HUD sidebar
+
+    // Starfield Background
+    const starsGeo = new THREE.BufferGeometry();
+    const starsCount = 2400;
+    const starPositions = new Float32Array(starsCount * 3);
+    for (let i = 0; i < starsCount * 3; i += 3) {
+      starPositions[i] = (Math.random() - 0.5) * 160;
+      starPositions[i + 1] = (Math.random() - 0.5) * 160;
+      starPositions[i + 2] = (Math.random() - 0.5) * 160;
+    }
+    starsGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    const starsMat = new THREE.PointsMaterial({ color: 0x93c5fd, size: 0.14, transparent: true, opacity: 0.75 });
+    const starfield = new THREE.Points(starsGeo, starsMat);
+    scene.add(starfield);
+
+    // Textures
+    const textureLoader = new THREE.TextureLoader();
+    const moonTex = textureLoader.load('moon_2k.jpg');
+    const marsTex = textureLoader.load('mars_2k.jpg');
+
+    // Planet Sphere Mesh
+    const sphereGeo = new THREE.SphereGeometry(1.8, 96, 96);
+    const planetMat = new THREE.MeshStandardMaterial({
+      map: moonTex,
+      bumpMap: moonTex,
+      bumpScale: 0.04,
+      roughness: 0.9,
+      metalness: 0.02
+    });
+    const planet = new THREE.Mesh(sphereGeo, planetMat);
+    planet.position.set(0.4, 0, 0);
+    scene.add(planet);
+
+    // Atmospheric Glow
+    const atmosphereMat = new THREE.ShaderMaterial({
+      vertexShader: `
+        varying vec3 vNormal;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vNormal;
+        uniform vec3 uColor;
+        void main() {
+          float intensity = pow(0.72 - dot(vNormal, vec3(0, 0, 1.0)), 2.8);
+          gl_FragColor = vec4(uColor, 1.0) * intensity * 0.38;
+        }
+      `,
+      uniforms: {
+        uColor: { value: new THREE.Color(0x38bdf8) }
+      },
+      blending: THREE.AdditiveBlending,
+      side: THREE.BackSide,
+      transparent: true
+    });
+    const atmosphere = new THREE.Mesh(new THREE.SphereGeometry(1.86, 48, 48), atmosphereMat);
+    atmosphere.position.copy(planet.position);
+    scene.add(atmosphere);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0x0f172a, 0.4);
+    scene.add(ambientLight);
+    const sunLight = new THREE.DirectionalLight(0xfff7ed, 2.2);
+    sunLight.position.set(6, 3, 5);
+    scene.add(sunLight);
+
+    // Surface Markers Container (ATTACHED DIRECTLY TO PLANET!)
+    const markersGroup = new THREE.Group();
+    planet.add(markersGroup); // Points are children of planet -> turn 100% in sync with planet!
+
+    // Helper: Lat/Long to 3D Sphere Position
+    function latLongToVector3(lat, lon, radius) {
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lon + 180) * (Math.PI / 180);
+      return new THREE.Vector3(
+        -(radius * Math.sin(phi) * Math.cos(theta)),
+        radius * Math.cos(phi),
+        radius * Math.sin(phi) * Math.sin(theta)
+      );
+    }
+
+    // Complete Artifacts Data
+    const moonArtifacts = [
+      { name: "Apollo 11 «Eagle» & LRRR", org: "NASA", meta: "2034 kg • retro reflector", lat: 0.674, lon: 23.473, desc: "Sea of Tranquility. First crewed lunar landing site.", color: 0xf59e0b },
+      { name: "Apollo 11 Eagle Ascent Stage Impact", org: "NASA", meta: "2184 kg • impact stage", lat: 14.19, lon: 53.64, desc: "Ascent stage impact site following crew rendezvous.", color: 0x94a3b8 },
+      { name: "Apollo 12 «Intrepid» & ALSEP", org: "NASA", meta: "2040 kg • descent stage", lat: -3.012, lon: -23.422, desc: "Ocean of Storms. Precision landing near Surveyor 3.", color: 0x10b981 },
+      { name: "Apollo 12 Intrepid Ascent Stage Impact", org: "NASA", meta: "2184 kg • impact stage", lat: -3.94, lon: -21.20, desc: "Intentional seismic impact.", color: 0xef4444 },
+      { name: "Apollo 13 Saturn V S-IVB Rocket Stage", org: "NASA", meta: "13925 kg • impact stage", lat: -2.75, lon: -27.86, desc: "Third-stage rocket booster impact crater.", color: 0x94a3b8 },
+      { name: "Apollo 14 «Antares» & MET", org: "NASA", meta: "2040 kg • descent stage", lat: -3.645, lon: -17.471, desc: "Fra Mauro formation landing site.", color: 0xf59e0b },
+      { name: "Apollo 14 Saturn V S-IVB Impact Site", org: "NASA", meta: "13988 kg • impact stage", lat: -8.09, lon: -26.02, desc: "Booster impact registered by Apollo 12 seismometer.", color: 0x94a3b8 },
+      { name: "Apollo 15 «Falcon» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: 26.132, lon: 3.634, desc: "Hadley-Apennine region. First Lunar Roving Vehicle.", color: 0xf59e0b },
+      { name: "Apollo 16 «Orion» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: -8.973, lon: 15.499, desc: "Descartes Highlands plateau landing site.", color: 0xf59e0b },
+      { name: "Apollo 17 «Challenger» & LRV", org: "NASA", meta: "2040 kg • lunar rover", lat: 20.191, lon: 30.772, desc: "Taurus-Littrow valley. Last human footprints on Moon.", color: 0xf59e0b },
+      { name: "Luna 2 (First Human Impact)", org: "USSR", meta: "390 kg • impact probe", lat: 29.1, lon: 0.0, desc: "Palus Putredinis. First spacecraft to reach Moon surface (1959).", color: 0xef4444 },
+      { name: "Luna 9 (First Soft Landing)", org: "USSR", meta: "99 kg • robotic lander", lat: 7.08, lon: -64.37, desc: "Oceanus Procellarum. First panoramic photos from surface (1966).", color: 0xef4444 },
+      { name: "Luna 16 (Automated Sample Return)", org: "USSR", meta: "1880 kg • descent stage", lat: -0.68, lon: 56.3, desc: "Mare Fecunditatis. Returned 101 grams of lunar soil.", color: 0xef4444 },
+      { name: "Luna 17 & Lunokhod 1", org: "USSR", meta: "756 kg • robotic rover", lat: 38.28, lon: -35.0, desc: "Mare Imbrium. First remote-controlled robotic rover.", color: 0xef4444 },
+      { name: "Luna 21 & Lunokhod 2", org: "USSR", meta: "840 kg • robotic rover", lat: 25.85, lon: 30.45, desc: "Le Monnier crater. Drove 39 km across the surface.", color: 0xef4444 },
+      { name: "Luna 24 (Deep Core Sample)", org: "USSR", meta: "1880 kg • descent stage", lat: 12.75, lon: 62.2, desc: "Mare Crisium. 2-meter deep lunar soil core return.", color: 0xef4444 },
+      { name: "Surveyor 1", org: "NASA", meta: "294 kg • soft lander", lat: -2.47, lon: -43.32, desc: "First American soft landing on extraterrestrial body.", color: 0xa855f7 },
+      { name: "Surveyor 3", org: "NASA", meta: "296 kg • soft lander", lat: -3.01, lon: -23.42, desc: "Visited 2.5 years later by Apollo 12 astronauts.", color: 0x38bdf8 },
+      { name: "Surveyor 5", org: "NASA", meta: "303 kg • soft lander", lat: 1.41, lon: 23.18, desc: "Conducted first alpha-scattering chemical analysis.", color: 0x38bdf8 },
+      { name: "Surveyor 7", org: "NASA", meta: "306 kg • soft lander", lat: -40.86, lon: -11.47, desc: "Landed on ejecta rim of Tycho crater.", color: 0x38bdf8 },
+      { name: "Chang'e 3 & Yutu Rover", org: "CNSA", meta: "1200 kg • active/dormant", lat: 44.12, lon: -19.51, desc: "Mare Imbrium. First Chinese lunar soft landing (2013).", color: 0x10b981 },
+      { name: "Chang'e 5 Sample Lander", org: "CNSA", meta: "1200 kg • descent stage", lat: 43.06, lon: -51.92, desc: "Mons Rümker. Returned youngest lunar basalts (1.7 kg).", color: 0x10b981 },
+      { name: "Chandrayaan-3 (Shiv Shakti)", org: "ISRO", meta: "1752 kg • active/dormant", lat: -69.37, lon: 32.35, desc: "Historic southern polar landing site (2023).", color: 0x10b981 },
+      { name: "SLIM Lander (JAXA)", org: "JAXA", meta: "200 kg • precision lander", lat: -13.31, lon: 25.25, desc: "Shioli crater. World-record 3-meter pinpoint landing.", color: 0x10b981 },
+      { name: "LCROSS Centaur Impact", org: "NASA", meta: "2270 kg • impact stage", lat: -84.73, lon: -48.72, desc: "Cabeus crater. Confirmed presence of water ice in dark craters.", color: 0xa855f7 },
+      { name: "Ranger 8 Impact", org: "NASA", meta: "367 kg • impact probe", lat: 2.64, lon: 24.77, desc: "Transmitted 7,137 high-res photos before impact.", color: 0xef4444 },
+      { name: "SMART-1 Impact", org: "ESA", meta: "367 kg • ion drive", lat: -34.26, lon: -46.19, desc: "Lacus Excellentiae. First European lunar mission impact.", color: 0x38bdf8 },
+      { name: "Kaguya Impact", org: "JAXA", meta: "2885 kg • lunar orbiter", lat: -65.5, lon: 80.4, desc: "Gillian crater. Global HDTV mapper controlled impact.", color: 0xf59e0b },
+      { name: "Lunar Prospector Impact", org: "NASA", meta: "296 kg • polar mapper", lat: -87.7, lon: 42.3, desc: "Permanent shadowed crater south pole impact.", color: 0x38bdf8 }
+    ];
+
+    const marsArtifacts = [
+      { name: "Perseverance & Ingenuity", org: "NASA", meta: "1025 kg • active rover", lat: 18.444, lon: 77.45, desc: "Jezero Crater. Seeking signs of ancient microbial life.", color: 0x10b981 },
+      { name: "Curiosity Rover (MSL)", org: "NASA", meta: "899 kg • active rover", lat: -4.589, lon: 137.44, desc: "Gale Crater / Mount Sharp. Operating for over 4,000 sols.", color: 0x10b981 },
+      { name: "Zhurong Rover (Tianwen-1)", org: "CNSA", meta: "240 kg • dormant rover", lat: 25.066, lon: 109.93, desc: "Utopia Planitia. First Chinese Mars rover.", color: 0x10b981 },
+      { name: "Opportunity Rover (MER-B)", org: "NASA", meta: "185 kg • dormant rover", lat: -1.946, lon: -5.526, desc: "Meridiani Planum. Explored Mars for 5,111 sols (record).", color: 0xf59e0b },
+      { name: "Spirit Rover (MER-A)", org: "NASA", meta: "185 kg • dormant rover", lat: -14.568, lon: 175.47, desc: "Gusev Crater. Discovered evidence of ancient silica hot springs.", color: 0xf59e0b },
+      { name: "InSight Mars Lander", org: "NASA", meta: "358 kg • dormant lander", lat: 4.502, lon: 135.62, desc: "Elysium Planitia. Measured internal structure and marsquakes.", color: 0xf59e0b },
+      { name: "Phoenix Mars Lander", org: "NASA", meta: "350 kg • arctic lander", lat: 68.218, lon: -125.75, desc: "Vastitas Borealis. Directly scooped and verified sub-surface water ice.", color: 0xf59e0b },
+      { name: "Viking 1 Lander", org: "NASA", meta: "572 kg • historic lander", lat: 22.48, lon: -47.97, desc: "Chryse Planitia. First successful long-duration Mars lander (1976).", color: 0xf59e0b },
+      { name: "Viking 2 Lander", org: "NASA", meta: "572 kg • historic lander", lat: 47.97, lon: -134.28, desc: "Utopia Planitia. Analyzed soil samples for signs of organic life.", color: 0xf59e0b },
+      { name: "Mars Pathfinder / Sojourner", org: "NASA", meta: "360 kg • rover precursor", lat: 19.33, lon: -33.55, desc: "Ares Vallis. First wheeled mobile rover on Mars (1997).", color: 0xf59e0b },
+      { name: "Schiaparelli EDM", org: "ESA", meta: "577 kg • impact site", lat: -2.05, lon: -5.53, desc: "Meridiani Planum. High-speed impact after parachute premature release.", color: 0xef4444 },
+      { name: "Mars 2 Lander", org: "USSR", meta: "355 kg • impact site", lat: -45.0, lon: 47.0, desc: "First human artifact to contact the surface of Mars (1971).", color: 0xef4444 },
+      { name: "Mars 3 Lander", org: "USSR", meta: "355 kg • soft lander", lat: -45.0, lon: -158.0, desc: "Ptolemaeus crater. First soft landing on Mars; transmitted 14.5 sec.", color: 0xef4444 },
+      { name: "Beagle 2", org: "UK/ESA", meta: "33 kg • lander site", lat: 11.53, lon: 90.43, desc: "Isidis Planitia. Discovered by MRO HiRISE in 2015.", color: 0xef4444 },
+      { name: "Mars Polar Lander", org: "NASA", meta: "290 kg • south pole", lat: -76.0, lon: -165.0, desc: "Planum Australe. Lost during atmospheric entry (1999).", color: 0xef4444 }
+    ];
+
+    let currentPlanet = 'moon';
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let markerMeshes = [];
+
+    function populateMarkers(data) {
+      // Clear old markers
+      while (markersGroup.children.length > 0) {
+        markersGroup.remove(markersGroup.children[0]);
+      }
+      markerMeshes = [];
+
+      data.forEach(item => {
+        // Physical 3D Pin attached to the planet mesh
+        const basePos = latLongToVector3(item.lat, item.lon, 1.80);
+        const tipPos = latLongToVector3(item.lat, item.lon, 1.88);
+
+        // Pin Stem Needle
+        const lineGeo = new THREE.BufferGeometry().setFromPoints([basePos, tipPos]);
+        const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.65 });
+        const line = new THREE.Line(lineGeo, lineMat);
+        markersGroup.add(line);
+
+        // Pin Head Sphere
+        const dotGeo = new THREE.SphereGeometry(0.038, 16, 16);
+        const dotMat = new THREE.MeshBasicMaterial({ color: item.color });
+        const mesh = new THREE.Mesh(dotGeo, dotMat);
+        mesh.position.copy(tipPos);
+        mesh.userData = item;
+        markersGroup.add(mesh);
+        markerMeshes.push(mesh);
+      });
+
+      // Update sidebar list
+      renderSidebarList(data);
+    }
+
+    function renderSidebarList(data) {
+      artifactsList.innerHTML = '';
+      data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'artifact-card';
+        card.innerHTML = `
+          <div class="card-top">
+            <span class="card-title">${item.name}</span>
+            <span class="card-dot" style="background: #${item.color.toString(16).padStart(6, '0')}"></span>
+          </div>
+          <div class="card-bottom">
+            <span>${item.org}</span>
+            <span>${item.meta}</span>
+          </div>
+        `;
+        // Click to focus camera on this artifact
+        card.addEventListener('click', () => {
+          focusOnArtifact(item);
+        });
+        artifactsList.appendChild(card);
+      });
+    }
+
+    function focusOnArtifact(item) {
+      const targetPos = latLongToVector3(item.lat, item.lon, 1.8);
+      // Position camera in front of target
+      const camPos = targetPos.clone().normalize().multiplyScalar(4.5).add(planet.position);
+      camera.position.copy(camPos);
+      controls.target.copy(planet.position);
+      controls.update();
+
+      // Show tooltip
+      ttTitle.innerText = item.name;
+      ttDesc.innerText = item.desc;
+      ttCoords.innerText = `LAT: ${item.lat.toFixed(3)}° | LON: ${item.lon.toFixed(3)}°`;
+      tooltip.style.left = (window.innerWidth / 2) + 'px';
+      tooltip.style.top = (window.innerHeight / 2 - 50) + 'px';
+      tooltip.style.display = 'block';
+    }
+
+    populateMarkers(moonArtifacts);
+
+    // Planet Switching
+    function setPlanet(p) {
+      currentPlanet = p;
+      if (p === 'moon') {
+        planetMat.map = moonTex;
+        planetMat.bumpMap = moonTex;
+        atmosphereMat.uniforms.uColor.value.setHex(0x38bdf8);
+        document.getElementById('sidebar-tag').innerText = 'LUNA-1 // MOON';
+        document.getElementById('sidebar-title').innerText = 'Moon';
+        document.getElementById('sidebar-desc').innerText = 'A half-century archive of human daring: Apollo descent stages, pioneering Soviet Lunokhods, and robotic precursors.';
+        document.getElementById('t-radius').innerText = '1 737,4 km';
+        document.getElementById('t-gravity').innerText = '1.62 m/s²';
+        document.getElementById('t-day').innerText = '27.3 Earth days';
+        document.getElementById('t-temp').innerText = '-20 °C';
+        document.getElementById('hardware-counter').innerText = '46 / 46';
+        document.getElementById('archive-count').innerText = '46 artifacts archived';
+        btnMoon.classList.add('active');
+        btnMars.classList.remove('active');
+        populateMarkers(moonArtifacts);
+      } else {
+        planetMat.map = marsTex;
+        planetMat.bumpMap = marsTex;
+        atmosphereMat.uniforms.uColor.value.setHex(0xea580c);
+        document.getElementById('sidebar-tag').innerText = 'ARES-1 // MARS';
+        document.getElementById('sidebar-title').innerText = 'Mars';
+        document.getElementById('sidebar-desc').innerText = 'Three generations of Martian explorers: nuclear rovers, historic landers, and silent sentinels across red sands.';
+        document.getElementById('t-radius').innerText = '3 389,5 km';
+        document.getElementById('t-gravity').innerText = '3.72 m/s²';
+        document.getElementById('t-day').innerText = '24h 37m';
+        document.getElementById('t-temp').innerText = '-63 °C';
+        document.getElementById('hardware-counter').innerText = '18 / 18';
+        document.getElementById('archive-count').innerText = '18 artifacts archived';
+        btnMars.classList.add('active');
+        btnMoon.classList.remove('active');
+        populateMarkers(marsArtifacts);
+      }
+      planetMat.needsUpdate = true;
+    }
+
+    btnMoon.addEventListener('click', () => setPlanet('moon'));
+    btnMars.addEventListener('click', () => setPlanet('mars'));
+    btnReset.addEventListener('click', () => {
+      controls.reset();
+      camera.position.set(0.6, 0.2, 5.2);
+      controls.target.set(0.4, 0, 0);
+      tooltip.style.display = 'none';
+    });
+    btnFullscreen.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    // Tooltip Raycasting on Hover
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(markerMeshes);
+
+      if (intersects.length > 0) {
+        const item = intersects[0].object.userData;
+        ttTitle.innerText = item.name;
+        ttDesc.innerText = item.desc;
+        ttCoords.innerText = `LAT: ${item.lat.toFixed(3)}° | LON: ${item.lon.toFixed(3)}°`;
+        tooltip.style.left = (e.clientX) + 'px';
+        tooltip.style.top = (e.clientY - 15) + 'px';
+        tooltip.style.display = 'block';
+      } else {
+        tooltip.style.display = 'none';
+      }
+    });
+
+    // Render loop
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update(); // strictly rotates when dragging
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

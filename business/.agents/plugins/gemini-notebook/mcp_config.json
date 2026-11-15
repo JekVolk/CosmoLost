@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "gemini-notebook-api": {
+      "command": "python",
+      "args": [
+        ".agents/plugins/gemini-notebook/scripts/gemini_notebook_bridge.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}

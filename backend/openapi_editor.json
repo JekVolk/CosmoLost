@@ -1,0 +1,424 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CosmoLost Editor, FastMCP & Ingestion API",
+    "version": "1.0.0",
+    "description": "API for Desktop Content Factory (Local-First) and Server FastMCP AI Gateway. Strictly utilizes existing 8 PostgreSQL tables without new Django models."
+  },
+  "servers": [
+    {
+      "url": "https://cosmolost.lihtar.org/api/v1/editor",
+      "description": "Production Server (Editor API)"
+    },
+    {
+      "url": "http://localhost:8000/api/v1/editor",
+      "description": "Local Dev Server (Editor API)"
+    },
+    {
+      "url": "http://localhost:8000/api/desktop",
+      "description": "Local Dev Server (Desktop Compatibility Alias)"
+    }
+  ],
+  "paths": {
+    "/editor/templates/": {
+      "get": {
+        "tags": [
+          "Editor Templates"
+        ],
+        "summary": "Список SMM-рубрик та таймлайн-структур",
+        "description": "Повертає дефолтні конфігурації вертикальних відео (~40 секунд) із безпечними зонами (Safe Zones). Дані повертаються з конфігурації без створення нових таблиць.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContentTemplate"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/editor/templates/{id}/": {
+      "get": {
+        "tags": [
+          "Editor Templates"
+        ],
+        "summary": "Отримати деталі структури рубрики",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentTemplate"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/editor/artifacts/{id}/assets/": {
+      "get": {
+        "tags": [
+          "Editor Assets"
+        ],
+        "summary": "Монтажний медіапакет артефакту",
+        "description": "Формує повний пакет фактів, адаптований під відеовиробництво:\n* Текст монологу для Edge-TTS (en / uk)\n* Готовий 3-рядковий SEO опис та перший закріплений Pin Comment\n* Фотографії NASA високої роздільності для локального кешування\n* Пряме посилання на 3D-модель .glb\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditorAssetBundle"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/editor/recommend-next-topic/": {
+      "post": {
+        "tags": [
+          "Editor Recommendations"
+        ],
+        "summary": "Розумний підбір наступної теми (Smart Next Topic Engine)",
+        "description": "На основі поточного артефакту та рубрики виконує семантичний запит до таблиць artifacts і missions для створення серійності контенту.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecommendNextTopicRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendNextTopicResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/loader/sync-nasa-catalog/": {
+      "post": {
+        "tags": [
+          "Ingestion"
+        ],
+        "summary": "Примусова синхронізація з каталогами NASA",
+        "description": "Адміністративний запуск фонового оновлення даних з NSSDCA та Lunar Manmade Catalog у таблиці artifacts і missions.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "COMPLETED"
+                    },
+                    "synced_records": {
+                      "type": "integer",
+                      "example": 142
+                    },
+                    "duration_sec": {
+                      "type": "number",
+                      "example": 3.2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ContentTemplate": {
+        "type": "object",
+        "required": [
+          "id",
+          "rubric_name",
+          "target_duration_sec",
+          "slide_structure"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "last-sol-drama"
+          },
+          "rubric_name": {
+            "type": "string",
+            "example": "Останній день на зв'язку"
+          },
+          "target_duration_sec": {
+            "type": "integer",
+            "minimum": 15,
+            "maximum": 60,
+            "example": 40
+          },
+          "safe_zone_preset": {
+            "type": "string",
+            "example": "PILLOWBOX_9_16"
+          },
+          "slide_structure": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "slide_index",
+                "type",
+                "duration_sec",
+                "safe_zone_layout"
+              ],
+              "properties": {
+                "slide_index": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "HOOK",
+                    "B_ROLL_FACTS",
+                    "DRAMA_PEAK",
+                    "SEAMLESS_LOOP_CTA"
+                  ]
+                },
+                "duration_sec": {
+                  "type": "number",
+                  "example": 3.5
+                },
+                "safe_zone_layout": {
+                  "type": "string",
+                  "example": "FULLSCREEN_AVATAR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "EditorAssetBundle": {
+        "type": "object",
+        "required": [
+          "artifact_id",
+          "name",
+          "tts_script",
+          "seo_caption",
+          "pin_comment",
+          "high_res_photos"
+        ],
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "example": "opportunity-rover"
+          },
+          "name": {
+            "type": "string",
+            "example": "Opportunity Rover"
+          },
+          "tts_script": {
+            "type": "object",
+            "required": [
+              "uk",
+              "en"
+            ],
+            "properties": {
+              "uk": {
+                "type": "string",
+                "example": "Мій годинник зупинився на Sol 5111..."
+              },
+              "en": {
+                "type": "string",
+                "example": "My clock stopped on Sol 5111..."
+              }
+            }
+          },
+          "seo_caption": {
+            "type": "object",
+            "required": [
+              "line1_hook",
+              "line2_seo",
+              "line3_tags"
+            ],
+            "properties": {
+              "line1_hook": {
+                "type": "string",
+                "example": "Чому вчені NASA мовчали про Sol 5111? 👇"
+              },
+              "line2_seo": {
+                "type": "string",
+                "example": "Повна історія Opportunity на Марсі. 3D-мапа: cosmolost.lihtar.org"
+              },
+              "line3_tags": {
+                "type": "string",
+                "example": "#cosmolost #nasa #mars #opportunity"
+              }
+            }
+          },
+          "pin_comment": {
+            "type": "string",
+            "example": "Як ви вважаєте, чи варто в майбутньому забрати марсоходи на Землю у музей?"
+          },
+          "high_res_photos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "model_3d_glb_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          }
+        }
+      },
+      "RecommendNextTopicRequest": {
+        "type": "object",
+        "required": [
+          "current_artifact_id",
+          "rubric_id",
+          "selection_reason"
+        ],
+        "properties": {
+          "current_artifact_id": {
+            "type": "string",
+            "example": "spirit-rover"
+          },
+          "rubric_id": {
+            "type": "string",
+            "example": "last-sol-drama"
+          },
+          "selection_reason": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 500,
+            "example": "Застрягання колеса в піщаній пастці Troy та замерзання"
+          }
+        }
+      },
+      "RecommendNextTopicResponse": {
+        "type": "object",
+        "required": [
+          "suggested_artifact_id",
+          "suggested_artifact_name",
+          "narrative_bridge",
+          "suggested_hook",
+          "suggested_rubric_id",
+          "recommended_pin_comment"
+        ],
+        "properties": {
+          "suggested_artifact_id": {
+            "type": "string",
+            "example": "opportunity-rover"
+          },
+          "suggested_artifact_name": {
+            "type": "string",
+            "example": "Opportunity Rover (MER-B)"
+          },
+          "narrative_bridge": {
+            "type": "string",
+            "example": "Поки Spirit замерзав у пісках, його близнюк Opportunity пройшов понад 45 км..."
+          },
+          "suggested_hook": {
+            "type": "string",
+            "example": "А ви знали, що близнюк застряглого Spirit здійснив марсіанське диво?"
+          },
+          "suggested_rubric_id": {
+            "type": "string",
+            "example": "last-sol-drama"
+          },
+          "recommended_pin_comment": {
+            "type": "string",
+            "example": "Хто з двох марсоходів мав героїчнішу долю: Spirit чи Opportunity?"
+          }
+        }
+      }
+    },
+    "responses": {
+      "NotFound": {
+        "description": "Ресурс не знайдено",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "NOT_FOUND"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Некоректні параметри запиту",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "BAD_REQUEST"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

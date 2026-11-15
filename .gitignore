@@ -1,0 +1,29 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+.agents/scratch/
+.env
+.env.local
+.env.*.local
+*.env
+!*.env.example
+*.env.local
+desktop-client/.env
+desktop-client/node_modules/
+desktop-client/dist/
+desktop-client/src-tauri/target/
+
+# IDE
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Local documents and handbooks
+*.pdf
+CosmoLost_Engineering_Handbook (1).pdf
+CosmoLost_Engineering_Handbook*.pdf
+

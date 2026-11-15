@@ -1,0 +1,40 @@
+import type { McpServer } from './schema';
+
+export const DEFAULT_MCP_SERVERS: McpServer[] = [
+  {
+    id: 'tauri',
+    name: 'Tauri Native IPC MCP',
+    description: 'Native operating system window control, device metrics, and Rust IPC commands',
+    endpoint: 'ipc://tauri-core',
+    transport: 'ipc',
+    status: 'connected',
+    enabled: true,
+    latencyMs: 1.2,
+    toolsCount: 3,
+    capabilities: ['tools', 'logging', 'ipc'],
+  },
+  {
+    id: 'chakra-ui',
+    name: 'Chakra UI v3 Design System MCP',
+    description: 'Theme customization, component specs, and dynamic colorPalette overrides',
+    endpoint: 'ipc://chakra-system',
+    transport: 'ipc',
+    status: 'connected',
+    enabled: true,
+    latencyMs: 0.8,
+    toolsCount: 3,
+    capabilities: ['tools', 'resources'],
+  },
+  {
+    id: 'context7',
+    name: 'Context7 Documentation & Knowledge MCP',
+    description: 'Semantic query engine across project documentation and FSD architecture guides',
+    endpoint: 'ipc://context7-docs',
+    transport: 'ipc',
+    status: 'connected',
+    enabled: true,
+    latencyMs: 2.1,
+    toolsCount: 2,
+    capabilities: ['tools', 'resources', 'prompts'],
+  },
+];

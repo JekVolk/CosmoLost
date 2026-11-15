@@ -1,0 +1,654 @@
+{
+  "version": "2.22",
+  "children": [
+    {
+      "type": "frame",
+      "id": "m6yozl",
+      "x": -300,
+      "y": -220,
+      "name": "Components Library",
+      "clip": true,
+      "width": 1200,
+      "height": 800,
+      "fill": "#0f172a",
+      "layout": "none",
+      "children": [
+        {
+          "type": "group",
+          "id": "KQnlL",
+          "x": 23,
+          "y": 23,
+          "name": "Artifact Card",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 12,
+              "id": "Y57XZn",
+              "x": 0,
+              "y": 0,
+              "fill": "#111c32",
+              "width": 320,
+              "height": 200
+            },
+            {
+              "type": "text",
+              "id": "Z7u1O",
+              "x": 13,
+              "y": 12,
+              "fill": "#f8fafc",
+              "content": "Apollo Lunar Module",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "pfbLz",
+              "x": 13,
+              "y": 45,
+              "name": "MOON",
+              "fill": "#38bdf8",
+              "content": "MOON",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "700"
+            },
+            {
+              "type": "group",
+              "id": "dXFkE",
+              "x": 13,
+              "y": 159,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 6,
+                  "id": "ejAvN",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#7f1d1d",
+                  "width": 75,
+                  "height": 26
+                },
+                {
+                  "type": "text",
+                  "id": "nvR2x",
+                  "x": 17,
+                  "y": 6,
+                  "fill": "#ffffff",
+                  "content": "Inactive",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "esd6G",
+              "x": 13,
+              "y": 85,
+              "fill": "#94a3b8",
+              "textGrowth": "fixed-width-height",
+              "width": 167,
+              "height": 30,
+              "content": "Apollo 11 landing site equipment",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "group",
+              "id": "K7qCD9",
+              "x": 207,
+              "y": 45,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 8,
+                  "id": "eimEP",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#1e293b",
+                  "width": 100,
+                  "height": 110
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 8,
+                  "id": "b9wze",
+                  "x": 0,
+                  "y": 0,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "Apollo_14_Lunar_Module_%28LM%29_on_the_moon.jpg",
+                    "mode": "cover"
+                  },
+                  "width": 100,
+                  "height": 110
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "uSBCr",
+          "x": 367,
+          "y": 23,
+          "name": "Artifact Card – Active",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 12,
+              "id": "DhD40",
+              "x": 0,
+              "y": 0,
+              "fill": "#111c32",
+              "width": 320,
+              "height": 200
+            },
+            {
+              "type": "text",
+              "id": "sSBeE",
+              "x": 13,
+              "y": 12,
+              "fill": "#f8fafc",
+              "content": "Apollo Lunar Module",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "kxiPD",
+              "x": 13,
+              "y": 45,
+              "name": "MOON",
+              "fill": "#38bdf8",
+              "content": "MOON",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "700"
+            },
+            {
+              "type": "group",
+              "id": "n0Hdmz",
+              "x": 13,
+              "y": 159,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 6,
+                  "id": "Hd3f6",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#166534",
+                  "width": 75,
+                  "height": 26
+                },
+                {
+                  "type": "text",
+                  "id": "X8K8Ot",
+                  "x": 21,
+                  "y": 6,
+                  "fill": "#ffffff",
+                  "content": "Active",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "y0BcB",
+              "x": 13,
+              "y": 85,
+              "fill": "#94a3b8",
+              "textGrowth": "fixed-width-height",
+              "width": 167,
+              "height": 30,
+              "content": "Apollo 11 landing site equipment",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "group",
+              "id": "foqba",
+              "x": 207,
+              "y": 45,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 8,
+                  "id": "rkAOH",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#1e293b",
+                  "width": 100,
+                  "height": 110
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 8,
+                  "id": "rmzm5",
+                  "x": 0,
+                  "y": 0,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "Apollo_14_Lunar_Module_%28LM%29_on_the_moon.jpg",
+                    "mode": "cover"
+                  },
+                  "width": 100,
+                  "height": 110
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "A0vtu",
+          "x": 713,
+          "y": 23,
+          "name": "Artifact Card – Broken",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 12,
+              "id": "Fx8Vg",
+              "x": 0,
+              "y": 0,
+              "fill": "#111c32",
+              "width": 320,
+              "height": 200
+            },
+            {
+              "type": "text",
+              "id": "T56WwS",
+              "x": 13,
+              "y": 12,
+              "fill": "#f8fafc",
+              "content": "Apollo Lunar Module",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "ow8wT",
+              "x": 13,
+              "y": 45,
+              "name": "MOON",
+              "fill": "#38bdf8",
+              "content": "MOON",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "700"
+            },
+            {
+              "type": "group",
+              "id": "mYn7c",
+              "x": 13,
+              "y": 159,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 6,
+                  "id": "VgqbR",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#475569",
+                  "width": 75,
+                  "height": 26
+                },
+                {
+                  "type": "text",
+                  "id": "BuIyf",
+                  "x": 19,
+                  "y": 6,
+                  "fill": "#ffffff",
+                  "content": "Broken",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "MfjEP",
+              "x": 13,
+              "y": 85,
+              "fill": "#94a3b8",
+              "textGrowth": "fixed-width-height",
+              "width": 167,
+              "height": 30,
+              "content": "Apollo 11 landing site equipment",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "group",
+              "id": "VMHVq",
+              "x": 207,
+              "y": 45,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 8,
+                  "id": "gcJAx",
+                  "x": 0,
+                  "y": 0,
+                  "fill": "#1e293b",
+                  "width": 100,
+                  "height": 110
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 8,
+                  "id": "RVSdA",
+                  "x": 0,
+                  "y": 0,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "Apollo_14_Lunar_Module_%28LM%29_on_the_moon.jpg",
+                    "mode": "cover"
+                  },
+                  "width": 100,
+                  "height": 110
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "DEruD",
+          "x": 63,
+          "y": 270,
+          "name": "Planet Switcher",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 10,
+              "id": "jI1uW",
+              "x": 0,
+              "y": 0,
+              "fill": "#1e293b",
+              "width": 240,
+              "height": 48
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 8,
+              "id": "r7Qzi",
+              "x": 10,
+              "y": 6,
+              "fill": "#334155",
+              "width": 105,
+              "height": 36
+            },
+            {
+              "type": "text",
+              "id": "LJMYe",
+              "x": 40,
+              "y": 15,
+              "fill": "#38bdf8",
+              "content": "MOON",
+              "fontFamily": "Inter",
+              "fontSize": 14,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "xDoqY",
+              "x": 157,
+              "y": 15,
+              "fill": "#f97316",
+              "content": "MARS",
+              "fontFamily": "Inter",
+              "fontSize": 14,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "RBblP",
+          "x": 367,
+          "y": 270,
+          "name": "Year Slider",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "tgxAs",
+              "x": 14,
+              "y": 6,
+              "fill": "#475569",
+              "width": 260,
+              "height": 4
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "AL8O4",
+              "x": 14,
+              "y": 6,
+              "fill": "#38bdf8",
+              "width": 130,
+              "height": 4
+            },
+            {
+              "type": "ellipse",
+              "id": "mTpzy",
+              "x": 136,
+              "y": 0,
+              "fill": "#38bdf8",
+              "width": 16,
+              "height": 16
+            },
+            {
+              "type": "text",
+              "id": "b1wNcT",
+              "x": 0,
+              "y": 13,
+              "fill": "#94a3b8",
+              "content": "1960",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "500"
+            },
+            {
+              "type": "text",
+              "id": "NeMek",
+              "x": 258,
+              "y": 13,
+              "fill": "#94a3b8",
+              "content": "2026",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "x3Pf63",
+          "x": 717,
+          "y": 279,
+          "name": "Filter Chip – Active",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 18,
+              "id": "oTxcY",
+              "x": 0,
+              "y": 0,
+              "fill": "#1e293b",
+              "width": 100,
+              "height": 36
+            },
+            {
+              "type": "text",
+              "id": "LbfxI",
+              "x": 30,
+              "y": 10,
+              "fill": "#f8fafc",
+              "content": "Active",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "v8Sh89",
+          "x": 641,
+          "y": 339,
+          "name": "Filter Chip – Inactive",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 18,
+              "id": "I1atHY",
+              "x": 0,
+              "y": 0,
+              "fill": "#1e293b",
+              "width": 100,
+              "height": 36
+            },
+            {
+              "type": "text",
+              "id": "s38ruD",
+              "x": 24.681289198113973,
+              "y": 10.3583951731963,
+              "fill": "#f8fafc",
+              "content": "Inactive",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "LQNLq",
+          "x": 787,
+          "y": 331,
+          "name": "Filter Chip – Broken",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 18,
+              "id": "XD8h3",
+              "x": 0,
+              "y": 0,
+              "fill": "#1e293b",
+              "width": 100,
+              "height": 36
+            },
+            {
+              "type": "text",
+              "id": "Ps7TY",
+              "x": 28,
+              "y": 10,
+              "fill": "#f8fafc",
+              "content": "Broken",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "FkGlY",
+          "x": 515,
+          "y": 414,
+          "name": "Search Bar",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 8,
+              "id": "Oy02u",
+              "x": 0,
+              "y": 0,
+              "fill": "#1e293b",
+              "width": 260,
+              "height": 40
+            },
+            {
+              "type": "text",
+              "id": "Z4W2wx",
+              "x": 68,
+              "y": 12,
+              "fill": "#94a3b8",
+              "content": "Search equipment...",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "group",
+              "id": "PNANT",
+              "x": 226,
+              "y": 12,
+              "children": [
+                {
+                  "type": "path",
+                  "id": "X04BL",
+                  "x": 0,
+                  "y": 0,
+                  "geometry": "M6 0c3.314 0 6 2.686 6 6 0 3.314-2.686 6-6 6-3.314 0-6-2.686-6-6 0-3.314 2.686-6 6-6z",
+                  "fill": "#94a3b8",
+                  "width": 12,
+                  "height": 12
+                },
+                {
+                  "type": "path",
+                  "id": "j4bHG",
+                  "x": 8,
+                  "y": 9.707106781186553,
+                  "rotation": 45.000000000000064,
+                  "geometry": "M0 0l1 0 0 3 0 3-1 0 0-6z",
+                  "fill": "#94a3b8",
+                  "width": 1.5,
+                  "height": 14
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "Q7h69a",
+          "x": 0,
+          "y": 486,
+          "fill": "#111c32",
+          "width": 1200,
+          "height": 64
+        },
+        {
+          "type": "text",
+          "id": "B7zqA",
+          "x": 492,
+          "y": 506,
+          "fill": "#f8fafc",
+          "content": "NASA Lost Equipment",
+          "fontFamily": "Inter",
+          "fontSize": 20,
+          "fontWeight": "700"
+        }
+      ]
+    }
+  ],
+  "fileToken": "5817e533-c3c9-4c8e-a284-f693fc18c4c4"
+}
