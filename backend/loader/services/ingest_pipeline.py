@@ -44,7 +44,7 @@ class NASAIngestPipeline:
 
         # Instantiate modular sub-services
         self.celestial_bodies_service = CelestialBodiesIngestService(repository, state_store)
-        self.missions_service = MissionsIngestService(repository, state_store)
+        self.missions_service = MissionsIngestService(repository, state_store, client=self.client)
         self.artifacts_service = ArtifactsIngestService(repository, state_store)
         self.rover_photos_service = RoverPhotosIngestService(client, repository)
         self.archive_media_service = ArchiveMediaIngestService(client, repository)
