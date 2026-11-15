@@ -1,5 +1,12 @@
 import { useMatchStore } from '@/entities/game';
-import { Badge, Box, Button, HStack, Heading, Text, VStack } from '@chakra-ui/react';
+import {
+  RP_TOKEN_ICON_URL,
+  getContainerIconUrl,
+  getEquipmentIconUrl,
+  getRarityBadgeIconUrl,
+  playSfx,
+} from '@/shared/lib';
+import { Badge, Box, Button, HStack, Heading, Image, Text, VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -51,18 +58,6 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
 
   const isVisible = isOpen !== undefined ? isOpen : phase === 'MATCH_END' && chestEarned;
 
-  useEffect(() => {
-    if (isVisible) {
-      setStage('shaking');
-      const timer = setTimeout(() => {
-        setStage('revealed');
-      }, 1200);
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible]);
-
-  if (!isVisible) return null;
-
   // Graceful fallback reward data if none provided by parent props
   const defaultArtifact: UnlockedArtifact = {
     id: 'unknown_artifact',
@@ -78,6 +73,24 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
     colorScheme: 'blue',
   };
 
+  useEffect(() => {
+    if (isVisible) {
+      setStage('shaking');
+      playSfx('chest_click');
+
+      const timer = setTimeout(() => {
+        setStage('revealed');
+        const isHighTier =
+          activeArtifact.rarity === 'HISTORIC' || activeArtifact.rarity === 'ANOMALY';
+        playSfx(isHighTier ? 'chest_open_historic' : 'chest_open_common');
+      }, 1200);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, activeArtifact.rarity]);
+
+  if (!isVisible) return null;
+
   const handlePlayAgain = () => {
     resetMatch();
     onPlayAgain?.();
@@ -87,6 +100,15 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
     resetMatch();
     onGoToProfile?.();
   };
+
+  const containerImg = getContainerIconUrl(
+    activeArtifact.rarity === 'ANOMALY'
+      ? 'alien_anomaly'
+      : activeArtifact.rarity === 'HISTORIC'
+        ? 'deep_space'
+        : 'standard',
+    false,
+  );
 
   return (
     <Box
@@ -129,9 +151,13 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
                 boxShadow: '0 0 24px rgba(236, 201, 75, 0.4)',
               }}
             >
-              <Text fontSize="5xl" aria-label="Контейнер">
-                📦
-              </Text>
+              <Image
+                src={containerImg}
+                alt="Контейнер"
+                width="100px"
+                height="100px"
+                objectFit="contain"
+              />
             </motion.div>
             <Text color="gray.400" fontSize="sm">
               Зняття захисних пломб контейнера...
@@ -158,7 +184,7 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
                 Новий артефакт розблоковано!
               </Heading>
 
-              {/* Artifact visual placeholder with rarity glow */}
+              {/* Artifact visual asset with rarity glow */}
               <Box
                 w="160px"
                 h="160px"
@@ -173,32 +199,35 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
                 position="relative"
                 overflow="hidden"
                 boxShadow={`inset 0 0 20px ${rarityInfo.hex}33`}
+                p={3}
               >
-                {/* SVG Visual Placeholder / Cue for real 3D model */}
-                <svg
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={rarityInfo.hex}
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                  <polyline points="2 17 12 22 22 17" />
-                  <polyline points="2 12 12 17 22 12" />
-                </svg>
-                <Text
-                  fontSize="2xs"
-                  color="gray.500"
-                  mt={2}
-                  letterSpacing="wider"
-                  textTransform="uppercase"
-                >
-                  3D ARTIFACT
-                </Text>
+                {activeArtifact.image_url ? (
+                  <Image
+                    src={activeArtifact.image_url}
+                    alt={activeArtifact.name}
+                    maxH="130px"
+                    maxW="130px"
+                    objectFit="contain"
+                  />
+                ) : (
+                  <VStack gap={2}>
+                    <Image
+                      src={getRarityBadgeIconUrl(activeArtifact.rarity)}
+                      alt={activeArtifact.rarity}
+                      width="64px"
+                      height="64px"
+                      objectFit="contain"
+                    />
+                    <Text
+                      fontSize="2xs"
+                      color="gray.400"
+                      letterSpacing="wider"
+                      textTransform="uppercase"
+                    >
+                      3D ARTIFACT
+                    </Text>
+                  </VStack>
+                )}
               </Box>
 
               <VStack gap={2}>
@@ -216,9 +245,18 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
                 <Heading size="lg" color="white">
                   {activeArtifact.name}
                 </Heading>
-                <Text fontSize="xs" color="blue.300">
-                  {activeArtifact.equipment_class}
-                </Text>
+                <HStack gap={1.5} align="center">
+                  <Image
+                    src={getEquipmentIconUrl(activeArtifact.equipment_class)}
+                    alt=""
+                    width="16px"
+                    height="16px"
+                    objectFit="contain"
+                  />
+                  <Text fontSize="xs" color="blue.300">
+                    {activeArtifact.equipment_class}
+                  </Text>
+                </HStack>
                 <Text fontSize="sm" color="gray.300">
                   {activeArtifact.description}
                 </Text>
@@ -234,9 +272,12 @@ export const ChestOpeningModal: React.FC<ChestOpeningModalProps> = ({
                   borderColor="yellow.600"
                   borderRadius="md"
                 >
-                  <Text color="yellow.300" fontSize="xs" fontWeight="medium">
-                    +{reward.rp_gained || 50} RP (Дублікат перетворено на Дослідницькі Бали)
-                  </Text>
+                  <HStack justify="center" gap={2}>
+                    <Image src={RP_TOKEN_ICON_URL} alt="RP Token" width="20px" height="20px" />
+                    <Text color="yellow.300" fontSize="xs" fontWeight="medium">
+                      +{reward.rp_gained || 50} RP (Дублікат перетворено на Дослідницькі Бали)
+                    </Text>
+                  </HStack>
                 </Box>
               )}
 

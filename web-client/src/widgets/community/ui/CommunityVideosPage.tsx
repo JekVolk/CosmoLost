@@ -1,3 +1,4 @@
+import { PlatformUpdateBanner } from '@/features/mcp-promo';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -21,11 +22,13 @@ import { getEmbeddableVideoUrl, validateVideoUrl } from '../../../shared/lib/vid
 
 interface CommunityVideosPageProps {
   onOpenArtifact: (artifact: SpaceArtifact, planetId: PlanetId) => void;
+  onOpenMcp?: () => void;
   planets?: Record<PlanetId, PlanetConfig>;
 }
 
 export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({
   onOpenArtifact,
+  onOpenMcp,
   planets,
 }) => {
   const [publications, setPublications] = useState<CommunityPublication[]>([]);
@@ -74,7 +77,7 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({
   const filteredPubs = publications.filter((pub) => {
     if (filterPlanet !== 'all') {
       const art = allArtifacts.find(
-        (a) => a.id === pub.artifact_id || a.mission === pub.mission_id,
+        (a) => a.id === pub.artifact_id || a.mission === pub.mission_id
       );
       if (art && art.planet !== filterPlanet) return false;
     }
@@ -116,7 +119,7 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({
     if (!validation.isValid) {
       setUrlValidationError(
         validation.error ||
-          'Please provide a valid video link from YouTube, Instagram, TikTok, or Vimeo.',
+          'Please provide a valid video link from YouTube, Instagram, TikTok, or Vimeo.'
       );
       return;
     }
@@ -161,6 +164,7 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({
   return (
     <div className="pen-community-page">
       <div className="pen-community-container">
+        <PlatformUpdateBanner onConnect={onOpenMcp} style={{ marginBottom: '20px' }} />
         <div className="pen-community-intro">
           <div className="pen-challenge-badge">
             <Sparkles size={11} className="text-cyan-400" />

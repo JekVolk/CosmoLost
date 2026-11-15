@@ -26,15 +26,30 @@ export const OAuthCallback: React.FC = () => {
     let active = true;
 
     async function completeAuth() {
+      if (typeof window !== 'undefined' && window.location) {
+        const searchParams = new URLSearchParams(window.location.search);
+        const errorParam = searchParams.get('error') || searchParams.get('error_description');
+        if (errorParam) {
+          setError(
+            errorParam === 'access_denied'
+              ? 'Доступ через Google було скасовано користувачем.'
+              : `Помилка авторизації: ${errorParam}`,
+          );
+          return;
+        }
+      }
+
       try {
         // Exchange session/cookie for JWT via secure endpoint (never from URL query params)
         const data = await httpClient.get<OAuthResponse>('/api/game/auth/google/done/');
         if (!active) return;
 
         const token = data.access || data.token;
-        if (token) {
-          setToken(token);
+        if (!token) {
+          throw new Error('Токен авторизації не отримано від сервера.');
         }
+
+        setToken(token);
 
         if (data.user) {
           setUser(data.user);
@@ -42,15 +57,13 @@ export const OAuthCallback: React.FC = () => {
           setUser({ callsign: data.callsign, elo_rating: 1000 });
         }
 
-        if (token) {
-          try {
-            const me = await userRepository.getMe();
-            if (active && me) {
-              setUser({ callsign: me.callsign, elo_rating: me.elo_rating });
-            }
-          } catch {
-            // Profile may be initialized later
+        try {
+          const me = await userRepository.getMe();
+          if (active && me) {
+            setUser({ callsign: me.callsign, elo_rating: me.elo_rating });
           }
+        } catch {
+          // Profile may be initialized later
         }
 
         navigate('/game', { replace: true });

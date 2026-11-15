@@ -187,6 +187,17 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({ onExit, onOpen
               site
             </div>
 
+            <AstroGuessrMiniMap
+              planetId={currentRound.planetId}
+              playerPin={{ lat: lastResult.guessLat, lon: lastResult.guessLon }}
+              trueCoordinates={currentRound.trueCoordinates}
+              isRevealed={true}
+              onSetPin={() => undefined}
+              onConfirmGuess={() => undefined}
+              accentColor={accentColor}
+              compact
+            />
+
             {/* Target Hardware Identity Card */}
             <div className={styles.targetCard}>
               {currentRound.artifact.imageUrl && (

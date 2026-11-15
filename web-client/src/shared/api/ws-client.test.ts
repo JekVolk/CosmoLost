@@ -50,16 +50,16 @@ describe('wsClient', () => {
   });
 
   it('connects and creates singleton socket', () => {
-    wsClient.connect('ws://localhost:8000/ws/game/');
+    wsClient.connect('/ws/game/');
     expect(MockWebSocket.instances.length).toBe(1);
 
     // Calling connect again while open should not create a new socket
-    wsClient.connect('ws://localhost:8000/ws/game/');
+    wsClient.connect('/ws/game/');
     expect(MockWebSocket.instances.length).toBe(1);
   });
 
   it('sends action and fields as JSON when connected', () => {
-    wsClient.connect('ws://localhost:8000/ws/game/');
+    wsClient.connect('/ws/game/');
     const socket = MockWebSocket.instances[0];
 
     wsClient.send('submit_guess', { lat: 10.5, lon: 20.3 });
@@ -73,7 +73,7 @@ describe('wsClient', () => {
   });
 
   it('dispatches incoming events to subscribed listeners', () => {
-    wsClient.connect('ws://localhost:8000/ws/game/');
+    wsClient.connect('/ws/game/');
     const socket = MockWebSocket.instances[0];
 
     const matchCallback = vi.fn();
@@ -109,7 +109,7 @@ describe('wsClient', () => {
   });
 
   it('disconnects and resets socket', () => {
-    wsClient.connect('ws://localhost:8000/ws/game/');
+    wsClient.connect('/ws/game/');
     const socket = MockWebSocket.instances[0];
 
     expect(wsClient.getSocket()).not.toBeNull();

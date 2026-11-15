@@ -1,9 +1,11 @@
+import { McpConnectPage } from '@/pages/mcp-connect';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { PLANETS } from '../entities/planet/model/planetData';
 import type { PlanetConfig, PlanetId, SpaceArtifact } from '../entities/planet/model/types';
 import { AstroGuessrGame } from '../features/astro-guessr-360';
 import { ViewControls } from '../features/view-controls/ui/ViewControls';
+import { ArenaPage } from '../pages/arena';
 import {
   apiArtifactDetailToSpaceArtifact,
   apiArtifactSummaryToSpaceArtifact,
@@ -12,7 +14,6 @@ import {
 import { AboutModal } from '../widgets/about/ui/AboutModal';
 import { CatalogPage } from '../widgets/catalog/ui/CatalogPage';
 import { CommunityVideosPage } from '../widgets/community/ui/CommunityVideosPage';
-import { ArenaPage } from '../pages/arena';
 import { DossierPage } from '../widgets/dossier/ui/DossierPage';
 import { type AppView, Header } from '../widgets/header/ui/Header';
 import { PlanetTelemetry } from '../widgets/planet-telemetry/ui/PlanetTelemetry';
@@ -22,7 +23,14 @@ import './styles/global.css';
 
 export const App: React.FC = () => {
   const [currentPlanetId, setCurrentPlanetId] = useState<PlanetId>('mars');
-  const [currentView, setCurrentView] = useState<AppView>('map');
+  const [currentView, setCurrentView] = useState<AppView>(() => {
+    const path = window.location.pathname;
+    const params = new URLSearchParams(window.location.search);
+    if (path === '/connect' || path === '/mcp' || params.get('view') === 'connect') {
+      return 'connect';
+    }
+    return 'map';
+  });
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [showMarkers, setShowMarkers] = useState(true);
   const [activeArtifact, setActiveArtifact] = useState<SpaceArtifact | null>(null);
@@ -51,10 +59,10 @@ export const App: React.FC = () => {
         const moonBody = bodies.find((b) => b.id === 'moon');
 
         const marsArts: SpaceArtifact[] = marsRes.results.map((item) =>
-          apiArtifactSummaryToSpaceArtifact(item, 'mars'),
+          apiArtifactSummaryToSpaceArtifact(item, 'mars')
         );
         const moonArts: SpaceArtifact[] = moonRes.results.map((item) =>
-          apiArtifactSummaryToSpaceArtifact(item, 'moon'),
+          apiArtifactSummaryToSpaceArtifact(item, 'moon')
         );
 
         setPlanets((prev) => ({
@@ -254,6 +262,7 @@ export const App: React.FC = () => {
           <CatalogPage
             onOpenDossier={(art, pId) => handleOpenDossier(art, pId)}
             onBackToMap={() => setCurrentView('map')}
+            onOpenMcp={() => setCurrentView('connect')}
             planets={planets}
           />
         )}
@@ -264,6 +273,7 @@ export const App: React.FC = () => {
               setCurrentPlanetId(pId);
               handleOpenDossier(art, pId);
             }}
+            onOpenMcp={() => setCurrentView('connect')}
             planets={planets}
           />
         )}
@@ -284,9 +294,38 @@ export const App: React.FC = () => {
           </div>
         )}
 
+        {currentView === 'connect' && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 60,
+              overflowY: 'auto',
+            }}
+          >
+            <McpConnectPage
+              onNavigate={(view) => {
+                setCurrentView(view);
+                if (view !== 'connect') {
+                  window.history.pushState(
+                    {},
+                    '',
+                    window.location.pathname === '/connect' ? '/' : window.location.pathname
+                  );
+                }
+              }}
+              onOpenAbout={() => setIsAboutOpen(true)}
+            />
+          </div>
+        )}
+
         <AboutModal
           isOpen={isAboutOpen}
           onClose={() => setIsAboutOpen(false)}
+          onOpenMcp={() => setCurrentView('connect')}
         />
       </div>
     </AppProviders>

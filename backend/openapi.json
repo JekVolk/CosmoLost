@@ -11,11 +11,11 @@
       "description": "Production Server (Portal API)"
     },
     {
-      "url": "http://localhost:8000/api/v1/portal",
+      "url": "/api/v1/portal",
       "description": "Local Dev Server (Portal API)"
     },
     {
-      "url": "http://localhost:8000/api/web",
+      "url": "/api/web",
       "description": "Local Dev Server (Web Compatibility Alias)"
     }
   ],

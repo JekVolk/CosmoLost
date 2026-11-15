@@ -1,6 +1,8 @@
 import { useMatchStore } from '@/entities/game';
+import { playBgm, playSfx, stopBgm } from '@/shared/lib';
 import { Box, Flex, VStack } from '@chakra-ui/react';
 import type React from 'react';
+import { useEffect } from 'react';
 import { MiniGameRenderer } from './MiniGameRenderer';
 import { OpponentProgress } from './OpponentProgress';
 import { RoundResultOverlay } from './RoundResultOverlay';
@@ -13,6 +15,27 @@ export interface BattleArenaProps {
 export const BattleArena: React.FC<BattleArenaProps> = ({ onContinueRound }) => {
   const phase = useMatchStore((s) => s.phase);
   const setPhase = useMatchStore((s) => s.setPhase);
+  const myScore = useMatchStore((s) => s.my_score);
+  const opponentScore = useMatchStore((s) => s.opponent_score);
+
+  useEffect(() => {
+    if (phase === 'ROUND_ACTIVE') {
+      playBgm(0.2);
+    } else if (phase === 'MATCH_END') {
+      stopBgm();
+      if (myScore >= opponentScore) {
+        playSfx('match_win');
+      } else {
+        playSfx('match_defeat');
+      }
+    }
+  }, [phase, myScore, opponentScore]);
+
+  useEffect(() => {
+    return () => {
+      stopBgm();
+    };
+  }, []);
 
   const handleContinue = () => {
     if (onContinueRound) {

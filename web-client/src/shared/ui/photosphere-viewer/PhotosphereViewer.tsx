@@ -12,8 +12,8 @@ import {
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import styles from './PhotosphereViewer.module.css';
 import { API_BASE_URL } from '../../api/portalApi';
+import styles from './PhotosphereViewer.module.css';
 import type { PhotosphereViewerProps } from './types';
 
 function getCompassHeading(azimuthDeg: number): string {

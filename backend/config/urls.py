@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import include, path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from game.views import social_auth_begin
 from loader import views as loader_views
 
 
@@ -43,6 +44,7 @@ urlpatterns = [
 
     # Routes for Game Module
     path('api/game/', include('game.urls')),
+    path('auth/login/<str:backend>/', social_auth_begin, name='social_begin'),
     path('auth/', include('social_django.urls', namespace='social')),
     path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

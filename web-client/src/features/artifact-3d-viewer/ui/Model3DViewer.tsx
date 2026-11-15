@@ -3,6 +3,7 @@ import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { resolveGlbModelUrl } from '../model/cdnModels';
 import type { Model3DViewerProps } from '../types';
@@ -299,6 +300,9 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
 
     if (candidateUrl) {
       const loader = new GLTFLoader();
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('/draco/');
+      loader.setDRACOLoader(dracoLoader);
       loader.load(
         candidateUrl,
         (gltf) => {
@@ -614,10 +618,20 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
       {modelLoadError && !loading && (
         <div
           style={{
-            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: '10px', zIndex: 20,
-            background: 'rgba(7, 11, 20, 0.92)', color: '#fca5a5',
-            fontFamily: 'var(--font-mono, monospace)', fontSize: '12px', textAlign: 'center', padding: '24px',
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            zIndex: 20,
+            background: 'rgba(7, 11, 20, 0.92)',
+            color: '#fca5a5',
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '12px',
+            textAlign: 'center',
+            padding: '24px',
           }}
         >
           <Box size={28} />

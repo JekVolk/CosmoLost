@@ -29,7 +29,7 @@ describe('useMatchmaking', () => {
   it('starts matchmaking: calls containerRepository, sets phase SEARCHING, connects WS', async () => {
     vi.mocked(containerRepository.startMatchWithSlot).mockResolvedValueOnce({
       match_id: 'match-123',
-      ws_url: 'ws://localhost:8000/ws/game/match-123/',
+      ws_url: '/ws/game/match-123/',
     });
 
     const { result } = renderHook(() => useMatchmaking());
@@ -39,7 +39,7 @@ describe('useMatchmaking', () => {
     });
 
     expect(containerRepository.startMatchWithSlot).toHaveBeenCalledWith(0);
-    expect(wsClient.connect).toHaveBeenCalledWith('ws://localhost:8000/ws/game/match-123/');
+    expect(wsClient.connect).toHaveBeenCalledWith('/ws/game/match-123/');
     expect(useMatchStore.getState().phase).toBe('SEARCHING');
     expect(useMatchStore.getState().match_id).toBe('match-123');
   });
@@ -55,7 +55,7 @@ describe('useMatchmaking', () => {
 
     vi.mocked(containerRepository.startMatchWithSlot).mockResolvedValueOnce({
       match_id: 'match-999',
-      ws_url: 'ws://localhost:8000/ws/game/match-999/',
+      ws_url: '/ws/game/match-999/',
     });
 
     const { result } = renderHook(() => useMatchmaking());

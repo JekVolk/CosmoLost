@@ -474,6 +474,25 @@ class GameApiTests(TestCase):
         self.assertIn('refresh', data)
         self.assertEqual(data['callsign'], 'pilot_alpha')
 
+    def test_google_oauth2_login_get_redirects(self):
+        res = self.client.get('/auth/login/google-oauth2/')
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('accounts.google.com', res['Location'])
+
+    def test_google_oauth2_login_post_redirects(self):
+        res = self.client.post('/auth/login/google-oauth2/')
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('accounts.google.com', res['Location'])
+
+    def test_google_oauth2_login_uses_forwarded_https_scheme(self):
+        res = self.client.get(
+            '/auth/login/google-oauth2/',
+            HTTP_X_FORWARDED_PROTO='https',
+            HTTP_HOST='cosmolost.lixtar.org',
+        )
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('redirect_uri=https%3A%2F%2Fcosmolost.lixtar.org%2Fauth%2Fcomplete%2F', res['Location'])
+
 
 class WebSocketDuelTests(TestCase):
     def setUp(self):
