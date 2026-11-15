@@ -34,7 +34,10 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,testserver').split(',')
+    for host in os.environ.get(
+        'DJANGO_ALLOWED_HOSTS',
+        'localhost,127.0.0.1,0.0.0.0,backend,testserver,cosmolost.lihtar.org,.lihtar.org',
+    ).split(',')
     if host.strip()
 ]
 
@@ -42,7 +45,7 @@ CSRF_TRUSTED_ORIGINS = [
     host.strip()
     for host in os.environ.get(
         'DJANGO_CSRF_TRUSTED_ORIGINS',
-        'http://localhost:9088,http://127.0.0.1:9088,http://127.0.0.1:9088,http://testserver:9088,http://localhost:8000,http://127.0.0.1:8000,http://testserver:8000'
+        'http://localhost:9088,http://127.0.0.1:9088,http://testserver:9088,http://localhost:8000,http://127.0.0.1:8000,http://testserver:8000,http://backend:8000,https://cosmolost.lihtar.org,http://cosmolost.lihtar.org',
     ).split(',')
     if host.strip()
 ]
@@ -79,6 +82,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'config.middleware.SimpleCorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -119,11 +123,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': os.environ.get('DB_HOST'),
-            'PORT': os.environ.get('DB_PORT'),
+            'NAME': os.environ.get('DB_NAME', 'cosmolost'),
+            'USER': os.environ.get('DB_USER', 'postgres'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+            'HOST': os.environ.get('DB_HOST', 'db'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
         }
     }
 
