@@ -1,5 +1,9 @@
 import math
+from urllib.parse import urlparse
+
+import requests
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -25,6 +29,40 @@ from .serializers import (
     ScientificDiscoverySerializer,
     TraverseWaypointSerializer,
 )
+
+
+NASA_MEDIA_HOSTS = {
+    'images-assets.nasa.gov',
+    'photojournal.jpl.nasa.gov',
+    'mars.nasa.gov',
+}
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def media_proxy(request):
+    """Serve allowlisted NASA images with same-origin CORS for WebGL textures."""
+    source_url = request.query_params.get('url', '')
+    parsed = urlparse(source_url)
+    if parsed.scheme != 'https' or parsed.hostname not in NASA_MEDIA_HOSTS:
+        return Response({'detail': 'Only allowlisted NASA media URLs are supported.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        upstream = requests.get(source_url, timeout=20, allow_redirects=True)
+        upstream.raise_for_status()
+    except requests.RequestException:
+        return Response({'detail': 'NASA media is unavailable.'}, status=status.HTTP_502_BAD_GATEWAY)
+
+    if urlparse(upstream.url).hostname not in NASA_MEDIA_HOSTS:
+        return Response({'detail': 'NASA media redirected to an unsupported host.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    content_type = upstream.headers.get('Content-Type', '').split(';', 1)[0].lower()
+    if not content_type.startswith('image/'):
+        return Response({'detail': 'The NASA resource is not an image.'}, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    response = HttpResponse(upstream.content, content_type=content_type)
+    response['Cache-Control'] = 'public, max-age=86400'
+    return response
 
 
 def compute_artifact_clusters(artifacts, cluster_distance_m=500.0):

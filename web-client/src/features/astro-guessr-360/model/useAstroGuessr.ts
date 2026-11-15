@@ -96,7 +96,7 @@ export const STATIC_ROUNDS: AstroGuessrRound[] = [
       imageUrl: 'https://images-assets.nasa.gov/image/KSC-as11-40-5964/KSC-as11-40-5964~medium.jpg',
       badgeColor: '#38bdf8',
     },
-    panoramaUrl: 'https://photojournal.jpl.nasa.gov/jpeg/PIA14545.jpg',
+    panoramaUrl: 'https://images-assets.nasa.gov/image/6900957/6900957~medium.jpg',
     caption: 'Tranquility Base 360-Degree Panorama, Mare Tranquillitatis',
     credit: 'NASA / Neil Armstrong & Buzz Aldrin Archive',
     trueCoordinates: {
