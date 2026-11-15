@@ -248,6 +248,16 @@ class GameApiTests(TestCase):
             name='Vostok Capsule', artifact_type='LANDER', operational_status='COMPLETED',
             latitude=51.27, longitude=45.99, location_name='Saratov', mass_kg=2460.0,
         )
+        self.artifact2 = Artifact.objects.create(
+            id='voskhod_capsule', mission=self.mission, celestial_body=self.body,
+            name='Voskhod Capsule', artifact_type='LANDER', operational_status='COMPLETED',
+            latitude=50.0, longitude=40.0, location_name='Step', mass_kg=2500.0,
+        )
+        self.artifact3 = Artifact.objects.create(
+            id='soyuz_capsule', mission=self.mission, celestial_body=self.body,
+            name='Soyuz Capsule', artifact_type='LANDER', operational_status='COMPLETED',
+            latitude=48.0, longitude=42.0, location_name='Baikonur', mass_kg=2800.0,
+        )
         self.equipment = EquipmentItem.objects.create(
             id='vostok_radio', artifact=self.artifact, name='Vostok Radio',
             description='Radio module', equipment_class=EquipmentClass.COMMUNICATIONS,
@@ -356,6 +366,30 @@ class GameApiTests(TestCase):
         inv_item.refresh_from_db()
         self.assertTrue(inv_item.is_showcased)
         self.assertEqual(inv_item.showcase_slot, 1)
+
+    def test_showcase_update_duplicate_inventory_item(self):
+        self.client.force_authenticate(user=self.user)
+        inv_item = UserInventoryItem.objects.create(user=self.user, equipment=self.equipment)
+        res = self.client.post(
+            '/api/game/showcase/update/',
+            {'slots': [
+                {'inventory_item_id': inv_item.id, 'slot': 1},
+                {'inventory_item_id': inv_item.id, 'slot': 2},
+            ]},
+            format='json',
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_match_create_insufficient_payloads_returns_409(self):
+        self.client.force_authenticate(user=self.user)
+        slot = ContainerSlot.objects.create(user=self.user, slot_index=5, container_type=ContainerType.STANDARD)
+        Artifact.objects.filter(id__in=[self.artifact2.id, self.artifact3.id]).delete()
+
+        res = self.client.post('/api/game/match/create/', {'slot_index': 5}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(res.json()['detail'], 'insufficient_round_content')
+        slot.refresh_from_db()
+        self.assertFalse(slot.is_reserved)
 
     def test_match_create_validation_and_creation(self):
         self.client.force_authenticate(user=self.user)
@@ -583,6 +617,32 @@ class WebSocketDuelTests(TestCase):
 
             # Send invalid action
             await communicator.send_json_to({'action': 'fly_to_jupiter'})
+            err = await communicator.receive_json_from()
+            self.assertEqual(err['event'], 'round.error')
+
+            await communicator.disconnect()
+
+        async_to_sync(_run)()
+
+    def test_ws_invalid_coordinates(self):
+        async def _run():
+            communicator = WebsocketCommunicator(
+                DuelConsumer.as_asgi(),
+                f"/ws/game/duel/{self.match.id}/",
+            )
+            communicator.scope['url_route'] = {'kwargs': {'match_id': self.match.id}}
+            communicator.scope['user'] = self.user
+            connected, _ = await communicator.connect()
+            self.assertTrue(connected)
+
+            await communicator.receive_json_from()
+            await communicator.receive_json_from()
+
+            await communicator.send_json_to({
+                'action': 'submit_guess',
+                'latitude': 'invalid_string',
+                'longitude': 50.0,
+            })
             err = await communicator.receive_json_from()
             self.assertEqual(err['event'], 'round.error')
 

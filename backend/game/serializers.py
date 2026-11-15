@@ -113,11 +113,16 @@ class ShowcaseUpdateRequestSerializer(serializers.Serializer):
 
     def validate_slots(self, value):
         slots_seen = set()
+        items_seen = set()
         for item in value:
             slot_num = item['slot']
+            item_id = item['inventory_item_id']
             if slot_num in slots_seen:
                 raise serializers.ValidationError(f"Duplicate showcase slot '{slot_num}' in request.")
+            if item_id in items_seen:
+                raise serializers.ValidationError(f"Duplicate inventory item '{item_id}' in request.")
             slots_seen.add(slot_num)
+            items_seen.add(item_id)
         return value
 
 

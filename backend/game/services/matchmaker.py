@@ -15,10 +15,14 @@ def pick_target_artifact(user_id: int) -> Artifact | None:
         created_at__gte=cutoff,
     ).values_list('target_artifact_id', flat=True)
 
-    fresh = Artifact.objects.exclude(id__in=used_ids).order_by('?')
+    valid_artifacts = Artifact.objects.filter(
+        latitude__isnull=False,
+        longitude__isnull=False,
+    )
+    fresh = valid_artifacts.exclude(id__in=used_ids).order_by('?')
     if fresh.exists():
         return fresh.first()
-    return Artifact.objects.order_by('?').first()
+    return valid_artifacts.order_by('?').first() or Artifact.objects.order_by('?').first()
 
 
 def build_bot_accuracy(player_elo: int) -> float:

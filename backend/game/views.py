@@ -79,11 +79,12 @@ class DailyContainerClaimView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        profile, _ = UserGameProfile.objects.get_or_create(
-            user=request.user,
-            defaults={'callsign': request.user.username or f"user_{request.user.id}"},
-        )
-        result = profile.claim_daily_login()
+        with transaction.atomic():
+            profile, _ = UserGameProfile.objects.select_for_update().get_or_create(
+                user=request.user,
+                defaults={'callsign': request.user.username or f"user_{request.user.id}"},
+            )
+            result = profile.claim_daily_login()
         return Response(result)
 
 
@@ -109,17 +110,17 @@ class ShowcaseUpdateView(APIView):
         slots_data = serializer.validated_data['slots']
         item_ids = [s['inventory_item_id'] for s in slots_data]
 
-        owned_items = {
-            item.id: item
-            for item in request.user.inventory.filter(id__in=item_ids)
-        }
-        if len(owned_items) != len(item_ids):
-            return Response(
-                {'detail': 'One or more items do not belong to you or do not exist.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
         with transaction.atomic():
+            owned_items = {
+                item.id: item
+                for item in request.user.inventory.select_for_update().filter(id__in=item_ids)
+            }
+            if len(owned_items) != len(item_ids):
+                return Response(
+                    {'detail': 'One or more items do not belong to you or do not exist.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
             request.user.inventory.filter(is_showcased=True).update(
                 is_showcased=False,
                 showcase_slot=None,
@@ -147,23 +148,32 @@ class MatchCreateView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         slot_index = serializer.validated_data['slot_index']
-        slot = request.user.container_slots.filter(slot_index=slot_index).first()
 
-        if not slot:
-            return Response({'detail': 'Слот не знайдено.'}, status=status.HTTP_404_NOT_FOUND)
-        if slot.is_reserved:
-            return Response({'detail': 'Слот уже зарезервовано.'}, status=status.HTTP_409_CONFLICT)
-
-        # Check content requirements
-        if Artifact.objects.count() < 1:
+        # Check content requirements: at least 3 valid MVP payloads with coordinates
+        valid_payloads_count = Artifact.objects.filter(
+            latitude__isnull=False,
+            longitude__isnull=False,
+        ).count()
+        if valid_payloads_count < 3:
             return Response({'detail': 'insufficient_round_content'}, status=status.HTTP_409_CONFLICT)
 
         with transaction.atomic():
+            slot = (
+                ContainerSlot.objects.select_for_update()
+                .filter(user=request.user, slot_index=slot_index)
+                .first()
+            )
+
+            if not slot:
+                return Response({'detail': 'Слот не знайдено.'}, status=status.HTTP_404_NOT_FOUND)
+            if slot.is_reserved:
+                return Response({'detail': 'Слот уже зарезервовано.'}, status=status.HTTP_409_CONFLICT)
+
             slot.is_reserved = True
             slot.save(update_fields=['is_reserved'])
 
             target_artifact = pick_target_artifact(request.user.id)
-            profile, _ = UserGameProfile.objects.get_or_create(
+            profile, _ = UserGameProfile.objects.select_for_update().get_or_create(
                 user=request.user,
                 defaults={'callsign': request.user.username or f"user_{request.user.id}"},
             )
@@ -215,10 +225,6 @@ class ContainerCraftView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        profile, _ = UserGameProfile.objects.get_or_create(
-            user=request.user,
-            defaults={'callsign': request.user.username or f"user_{request.user.id}"},
-        )
         ctype = request.data.get('container_type', ContainerType.STANDARD)
         target_class = request.data.get('target_class', None)
 
@@ -229,10 +235,15 @@ class ContainerCraftView(APIView):
         }
         cost = costs.get(ctype, 100)
 
-        if profile.research_points < cost:
-            return Response({'detail': 'Недостатньо RP'}, status=status.HTTP_400_BAD_REQUEST)
-
         with transaction.atomic():
+            profile, _ = UserGameProfile.objects.select_for_update().get_or_create(
+                user=request.user,
+                defaults={'callsign': request.user.username or f"user_{request.user.id}"},
+            )
+
+            if profile.research_points < cost:
+                return Response({'detail': 'Недостатньо RP'}, status=status.HTTP_400_BAD_REQUEST)
+
             profile.research_points -= cost
             profile.save(update_fields=['research_points'])
             craft = LootService().roll(profile, ctype, target_class or None)

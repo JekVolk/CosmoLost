@@ -26,6 +26,7 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         self.is_p1 = match_data['player1_id'] == self.user.id
 
         await self.channel_layer.group_add(self.group_name, self.channel_name)
+        self._in_group = True
         await self.accept()
 
         # Send initial matched event
@@ -40,20 +41,24 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         await self.send_round_start()
 
     async def disconnect(self, close_code):
-        if hasattr(self, 'group_name'):
+        if getattr(self, '_in_group', False) and hasattr(self, 'group_name') and self.channel_layer:
             await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
     async def receive_json(self, content):
+        if not isinstance(content, dict):
+            await self.send_json({'event': 'round.error', 'message': 'Invalid payload format'})
+            return
+
         action = content.get('action')
-        if not action:
-            await self.send_json({'event': 'round.error', 'message': 'Missing action'})
+        if not action or not isinstance(action, str):
+            await self.send_json({'event': 'round.error', 'message': 'Missing or invalid action'})
             return
 
         if action == 'submit_guess':
             lat = content.get('latitude')
             lon = content.get('longitude')
-            if lat is None or lon is None:
-                await self.send_json({'event': 'round.error', 'message': 'Missing coordinates'})
+            if lat is None or lon is None or not isinstance(lat, (int, float)) or not isinstance(lon, (int, float)):
+                await self.send_json({'event': 'round.error', 'message': 'Missing or invalid coordinates'})
                 return
 
             score = await self.calculate_guess_score(lat, lon)
