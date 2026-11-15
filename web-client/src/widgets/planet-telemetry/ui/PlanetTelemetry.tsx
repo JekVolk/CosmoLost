@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import type { PlanetConfig, SpaceArtifact } from '../../../entities/planet/model/types';
 import {
-  Filter,
-  Search,
-  X,
+  Activity,
+  Check,
   ChevronLeft,
   ChevronRight,
-  Info,
-  Check,
   Compass,
-  Wind,
   ExternalLink,
-  Activity,
+  Filter,
+  Info,
   Layers,
+  Search,
+  Wind,
+  X,
 } from 'lucide-react';
+import React, { useState } from 'react';
+import type { PlanetConfig, SpaceArtifact } from '../../../entities/planet/model/types';
 
 interface PlanetTelemetryProps {
   planet: PlanetConfig;
@@ -51,15 +51,11 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
   ];
 
   const toggleType = (t: string) => {
-    setSelectedTypes((prev) =>
-      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]
-    );
+    setSelectedTypes((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
   };
 
   const toggleStatus = (s: string) => {
-    setSelectedStatuses((prev) =>
-      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
-    );
+    setSelectedStatuses((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
   };
 
   const filteredArtifacts = React.useMemo(() => {
@@ -68,7 +64,12 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
         const isMatch = selectedTypes.some((t) => {
           if (t === 'rover') return art.type === 'rover' || art.type === 'helicopter';
           if (t === 'lander') return art.type === 'lander' || art.type === 'descent_stage';
-          if (t === 'science') return art.type === 'retro_reflector' || art.type === 'instrument' || art.type === 'sample_depot';
+          if (t === 'science')
+            return (
+              art.type === 'retro_reflector' ||
+              art.type === 'instrument' ||
+              art.type === 'sample_depot'
+            );
           if (t === 'impact') return art.type === 'impact_stage';
           return false;
         });
@@ -79,8 +80,12 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
         const stat = (art.operationalStatus || '').toLowerCase();
         const isMatch = selectedStatuses.some((s) => {
           if (s === 'active') return stat.includes('active') || stat.includes('operating');
-          if (s === 'preserved') return stat.includes('preserved') || stat.includes('complete') || stat.includes('intact');
-          if (s === 'lost') return stat.includes('lost') || stat.includes('crashed') || stat.includes('inactive');
+          if (s === 'preserved')
+            return (
+              stat.includes('preserved') || stat.includes('complete') || stat.includes('intact')
+            );
+          if (s === 'lost')
+            return stat.includes('lost') || stat.includes('crashed') || stat.includes('inactive');
           return false;
         });
         if (!isMatch) return false;
@@ -128,7 +133,9 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
           <div className="pen-filter-header">
             <div className="pen-filter-title-group">
               <Activity size={16} style={{ color: themeColor }} />
-              <span className="pen-filter-title">{planet.name.toUpperCase()} Telemetry & Registry</span>
+              <span className="pen-filter-title">
+                {planet.name.toUpperCase()} Telemetry & Registry
+              </span>
             </div>
             <button
               type="button"
@@ -204,7 +211,16 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
           </div>
 
           {activeTab === 'atmosphere' ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto', maxHeight: 'calc(100vh - 220px)', paddingRight: '4px' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                overflowY: 'auto',
+                maxHeight: 'calc(100vh - 220px)',
+                paddingRight: '4px',
+              }}
+            >
               {/* Atmospheric Profile Card */}
               <div
                 style={{
@@ -214,42 +230,146 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
                   border: `1px solid ${themeColor}30`,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}
+                >
                   <Wind size={14} style={{ color: themeColor }} />
-                  <span style={{ fontSize: '11px', fontWeight: 700, color: '#f8fafc', fontFamily: 'var(--font-mono)' }}>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      color: '#f8fafc',
+                      fontFamily: 'var(--font-mono)',
+                    }}
+                  >
                     {isMars ? 'MARTIAN ATMOSPHERE' : 'LUNAR EXOSPHERE'}
                   </span>
                 </div>
 
-                <div style={{ fontSize: '12.5px', color: '#cbd5e1', lineHeight: 1.5, marginBottom: '8px' }}>
+                <div
+                  style={{
+                    fontSize: '12.5px',
+                    color: '#cbd5e1',
+                    lineHeight: 1.5,
+                    marginBottom: '8px',
+                  }}
+                >
                   <strong>Composition:</strong> {planet.telemetry.atmosphere}
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  <div style={{ padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div style={{ fontSize: '9.5px', color: '#64748b', fontFamily: 'var(--font-mono)' }}>PRESSURE</div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#fff', fontFamily: 'var(--font-mono)' }}>
+                  <div
+                    style={{
+                      padding: '8px',
+                      borderRadius: '6px',
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '9.5px',
+                        color: '#64748b',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
+                      PRESSURE
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        color: '#fff',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
                       {isMars ? '6.10 mbar' : '10⁻¹² bar'}
                     </div>
                   </div>
 
-                  <div style={{ padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div style={{ fontSize: '9.5px', color: '#64748b', fontFamily: 'var(--font-mono)' }}>MEAN TEMP</div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#fbbf24', fontFamily: 'var(--font-mono)' }}>
+                  <div
+                    style={{
+                      padding: '8px',
+                      borderRadius: '6px',
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '9.5px',
+                        color: '#64748b',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
+                      MEAN TEMP
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        color: '#fbbf24',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
                       {planet.telemetry.avgTemperature}
                     </div>
                   </div>
 
-                  <div style={{ padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div style={{ fontSize: '9.5px', color: '#64748b', fontFamily: 'var(--font-mono)' }}>GRAVITY</div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#34d399', fontFamily: 'var(--font-mono)' }}>
+                  <div
+                    style={{
+                      padding: '8px',
+                      borderRadius: '6px',
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '9.5px',
+                        color: '#64748b',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
+                      GRAVITY
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        color: '#34d399',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
                       {planet.telemetry.surfaceGravity}
                     </div>
                   </div>
 
-                  <div style={{ padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div style={{ fontSize: '9.5px', color: '#64748b', fontFamily: 'var(--font-mono)' }}>DAY LENGTH</div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#38bdf8', fontFamily: 'var(--font-mono)' }}>
+                  <div
+                    style={{
+                      padding: '8px',
+                      borderRadius: '6px',
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '9.5px',
+                        color: '#64748b',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
+                      DAY LENGTH
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        color: '#38bdf8',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
                       {planet.telemetry.dayLength.split(' ')[0]}
                     </div>
                   </div>
@@ -265,33 +385,59 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}
+                >
                   <Layers size={14} style={{ color: '#38bdf8' }} />
-                  <span style={{ fontSize: '11px', fontWeight: 700, color: '#f8fafc', fontFamily: 'var(--font-mono)' }}>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      color: '#f8fafc',
+                      fontFamily: 'var(--font-mono)',
+                    }}
+                  >
                     PLANETARY METRICS
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11.5px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    fontSize: '11.5px',
+                  }}
+                >
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: '#94a3b8' }}>Radius:</span>
-                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)' }}>{planet.telemetry.radiusKm.toLocaleString()} km</span>
+                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)' }}>
+                      {planet.telemetry.radiusKm.toLocaleString()} km
+                    </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: '#94a3b8' }}>Orbital Period:</span>
-                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)' }}>{planet.telemetry.orbitPeriod}</span>
+                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)' }}>
+                      {planet.telemetry.orbitPeriod}
+                    </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: '#94a3b8' }}>Axial Tilt:</span>
-                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)' }}>{planet.axialTiltDeg}°</span>
+                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)' }}>
+                      {planet.axialTiltDeg}°
+                    </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: '#94a3b8' }}>Temp Range:</span>
-                    <span style={{ color: '#fbbf24', fontFamily: 'var(--font-mono)' }}>{planet.telemetry.tempRange}</span>
+                    <span style={{ color: '#fbbf24', fontFamily: 'var(--font-mono)' }}>
+                      {planet.telemetry.tempRange}
+                    </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: '#94a3b8' }}>Distance to Earth:</span>
-                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)' }}>{planet.telemetry.distanceFromEarth}</span>
+                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)' }}>
+                      {planet.telemetry.distanceFromEarth}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -355,9 +501,7 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
                         style={{ '--chip-accent': themeColor } as React.CSSProperties}
                         onClick={() => toggleType(opt.id)}
                       >
-                        <span className="pen-chip-box">
-                          {active && <Check size={10} />}
-                        </span>
+                        <span className="pen-chip-box">{active && <Check size={10} />}</span>
                         <span>{opt.label}</span>
                       </button>
                     );
@@ -378,9 +522,7 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
                         style={{ '--chip-accent': themeColor } as React.CSSProperties}
                         onClick={() => toggleStatus(opt.id)}
                       >
-                        <span className="pen-chip-box">
-                          {active && <Check size={10} />}
-                        </span>
+                        <span className="pen-chip-box">{active && <Check size={10} />}</span>
                         <span>{opt.label}</span>
                       </button>
                     );

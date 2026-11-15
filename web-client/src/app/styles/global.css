@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 :root {
-  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Chakra Petch', monospace;
-  --font-display: 'Chakra Petch', var(--font-main);
+  --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "Chakra Petch", monospace;
+  --font-display: "Chakra Petch", var(--font-main);
 
   --bg-deep: #05070d;
   --bg-panel: rgba(9, 13, 24, 0.78);
@@ -27,7 +27,9 @@
   padding: 0;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -89,7 +91,12 @@ body:has(.dossier-page),
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  background: linear-gradient(180deg, rgba(5, 7, 13, 0.95) 0%, rgba(5, 7, 13, 0.4) 75%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(5, 7, 13, 0.95) 0%,
+    rgba(5, 7, 13, 0.4) 75%,
+    transparent 100%
+  );
   pointer-events: none;
 }
 
@@ -902,7 +909,7 @@ body:has(.dossier-page),
   width: 20px;
   height: 20px;
   transform: rotate(45deg);
-  border: 1.5px solid #00F0FF;
+  border: 1.5px solid #00f0ff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -913,7 +920,7 @@ body:has(.dossier-page),
 .cosmo-emblem-core {
   width: 8px;
   height: 8px;
-  background-color: #00F0FF;
+  background-color: #00f0ff;
   border-radius: 1px;
 }
 
@@ -927,7 +934,7 @@ body:has(.dossier-page),
   font-size: 18px;
   font-weight: 800;
   letter-spacing: 2px;
-  color: #F8FAFC;
+  color: #f8fafc;
   line-height: 1.1;
 }
 
@@ -936,7 +943,7 @@ body:has(.dossier-page),
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #00F0FF;
+  color: #00f0ff;
 }
 
 .cosmo-nav-links {
@@ -951,7 +958,7 @@ body:has(.dossier-page),
   font-family: var(--font-main);
   font-size: 14.5px;
   font-weight: 500;
-  color: #CBD5E1;
+  color: #cbd5e1;
   padding: 6px 14px;
   border-radius: 8px;
   cursor: pointer;
@@ -960,25 +967,25 @@ body:has(.dossier-page),
 }
 
 .cosmo-nav-link:hover {
-  color: #FFFFFF;
+  color: #ffffff;
   background: rgba(255, 255, 255, 0.05);
 }
 
 .cosmo-nav-link.active {
-  color: var(--link-accent, #00F0FF);
+  color: var(--link-accent, #00f0ff);
   font-weight: 600;
   background: rgba(0, 240, 255, 0.08);
 }
 
 .cosmo-nav-link.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -4px;
   left: 50%;
   transform: translateX(-50%);
   width: 20px;
   height: 2px;
-  background-color: var(--link-accent, #00F0FF);
+  background-color: var(--link-accent, #00f0ff);
   border-radius: 1px;
 }
 
@@ -991,7 +998,7 @@ body:has(.dossier-page),
 .cosmo-planet-segmented {
   display: flex;
   background: rgba(7, 14, 30, 0.85);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 20px;
   padding: 3px;
   gap: 2px;
@@ -1008,25 +1015,25 @@ body:has(.dossier-page),
   font-family: var(--font-main);
   font-size: 13.5px;
   font-weight: 500;
-  color: #94A3B8;
+  color: #94a3b8;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .cosmo-planet-seg-btn:hover {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .cosmo-planet-seg-btn.active-moon {
   background: rgba(0, 240, 255, 0.15);
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 600;
   border: 1px solid rgba(0, 240, 255, 0.4);
 }
 
 .cosmo-planet-seg-btn.active-mars {
   background: rgba(249, 115, 22, 0.2);
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 600;
   border: 1px solid rgba(249, 115, 22, 0.5);
 }
@@ -1050,7 +1057,7 @@ body:has(.dossier-page),
   align-items: center;
   gap: 6px;
   background: rgba(11, 21, 40, 0.9);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 20px;
   padding: 5px 12px;
   font-size: 12px;
@@ -1059,7 +1066,7 @@ body:has(.dossier-page),
 }
 
 .cosmo-mcp-label {
-  color: #00F0FF;
+  color: #00f0ff;
   font-weight: 700;
   letter-spacing: 0.5px;
 }
@@ -1074,12 +1081,20 @@ body:has(.dossier-page),
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
 }
 
 @keyframes pulseBorderMars {
-  0%, 100% {
+  0%,
+  100% {
     border-color: rgba(249, 115, 22, 0.6);
     box-shadow: 0 0 12px rgba(249, 115, 22, 0.35);
   }
@@ -1090,7 +1105,8 @@ body:has(.dossier-page),
 }
 
 @keyframes pulseBorderMoon {
-  0%, 100% {
+  0%,
+  100% {
     border-color: rgba(56, 189, 248, 0.6);
     box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
   }
@@ -1142,7 +1158,7 @@ body:has(.dossier-page),
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
-  color: #64748B;
+  color: #64748b;
   padding: 4px 8px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.03);
@@ -1158,10 +1174,10 @@ body:has(.dossier-page),
   align-items: center;
   gap: 8px;
   background: rgba(11, 21, 40, 0.88);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 12px;
   padding: 8px 14px;
-  color: #F8FAFC;
+  color: #f8fafc;
   font-family: var(--font-main);
   font-size: 12px;
   font-weight: 600;
@@ -1200,7 +1216,7 @@ body:has(.dossier-page),
   background: rgba(11, 21, 40, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 18px;
   padding: 18px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
@@ -1223,7 +1239,7 @@ body:has(.dossier-page),
   font-family: var(--font-main);
   font-size: 17.5px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-collapse-btn {
@@ -1235,14 +1251,14 @@ body:has(.dossier-page),
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94A3B8;
+  color: #94a3b8;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .pen-collapse-btn:hover {
   background: rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-search-box {
@@ -1255,17 +1271,17 @@ body:has(.dossier-page),
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #64748B;
+  color: #64748b;
   pointer-events: none;
 }
 
 .pen-search-input {
   width: 100%;
   background: rgba(7, 14, 30, 0.8);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 10px;
   padding: 8px 28px 8px 32px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-family: var(--font-main);
   font-size: 13.5px;
   outline: none;
@@ -1284,7 +1300,7 @@ body:has(.dossier-page),
   transform: translateY(-50%);
   background: transparent;
   border: none;
-  color: #64748B;
+  color: #64748b;
   cursor: pointer;
   padding: 2px;
 }
@@ -1299,7 +1315,7 @@ body:has(.dossier-page),
   font-family: var(--font-main);
   font-size: 13px;
   font-weight: 700;
-  color: #94A3B8;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1315,10 +1331,10 @@ body:has(.dossier-page),
   align-items: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 8px;
   padding: 6px 11px;
-  color: #CBD5E1;
+  color: #cbd5e1;
   font-family: var(--font-main);
   font-size: 13px;
   cursor: pointer;
@@ -1327,13 +1343,13 @@ body:has(.dossier-page),
 
 .pen-chip-btn:hover {
   background: rgba(255, 255, 255, 0.07);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-chip-btn.active {
   background: rgba(0, 240, 255, 0.12);
-  border-color: var(--chip-accent, #00F0FF);
-  color: #FFFFFF;
+  border-color: var(--chip-accent, #00f0ff);
+  color: #ffffff;
 }
 
 .pen-chip-box {
@@ -1348,9 +1364,9 @@ body:has(.dossier-page),
 }
 
 .pen-chip-btn.active .pen-chip-box {
-  border-color: var(--chip-accent, #00F0FF);
-  background: var(--chip-accent, #00F0FF);
-  color: #070E1E;
+  border-color: var(--chip-accent, #00f0ff);
+  background: var(--chip-accent, #00f0ff);
+  color: #070e1e;
 }
 
 .pen-registry-header {
@@ -1367,7 +1383,7 @@ body:has(.dossier-page),
   gap: 6px;
   font-size: 14px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-registry-count {
@@ -1403,7 +1419,7 @@ body:has(.dossier-page),
 
 .pen-artifact-row.selected {
   background: rgba(0, 240, 255, 0.12);
-  border-color: var(--row-accent, #00F0FF);
+  border-color: var(--row-accent, #00f0ff);
 }
 
 .pen-row-main {
@@ -1415,7 +1431,7 @@ body:has(.dossier-page),
 .pen-row-name {
   font-size: 14px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-row-dot {
@@ -1429,7 +1445,7 @@ body:has(.dossier-page),
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #94A3B8;
+  color: #94a3b8;
   margin-top: 2px;
 }
 
@@ -1439,7 +1455,7 @@ body:has(.dossier-page),
   gap: 8px;
   padding: 10px 12px;
   background: rgba(7, 14, 30, 0.6);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 10px;
 }
 
@@ -1451,7 +1467,7 @@ body:has(.dossier-page),
 .pen-tip-text {
   font-size: 12.5px;
   line-height: 1.45;
-  color: #94A3B8;
+  color: #94a3b8;
 }
 
 .pen-viewport-pill {
@@ -1463,7 +1479,7 @@ body:has(.dossier-page),
   display: flex;
   align-items: center;
   background: rgba(7, 14, 30, 0.88);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 9999px;
   padding: 6px 14px;
   gap: 12px;
@@ -1478,7 +1494,7 @@ body:has(.dossier-page),
   gap: 6px;
   background: transparent;
   border: none;
-  color: #E2E8F0;
+  color: #e2e8f0;
   font-family: var(--font-main);
   font-size: 13.5px;
   font-weight: 600;
@@ -1489,19 +1505,19 @@ body:has(.dossier-page),
 }
 
 .pen-pill-btn:hover {
-  color: #FFFFFF;
+  color: #ffffff;
   background: rgba(255, 255, 255, 0.08);
 }
 
 .pen-pill-btn.active {
-  color: var(--pill-accent, #00F0FF);
+  color: var(--pill-accent, #00f0ff);
   background: rgba(0, 240, 255, 0.12);
 }
 
 .pen-pill-divider {
   width: 1px;
   height: 14px;
-  background: #1E293B;
+  background: #1e293b;
 }
 
 .pen-right-detail-card {
@@ -1518,7 +1534,7 @@ body:has(.dossier-page),
   background: rgba(11, 21, 40, 0.92);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -1526,8 +1542,14 @@ body:has(.dossier-page),
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .pen-card-header {
@@ -1552,7 +1574,7 @@ body:has(.dossier-page),
   font-family: var(--font-main);
   font-size: 22px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #ffffff;
   line-height: 1.2;
 }
 
@@ -1565,7 +1587,7 @@ body:has(.dossier-page),
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94A3B8;
+  color: #94a3b8;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -1573,7 +1595,7 @@ body:has(.dossier-page),
 .pen-close-btn:hover {
   background: rgba(239, 68, 68, 0.2);
   border-color: #ef4444;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-mission-row {
@@ -1641,7 +1663,7 @@ body:has(.dossier-page),
   gap: 8px;
   padding: 12px;
   background: rgba(7, 14, 30, 0.6);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 12px;
 }
 
@@ -1656,11 +1678,11 @@ body:has(.dossier-page),
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #94A3B8;
+  color: #94a3b8;
 }
 
 .pen-meta-value {
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 500;
 }
 
@@ -1672,7 +1694,7 @@ body:has(.dossier-page),
 .pen-card-description {
   font-size: 14.5px;
   line-height: 1.55;
-  color: #CBD5E1;
+  color: #cbd5e1;
 }
 
 .pen-explore-btn {
@@ -1681,8 +1703,8 @@ body:has(.dossier-page),
   justify-content: center;
   gap: 8px;
   background: rgba(2, 132, 199, 0.12);
-  border: 1px solid var(--accent-color, #00F0FF);
-  color: var(--accent-color, #00F0FF);
+  border: 1px solid var(--accent-color, #00f0ff);
+  color: var(--accent-color, #00f0ff);
   border-radius: 12px;
   padding: 12px 18px;
   font-family: var(--font-main);
@@ -1694,8 +1716,8 @@ body:has(.dossier-page),
 }
 
 .pen-explore-btn:hover {
-  background: var(--accent-color, #00F0FF);
-  color: #070E1E;
+  background: var(--accent-color, #00f0ff);
+  color: #070e1e;
   box-shadow: 0 6px 20px rgba(0, 240, 255, 0.35);
 }
 
@@ -1704,9 +1726,8 @@ body:has(.dossier-page),
   inset: 0;
   top: 56px;
   overflow-y: auto;
-  background: #0A0B10;
-  background-image:
-    radial-gradient(circle at 15% 20%, rgba(0, 240, 255, 0.06) 0%, transparent 40%),
+  background: #0a0b10;
+  background-image: radial-gradient(circle at 15% 20%, rgba(0, 240, 255, 0.06) 0%, transparent 40%),
     radial-gradient(circle at 85% 75%, rgba(249, 115, 22, 0.05) 0%, transparent 45%);
   padding: 32px 0 60px 0;
   user-select: text;
@@ -1737,7 +1758,7 @@ body:has(.dossier-page),
   padding: 5px 14px;
   font-size: 12px;
   font-weight: 700;
-  color: #00F0FF;
+  color: #00f0ff;
   letter-spacing: 0.8px;
   align-self: flex-start;
 }
@@ -1746,14 +1767,14 @@ body:has(.dossier-page),
   font-family: var(--font-main);
   font-size: 34px;
   font-weight: 800;
-  color: #F8FAFC;
+  color: #f8fafc;
   letter-spacing: -0.5px;
 }
 
 .pen-catalog-subtitle {
   font-size: 15.5px;
   line-height: 1.5;
-  color: #94A3B8;
+  color: #94a3b8;
   max-width: 780px;
 }
 
@@ -1762,7 +1783,7 @@ body:has(.dossier-page),
   align-items: center;
   gap: 20px;
   background: rgba(11, 17, 31, 0.85);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 14px;
   padding: 12px 24px;
   align-self: flex-start;
@@ -1779,23 +1800,27 @@ body:has(.dossier-page),
   font-family: var(--font-main);
   font-size: 22px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-.pen-metric-num.cyan { color: #00F0FF; }
-.pen-metric-num.rust { color: #f97316; }
+.pen-metric-num.cyan {
+  color: #00f0ff;
+}
+.pen-metric-num.rust {
+  color: #f97316;
+}
 
 .pen-metric-lbl {
   font-size: 12.5px;
   font-weight: 700;
-  color: #64748B;
+  color: #64748b;
   letter-spacing: 0.5px;
 }
 
 .pen-metric-sep {
   width: 1px;
   height: 20px;
-  background: #1E293B;
+  background: #1e293b;
 }
 
 .pen-catalog-toolbar {
@@ -1804,7 +1829,7 @@ body:has(.dossier-page),
   justify-content: space-between;
   gap: 16px;
   background: rgba(11, 18, 34, 0.9);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 14px;
   padding: 12px 18px;
   flex-wrap: wrap;
@@ -1825,10 +1850,10 @@ body:has(.dossier-page),
 .pen-catalog-input {
   width: 100%;
   background: rgba(7, 14, 30, 0.8);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 10px;
   padding: 9px 28px 9px 34px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
@@ -1841,7 +1866,7 @@ body:has(.dossier-page),
 .pen-planet-filter-group {
   display: flex;
   background: rgba(7, 14, 30, 0.8);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 10px;
   padding: 3px;
   gap: 2px;
@@ -1853,7 +1878,7 @@ body:has(.dossier-page),
   font-family: var(--font-main);
   font-size: 13.5px;
   font-weight: 500;
-  color: #94A3B8;
+  color: #94a3b8;
   padding: 5px 12px;
   border-radius: 8px;
   cursor: pointer;
@@ -1861,18 +1886,18 @@ body:has(.dossier-page),
 }
 
 .pen-filter-tab:hover {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-filter-tab.active {
   background: rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 600;
 }
 
 .pen-filter-tab.active.moon {
   background: rgba(0, 240, 255, 0.15);
-  color: #00F0FF;
+  color: #00f0ff;
 }
 
 .pen-filter-tab.active.mars {
@@ -1889,16 +1914,16 @@ body:has(.dossier-page),
 .pen-select-icon {
   position: absolute;
   left: 10px;
-  color: #64748B;
+  color: #64748b;
   pointer-events: none;
 }
 
 .pen-type-select,
 .pen-sort-select {
   background: rgba(7, 14, 30, 0.8);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 10px;
-  color: #CBD5E1;
+  color: #cbd5e1;
   font-size: 13.5px;
   padding: 8px 14px 8px 30px;
   outline: none;
@@ -1917,7 +1942,7 @@ body:has(.dossier-page),
 
 .pen-results-count {
   font-size: 15px;
-  color: #94A3B8;
+  color: #94a3b8;
 }
 
 .pen-clear-filters-btn {
@@ -1928,7 +1953,7 @@ body:has(.dossier-page),
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 6px 12px;
-  color: #94A3B8;
+  color: #94a3b8;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
@@ -1936,7 +1961,7 @@ body:has(.dossier-page),
 
 .pen-clear-filters-btn:hover {
   background: rgba(255, 255, 255, 0.06);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-card-grid-3 {
@@ -1949,7 +1974,7 @@ body:has(.dossier-page),
   display: flex;
   flex-direction: column;
   background: rgba(11, 17, 31, 0.85);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -1958,7 +1983,7 @@ body:has(.dossier-page),
 
 .pen-catalog-card:hover {
   transform: translateY(-4px);
-  border-color: var(--card-accent, #00F0FF);
+  border-color: var(--card-accent, #00f0ff);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.1);
 }
 
@@ -2008,19 +2033,19 @@ body:has(.dossier-page),
 
 .pen-planet-badge.moon {
   background: rgba(0, 240, 255, 0.85);
-  color: #070E1E;
+  color: #070e1e;
 }
 
 .pen-planet-badge.mars {
   background: rgba(249, 115, 22, 0.9);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-agency-badge {
   background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 12px;
   font-weight: 600;
   padding: 3px 8px;
@@ -2045,7 +2070,7 @@ body:has(.dossier-page),
 .pen-catalog-card-title {
   font-size: 20px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #ffffff;
   line-height: 1.3;
 }
 
@@ -2054,7 +2079,7 @@ body:has(.dossier-page),
   align-items: center;
   gap: 14px;
   font-size: 13.5px;
-  color: #94A3B8;
+  color: #94a3b8;
   flex-wrap: wrap;
 }
 
@@ -2067,7 +2092,7 @@ body:has(.dossier-page),
 .pen-catalog-card-brief {
   font-size: 14px;
   line-height: 1.5;
-  color: #CBD5E1;
+  color: #cbd5e1;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -2107,11 +2132,11 @@ body:has(.dossier-page),
 
 .pen-empty-state h3 {
   font-size: 18px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-empty-state p {
-  color: #94A3B8;
+  color: #94a3b8;
   font-size: 13px;
   max-width: 400px;
 }
@@ -2120,8 +2145,8 @@ body:has(.dossier-page),
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #00F0FF;
-  color: #070E1E;
+  background: #00f0ff;
+  color: #070e1e;
   border: none;
   border-radius: 10px;
   padding: 9px 18px;
@@ -2143,7 +2168,7 @@ body:has(.dossier-page),
   align-items: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.05);
-  color: #CBD5E1;
+  color: #cbd5e1;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 10px;
   padding: 9px 18px;
@@ -2156,7 +2181,7 @@ body:has(.dossier-page),
 
 .pen-btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-community-page {
@@ -2164,9 +2189,8 @@ body:has(.dossier-page),
   inset: 0;
   top: 56px;
   overflow-y: auto;
-  background: #0A0B10;
-  background-image:
-    radial-gradient(circle at 80% 20%, rgba(0, 240, 255, 0.06) 0%, transparent 40%),
+  background: #0a0b10;
+  background-image: radial-gradient(circle at 80% 20%, rgba(0, 240, 255, 0.06) 0%, transparent 40%),
     radial-gradient(circle at 20% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 45%);
   padding: 32px 0 60px 0;
   user-select: text;
@@ -2212,7 +2236,7 @@ body:has(.dossier-page),
   display: flex;
   flex-direction: column;
   background: rgba(11, 17, 31, 0.88);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
@@ -2248,7 +2272,7 @@ body:has(.dossier-page),
 .pen-platform-pill {
   font-size: 12px;
   font-weight: 700;
-  color: #00F0FF;
+  color: #00f0ff;
   background: rgba(0, 240, 255, 0.1);
   border: 1px solid rgba(0, 240, 255, 0.3);
   border-radius: 6px;
@@ -2271,19 +2295,19 @@ body:has(.dossier-page),
 .pen-featured-title {
   font-size: 22px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #ffffff;
   line-height: 1.3;
 }
 
 .pen-featured-author {
   font-size: 14px;
-  color: #94A3B8;
+  color: #94a3b8;
 }
 
 .pen-featured-desc {
   font-size: 14px;
   line-height: 1.5;
-  color: #CBD5E1;
+  color: #cbd5e1;
 }
 
 .pen-featured-stats {
@@ -2291,7 +2315,7 @@ body:has(.dossier-page),
   align-items: center;
   gap: 16px;
   font-size: 13.5px;
-  color: #94A3B8;
+  color: #94a3b8;
   padding-top: 6px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -2311,7 +2335,7 @@ body:has(.dossier-page),
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 14px;
-  color: #00F0FF;
+  color: #00f0ff;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -2335,14 +2359,14 @@ body:has(.dossier-page),
 .pen-gallery-title {
   font-size: 19px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-gallery-filters {
   display: flex;
   gap: 4px;
   background: rgba(7, 14, 30, 0.8);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 8px;
   padding: 2px;
 }
@@ -2352,7 +2376,7 @@ body:has(.dossier-page),
   border: none;
   font-size: 13.5px;
   font-weight: 500;
-  color: #94A3B8;
+  color: #94a3b8;
   padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
@@ -2360,7 +2384,7 @@ body:has(.dossier-page),
 
 .pen-sub-tab.active {
   background: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -2374,7 +2398,7 @@ body:has(.dossier-page),
   display: flex;
   flex-direction: column;
   background: rgba(11, 17, 31, 0.85);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
@@ -2387,7 +2411,7 @@ body:has(.dossier-page),
 }
 
 .pen-video-card.active {
-  border-color: #00F0FF;
+  border-color: #00f0ff;
   box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
 }
 
@@ -2427,7 +2451,7 @@ body:has(.dossier-page),
   background: rgba(0, 0, 0, 0.8);
   font-size: 11px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
   padding: 2px 6px;
   border-radius: 4px;
   text-transform: uppercase;
@@ -2443,7 +2467,7 @@ body:has(.dossier-page),
 .pen-video-card-title {
   font-size: 15px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -2453,7 +2477,7 @@ body:has(.dossier-page),
 
 .pen-video-card-meta {
   font-size: 12.5px;
-  color: #94A3B8;
+  color: #94a3b8;
   display: flex;
   gap: 5px;
 }
@@ -2461,7 +2485,7 @@ body:has(.dossier-page),
 .pen-guidelines-card {
   padding: 18px;
   background: rgba(11, 18, 34, 0.8);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 14px;
   display: flex;
   flex-direction: column;
@@ -2477,7 +2501,7 @@ body:has(.dossier-page),
 .pen-guidelines-title {
   font-size: 13px;
   font-weight: 700;
-  color: #00F0FF;
+  color: #00f0ff;
   letter-spacing: 0.8px;
 }
 
@@ -2488,13 +2512,13 @@ body:has(.dossier-page),
   flex-direction: column;
   gap: 6px;
   font-size: 13.5px;
-  color: #94A3B8;
+  color: #94a3b8;
   line-height: 1.4;
 }
 
 .pen-guidelines-list li::before {
-  content: '• ';
-  color: #00F0FF;
+  content: "• ";
+  color: #00f0ff;
   font-weight: bold;
 }
 
@@ -2515,7 +2539,7 @@ body:has(.dossier-page),
   max-width: 560px;
   box-sizing: border-box;
   background: rgba(11, 21, 40, 0.96);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 20px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
   padding: 24px;
@@ -2537,7 +2561,7 @@ body:has(.dossier-page),
 .pen-modal-header h3 {
   font-size: 22px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-modal-close {
@@ -2549,13 +2573,13 @@ body:has(.dossier-page),
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94A3B8;
+  color: #94a3b8;
   cursor: pointer;
 }
 
 .pen-modal-close:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-modal-form {
@@ -2578,7 +2602,7 @@ body:has(.dossier-page),
 .pen-form-field label {
   font-size: 13px;
   font-weight: 700;
-  color: #94A3B8;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -2591,10 +2615,10 @@ body:has(.dossier-page),
   box-sizing: border-box;
   min-width: 0;
   background: rgba(7, 14, 30, 0.85);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 10px;
   padding: 9px 13px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 14px;
   outline: none;
   font-family: var(--font-main);
@@ -2609,8 +2633,8 @@ body:has(.dossier-page),
 }
 
 .pen-form-field select option {
-  background: #0B1528;
-  color: #FFFFFF;
+  background: #0b1528;
+  color: #ffffff;
 }
 
 .pen-form-field input:focus,
@@ -2651,12 +2675,12 @@ body:has(.dossier-page),
 
 .pen-modal-success h4 {
   font-size: 18px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-modal-success p {
   font-size: 12.5px;
-  color: #94A3B8;
+  color: #94a3b8;
 }
 
 .pen-about-title-group {
@@ -2671,13 +2695,13 @@ body:has(.dossier-page),
   gap: 5px;
   font-size: 12px;
   font-weight: 700;
-  color: #00F0FF;
+  color: #00f0ff;
 }
 
 .pen-about-title {
   font-size: 24px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .pen-about-body {
@@ -2689,7 +2713,7 @@ body:has(.dossier-page),
 .pen-about-lead {
   font-size: 16px;
   line-height: 1.5;
-  color: #CBD5E1;
+  color: #cbd5e1;
 }
 
 .pen-about-grid {
@@ -2703,21 +2727,21 @@ body:has(.dossier-page),
   gap: 10px;
   padding: 12px;
   background: rgba(7, 14, 30, 0.6);
-  border: 1px solid #1E293B;
+  border: 1px solid #1e293b;
   border-radius: 12px;
 }
 
 .pen-about-feature h4 {
   font-size: 15px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-bottom: 3px;
 }
 
 .pen-about-feature p {
   font-size: 13px;
   line-height: 1.4;
-  color: #94A3B8;
+  color: #94a3b8;
 }
 
 .pen-about-footer {
@@ -2732,7 +2756,7 @@ body:has(.dossier-page),
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #00F0FF;
+  color: #00f0ff;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
@@ -2745,5 +2769,5 @@ body:has(.dossier-page),
 .pen-about-version {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: #64748B;
+  color: #64748b;
 }

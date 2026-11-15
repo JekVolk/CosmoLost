@@ -1,6 +1,6 @@
-import React from 'react';
+import { Gamepad2, Sparkles, Swords } from 'lucide-react';
+import type React from 'react';
 import type { PlanetId } from '../../../entities/planet/model/types';
-import { Sparkles, Gamepad2 } from 'lucide-react';
 
 export type AppView = 'map' | 'catalog' | 'community' | 'astro-guessr';
 
@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="cosmo-header-pen">
-      <div className="cosmo-nav-brand" onClick={() => onSelectView('map')}>
+      <button type="button" className="cosmo-nav-brand" onClick={() => onSelectView('map')}>
         <div className="cosmo-emblem-wrap">
           <div className="cosmo-emblem-diamond" style={{ borderColor: themeAccent }}>
             <div className="cosmo-emblem-core" style={{ backgroundColor: themeAccent }} />
@@ -38,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="cosmo-brand-title">COSMOLOST</div>
           <div className="cosmo-brand-sub">NASA SPACE APPS 2026</div>
         </div>
-      </div>
+      </button>
 
       <nav className="cosmo-nav-links">
         <button
@@ -68,23 +68,38 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           type="button"
           className={`cosmo-nav-link ${currentView === 'astro-guessr' ? 'active' : ''}`}
-          style={{
-            '--link-accent': themeAccent,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            color: currentView === 'astro-guessr' ? themeAccent : undefined,
-          } as React.CSSProperties}
+          style={
+            {
+              '--link-accent': themeAccent,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: currentView === 'astro-guessr' ? themeAccent : undefined,
+            } as React.CSSProperties
+          }
           onClick={() => onSelectView('astro-guessr')}
         >
           <Gamepad2 size={13} />
           <span>AstroGuessr 360°</span>
         </button>
-        <button
-          type="button"
+        <a
+          href="/game"
           className="cosmo-nav-link"
-          onClick={onOpenAbout}
+          style={
+            {
+              '--link-accent': '#00F0FF',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: '#00F0FF',
+              fontWeight: 700,
+            } as React.CSSProperties
+          }
         >
+          <Swords size={13} />
+          <span>Game Hub</span>
+        </a>
+        <button type="button" className="cosmo-nav-link" onClick={onOpenAbout}>
           About Project
         </button>
       </nav>
@@ -109,18 +124,27 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        <div className="cosmo-mcp-badge" title={isLiveApi ? 'Connected to live OpenAPI backend' : 'Using cached offline OpenAPI layer'}>
+        <div
+          className="cosmo-mcp-badge"
+          title={
+            isLiveApi ? 'Connected to live OpenAPI backend' : 'Using cached offline OpenAPI layer'
+          }
+        >
           <Sparkles size={11} style={{ color: isLiveApi ? '#22c55e' : '#00F0FF' }} />
           <span className="cosmo-mcp-label">OPENAPI API</span>
-          <span className="cosmo-pulse-dot" style={{ backgroundColor: isLiveApi ? '#22c55e' : '#38bdf8', boxShadow: `0 0 6px ${isLiveApi ? '#22c55e' : '#38bdf8'}` }} />
+          <span
+            className="cosmo-pulse-dot"
+            style={{
+              backgroundColor: isLiveApi ? '#22c55e' : '#38bdf8',
+              boxShadow: `0 0 6px ${isLiveApi ? '#22c55e' : '#38bdf8'}`,
+            }}
+          />
           <span className="cosmo-mcp-status" style={{ color: isLiveApi ? '#22c55e' : '#38bdf8' }}>
             {isLiveApi ? 'LIVE API' : 'CACHED'}
           </span>
         </div>
 
-        <div className="cosmo-theme-tag">
-          {artifactCount} ITEMS
-        </div>
+        <div className="cosmo-theme-tag">{artifactCount} ITEMS</div>
       </div>
     </header>
   );

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { PlanetConfig, SpaceArtifact } from '../../../entities/planet/model/types';
 import { PlanetScene } from '../lib/threeScene';
 import { HoverPreviewCard } from './HoverPreviewCard';

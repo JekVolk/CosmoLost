@@ -1,17 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import type { SpaceArtifact, PlanetId, PlanetConfig } from '../../../entities/planet/model/types';
+import {
+  AlertTriangle,
+  CheckCircle2,
+  ExternalLink,
+  Eye,
+  Heart,
+  Play,
+  Plus,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from 'lucide-react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { PLANETS } from '../../../entities/planet/model/planetData';
+import type { PlanetConfig, PlanetId, SpaceArtifact } from '../../../entities/planet/model/types';
 import { portalApi } from '../../../shared/api/portalApi';
 import type { CommunityPublication, PlatformType } from '../../../shared/api/types';
-import { validateVideoUrl, getEmbeddableVideoUrl } from '../../../shared/lib/videoUrl';
-import { Sparkles, Plus, Play, ExternalLink, ShieldCheck, Heart, Eye, CheckCircle2, X, Search, AlertTriangle } from 'lucide-react';
+import { getEmbeddableVideoUrl, validateVideoUrl } from '../../../shared/lib/videoUrl';
 
 interface CommunityVideosPageProps {
   onOpenArtifact: (artifact: SpaceArtifact, planetId: PlanetId) => void;
   planets?: Record<PlanetId, PlanetConfig>;
 }
 
-export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpenArtifact, planets }) => {
+export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({
+  onOpenArtifact,
+  planets,
+}) => {
   const [publications, setPublications] = useState<CommunityPublication[]>([]);
   const [filterPlanet, setFilterPlanet] = useState<'all' | 'moon' | 'mars'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,13 +61,21 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
   }, []);
 
   const allArtifacts = [
-    ...((planets?.moon?.artifacts || PLANETS.moon.artifacts) || []).map((a: SpaceArtifact) => ({ ...a, planet: 'moon' as PlanetId })),
-    ...((planets?.mars?.artifacts || PLANETS.mars.artifacts) || []).map((a: SpaceArtifact) => ({ ...a, planet: 'mars' as PlanetId })),
+    ...(planets?.moon?.artifacts || PLANETS.moon.artifacts || []).map((a: SpaceArtifact) => ({
+      ...a,
+      planet: 'moon' as PlanetId,
+    })),
+    ...(planets?.mars?.artifacts || PLANETS.mars.artifacts || []).map((a: SpaceArtifact) => ({
+      ...a,
+      planet: 'mars' as PlanetId,
+    })),
   ];
 
   const filteredPubs = publications.filter((pub) => {
     if (filterPlanet !== 'all') {
-      const art = allArtifacts.find((a) => a.id === pub.artifact_id || a.mission === pub.mission_id);
+      const art = allArtifacts.find(
+        (a) => a.id === pub.artifact_id || a.mission === pub.mission_id,
+      );
       if (art && art.planet !== filterPlanet) return false;
     }
     if (searchQuery.trim()) {
@@ -90,7 +114,10 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
     // Strict URL validation: accept only YouTube, Instagram, TikTok, and verified video platforms
     const validation = validateVideoUrl(formData.video_url);
     if (!validation.isValid) {
-      setUrlValidationError(validation.error || 'Please provide a valid video link from YouTube, Instagram, TikTok, or Vimeo.');
+      setUrlValidationError(
+        validation.error ||
+          'Please provide a valid video link from YouTube, Instagram, TikTok, or Vimeo.',
+      );
       return;
     }
 
@@ -144,7 +171,8 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
             <div>
               <h1 className="pen-catalog-title">Community Videos</h1>
               <p className="pen-catalog-subtitle">
-                Explore videos, documentaries, and archival breakdowns created by scientists, students, and space archivists worldwide.
+                Explore videos, documentaries, and archival breakdowns created by scientists,
+                students, and space archivists worldwide.
               </p>
             </div>
             <button
@@ -202,8 +230,12 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                 <p className="pen-featured-desc">{currentFeatured.source_references}</p>
 
                 <div className="pen-featured-stats">
-                  <span className="stat"><Eye size={13} /> 2.4k views</span>
-                  <span className="stat"><Heart size={13} /> 342 likes</span>
+                  <span className="stat">
+                    <Eye size={13} /> 2.4k views
+                  </span>
+                  <span className="stat">
+                    <Heart size={13} /> 342 likes
+                  </span>
                 </div>
 
                 {(() => {
@@ -214,7 +246,9 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                       className="pen-featured-artifact-link"
                       onClick={() => onOpenArtifact(targetArt, targetArt.planet)}
                     >
-                      <span>Related Artifact: <strong>{targetArt.name}</strong></span>
+                      <span>
+                        Related Artifact: <strong>{targetArt.name}</strong>
+                      </span>
                       <ExternalLink size={13} />
                     </div>
                   );
@@ -281,7 +315,15 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                     onClick={() => setSelectedVideo(pub)}
                   >
                     <div className="pen-video-card-thumb-wrap">
-                      <div className="pen-video-card-thumb" style={{ background: '#0b1120', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div
+                        className="pen-video-card-thumb"
+                        style={{
+                          background: '#0b1120',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
                         <Play size={24} style={{ color: '#00F0FF', opacity: 0.8 }} />
                       </div>
                       <div className="pen-video-play-overlay">
@@ -309,7 +351,9 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                 <span className="pen-guidelines-title">FEED SUBMISSION CRITERIA</span>
               </div>
               <ul className="pen-guidelines-list">
-                <li>9:16 vertical format (1080×1920) optimized for mobile & desktop exploration.</li>
+                <li>
+                  9:16 vertical format (1080×1920) optimized for mobile & desktop exploration.
+                </li>
                 <li>Maximum 3-minute run time focused on lunar or martian hardware science.</li>
                 <li>Include verified NASA PIA, PDS, or JPL archival references.</li>
               </ul>
@@ -367,7 +411,9 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                     <label>Platform</label>
                     <select
                       value={formData.platform_type}
-                      onChange={(e) => setFormData({ ...formData, platform_type: e.target.value as any })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, platform_type: e.target.value as any })
+                      }
                     >
                       <option value="YOUTUBE">YouTube (Shorts/Video)</option>
                       <option value="TIKTOK">TikTok</option>
@@ -399,9 +445,20 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                 </div>
 
                 <div className="pen-form-field">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                    <label style={{ margin: 0 }}>Video URL / Link (YouTube, Instagram, TikTok, etc.)</label>
-                    <span style={{ fontSize: '10.5px', color: '#94a3b8' }}>Only verified video platforms</span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '4px',
+                    }}
+                  >
+                    <label style={{ margin: 0 }}>
+                      Video URL / Link (YouTube, Instagram, TikTok, etc.)
+                    </label>
+                    <span style={{ fontSize: '10.5px', color: '#94a3b8' }}>
+                      Only verified video platforms
+                    </span>
                   </div>
                   <input
                     type="url"
@@ -410,22 +467,45 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                     onChange={(e) => handleVideoUrlChange(e.target.value)}
                     placeholder="https://www.youtube.com/watch?v=... or https://www.tiktok.com/@... or Instagram reel"
                     style={{
-                      borderColor: urlValidationError ? '#ef4444' : formData.video_url && !urlValidationError ? '#10b981' : undefined,
+                      borderColor: urlValidationError
+                        ? '#ef4444'
+                        : formData.video_url && !urlValidationError
+                          ? '#10b981'
+                          : undefined,
                     }}
                   />
                   {urlValidationError ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '5px', color: '#f87171', fontSize: '11px' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        marginTop: '5px',
+                        color: '#f87171',
+                        fontSize: '11px',
+                      }}
+                    >
                       <AlertTriangle size={12} />
                       <span>{urlValidationError}</span>
                     </div>
                   ) : formData.video_url.trim() ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '5px', color: '#34d399', fontSize: '11px' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        marginTop: '5px',
+                        color: '#34d399',
+                        fontSize: '11px',
+                      }}
+                    >
                       <CheckCircle2 size={12} />
                       <span>Valid {formData.platform_type} video link detected</span>
                     </div>
                   ) : (
                     <div style={{ fontSize: '10.5px', color: '#64748b', marginTop: '4px' }}>
-                      Accepted formats: YouTube (video, shorts, youtu.be), Instagram (reels, p), TikTok (videos, vm), Vimeo, NASA Media.
+                      Accepted formats: YouTube (video, shorts, youtu.be), Instagram (reels, p),
+                      TikTok (videos, vm), Vimeo, NASA Media.
                     </div>
                   )}
                 </div>
@@ -435,7 +515,9 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                   <textarea
                     rows={3}
                     value={formData.source_references}
-                    onChange={(e) => setFormData({ ...formData, source_references: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, source_references: e.target.value })
+                    }
                     placeholder="Provide context regarding the telemetry or NASA archive PIA/PDS references..."
                   />
                 </div>
@@ -448,11 +530,7 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
                   >
                     Cancel
                   </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="pen-btn-primary"
-                  >
+                  <button type="submit" disabled={isSubmitting} className="pen-btn-primary">
                     {isSubmitting ? 'Submitting...' : 'Submit Video'}
                   </button>
                 </div>

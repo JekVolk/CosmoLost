@@ -39,9 +39,7 @@
             }
           }
         },
-        "tags": [
-          "Celestial Bodies"
-        ],
+        "tags": ["Celestial Bodies"],
         "operationId": "listCelestialBodies"
       }
     },
@@ -55,10 +53,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [
-                "moon",
-                "mars"
-              ]
+              "enum": ["moon", "mars"]
             }
           }
         ],
@@ -76,9 +71,7 @@
             "$ref": "#/components/responses/NotFound"
           }
         },
-        "tags": [
-          "Celestial Bodies"
-        ],
+        "tags": ["Celestial Bodies"],
         "operationId": "getCelestialBodyDetail"
       }
     },
@@ -92,10 +85,7 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": [
-                "moon",
-                "mars"
-              ]
+              "enum": ["moon", "mars"]
             }
           },
           {
@@ -169,9 +159,7 @@
             }
           }
         },
-        "tags": [
-          "Artifacts"
-        ],
+        "tags": ["Artifacts"],
         "operationId": "listArtifacts"
       }
     },
@@ -203,9 +191,7 @@
             "$ref": "#/components/responses/NotFound"
           }
         },
-        "tags": [
-          "Artifacts"
-        ],
+        "tags": ["Artifacts"],
         "operationId": "getArtifactDetail"
       }
     },
@@ -237,9 +223,7 @@
             }
           }
         },
-        "tags": [
-          "Artifacts"
-        ],
+        "tags": ["Artifacts"],
         "operationId": "getArtifactWaypoints"
       }
     },
@@ -270,9 +254,7 @@
             }
           }
         },
-        "tags": [
-          "Artifacts"
-        ],
+        "tags": ["Artifacts"],
         "operationId": "getArtifactDiscoveries"
       }
     },
@@ -303,9 +285,7 @@
             }
           }
         },
-        "tags": [
-          "Artifacts"
-        ],
+        "tags": ["Artifacts"],
         "operationId": "getArtifactMedia"
       }
     },
@@ -341,9 +321,7 @@
             }
           }
         },
-        "tags": [
-          "Missions"
-        ],
+        "tags": ["Missions"],
         "operationId": "listMissions"
       }
     },
@@ -374,9 +352,7 @@
             "$ref": "#/components/responses/NotFound"
           }
         },
-        "tags": [
-          "Missions"
-        ],
+        "tags": ["Missions"],
         "operationId": "getMissionDetail"
       }
     },
@@ -433,9 +409,7 @@
             }
           }
         },
-        "tags": [
-          "Community Publications"
-        ],
+        "tags": ["Community Publications"],
         "operationId": "listCommunityPublications"
       },
       "post": {
@@ -464,9 +438,7 @@
             "$ref": "#/components/responses/BadRequest"
           }
         },
-        "tags": [
-          "Community Publications"
-        ],
+        "tags": ["Community Publications"],
         "operationId": "submitCommunityPublication"
       }
     }
@@ -475,10 +447,7 @@
     "schemas": {
       "CoordinateSystemType": {
         "type": "string",
-        "enum": [
-          "SELENOGRAPHIC",
-          "PLANETOCENTRIC_360"
-        ]
+        "enum": ["SELENOGRAPHIC", "PLANETOCENTRIC_360"]
       },
       "ArtifactType": {
         "type": "string",
@@ -497,12 +466,7 @@
       },
       "OperationalStatus": {
         "type": "string",
-        "enum": [
-          "DORMANT",
-          "PASSIVE_ACTIVE",
-          "DESTROYED_ON_IMPACT",
-          "ACTIVE_TRANSMITTING"
-        ]
+        "enum": ["DORMANT", "PASSIVE_ACTIVE", "DESTROYED_ON_IMPACT", "ACTIVE_TRANSMITTING"]
       },
       "MediaCategory": {
         "type": "string",
@@ -516,12 +480,7 @@
       },
       "PlatformType": {
         "type": "string",
-        "enum": [
-          "YOUTUBE",
-          "TIKTOK",
-          "REELS",
-          "OTHER"
-        ]
+        "enum": ["YOUTUBE", "TIKTOK", "REELS", "OTHER"]
       },
       "CelestialBody": {
         "type": "object",
@@ -561,12 +520,7 @@
       },
       "Coordinates": {
         "type": "object",
-        "required": [
-          "latitude",
-          "longitude",
-          "coordinate_system",
-          "location_name"
-        ],
+        "required": ["latitude", "longitude", "coordinate_system", "location_name"],
         "properties": {
           "latitude": {
             "type": "number",
@@ -591,10 +545,7 @@
       },
       "ClusterInfo": {
         "type": "object",
-        "required": [
-          "is_clustered",
-          "cluster_count"
-        ],
+        "required": ["is_clustered", "cluster_count"],
         "properties": {
           "is_clustered": {
             "type": "boolean",
@@ -780,12 +731,7 @@
       },
       "ArtifactListResponse": {
         "type": "object",
-        "required": [
-          "total",
-          "limit",
-          "offset",
-          "results"
-        ],
+        "required": ["total", "limit", "offset", "results"],
         "properties": {
           "total": {
             "type": "integer"
@@ -878,13 +824,7 @@
       },
       "ArtifactMedia": {
         "type": "object",
-        "required": [
-          "id",
-          "media_category",
-          "media_url",
-          "caption",
-          "credit"
-        ],
+        "required": ["id", "media_category", "media_url", "caption", "credit"],
         "properties": {
           "id": {
             "type": "string"
@@ -910,13 +850,7 @@
       },
       "MissionDetail": {
         "type": "object",
-        "required": [
-          "id",
-          "nssdca_id",
-          "name",
-          "agency",
-          "summary"
-        ],
+        "required": ["id", "nssdca_id", "name", "agency", "summary"],
         "properties": {
           "id": {
             "type": "string"
@@ -952,10 +886,7 @@
       },
       "MissionListResponse": {
         "type": "object",
-        "required": [
-          "total",
-          "results"
-        ],
+        "required": ["total", "results"],
         "properties": {
           "total": {
             "type": "integer"
@@ -1008,12 +939,7 @@
       },
       "CommunityPublicationSubmitResponse": {
         "type": "object",
-        "required": [
-          "id",
-          "status",
-          "is_approved",
-          "message"
-        ],
+        "required": ["id", "status", "is_approved", "message"],
         "properties": {
           "id": {
             "type": "string",
@@ -1034,10 +960,7 @@
       },
       "CommunityPublicationListResponse": {
         "type": "object",
-        "required": [
-          "total",
-          "results"
-        ],
+        "required": ["total", "results"],
         "properties": {
           "total": {
             "type": "integer"

@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import type { PlatformType, CommunityPublication } from '../../../shared/api/types';
+import {
+  AlertTriangle,
+  CheckCircle,
+  CheckCircle2,
+  ExternalLink,
+  PlusCircle,
+  Sparkles,
+  Video,
+  X,
+} from 'lucide-react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { portalApi } from '../../../shared/api/portalApi';
+import type { CommunityPublication, PlatformType } from '../../../shared/api/types';
 import { validateVideoUrl } from '../../../shared/lib/videoUrl';
-import { Video, PlusCircle, ExternalLink, CheckCircle, Sparkles, X, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 interface CommunityPublicationsSectionProps {
   artifactId: string;
@@ -63,7 +73,9 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
 
     const validation = validateVideoUrl(formVideoUrl);
     if (!validation.isValid) {
-      setUrlValidationError(validation.error || 'Accepted platforms: YouTube, Instagram, TikTok, Vimeo, NASA Media.');
+      setUrlValidationError(
+        validation.error || 'Accepted platforms: YouTube, Instagram, TikTok, Vimeo, NASA Media.',
+      );
       return;
     }
 
@@ -99,7 +111,14 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
 
   return (
     <div className="cosmo-glass dossier-block" style={{ marginTop: '24px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '16px',
+        }}
+      >
         <h3 className="dossier-block-title" style={{ margin: 0 }}>
           <Video size={18} style={{ color: themeColor }} />
           <span>Community Publications & Video Archive</span>
@@ -134,13 +153,29 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
       </div>
 
       {isLoading ? (
-        <div style={{ color: 'var(--text-dim)', fontSize: '13px', padding: '16px 0' }}>Loading community archive...</div>
+        <div style={{ color: 'var(--text-dim)', fontSize: '13px', padding: '16px 0' }}>
+          Loading community archive...
+        </div>
       ) : publications.length === 0 ? (
-        <div style={{ color: 'var(--text-muted)', fontSize: '13px', padding: '16px 0', textAlign: 'center' }}>
-          No community videos submitted yet. Be the first to submit a video report for {missionName}!
+        <div
+          style={{
+            color: 'var(--text-muted)',
+            fontSize: '13px',
+            padding: '16px 0',
+            textAlign: 'center',
+          }}
+        >
+          No community videos submitted yet. Be the first to submit a video report for {missionName}
+          !
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '14px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '14px',
+          }}
+        >
           {publications.map((pub) => (
             <div
               key={pub.id}
@@ -156,7 +191,14 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
               }}
             >
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: '8px',
+                  }}
+                >
                   <span
                     style={{
                       fontFamily: 'var(--font-mono)',
@@ -164,19 +206,45 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
                       fontWeight: 700,
                       padding: '2px 8px',
                       borderRadius: '4px',
-                      background: pub.platform_type === 'YOUTUBE' ? '#ef444425' : pub.platform_type === 'TIKTOK' ? '#06b6d425' : '#8b5cf625',
-                      color: pub.platform_type === 'YOUTUBE' ? '#f87171' : pub.platform_type === 'TIKTOK' ? '#22d3ee' : '#a78bfa',
+                      background:
+                        pub.platform_type === 'YOUTUBE'
+                          ? '#ef444425'
+                          : pub.platform_type === 'TIKTOK'
+                            ? '#06b6d425'
+                            : '#8b5cf625',
+                      color:
+                        pub.platform_type === 'YOUTUBE'
+                          ? '#f87171'
+                          : pub.platform_type === 'TIKTOK'
+                            ? '#22d3ee'
+                            : '#a78bfa',
                       border: `1px solid ${pub.platform_type === 'YOUTUBE' ? '#ef444450' : pub.platform_type === 'TIKTOK' ? '#06b6d450' : '#8b5cf650'}`,
                     }}
                   >
                     {pub.platform_type}
                   </span>
-                  <span style={{ fontSize: '11px', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      color: 'var(--text-dim)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
                     <CheckCircle size={11} style={{ color: '#34d399' }} /> Approved
                   </span>
                 </div>
 
-                <h4 style={{ fontSize: '13.5px', color: '#f1f5f9', margin: '0 0 6px 0', lineHeight: 1.4, fontWeight: 600 }}>
+                <h4
+                  style={{
+                    fontSize: '13.5px',
+                    color: '#f1f5f9',
+                    margin: '0 0 6px 0',
+                    lineHeight: 1.4,
+                    fontWeight: 600,
+                  }}
+                >
                   {pub.title}
                 </h4>
 
@@ -185,8 +253,18 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
                 </div>
 
                 {pub.source_references && (
-                  <div style={{ fontSize: '11px', color: 'var(--text-dim)', background: 'rgba(0,0,0,0.25)', padding: '6px 8px', borderRadius: '6px', marginBottom: '12px' }}>
-                    <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Source:</span> {pub.source_references}
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      color: 'var(--text-dim)',
+                      background: 'rgba(0,0,0,0.25)',
+                      padding: '6px 8px',
+                      borderRadius: '6px',
+                      marginBottom: '12px',
+                    }}
+                  >
+                    <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Source:</span>{' '}
+                    {pub.source_references}
                   </div>
                 )}
               </div>
@@ -270,14 +348,24 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
               <X size={20} />
             </button>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}
+            >
               <Sparkles size={20} style={{ color: themeColor }} />
-              <h3 style={{ margin: 0, fontSize: '18px', color: '#fff', fontFamily: 'var(--font-chakra)' }}>
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: '18px',
+                  color: '#fff',
+                  fontFamily: 'var(--font-chakra)',
+                }}
+              >
                 Submit Community Video Report
               </h3>
             </div>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '0 0 20px 0' }}>
-              Post YouTube, TikTok or Reels videos about {missionName} to the CosmoLost global database.
+              Post YouTube, TikTok or Reels videos about {missionName} to the CosmoLost global
+              database.
             </p>
 
             {submitSuccess ? (
@@ -298,9 +386,20 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
                 <span>{submitSuccess}</span>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <form
+                onSubmit={handleSubmit}
+                style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
+              >
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', marginBottom: '5px' }}>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: '11px',
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--text-dim)',
+                      marginBottom: '5px',
+                    }}
+                  >
                     VIDEO TITLE *
                   </label>
                   <input
@@ -324,11 +423,27 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
 
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                      <label style={{ margin: 0, fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '5px',
+                      }}
+                    >
+                      <label
+                        style={{
+                          margin: 0,
+                          fontSize: '11px',
+                          fontFamily: 'var(--font-mono)',
+                          color: 'var(--text-dim)',
+                        }}
+                      >
                         VIDEO URL *
                       </label>
-                      <span style={{ fontSize: '10px', color: '#94a3b8' }}>YouTube, Instagram, TikTok</span>
+                      <span style={{ fontSize: '10px', color: '#94a3b8' }}>
+                        YouTube, Instagram, TikTok
+                      </span>
                     </div>
                     <input
                       type="url"
@@ -348,12 +463,30 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
                       }}
                     />
                     {urlValidationError ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px', color: '#f87171', fontSize: '10.5px' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          marginTop: '4px',
+                          color: '#f87171',
+                          fontSize: '10.5px',
+                        }}
+                      >
                         <AlertTriangle size={11} />
                         <span>{urlValidationError}</span>
                       </div>
                     ) : formVideoUrl.trim() ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px', color: '#34d399', fontSize: '10.5px' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          marginTop: '4px',
+                          color: '#34d399',
+                          fontSize: '10.5px',
+                        }}
+                      >
                         <CheckCircle2 size={11} />
                         <span>Valid {formPlatform} video source</span>
                       </div>
@@ -361,7 +494,15 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', marginBottom: '5px' }}>
+                    <label
+                      style={{
+                        display: 'block',
+                        fontSize: '11px',
+                        fontFamily: 'var(--font-mono)',
+                        color: 'var(--text-dim)',
+                        marginBottom: '5px',
+                      }}
+                    >
                       PLATFORM
                     </label>
                     <select
@@ -387,7 +528,15 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', marginBottom: '5px' }}>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: '11px',
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--text-dim)',
+                      marginBottom: '5px',
+                    }}
+                  >
                     AUTHOR / CREATOR NAME *
                   </label>
                   <input
@@ -410,7 +559,15 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', marginBottom: '5px' }}>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: '11px',
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--text-dim)',
+                      marginBottom: '5px',
+                    }}
+                  >
                     SOURCE REFERENCES (NASA ARCHIVES / DATASETS)
                   </label>
                   <input
@@ -431,7 +588,14 @@ export const CommunityPublicationsSection: React.FC<CommunityPublicationsSection
                   />
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    gap: '10px',
+                    marginTop: '10px',
+                  }}
+                >
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}

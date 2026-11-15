@@ -1,17 +1,17 @@
-import React from 'react';
-import type { PlanetConfig, SpaceArtifact } from '../../../entities/planet/model/types';
 import {
   Activity,
-  Wind,
-  Thermometer,
-  Gauge,
-  Sun,
-  Shield,
-  ExternalLink,
-  Layers,
   Database,
+  ExternalLink,
+  Gauge,
+  Layers,
   Radio,
+  Shield,
+  Sun,
+  Thermometer,
+  Wind,
 } from 'lucide-react';
+import type React from 'react';
+import type { PlanetConfig, SpaceArtifact } from '../../../entities/planet/model/types';
 
 interface ScientificTelemetryBlockProps {
   planet: PlanetConfig;
@@ -29,8 +29,8 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
   // Atmospheric gas composition breakdown (NASA PDS / Planetary Fact Sheet Data)
   const marsGases = [
     { name: 'Carbon Dioxide (CO₂)', percent: 95.32, color: '#f97316' },
-    { name: 'Nitrogen (N₂)', percent: 2.60, color: '#38bdf8' },
-    { name: 'Argon (⁴⁰Ar)', percent: 1.90, color: '#a855f7' },
+    { name: 'Nitrogen (N₂)', percent: 2.6, color: '#38bdf8' },
+    { name: 'Argon (⁴⁰Ar)', percent: 1.9, color: '#a855f7' },
     { name: 'Oxygen (O₂)', percent: 0.16, color: '#34d399' },
     { name: 'Carbon Monoxide (CO)', percent: 0.08, color: '#fbbf24' },
     { name: 'Water Vapor / Trace', percent: 0.03, color: '#94a3b8' },
@@ -51,7 +51,8 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
       className="cosmo-glass dossier-block"
       style={{
         border: `1.5px solid ${themeColor}40`,
-        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(10, 15, 28, 0.9) 100%)',
+        background:
+          'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(10, 15, 28, 0.9) 100%)',
         boxShadow: `0 12px 32px -10px ${themeColor}20`,
         marginBottom: '24px',
       }}
@@ -137,7 +138,14 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
 
       {/* Atmospheric Composition Section */}
       <div style={{ marginBottom: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '8px',
+          }}
+        >
           <span
             style={{
               fontFamily: 'var(--font-mono, monospace)',
@@ -149,7 +157,13 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
           >
             ATMOSPHERIC GAS COMPOSITION
           </span>
-          <span style={{ fontSize: '11px', color: '#64748b', fontFamily: 'var(--font-mono, monospace)' }}>
+          <span
+            style={{
+              fontSize: '11px',
+              color: '#64748b',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
             {isMars ? 'Mean Volumetric Mixing Ratio' : 'Exospheric Relative Fraction'}
           </span>
         </div>
@@ -205,7 +219,13 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
                 }}
               />
               <span style={{ color: '#e2e8f0', fontWeight: 600 }}>{gas.name}</span>
-              <span style={{ fontFamily: 'var(--font-mono, monospace)', color: gas.color, fontWeight: 700 }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono, monospace)',
+                  color: gas.color,
+                  fontWeight: 700,
+                }}
+              >
                 {gas.percent}%
               </span>
             </div>
@@ -233,15 +253,31 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <Gauge size={14} style={{ color: themeColor }} />
-            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '10px', color: '#94a3b8', fontWeight: 700 }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '10px',
+                color: '#94a3b8',
+                fontWeight: 700,
+              }}
+            >
               SURFACE PRESSURE
             </span>
           </div>
-          <div style={{ fontSize: '17px', fontWeight: 700, color: '#f8fafc', fontFamily: 'var(--font-mono, monospace)' }}>
+          <div
+            style={{
+              fontSize: '17px',
+              fontWeight: 700,
+              color: '#f8fafc',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
             {isMars ? '6.10 mbar (610 Pa)' : '10⁻¹² bar (10⁻⁷ Pa)'}
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
-            {isMars ? '~0.6% of Earth sea level (±25% seasonal CO₂ cap cycle)' : 'Surface-bound collisionless vacuum (<10 tons total)'}
+            {isMars
+              ? '~0.6% of Earth sea level (±25% seasonal CO₂ cap cycle)'
+              : 'Surface-bound collisionless vacuum (<10 tons total)'}
           </div>
         </div>
 
@@ -256,15 +292,31 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <Layers size={14} style={{ color: '#38bdf8' }} />
-            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '10px', color: '#94a3b8', fontWeight: 700 }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '10px',
+                color: '#94a3b8',
+                fontWeight: 700,
+              }}
+            >
               ATMOSPHERIC DENSITY
             </span>
           </div>
-          <div style={{ fontSize: '17px', fontWeight: 700, color: '#f8fafc', fontFamily: 'var(--font-mono, monospace)' }}>
+          <div
+            style={{
+              fontSize: '17px',
+              fontWeight: 700,
+              color: '#f8fafc',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
             {isMars ? '~0.020 kg/m³' : '< 10⁻¹⁵ kg/m³'}
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
-            {isMars ? 'Scale height H = 11.1 km • Thin aerodynamic regime' : 'Non-collisional ballistic particle exosphere'}
+            {isMars
+              ? 'Scale height H = 11.1 km • Thin aerodynamic regime'
+              : 'Non-collisional ballistic particle exosphere'}
           </div>
         </div>
 
@@ -279,11 +331,25 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <Thermometer size={14} style={{ color: '#fbbf24' }} />
-            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '10px', color: '#94a3b8', fontWeight: 700 }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '10px',
+                color: '#94a3b8',
+                fontWeight: 700,
+              }}
+            >
               SURFACE TEMPERATURE
             </span>
           </div>
-          <div style={{ fontSize: '17px', fontWeight: 700, color: '#fbbf24', fontFamily: 'var(--font-mono, monospace)' }}>
+          <div
+            style={{
+              fontSize: '17px',
+              fontWeight: 700,
+              color: '#fbbf24',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
             {planet.telemetry.avgTemperature} (Mean)
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
@@ -302,15 +368,31 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <Sun size={14} style={{ color: '#f59e0b' }} />
-            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '10px', color: '#94a3b8', fontWeight: 700 }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '10px',
+                color: '#94a3b8',
+                fontWeight: 700,
+              }}
+            >
               {isMars ? 'DUST OPTICAL DEPTH (TAU)' : 'SOLAR FLUX (INSOLATION)'}
             </span>
           </div>
-          <div style={{ fontSize: '17px', fontWeight: 700, color: '#f8fafc', fontFamily: 'var(--font-mono, monospace)' }}>
+          <div
+            style={{
+              fontSize: '17px',
+              fontWeight: 700,
+              color: '#f8fafc',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
             {isMars ? 'Clear τ = 0.4–0.9 | Storm τ > 4.5' : '1,361 W/m² (Unshielded)'}
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
-            {isMars ? 'Solar flux ~590 W/m² (43% of Earth) • Blackout hazard' : 'Unfiltered cosmic rays & solar wind radiation'}
+            {isMars
+              ? 'Solar flux ~590 W/m² (43% of Earth) • Blackout hazard'
+              : 'Unfiltered cosmic rays & solar wind radiation'}
           </div>
         </div>
 
@@ -325,15 +407,30 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <Shield size={14} style={{ color: '#34d399' }} />
-            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '10px', color: '#94a3b8', fontWeight: 700 }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '10px',
+                color: '#94a3b8',
+                fontWeight: 700,
+              }}
+            >
               SURFACE GRAVITY
             </span>
           </div>
-          <div style={{ fontSize: '17px', fontWeight: 700, color: '#34d399', fontFamily: 'var(--font-mono, monospace)' }}>
+          <div
+            style={{
+              fontSize: '17px',
+              fontWeight: 700,
+              color: '#34d399',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
             {planet.telemetry.surfaceGravity}
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
-            Escape Velocity: {isMars ? '5.03 km/s' : '2.38 km/s'} • Planetary Radius: {planet.telemetry.radiusKm.toLocaleString()} km
+            Escape Velocity: {isMars ? '5.03 km/s' : '2.38 km/s'} • Planetary Radius:{' '}
+            {planet.telemetry.radiusKm.toLocaleString()} km
           </div>
         </div>
 
@@ -348,11 +445,25 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
             <Activity size={14} style={{ color: themeColor }} />
-            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '10px', color: '#94a3b8', fontWeight: 700 }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '10px',
+                color: '#94a3b8',
+                fontWeight: 700,
+              }}
+            >
               ROTATION & SOL LENGTH
             </span>
           </div>
-          <div style={{ fontSize: '17px', fontWeight: 700, color: '#f8fafc', fontFamily: 'var(--font-mono, monospace)' }}>
+          <div
+            style={{
+              fontSize: '17px',
+              fontWeight: 700,
+              color: '#f8fafc',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
             {planet.telemetry.dayLength}
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
@@ -388,35 +499,101 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+              gap: '10px',
+            }}
+          >
             {artifact.lastTelemetry.powerWh !== undefined && (
               <div>
-                <span style={{ fontSize: '10px', color: '#94a3b8', fontFamily: 'var(--font-mono, monospace)' }}>FINAL POWER:</span>
-                <div style={{ fontSize: '15px', fontWeight: 700, color: '#fca5a5', fontFamily: 'var(--font-mono, monospace)' }}>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    color: '#94a3b8',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  FINAL POWER:
+                </span>
+                <div
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    color: '#fca5a5',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
                   {artifact.lastTelemetry.powerWh} Wh
                 </div>
               </div>
             )}
             {artifact.lastTelemetry.dustTau !== undefined && (
               <div>
-                <span style={{ fontSize: '10px', color: '#94a3b8', fontFamily: 'var(--font-mono, monospace)' }}>RECORD TAU:</span>
-                <div style={{ fontSize: '15px', fontWeight: 700, color: '#fbbf24', fontFamily: 'var(--font-mono, monospace)' }}>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    color: '#94a3b8',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  RECORD TAU:
+                </span>
+                <div
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    color: '#fbbf24',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
                   {artifact.lastTelemetry.dustTau}
                 </div>
               </div>
             )}
             {artifact.lastTelemetry.pitchDeg !== undefined && (
               <div>
-                <span style={{ fontSize: '10px', color: '#94a3b8', fontFamily: 'var(--font-mono, monospace)' }}>CHASSIS TILT:</span>
-                <div style={{ fontSize: '15px', fontWeight: 700, color: '#38bdf8', fontFamily: 'var(--font-mono, monospace)' }}>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    color: '#94a3b8',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  CHASSIS TILT:
+                </span>
+                <div
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    color: '#38bdf8',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
                   {artifact.lastTelemetry.pitchDeg}°
                 </div>
               </div>
             )}
             {artifact.lastTelemetry.finalSol !== undefined && (
               <div>
-                <span style={{ fontSize: '10px', color: '#94a3b8', fontFamily: 'var(--font-mono, monospace)' }}>LAST CONTACT SOL:</span>
-                <div style={{ fontSize: '15px', fontWeight: 700, color: '#34d399', fontFamily: 'var(--font-mono, monospace)' }}>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    color: '#94a3b8',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  LAST CONTACT SOL:
+                </span>
+                <div
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    color: '#34d399',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
                   Sol {artifact.lastTelemetry.finalSol}
                 </div>
               </div>
@@ -437,7 +614,14 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Database size={13} style={{ color: themeColor }} />
-          <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '11px', color: '#94a3b8', fontWeight: 700 }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '11px',
+              color: '#94a3b8',
+              fontWeight: 700,
+            }}
+          >
             OFFICIAL NASA SCIENTIFIC DATA SOURCES & CITATIONS
           </span>
         </div>
@@ -483,7 +667,11 @@ export const ScientificTelemetryBlock: React.FC<ScientificTelemetryBlockProps> =
               fontFamily: 'var(--font-mono, monospace)',
             }}
           >
-            <span>{isMars ? 'NASA Mars Exploration Program (MEP)' : 'NASA Lunar Reconnaissance Orbiter (LRO)'}</span>
+            <span>
+              {isMars
+                ? 'NASA Mars Exploration Program (MEP)'
+                : 'NASA Lunar Reconnaissance Orbiter (LRO)'}
+            </span>
             <ExternalLink size={11} />
           </a>
 

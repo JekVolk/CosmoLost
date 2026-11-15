@@ -1,6 +1,6 @@
-import React from 'react';
-import type { SpaceArtifact, PlanetId } from '../../../entities/planet/model/types';
-import { X, ExternalLink, MapPin, Calendar, Activity, Rocket } from 'lucide-react';
+import { Activity, Calendar, ExternalLink, MapPin, Rocket, X } from 'lucide-react';
+import type React from 'react';
+import type { PlanetId, SpaceArtifact } from '../../../entities/planet/model/types';
 
 interface RightDetailCardProps {
   artifact: SpaceArtifact;
@@ -27,18 +27,16 @@ export const RightDetailCard: React.FC<RightDetailCardProps> = ({
           </div>
           <h3 className="pen-card-title">{artifact.name}</h3>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="pen-close-btn"
-          title="Close details"
-        >
+        <button type="button" onClick={onClose} className="pen-close-btn" title="Close details">
           <X size={16} />
         </button>
       </div>
 
       <div className="pen-mission-row">
-        <div className="pen-mission-badge" style={{ borderColor: `${themeColor}60`, color: themeColor }}>
+        <div
+          className="pen-mission-badge"
+          style={{ borderColor: `${themeColor}60`, color: themeColor }}
+        >
           <Rocket size={12} />
           <span>{artifact.mission}</span>
         </div>
@@ -79,7 +77,8 @@ export const RightDetailCard: React.FC<RightDetailCardProps> = ({
             <span>Coordinates:</span>
           </div>
           <div className="pen-meta-value mono">
-            {Math.abs(artifact.lat).toFixed(2)}°{artifact.lat >= 0 ? 'N' : 'S'}, {Math.abs(artifact.lon).toFixed(2)}°{artifact.lon >= 0 ? 'E' : 'W'}
+            {Math.abs(artifact.lat).toFixed(2)}°{artifact.lat >= 0 ? 'N' : 'S'},{' '}
+            {Math.abs(artifact.lon).toFixed(2)}°{artifact.lon >= 0 ? 'E' : 'W'}
           </div>
         </div>
 
@@ -88,9 +87,7 @@ export const RightDetailCard: React.FC<RightDetailCardProps> = ({
             <Calendar size={13} style={{ color: themeColor }} />
             <span>Landing Date:</span>
           </div>
-          <div className="pen-meta-value">
-            {artifact.landingDate}
-          </div>
+          <div className="pen-meta-value">{artifact.landingDate}</div>
         </div>
 
         <div className="pen-meta-row">
@@ -108,16 +105,12 @@ export const RightDetailCard: React.FC<RightDetailCardProps> = ({
             <div className="pen-meta-label">
               <span>Hardware Mass:</span>
             </div>
-            <div className="pen-meta-value mono">
-              {artifact.massKg.toLocaleString()} kg
-            </div>
+            <div className="pen-meta-value mono">{artifact.massKg.toLocaleString()} kg</div>
           </div>
         )}
       </div>
 
-      <p className="pen-card-description">
-        {artifact.brief || artifact.description}
-      </p>
+      <p className="pen-card-description">{artifact.brief || artifact.description}</p>
 
       <button
         type="button"

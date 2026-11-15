@@ -1,20 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
-import type { PlanetId, SpaceArtifact, PlanetConfig } from '../entities/planet/model/types';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PLANETS } from '../entities/planet/model/planetData';
-import {
-  portalApi,
-  apiArtifactSummaryToSpaceArtifact,
-  apiArtifactDetailToSpaceArtifact,
-} from '../shared/api/portalApi';
-import { Header, type AppView } from '../widgets/header/ui/Header';
-import { PlanetViewer } from '../widgets/planet-viewer/ui/PlanetViewer';
-import { PlanetTelemetry } from '../widgets/planet-telemetry/ui/PlanetTelemetry';
+import type { PlanetConfig, PlanetId, SpaceArtifact } from '../entities/planet/model/types';
+import { AstroGuessrGame } from '../features/astro-guessr-360';
 import { ViewControls } from '../features/view-controls/ui/ViewControls';
-import { DossierPage } from '../widgets/dossier/ui/DossierPage';
+import {
+  apiArtifactDetailToSpaceArtifact,
+  apiArtifactSummaryToSpaceArtifact,
+  portalApi,
+} from '../shared/api/portalApi';
+import { AboutModal } from '../widgets/about/ui/AboutModal';
 import { CatalogPage } from '../widgets/catalog/ui/CatalogPage';
 import { CommunityVideosPage } from '../widgets/community/ui/CommunityVideosPage';
-import { AstroGuessrGame } from '../features/astro-guessr-360';
-import { AboutModal } from '../widgets/about/ui/AboutModal';
+import { DossierPage } from '../widgets/dossier/ui/DossierPage';
+import { type AppView, Header } from '../widgets/header/ui/Header';
+import { PlanetTelemetry } from '../widgets/planet-telemetry/ui/PlanetTelemetry';
+import { PlanetViewer } from '../widgets/planet-viewer/ui/PlanetViewer';
 import './styles/global.css';
 
 export const App: React.FC = () => {
@@ -48,10 +49,10 @@ export const App: React.FC = () => {
         const moonBody = bodies.find((b) => b.id === 'moon');
 
         const marsArts: SpaceArtifact[] = marsRes.results.map((item) =>
-          apiArtifactSummaryToSpaceArtifact(item, 'mars')
+          apiArtifactSummaryToSpaceArtifact(item, 'mars'),
         );
         const moonArts: SpaceArtifact[] = moonRes.results.map((item) =>
-          apiArtifactSummaryToSpaceArtifact(item, 'moon')
+          apiArtifactSummaryToSpaceArtifact(item, 'moon'),
         );
 
         setPlanets((prev) => ({
@@ -88,13 +89,16 @@ export const App: React.FC = () => {
     const planetParam = (params.get('planet') as PlanetId) || 'mars';
 
     if (artifactId) {
-      portalApi.getArtifactDetail(artifactId).then((detail) => {
-        if (detail) {
-          const art = apiArtifactDetailToSpaceArtifact(detail, planetParam);
-          setStandaloneDossier({ artifact: art, planetId: planetParam });
-          setCurrentPlanetId(planetParam);
-        }
-      }).catch(() => {});
+      portalApi
+        .getArtifactDetail(artifactId)
+        .then((detail) => {
+          if (detail) {
+            const art = apiArtifactDetailToSpaceArtifact(detail, planetParam);
+            setStandaloneDossier({ artifact: art, planetId: planetParam });
+            setCurrentPlanetId(planetParam);
+          }
+        })
+        .catch(() => {});
     }
 
     const handlePopState = () => {
@@ -102,15 +106,18 @@ export const App: React.FC = () => {
       const popArtId = popParams.get('artifact');
       const popPlanet = (popParams.get('planet') as PlanetId) || 'mars';
       if (popArtId) {
-        portalApi.getArtifactDetail(popArtId).then((detail) => {
-          if (detail) {
-            setStandaloneDossier({
-              artifact: apiArtifactDetailToSpaceArtifact(detail, popPlanet),
-              planetId: popPlanet,
-            });
-            setCurrentPlanetId(popPlanet);
-          }
-        }).catch(() => {});
+        portalApi
+          .getArtifactDetail(popArtId)
+          .then((detail) => {
+            if (detail) {
+              setStandaloneDossier({
+                artifact: apiArtifactDetailToSpaceArtifact(detail, popPlanet),
+                planetId: popPlanet,
+              });
+              setCurrentPlanetId(popPlanet);
+            }
+          })
+          .catch(() => {});
       } else {
         setStandaloneDossier(null);
       }
@@ -136,12 +143,15 @@ export const App: React.FC = () => {
     setStandaloneDossier({ artifact, planetId: pId });
     window.history.pushState({}, '', `?artifact=${artifact.id}&planet=${pId}`);
 
-    portalApi.getArtifactDetail(artifact.id).then((detail) => {
-      if (detail) {
-        const detailedArtifact = apiArtifactDetailToSpaceArtifact(detail, pId);
-        setStandaloneDossier({ artifact: detailedArtifact, planetId: pId });
-      }
-    }).catch(() => {});
+    portalApi
+      .getArtifactDetail(artifact.id)
+      .then((detail) => {
+        if (detail) {
+          const detailedArtifact = apiArtifactDetailToSpaceArtifact(detail, pId);
+          setStandaloneDossier({ artifact: detailedArtifact, planetId: pId });
+        }
+      })
+      .catch(() => {});
   };
 
   const handleSelectArtifactFromList = (artifact: SpaceArtifact) => {
@@ -263,10 +273,7 @@ export const App: React.FC = () => {
         />
       )}
 
-      <AboutModal
-        isOpen={isAboutOpen}
-        onClose={() => setIsAboutOpen(false)}
-      />
+      <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
     </div>
   );
 };

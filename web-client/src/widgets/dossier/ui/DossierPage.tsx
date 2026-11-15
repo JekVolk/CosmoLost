@@ -1,31 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import {
+  Activity,
+  AlertTriangle,
+  ArrowLeft,
+  BookOpen,
+  Box,
+  Camera,
+  Clock,
+  Compass,
+  Cpu,
+  Eye,
+  MapPin,
+  Maximize2,
+  Navigation,
+  Radio,
+  ShieldCheck,
+  Sparkles,
+  X,
+  Zap,
+} from 'lucide-react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import type { PlanetConfig, SpaceArtifact } from '../../../entities/planet/model/types';
+import { Model3DViewer, resolveGlbModelUrl } from '../../../features/artifact-3d-viewer';
 import { portalApi } from '../../../shared/api/portalApi';
-import type { ArtifactDetail, TraverseWaypoint, ArtifactMedia } from '../../../shared/api/types';
-import type { SpaceArtifact, PlanetConfig } from '../../../entities/planet/model/types';
+import type { ArtifactDetail, ArtifactMedia, TraverseWaypoint } from '../../../shared/api/types';
 import { PhotosphereViewer } from '../../../shared/ui/photosphere-viewer';
 import { CommunityPublicationsSection } from './CommunityPublicationsSection';
 import { ScientificTelemetryBlock } from './ScientificTelemetryBlock';
-import { Model3DViewer, resolveGlbModelUrl } from '../../../features/artifact-3d-viewer';
-import {
-  ArrowLeft,
-  MapPin,
-  Clock,
-  Navigation,
-  AlertTriangle,
-  ShieldCheck,
-  Radio,
-  Activity,
-  Cpu,
-  Eye,
-  Sparkles,
-  BookOpen,
-  Zap,
-  Camera,
-  Maximize2,
-  X,
-  Box,
-  Compass,
-} from 'lucide-react';
 
 interface DossierPageProps {
   artifact: SpaceArtifact;
@@ -33,11 +34,7 @@ interface DossierPageProps {
   onBackToMap: () => void;
 }
 
-export const DossierPage: React.FC<DossierPageProps> = ({
-  artifact,
-  planet,
-  onBackToMap,
-}) => {
+export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBackToMap }) => {
   const isMars = planet.id === 'mars';
   const themeColor = isMars ? '#f97316' : '#38bdf8';
   const [isPhotoExpanded, setIsPhotoExpanded] = useState(false);
@@ -79,7 +76,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
     (item) =>
       item.media_category === 'PANORAMA' ||
       item.caption?.toLowerCase().includes('360') ||
-      item.caption?.toLowerCase().includes('panorama')
+      item.caption?.toLowerCase().includes('panorama'),
   );
   const activePanorama = selectedPanorama || panoramas[0] || null;
 
@@ -87,16 +84,17 @@ export const DossierPage: React.FC<DossierPageProps> = ({
   const displayedCause = liveDetail?.cause_of_deactivation || artifact.whyAbandoned;
   const rawModel3dUrl = liveDetail?.model_3d_url || artifact.model3dUrl;
   const effectiveModel3dUrl = resolveGlbModelUrl(artifact.id, rawModel3dUrl);
-  const effectiveWaypoints = liveWaypoints.length > 0
-    ? liveWaypoints.map((w) => ({
-        solOrStep: w.sol_or_step,
-        lat: w.latitude,
-        lon: w.longitude,
-        odometryM: (w as any).odometry_m ?? (w as any).odometryM ?? (w.sol_or_step * 250),
-        title: (w.telemetry_snapshot as any)?.stepName || `Waypoint ${w.sol_or_step}`,
-        storySnippet: w.story_snippet || undefined,
-      }))
-    : artifact.traversePath || [];
+  const effectiveWaypoints =
+    liveWaypoints.length > 0
+      ? liveWaypoints.map((w) => ({
+          solOrStep: w.sol_or_step,
+          lat: w.latitude,
+          lon: w.longitude,
+          odometryM: (w as any).odometry_m ?? (w as any).odometryM ?? w.sol_or_step * 250,
+          title: (w.telemetry_snapshot as any)?.stepName || `Waypoint ${w.sol_or_step}`,
+          storySnippet: w.story_snippet || undefined,
+        }))
+      : artifact.traversePath || [];
 
   return (
     <div className="dossier-page">
@@ -108,16 +106,30 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               <ArrowLeft size={16} />
               <span>Back to 3D Map</span>
             </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'var(--text-dim)' }}>
-              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>Home</span>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '11px',
+                color: 'var(--text-dim)',
+              }}
+            >
+              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>
+                Home
+              </span>
               <span>/</span>
-              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>Catalog</span>
+              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>
+                Catalog
+              </span>
               <span>/</span>
               <span style={{ color: themeColor, fontWeight: 600 }}>{artifact.name}</span>
             </div>
           </div>
 
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)' }}>
+          <div
+            style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)' }}
+          >
             NASA SPACE APPS 2026 ARCHIVE
           </div>
         </div>
@@ -137,31 +149,101 @@ export const DossierPage: React.FC<DossierPageProps> = ({
           }}
         >
           <div>
-            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>LANDING DATE</div>
-            <div style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}>{artifact.landingDate}</div>
-          </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>PLANET</div>
-            <div style={{ fontSize: '12.5px', color: themeColor, fontWeight: 700, marginTop: '2px' }}>{planet.nameEn.toUpperCase()}</div>
-          </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>LOCATION</div>
-            <div style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}>{artifact.locationName}</div>
-          </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>HARDWARE MASS</div>
-            <div style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}>
-              {artifact.massKg ? `${artifact.massKg.toLocaleString()} kg` : 'Telemetry Not Available'}
+            <div
+              style={{
+                fontSize: '9.5px',
+                color: '#64748B',
+                fontWeight: 700,
+                letterSpacing: '0.5px',
+              }}
+            >
+              LANDING DATE
+            </div>
+            <div
+              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
+            >
+              {artifact.landingDate}
             </div>
           </div>
           <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
           <div>
-            <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700, letterSpacing: '0.5px' }}>COORDINATES</div>
-            <div style={{ fontSize: '12.5px', color: '#38bdf8', fontFamily: 'var(--font-mono)', fontWeight: 600, marginTop: '2px' }}>
-              {Math.abs(artifact.lat).toFixed(2)}°{artifact.lat >= 0 ? 'N' : 'S'}, {Math.abs(artifact.lon).toFixed(2)}°{artifact.lon >= 0 ? 'E' : 'W'}
+            <div
+              style={{
+                fontSize: '9.5px',
+                color: '#64748B',
+                fontWeight: 700,
+                letterSpacing: '0.5px',
+              }}
+            >
+              PLANET
+            </div>
+            <div
+              style={{ fontSize: '12.5px', color: themeColor, fontWeight: 700, marginTop: '2px' }}
+            >
+              {planet.nameEn.toUpperCase()}
+            </div>
+          </div>
+          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
+          <div>
+            <div
+              style={{
+                fontSize: '9.5px',
+                color: '#64748B',
+                fontWeight: 700,
+                letterSpacing: '0.5px',
+              }}
+            >
+              LOCATION
+            </div>
+            <div
+              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
+            >
+              {artifact.locationName}
+            </div>
+          </div>
+          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
+          <div>
+            <div
+              style={{
+                fontSize: '9.5px',
+                color: '#64748B',
+                fontWeight: 700,
+                letterSpacing: '0.5px',
+              }}
+            >
+              HARDWARE MASS
+            </div>
+            <div
+              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
+            >
+              {artifact.massKg
+                ? `${artifact.massKg.toLocaleString()} kg`
+                : 'Telemetry Not Available'}
+            </div>
+          </div>
+          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
+          <div>
+            <div
+              style={{
+                fontSize: '9.5px',
+                color: '#64748B',
+                fontWeight: 700,
+                letterSpacing: '0.5px',
+              }}
+            >
+              COORDINATES
+            </div>
+            <div
+              style={{
+                fontSize: '12.5px',
+                color: '#38bdf8',
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 600,
+                marginTop: '2px',
+              }}
+            >
+              {Math.abs(artifact.lat).toFixed(2)}°{artifact.lat >= 0 ? 'N' : 'S'},{' '}
+              {Math.abs(artifact.lon).toFixed(2)}°{artifact.lon >= 0 ? 'E' : 'W'}
             </div>
           </div>
         </div>
@@ -199,20 +281,20 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                       artifact.operationalStatus === 'PASSIVE_ACTIVE'
                         ? 'rgba(16, 185, 129, 0.15)'
                         : artifact.operationalStatus === 'DESTROYED_FOR_SCIENCE'
-                        ? 'rgba(239, 68, 68, 0.18)'
-                        : 'rgba(245, 158, 11, 0.15)',
+                          ? 'rgba(239, 68, 68, 0.18)'
+                          : 'rgba(245, 158, 11, 0.15)',
                     border:
                       artifact.operationalStatus === 'PASSIVE_ACTIVE'
                         ? '1px solid rgba(16, 185, 129, 0.4)'
                         : artifact.operationalStatus === 'DESTROYED_FOR_SCIENCE'
-                        ? '1px solid rgba(239, 68, 68, 0.4)'
-                        : '1px solid rgba(245, 158, 11, 0.4)',
+                          ? '1px solid rgba(239, 68, 68, 0.4)'
+                          : '1px solid rgba(245, 158, 11, 0.4)',
                     color:
                       artifact.operationalStatus === 'PASSIVE_ACTIVE'
                         ? '#34d399'
                         : artifact.operationalStatus === 'DESTROYED_FOR_SCIENCE'
-                        ? '#f87171'
-                        : '#fbbf24',
+                          ? '#f87171'
+                          : '#fbbf24',
                     textTransform: 'uppercase',
                   }}
                 >
@@ -268,7 +350,8 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                       color: 'var(--text-dim)',
                     }}
                   >
-                    Dry Mass: <strong style={{ color: '#fff' }}>{artifact.massKg.toLocaleString()} kg</strong>
+                    Dry Mass:{' '}
+                    <strong style={{ color: '#fff' }}>{artifact.massKg.toLocaleString()} kg</strong>
                   </span>
                 )}
 
@@ -284,17 +367,28 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                     }}
                   >
                     <Zap size={11} style={{ color: themeColor }} />
-                    <span>Power: <strong style={{ color: '#fff' }}>{artifact.powerSource}</strong></span>
+                    <span>
+                      Power: <strong style={{ color: '#fff' }}>{artifact.powerSource}</strong>
+                    </span>
                   </span>
                 )}
               </div>
 
               <h1 className="dossier-title">{artifact.name}</h1>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '13.5px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: 'var(--text-muted)',
+                  fontSize: '13.5px',
+                }}
+              >
                 <MapPin size={16} style={{ color: themeColor }} />
                 <span>
-                  Location on {planet.nameEn}: <strong style={{ color: '#fff' }}>{artifact.locationName}</strong>
+                  Location on {planet.nameEn}:{' '}
+                  <strong style={{ color: '#fff' }}>{artifact.locationName}</strong>
                 </span>
               </div>
 
@@ -305,12 +399,17 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                   LANDING COORDINATES: {artifact.lat.toFixed(4)}° {artifact.lat >= 0 ? 'N' : 'S'},{' '}
                   {artifact.lon.toFixed(4)}° {artifact.lon >= 0 ? 'E' : 'W'}
                 </span>
-                <span style={{ color: 'var(--text-dim)' }}>PLANETARY REGISTRY: {planet.telemetry.designation}</span>
+                <span style={{ color: 'var(--text-dim)' }}>
+                  PLANETARY REGISTRY: {planet.telemetry.designation}
+                </span>
               </div>
             </div>
 
             {/* Media Presentation Area: 3D GLB Model & Archival Photo */}
-            <div className="dossier-photo-container" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div
+              className="dossier-photo-container"
+              style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+            >
               {/* Mode Switcher Tabs & 360 Panorama CTA */}
               <div
                 style={{
@@ -471,18 +570,41 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               borderRadius: '16px',
               marginBottom: '24px',
               borderLeft: `4px solid ${themeColor}`,
-              background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(10, 15, 28, 0.95) 100%)',
+              background:
+                'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(10, 15, 28, 0.95) 100%)',
               boxShadow: `0 10px 30px -10px ${themeColor}25`,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '12px',
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Radio size={16} style={{ color: themeColor }} className="animate-pulse" />
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: themeColor, textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em' }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '11px',
+                    color: themeColor,
+                    textTransform: 'uppercase',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                  }}
+                >
                   Diary of the Last Sol
                 </span>
               </div>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-dim)' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '10px',
+                  color: 'var(--text-dim)',
+                }}
+              >
                 ARCHIVAL AUDIO TRANSCRIPT
               </span>
             </div>
@@ -514,24 +636,32 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               background: 'rgba(15, 23, 42, 0.6)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}
+            >
               <BookOpen size={16} style={{ color: '#38bdf8' }} />
-              <h3 style={{ fontFamily: 'var(--font-chakra)', fontSize: '15px', color: '#fff', margin: 0, letterSpacing: '0.04em' }}>
+              <h3
+                style={{
+                  fontFamily: 'var(--font-chakra)',
+                  fontSize: '15px',
+                  color: '#fff',
+                  margin: 0,
+                  letterSpacing: '0.04em',
+                }}
+              >
                 How It Worked (Engineering Breakdown)
               </h3>
             </div>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+            <p
+              style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}
+            >
               {artifact.howItWorked}
             </p>
           </div>
         )}
 
         {/* NASA Scientific Telemetry & Atmospheric Environment Block */}
-        <ScientificTelemetryBlock
-          planet={planet}
-          artifact={artifact}
-          themeColor={themeColor}
-        />
+        <ScientificTelemetryBlock planet={planet} artifact={artifact} themeColor={themeColor} />
 
         {/* Main Grid: 2-column detailed breakdown */}
         <div className="dossier-grid">
@@ -547,7 +677,10 @@ export const DossierPage: React.FC<DossierPageProps> = ({
             </div>
 
             {}
-            <div className="cosmo-glass dossier-block" style={{ borderLeft: `3px solid ${themeColor}` }}>
+            <div
+              className="cosmo-glass dossier-block"
+              style={{ borderLeft: `3px solid ${themeColor}` }}
+            >
               <h3 className="dossier-block-title">
                 <AlertTriangle size={18} style={{ color: '#f59e0b' }} />
                 <span>Why It Remained (Abandoned but Not Forgotten)</span>
@@ -574,13 +707,35 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                         border: '1px solid rgba(255, 255, 255, 0.06)',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 700, color: themeColor }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            color: themeColor,
+                          }}
+                        >
                           {inst.acronym}
                         </span>
-                        <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>{inst.fullName}</span>
+                        <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>
+                          {inst.fullName}
+                        </span>
                       </div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                      <div
+                        style={{
+                          fontSize: '12px',
+                          color: 'var(--text-muted)',
+                          marginBottom: '4px',
+                        }}
+                      >
                         <strong>Tool:</strong> {inst.purpose}
                       </div>
                       <div style={{ fontSize: '12px', color: '#e2e8f0' }}>
@@ -602,7 +757,10 @@ export const DossierPage: React.FC<DossierPageProps> = ({
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {effectiveWaypoints.map((step, idx) => (
-                    <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <div
+                      key={idx}
+                      style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}
+                    >
                       <div
                         style={{
                           fontFamily: 'var(--font-mono)',
@@ -620,10 +778,17 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                       </div>
                       <div>
                         <div style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>
-                          {step.title} {step.odometryM ? `(${step.odometryM.toLocaleString()} m)` : ''}
+                          {step.title}{' '}
+                          {step.odometryM ? `(${step.odometryM.toLocaleString()} m)` : ''}
                         </div>
                         {step.storySnippet && (
-                          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                          <div
+                            style={{
+                              fontSize: '12px',
+                              color: 'var(--text-muted)',
+                              marginTop: '2px',
+                            }}
+                          >
                             {step.storySnippet}
                           </div>
                         )}
@@ -643,7 +808,8 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                 className="cosmo-glass dossier-block"
                 style={{
                   border: '1px solid rgba(239, 68, 68, 0.3)',
-                  background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(15, 23, 42, 0.7) 100%)',
+                  background:
+                    'linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(15, 23, 42, 0.7) 100%)',
                 }}
               >
                 <h3 className="dossier-block-title">
@@ -651,52 +817,164 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                   <span>Final Telemetry & Last Signal</span>
                 </h3>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginBottom: '12px' }}>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: '10px',
+                    marginBottom: '12px',
+                  }}
+                >
                   {artifact.lastTelemetry.powerWh !== undefined && (
-                    <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>FINAL POWER</div>
-                      <div style={{ fontSize: '16px', fontWeight: 700, color: '#f87171', fontFamily: 'var(--font-mono)' }}>
+                    <div
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        background: 'rgba(0,0,0,0.3)',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: '10.5px',
+                          color: 'var(--text-dim)',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
+                        FINAL POWER
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '16px',
+                          fontWeight: 700,
+                          color: '#f87171',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
                         {artifact.lastTelemetry.powerWh} Wh
                       </div>
                       {artifact.lastTelemetry.powerInitialWh && (
-                        <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Initial: {artifact.lastTelemetry.powerInitialWh} Wh</div>
+                        <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                          Initial: {artifact.lastTelemetry.powerInitialWh} Wh
+                        </div>
                       )}
                     </div>
                   )}
 
                   {artifact.lastTelemetry.dustTau !== undefined && (
-                    <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>DUST OPACITY (TAU)</div>
-                      <div style={{ fontSize: '16px', fontWeight: 700, color: '#fbbf24', fontFamily: 'var(--font-mono)' }}>
+                    <div
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        background: 'rgba(0,0,0,0.3)',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: '10.5px',
+                          color: 'var(--text-dim)',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
+                        DUST OPACITY (TAU)
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '16px',
+                          fontWeight: 700,
+                          color: '#fbbf24',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
                         {artifact.lastTelemetry.dustTau}
                       </div>
-                      <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Record solar blackout</div>
+                      <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                        Record solar blackout
+                      </div>
                     </div>
                   )}
 
                   {artifact.lastTelemetry.pitchDeg !== undefined && (
-                    <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>TILT PITCH</div>
-                      <div style={{ fontSize: '16px', fontWeight: 700, color: '#38bdf8', fontFamily: 'var(--font-mono)' }}>
+                    <div
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        background: 'rgba(0,0,0,0.3)',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: '10.5px',
+                          color: 'var(--text-dim)',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
+                        TILT PITCH
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '16px',
+                          fontWeight: 700,
+                          color: '#38bdf8',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
                         {artifact.lastTelemetry.pitchDeg}°
                       </div>
-                      <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Tilted away from Sun</div>
+                      <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                        Tilted away from Sun
+                      </div>
                     </div>
                   )}
 
                   {artifact.lastTelemetry.tempC !== undefined && (
-                    <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>SURFACE TEMP</div>
-                      <div style={{ fontSize: '16px', fontWeight: 700, color: '#38bdf8', fontFamily: 'var(--font-mono)' }}>
+                    <div
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        background: 'rgba(0,0,0,0.3)',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: '10.5px',
+                          color: 'var(--text-dim)',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
+                        SURFACE TEMP
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '16px',
+                          fontWeight: 700,
+                          color: '#38bdf8',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
                         {artifact.lastTelemetry.tempC} °C
                       </div>
-                      <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Deep Martian freeze</div>
+                      <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                        Deep Martian freeze
+                      </div>
                     </div>
                   )}
                 </div>
 
                 {artifact.lastTelemetry.finalQuoteOrSignal && (
-                  <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', fontSize: '12px', color: '#fca5a5' }}>
+                  <div
+                    style={{
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid rgba(239, 68, 68, 0.25)',
+                      fontSize: '12px',
+                      color: '#fca5a5',
+                    }}
+                  >
                     <strong>Last Signal:</strong> "{artifact.lastTelemetry.finalQuoteOrSignal}"
                   </div>
                 )}
@@ -705,7 +983,10 @@ export const DossierPage: React.FC<DossierPageProps> = ({
 
             {}
             {artifact.orbitalSpottedBy && (
-              <div className="cosmo-glass dossier-block" style={{ borderLeft: '3px solid #38bdf8' }}>
+              <div
+                className="cosmo-glass dossier-block"
+                style={{ borderLeft: '3px solid #38bdf8' }}
+              >
                 <h3 className="dossier-block-title">
                   <Eye size={18} style={{ color: '#38bdf8' }} />
                   <span>Orbital Reconnaissance Proof</span>
@@ -714,8 +995,16 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                   {artifact.orbitalSpottedBy}
                 </p>
                 {artifact.nasaPiaId && (
-                  <div style={{ marginTop: '8px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)' }}>
-                    NASA PIA ARCHIVE REF: <strong style={{ color: '#38bdf8' }}>{artifact.nasaPiaId}</strong>
+                  <div
+                    style={{
+                      marginTop: '8px',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      color: 'var(--text-dim)',
+                    }}
+                  >
+                    NASA PIA ARCHIVE REF:{' '}
+                    <strong style={{ color: '#38bdf8' }}>{artifact.nasaPiaId}</strong>
                   </div>
                 )}
               </div>
@@ -729,47 +1018,125 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>Landing Date:</span>
-                  <span style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{artifact.landingDate}</span>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '8px 0',
+                    borderBottom: '1px solid rgba(255,255,255,0.06)',
+                  }}
+                >
+                  <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>
+                    Landing Date:
+                  </span>
+                  <span style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>
+                    {artifact.landingDate}
+                  </span>
                 </div>
 
                 {artifact.lastContactDate && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>Last Contact:</span>
-                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{artifact.lastContactDate}</span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '8px 0',
+                      borderBottom: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>
+                      Last Contact:
+                    </span>
+                    <span
+                      style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px' }}
+                    >
+                      {artifact.lastContactDate}
+                    </span>
                   </div>
                 )}
 
                 {artifact.operationalDays !== undefined && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>Surface Lifetime:</span>
-                    <span style={{ color: themeColor, fontFamily: 'var(--font-mono)', fontSize: '13.5px', fontWeight: 700 }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '8px 0',
+                      borderBottom: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>
+                      Surface Lifetime:
+                    </span>
+                    <span
+                      style={{
+                        color: themeColor,
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '13.5px',
+                        fontWeight: 700,
+                      }}
+                    >
                       {artifact.operationalDays} days / sols
                     </span>
                   </div>
                 )}
 
                 {artifact.distanceTraveledKm !== undefined && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>Distance Traveled:</span>
-                    <span style={{ color: '#10b981', fontFamily: 'var(--font-mono)', fontSize: '13.5px', fontWeight: 700 }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '8px 0',
+                      borderBottom: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>
+                      Distance Traveled:
+                    </span>
+                    <span
+                      style={{
+                        color: '#10b981',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '13.5px',
+                        fontWeight: 700,
+                      }}
+                    >
                       {artifact.distanceTraveledKm} km
                     </span>
                   </div>
                 )}
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>Hardware Category:</span>
-                  <span style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px', textTransform: 'capitalize' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '8px 0',
+                    borderBottom: '1px solid rgba(255,255,255,0.06)',
+                  }}
+                >
+                  <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>
+                    Hardware Category:
+                  </span>
+                  <span
+                    style={{
+                      color: '#fff',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '13px',
+                      textTransform: 'capitalize',
+                    }}
+                  >
                     {artifact.type.replace('_', ' ')}
                   </span>
                 </div>
 
                 {artifact.powerSource && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0' }}>
-                    <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>Power Source:</span>
-                    <span style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>
+                  <div
+                    style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0' }}
+                  >
+                    <span style={{ color: 'var(--text-dim)', fontSize: '12.5px' }}>
+                      Power Source:
+                    </span>
+                    <span
+                      style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px' }}
+                    >
                       {artifact.powerSource}
                     </span>
                   </div>
@@ -820,8 +1187,9 @@ export const DossierPage: React.FC<DossierPageProps> = ({
           <div style={{ color: themeColor, fontWeight: 700, marginBottom: '4px' }}>
             NASA SPACE APPS CHALLENGE
           </div>
-          Data and planetary cartography provided by NASA Planetary Data System (PDS), NSSDCA Master Catalog, JPL Mission Archives, LROC, and MRO HiRISE.
-          Content adapted for school-age space enthusiasts and open science education.
+          Data and planetary cartography provided by NASA Planetary Data System (PDS), NSSDCA Master
+          Catalog, JPL Mission Archives, LROC, and MRO HiRISE. Content adapted for school-age space
+          enthusiasts and open science education.
         </div>
 
         {}
@@ -836,20 +1204,23 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               >
                 <X size={20} />
               </button>
-              <img
-                src={artifact.imageUrl}
-                alt={artifact.name}
-                className="dossier-lightbox-img"
-              />
+              <img src={artifact.imageUrl} alt={artifact.name} className="dossier-lightbox-img" />
               <div className="dossier-lightbox-caption">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontWeight: 700, fontSize: '15px', color: '#fff' }}>{artifact.name}</span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: themeColor }}>
+                <div
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                >
+                  <span style={{ fontWeight: 700, fontSize: '15px', color: '#fff' }}>
+                    {artifact.name}
+                  </span>
+                  <span
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: themeColor }}
+                  >
                     {artifact.agency}
                   </span>
                 </div>
                 <div style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                  Archival photograph captured on surface / orbital reconnaissance ({artifact.locationName})
+                  Archival photograph captured on surface / orbital reconnaissance (
+                  {artifact.locationName})
                 </div>
               </div>
             </div>
