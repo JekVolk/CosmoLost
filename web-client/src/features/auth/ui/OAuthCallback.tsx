@@ -32,8 +32,8 @@ export const OAuthCallback: React.FC = () => {
         if (errorParam) {
           setError(
             errorParam === 'access_denied'
-              ? 'Доступ через Google було скасовано користувачем.'
-              : `Помилка авторизації: ${errorParam}`,
+              ? 'Google sign-in was cancelled by the user.'
+              : `Authentication error: ${errorParam}`,
           );
           return;
         }
@@ -46,7 +46,7 @@ export const OAuthCallback: React.FC = () => {
 
         const token = data.access || data.token;
         if (!token) {
-          throw new Error('Токен авторизації не отримано від сервера.');
+          throw new Error('Authorization token was not received from server.');
         }
 
         setToken(token);
@@ -70,7 +70,7 @@ export const OAuthCallback: React.FC = () => {
       } catch (err) {
         if (!active) return;
         console.error('OAuth exchange error:', err);
-        setError('Не вдалося завершити авторизацію через Google. Спробуйте ще раз.');
+        setError('Failed to complete Google sign-in. Please try again or use Guest Cadet.');
       }
     }
 
@@ -102,13 +102,13 @@ export const OAuthCallback: React.FC = () => {
           textAlign="center"
         >
           <Heading size="md" color="red.400">
-            Помилка авторизації
+            Authentication Error
           </Heading>
           <Text color="gray.300" fontSize="sm">
             {error}
           </Text>
           <Button colorPalette="blue" onClick={() => navigate('/login', { replace: true })}>
-            Повернутися до входу
+            Back to Sign-In
           </Button>
         </VStack>
       </Box>
@@ -135,10 +135,10 @@ export const OAuthCallback: React.FC = () => {
       >
         <Spinner size="xl" color="blue.400" />
         <Heading size="md" color="white">
-          Завершення входу...
+          Completing sign-in...
         </Heading>
         <Text color="gray.400" fontSize="sm">
-          Підключення до сесії CosmoLost
+          Connecting to CosmoLost session
         </Text>
       </VStack>
     </Box>

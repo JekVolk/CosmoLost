@@ -159,114 +159,36 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
           </div>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: 'rgba(11, 17, 31, 0.85)',
-            border: '1px solid #1E293B',
-            borderRadius: '14px',
-            padding: '12px 24px',
-            marginBottom: '20px',
-            flexWrap: 'wrap',
-            gap: '16px',
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              LANDING DATE
-            </div>
-            <div
-              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
-            >
-              {artifact.landingDate}
-            </div>
+        <div className="dossier-metrics-bar">
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">LANDING DATE</div>
+            <div className="dossier-metric-val">{artifact.landingDate}</div>
           </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              PLANET
-            </div>
-            <div
-              style={{ fontSize: '12.5px', color: themeColor, fontWeight: 700, marginTop: '2px' }}
-            >
+          <div className="dossier-metric-divider" />
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">PLANET</div>
+            <div className="dossier-metric-val" style={{ color: themeColor }}>
               {planet.nameEn.toUpperCase()}
             </div>
           </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              LOCATION
-            </div>
-            <div
-              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
-            >
+          <div className="dossier-metric-divider" />
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">LOCATION</div>
+            <div className="dossier-metric-val" title={artifact.locationName}>
               {artifact.locationName}
             </div>
           </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              HARDWARE MASS
-            </div>
-            <div
-              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
-            >
-              {artifact.massKg
-                ? `${artifact.massKg.toLocaleString()} kg`
-                : 'Telemetry Not Available'}
+          <div className="dossier-metric-divider" />
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">HARDWARE MASS</div>
+            <div className="dossier-metric-val">
+              {artifact.massKg ? `${artifact.massKg.toLocaleString()} kg` : 'Telemetry Not Available'}
             </div>
           </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              COORDINATES
-            </div>
-            <div
-              style={{
-                fontSize: '12.5px',
-                color: '#38bdf8',
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 600,
-                marginTop: '2px',
-              }}
-            >
+          <div className="dossier-metric-divider" />
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">COORDINATES</div>
+            <div className="dossier-metric-val mono">
               {Math.abs(artifact.lat).toFixed(2)}°{artifact.lat >= 0 ? 'N' : 'S'},{' '}
               {Math.abs(artifact.lon).toFixed(2)}°{artifact.lon >= 0 ? 'E' : 'W'}
             </div>

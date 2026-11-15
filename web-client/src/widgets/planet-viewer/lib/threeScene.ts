@@ -919,13 +919,13 @@ export class PlanetScene {
       ? new THREE.Color(artifact.badgeColor)
       : (isMars ? new THREE.Color(0xf97316) : new THREE.Color(0x00F0FF));
 
-    // 1. High-intensity vertical quantum laser pillar shooting into orbit
-    const pillarHeight = 0.85;
-    const pillarGeo = new THREE.CylinderGeometry(0.009, 0.048, pillarHeight, 24, 1, true);
+    // 1. Sleek holographic quantum laser beacon pillar
+    const pillarHeight = 0.35;
+    const pillarGeo = new THREE.CylinderGeometry(0.003, 0.016, pillarHeight, 32, 1, true);
     const pillarMat = new THREE.MeshBasicMaterial({
       color: colorHex,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.38,
       blending: THREE.AdditiveBlending,
       side: THREE.DoubleSide,
       depthWrite: false,
@@ -934,42 +934,42 @@ export class PlanetScene {
     this.selectionPillar.position.y = pillarHeight / 2;
     this.selectionGroup.add(this.selectionPillar);
 
-    // Inner pure white laser needle
-    const laserGeo = new THREE.CylinderGeometry(0.0022, 0.0022, pillarHeight * 1.05, 8);
+    // Inner pure laser thread
+    const laserGeo = new THREE.CylinderGeometry(0.0009, 0.0009, pillarHeight * 1.02, 12);
     const laserMat = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       transparent: true,
-      opacity: 0.95,
+      opacity: 0.8,
       blending: THREE.AdditiveBlending,
     });
     this.selectionLaser = new THREE.Mesh(laserGeo, laserMat);
-    this.selectionLaser.position.y = (pillarHeight * 1.05) / 2;
+    this.selectionLaser.position.y = (pillarHeight * 1.02) / 2;
     this.selectionGroup.add(this.selectionLaser);
 
-    // 2. Three concentric pulsing radar rings on the planetary crust
+    // 2. Concentric silky radar sonar ripples expanding gently on planetary crust
     for (let i = 0; i < 3; i++) {
-      const ringGeo = new THREE.RingGeometry(0.022, 0.034, 36);
+      const ringGeo = new THREE.RingGeometry(0.016, 0.024, 48);
       const ringMat = new THREE.MeshBasicMaterial({
         color: colorHex,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.6,
         side: THREE.DoubleSide,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
       const ring = new THREE.Mesh(ringGeo, ringMat);
       ring.rotation.x = Math.PI / 2;
-      ring.position.y = 0.003 + i * 0.0012;
+      ring.position.y = 0.002 + i * 0.0008;
       this.selectionGroup.add(ring);
       this.selectionRings.push(ring);
     }
 
-    // 3. Holographic HUD targeting reticle brackets floating above the beacon
+    // 3. Floating holographic HUD targeting reticle with precision tech brackets
     const reticleGroup = new THREE.Group();
-    reticleGroup.position.y = 0.16;
+    reticleGroup.position.y = 0.10;
 
-    const bSize = 0.046;
-    const bLen = 0.018;
+    const bSize = 0.030;
+    const bLen = 0.010;
     const bracketPts = [
       new THREE.Vector3(-bSize, 0, -bSize), new THREE.Vector3(-bSize + bLen, 0, -bSize),
       new THREE.Vector3(-bSize, 0, -bSize), new THREE.Vector3(-bSize, 0, -bSize + bLen),
@@ -984,18 +984,18 @@ export class PlanetScene {
     const bMat = new THREE.LineBasicMaterial({
       color: 0xffffff,
       transparent: true,
-      opacity: 0.95,
+      opacity: 0.85,
       blending: THREE.AdditiveBlending,
     });
     reticleGroup.add(new THREE.LineSegments(bGeo, bMat));
 
     // Central diamond target glyph
-    const diamondGeo = new THREE.RingGeometry(0.014, 0.019, 4);
+    const diamondGeo = new THREE.RingGeometry(0.007, 0.010, 4);
     const diamondMat = new THREE.MeshBasicMaterial({
       color: colorHex,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.92,
+      opacity: 0.88,
       blending: THREE.AdditiveBlending,
     });
     const diamondMesh = new THREE.Mesh(diamondGeo, diamondMat);
@@ -1005,9 +1005,9 @@ export class PlanetScene {
     this.selectionGroup.add(reticleGroup);
     this.selectionReticle = reticleGroup;
 
-    // 4. PointLight illuminating the planetary surface
-    this.selectionLight = new THREE.PointLight(colorHex, 4.5, 1.4, 1.6);
-    this.selectionLight.position.y = 0.14;
+    // 4. Soft ambient planetary glow
+    this.selectionLight = new THREE.PointLight(colorHex, 2.0, 0.65, 2.0);
+    this.selectionLight.position.y = 0.06;
     this.selectionGroup.add(this.selectionLight);
 
     marker.markerGroup.add(this.selectionGroup);
@@ -1395,26 +1395,28 @@ export class PlanetScene {
     if (this.selectedArtifactId) {
       const animT = performance.now() * 0.003;
       if (this.selectionPillar) {
-        const pulse = 0.75 + Math.sin(animT * 4) * 0.25;
-        (this.selectionPillar.material as THREE.MeshBasicMaterial).opacity = 0.55 * pulse;
-        this.selectionPillar.scale.x = 1.0 + Math.sin(animT * 3.5) * 0.18;
-        this.selectionPillar.scale.z = 1.0 + Math.sin(animT * 3.5) * 0.18;
+        const pulse = 0.85 + Math.sin(animT * 2.2) * 0.15;
+        (this.selectionPillar.material as THREE.MeshBasicMaterial).opacity = 0.38 * pulse;
+        this.selectionPillar.scale.x = 1.0 + Math.sin(animT * 2.0) * 0.08;
+        this.selectionPillar.scale.z = 1.0 + Math.sin(animT * 2.0) * 0.08;
       }
       if (this.selectionLaser) {
-        const needlePulse = 0.85 + Math.sin(animT * 6) * 0.15;
+        const needlePulse = 0.8 + Math.sin(animT * 3.5) * 0.2;
         (this.selectionLaser.material as THREE.MeshBasicMaterial).opacity = needlePulse;
       }
       if (this.selectionReticle) {
-        this.selectionReticle.rotation.y += 0.025;
+        this.selectionReticle.rotation.y += 0.008;
+        this.selectionReticle.position.y = 0.10 + Math.sin(animT * 1.8) * 0.006;
       }
       this.selectionRings.forEach((ring, idx) => {
-        const ringPhase = (animT * 0.75 + idx * 0.33) % 1.0;
-        const ringScale = 0.8 + ringPhase * 4.5;
+        const ringPhase = (animT * 0.5 + idx * 0.33) % 1.0;
+        const ringScale = 0.9 + ringPhase * 1.8;
         ring.scale.set(ringScale, ringScale, 1);
-        (ring.material as THREE.MeshBasicMaterial).opacity = Math.max(0, (1.0 - ringPhase) * 0.85);
+        const fade = Math.pow(Math.max(0, 1.0 - ringPhase), 1.4) * 0.65;
+        (ring.material as THREE.MeshBasicMaterial).opacity = fade;
       });
       if (this.selectionLight) {
-        this.selectionLight.intensity = 3.5 + Math.sin(animT * 6) * 1.5;
+        this.selectionLight.intensity = 1.8 + Math.sin(animT * 2.0) * 0.4;
       }
     }
 

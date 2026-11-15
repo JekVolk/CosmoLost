@@ -574,6 +574,66 @@ body:has(.dossier-page),
   flex-shrink: 0;
 }
 
+.dossier-metrics-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(11, 17, 31, 0.85);
+  border: 1px solid #1E293B;
+  border-radius: 14px;
+  padding: 12px 24px;
+  margin-bottom: 20px;
+  gap: 16px;
+  min-width: 0;
+}
+
+.dossier-metric-cell {
+  flex: 1;
+  min-width: 0;
+}
+
+.dossier-metric-label {
+  font-size: 9.5px;
+  color: #64748B;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.dossier-metric-val {
+  font-size: 12.5px;
+  color: #FFFFFF;
+  font-weight: 600;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dossier-metric-val.mono {
+  color: #38bdf8;
+  font-family: var(--font-mono);
+}
+
+.dossier-metric-divider {
+  width: 1px;
+  height: 24px;
+  background: #1E293B;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .dossier-metrics-bar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 14px;
+  }
+  .dossier-metric-divider {
+    display: none;
+  }
+}
+
 .btn-back {
   display: inline-flex;
   align-items: center;
@@ -1503,9 +1563,10 @@ body:has(.dossier-page),
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid #1e293b;
   border-radius: 18px;
-  padding: 18px;
+  padding: 14px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  gap: 14px;
+  gap: 8px;
+  overflow: hidden;
 }
 
 .pen-filter-header {
@@ -1535,8 +1596,9 @@ body:has(.dossier-page),
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .pen-filter-toggle-btn {
@@ -1583,11 +1645,14 @@ body:has(.dossier-page),
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 8px;
+  max-height: 140px;
+  overflow-y: auto;
+  flex-shrink: 0;
   padding: 8px 10px;
   background: rgba(15, 23, 42, 0.5);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.06);
+  scrollbar-width: thin;
   animation: fadeIn 0.18s ease-out;
 }
 
@@ -1618,6 +1683,7 @@ body:has(.dossier-page),
 .pen-search-box {
   position: relative;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .pen-search-icon {
@@ -1727,8 +1793,9 @@ body:has(.dossier-page),
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 6px;
+  padding-top: 4px;
   border-top: 1px solid rgba(30, 41, 59, 0.6);
+  flex-shrink: 0;
 }
 
 .pen-registry-title {
@@ -1747,8 +1814,8 @@ body:has(.dossier-page),
 }
 
 .pen-artifact-scroll-list {
-  flex: 1 1 auto;
-  min-height: 220px;
+  flex: 1 1 0;
+  min-height: 80px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -1994,25 +2061,45 @@ body:has(.dossier-page),
 }
 
 .pen-mission-badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 5px;
   border: 1px solid;
   border-radius: 12px;
-  padding: 4px 12px;
-  font-size: 13px;
+  padding: 4px 10px;
+  font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pen-mission-badge span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pen-status-pill {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 5px;
   border: 1px solid;
   border-radius: 12px;
-  padding: 4px 12px;
-  font-size: 12.5px;
+  padding: 4px 10px;
+  font-size: 11.5px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pen-status-pill span:last-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pen-status-dot {
@@ -3174,6 +3261,17 @@ body:has(.dossier-page),
   letter-spacing: 0.8px;
   text-transform: uppercase;
   margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.pen-target-lock-badge span:last-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .pen-target-lock-dot {
@@ -3219,7 +3317,8 @@ body:has(.dossier-page),
     width: 300px;
   }
   .pen-artifact-scroll-list {
-    min-height: 250px;
+    flex: 1 1 0;
+    min-height: 80px;
   }
   .pen-right-detail-card {
     top: 64px;
@@ -3338,8 +3437,12 @@ body:has(.dossier-page),
     overflow: hidden;
   }
   .pen-artifact-scroll-list {
-    min-height: 260px;
-    max-height: calc(100vh - 180px);
+    flex: 1 1 0;
+    min-height: 80px;
+    max-height: none;
+  }
+  .pen-tip-card {
+    display: none !important;
   }
 
   /* Right Detail Card converts to modern Bottom Sheet */

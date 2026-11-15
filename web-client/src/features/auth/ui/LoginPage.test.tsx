@@ -32,7 +32,7 @@ describe('LoginPage', () => {
     expect(form?.getAttribute('method')).toBe('POST');
     expect(form?.getAttribute('action')).toBe('/auth/login/google-oauth2/');
 
-    const submitBtn = screen.getByRole('button', { name: /увійти через google/i });
+    const submitBtn = screen.getByRole('button', { name: /sign in with google/i });
     expect(submitBtn).toBeInTheDocument();
     expect(submitBtn.getAttribute('type')).toBe('submit');
   });

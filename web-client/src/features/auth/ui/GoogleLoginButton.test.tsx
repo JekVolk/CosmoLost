@@ -19,7 +19,7 @@ describe('GoogleLoginButton', () => {
     expect(form?.getAttribute('method')).toBe('POST');
     expect(form?.getAttribute('action')).toBe('/auth/login/google-oauth2/');
 
-    const button = screen.getByRole('button', { name: /увійти через google/i });
+    const button = screen.getByRole('button', { name: /sign in with google/i });
     expect(button).toBeInTheDocument();
     expect(button.getAttribute('type')).toBe('submit');
     expect(container.querySelector('input[name="csrfmiddlewaretoken"]')).toBeNull();

@@ -199,23 +199,25 @@ export const App: React.FC = () => {
   return (
     <AppProviders>
       <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-        <Header
-          currentPlanetId={currentPlanetId}
-          onSelectPlanet={(id) => {
-            setCurrentPlanetId(id);
-            setActiveArtifact(null);
-          }}
-          artifactCount={currentPlanet?.artifacts?.length || 0}
-          currentView={currentView}
-          onSelectView={(view) => {
-            setCurrentView(view);
-            if (view !== 'map') {
+        {currentView !== 'astro-guessr' && (
+          <Header
+            currentPlanetId={currentPlanetId}
+            onSelectPlanet={(id) => {
+              setCurrentPlanetId(id);
               setActiveArtifact(null);
-            }
-          }}
-          onOpenAbout={() => setIsAboutOpen(true)}
-          isLiveApi={apiOnline}
-        />
+            }}
+            artifactCount={currentPlanet?.artifacts?.length || 0}
+            currentView={currentView}
+            onSelectView={(view) => {
+              setCurrentView(view);
+              if (view !== 'map') {
+                setActiveArtifact(null);
+              }
+            }}
+            onOpenAbout={() => setIsAboutOpen(true)}
+            isLiveApi={apiOnline}
+          />
+        )}
 
         {currentView === 'map' && currentPlanet && (
           <>

@@ -147,7 +147,7 @@ export function apiArtifactSummaryToSpaceArtifact(
     lon: summary.coordinates.longitude,
     locationName: summary.coordinates.location_name,
     massKg: summary.mass_kg || match?.massKg || undefined,
-    landingDate: match?.landingDate || 'Historical',
+    landingDate: summary.landing_date || summary.launch_date || match?.landingDate || 'Historical',
     lastContactDate: match?.lastContactDate,
     operationalDays: match?.operationalDays,
     distanceTraveledKm: match?.distanceTraveledKm,

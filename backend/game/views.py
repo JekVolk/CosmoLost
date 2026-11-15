@@ -1,7 +1,9 @@
+import uuid
 from datetime import timedelta
-from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.conf import settings
+from django.contrib.auth import REDIRECT_FIELD_NAME, get_user_model
 from django.db import transaction
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
@@ -311,6 +313,37 @@ class GoogleAuthCallbackView(APIView):
         return self.get(request)
 
 
+class DemoLoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        callsign_input = (request.data.get('callsign') or '').strip()
+        if not callsign_input:
+            random_id = uuid.uuid4().hex[:4].upper()
+            callsign_input = f"Cadet-{random_id}"
+        
+        User = get_user_model()
+        username = f"cadet_{uuid.uuid4().hex[:10]}"
+        user = User.objects.create_user(
+            username=username,
+            first_name=callsign_input
+        )
+        profile, _ = UserGameProfile.objects.get_or_create(
+            user=user,
+            defaults={'callsign': callsign_input, 'elo_rating': 1000}
+        )
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'callsign': profile.callsign,
+            'user': {
+                'callsign': profile.callsign,
+                'elo_rating': profile.elo_rating,
+            }
+        })
+
+
 @never_cache
 @csrf_exempt
 @psa('social:complete')
@@ -319,5 +352,7 @@ def social_auth_begin(request, backend):
     Support both POST and GET for social login initiation without CSRF blocks.
     Allows standard HTML <form method="POST" action="/auth/login/<backend>/"> from frontend.
     """
+    if backend == 'google-oauth2' and not getattr(settings, 'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', ''):
+        return redirect('/login?error=google_not_configured')
     return do_auth(request.backend, redirect_name=REDIRECT_FIELD_NAME, user=request.user)
 
