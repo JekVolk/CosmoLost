@@ -43,7 +43,7 @@ interface SettingsImportExportCardProps {
   onExportWorkspace: () => void;
   onExportSettingsOnly: () => void;
   onApplyImport: () => void;
-  onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onFileUpload: (file: File) => void;
 }
 
 export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> = ({
@@ -163,7 +163,18 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
                 </Text>
               </VStack>
 
-              <HStack gap="2">
+              <HStack
+                gap="2"
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  event.dataTransfer.dropEffect = 'copy';
+                }}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  const file = event.dataTransfer.files?.[0];
+                  if (file) onFileUpload(file);
+                }}
+              >
                 <HStack
                   p="1"
                   bg="bg.canvas"
@@ -198,6 +209,7 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
                   variant="outline"
                   colorPalette="teal"
                   onClick={() => fileInputRef.current?.click()}
+                  title="Перетягніть JSON сюди або виберіть його у провіднику"
                 >
                   <FileUp size={14} />
                   {t('settings.uploadJson')}
@@ -207,7 +219,11 @@ export const SettingsImportExportCard: React.FC<SettingsImportExportCardProps> =
                   type="file"
                   accept=".json,application/json"
                   style={{ display: 'none' }}
-                  onChange={onFileUpload}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) onFileUpload(file);
+                    event.target.value = '';
+                  }}
                 />
               </HStack>
             </Flex>
