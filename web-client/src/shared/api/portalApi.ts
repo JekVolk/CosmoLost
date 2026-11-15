@@ -518,7 +518,16 @@ export const portalApi = {
       const res = await fetch(`${API_BASE_URL}/community-publications/?${q.toString()}`, { signal: AbortSignal.timeout(2500) });
       if (res.ok) {
         isLiveBackendConnected = true;
-        return await res.json();
+        const data = await res.json();
+        if (data && Array.isArray(data.results) && data.results.length > 0) {
+          // Merge local submissions if any exist
+          const localItems = getLocalCommunityPublications().filter((lp) => !data.results.some((r: any) => r.id === lp.id));
+          const merged = [...localItems, ...data.results];
+          return {
+            total: merged.length,
+            results: merged,
+          };
+        }
       }
     } catch {}
 

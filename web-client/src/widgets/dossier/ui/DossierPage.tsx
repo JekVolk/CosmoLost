@@ -4,7 +4,8 @@ import type { ArtifactDetail, TraverseWaypoint, ArtifactMedia } from '../../../s
 import type { SpaceArtifact, PlanetConfig } from '../../../entities/planet/model/types';
 import { PhotosphereViewer } from '../../../shared/ui/photosphere-viewer';
 import { CommunityPublicationsSection } from './CommunityPublicationsSection';
-import { Model3DViewer } from '../../../features/artifact-3d-viewer';
+import { ScientificTelemetryBlock } from './ScientificTelemetryBlock';
+import { Model3DViewer, resolveGlbModelUrl } from '../../../features/artifact-3d-viewer';
 import {
   ArrowLeft,
   MapPin,
@@ -84,7 +85,8 @@ export const DossierPage: React.FC<DossierPageProps> = ({
 
   const displayedMonologue = liveDetail?.first_person_monologue || artifact.firstPersonMonologue;
   const displayedCause = liveDetail?.cause_of_deactivation || artifact.whyAbandoned;
-  const model3dUrl = liveDetail?.model_3d_url;
+  const rawModel3dUrl = liveDetail?.model_3d_url || artifact.model3dUrl;
+  const effectiveModel3dUrl = resolveGlbModelUrl(artifact.id, rawModel3dUrl);
   const effectiveWaypoints = liveWaypoints.length > 0
     ? liveWaypoints.map((w) => ({
         solOrStep: w.sol_or_step,
@@ -233,11 +235,12 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                   </span>
                 )}
 
-                {model3dUrl && (
+                {effectiveModel3dUrl && (
                   <a
-                    href={model3dUrl}
+                    href={effectiveModel3dUrl}
                     target="_blank"
                     rel="noreferrer"
+                    title="Direct verified NASA 3D Resources GLB Asset"
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -398,7 +401,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
               {viewMode === '3d' ? (
                 <Model3DViewer
                   artifact={artifact}
-                  modelUrl={model3dUrl || artifact.model3dUrl}
+                  modelUrl={effectiveModel3dUrl}
                   themeColor={themeColor}
                 />
               ) : (
@@ -523,7 +526,14 @@ export const DossierPage: React.FC<DossierPageProps> = ({
           </div>
         )}
 
-        {}
+        {/* NASA Scientific Telemetry & Atmospheric Environment Block */}
+        <ScientificTelemetryBlock
+          planet={planet}
+          artifact={artifact}
+          themeColor={themeColor}
+        />
+
+        {/* Main Grid: 2-column detailed breakdown */}
         <div className="dossier-grid">
           {}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

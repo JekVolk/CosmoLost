@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { Model3DViewerProps } from '../types';
-import { NASA_3D_MODEL_CDN_MAP } from '../model/cdnModels';
+import { resolveGlbModelUrl } from '../model/cdnModels';
 import {
   RotateCcw,
   Play,
@@ -29,6 +29,7 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
   const [modelSource, setModelSource] = useState<string>('NASA 3D CDN GLB');
 
   const controlsRef = useRef<OrbitControls | null>(null);
+  const isAutoRotatingRef = useRef<boolean>(isAutoRotating);
   const modelGroupRef = useRef<THREE.Group | null>(null);
   const materialsRef = useRef<THREE.Material[]>([]);
 
@@ -58,7 +59,7 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
-    controls.autoRotate = isAutoRotating;
+    controls.autoRotate = isAutoRotatingRef.current;
     controls.autoRotateSpeed = 1.6;
     controls.minDistance = 1.0;
     controls.maxDistance = 8.0;
@@ -296,9 +297,7 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
 
     // Candidate NASA CDN model URL or fallback
     const candidateUrl =
-      modelUrl ||
-      artifact.model3dUrl ||
-      NASA_3D_MODEL_CDN_MAP[artifact.id] ||
+      resolveGlbModelUrl(artifact.id, modelUrl || artifact.model3dUrl) ||
       (artifact.model3dName
         ? `https://raw.githubusercontent.com/nasa/3d-models/main/${artifact.model3dName}.glb`
         : null);
@@ -390,7 +389,14 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
         container.removeChild(renderer.domElement);
       }
     };
-  }, [artifact.id, artifact.type, artifact.model3dUrl, artifact.model3dName, modelUrl, themeColor, isAutoRotating]);
+  }, [artifact.id, artifact.type, artifact.model3dUrl, artifact.model3dName, modelUrl, themeColor]);
+
+  useEffect(() => {
+    isAutoRotatingRef.current = isAutoRotating;
+    if (controlsRef.current) {
+      controlsRef.current.autoRotate = isAutoRotating;
+    }
+  }, [isAutoRotating]);
 
   const toggleAutoRotate = () => {
     setIsAutoRotating((prev) => {
