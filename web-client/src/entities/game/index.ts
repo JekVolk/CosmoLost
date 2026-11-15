@@ -1,2 +1,11 @@
-﻿export { useMatchStore } from './model/useMatchStore';
-export type { MatchPhase, RoundInfo } from './model/useMatchStore';
+export {
+  useMatchStore,
+  type MatchPhase,
+  type RoundData,
+  type MatchOpponent,
+  type MatchState,
+} from './model/useMatchStore';
+export {
+  useGameEvents,
+  type GameEventOptions,
+} from './model/useGameEvents';

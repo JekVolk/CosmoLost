@@ -1,1 +1,1 @@
-﻿export { ArenaPage } from './ui/ArenaPage';
+export { ArenaPage } from './ui/ArenaPage';

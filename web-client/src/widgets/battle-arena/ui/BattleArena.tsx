@@ -1,27 +1,54 @@
-﻿import React from 'react';
-import { Box, HStack, Text, VStack } from '@chakra-ui/react';
 import { useMatchStore } from '@/entities/game';
-import { AstroGuessrGame } from '@/features/astro-guessr';
-import { ForensicSolGame } from '@/features/forensic-sol';
-import { MissionHangarGame } from '@/features/mission-hangar';
+import { Box, Flex, VStack } from '@chakra-ui/react';
+import type React from 'react';
+import { MiniGameRenderer } from './MiniGameRenderer';
+import { OpponentProgress } from './OpponentProgress';
+import { RoundResultOverlay } from './RoundResultOverlay';
+import { ScoreHUD } from './ScoreHUD';
 
-export const BattleArena: React.FC = () => {
-  const { currentRound, timerSec, myScore, opponentScore, opponent } = useMatchStore();
+export interface BattleArenaProps {
+  onContinueRound?: () => void;
+}
+
+export const BattleArena: React.FC<BattleArenaProps> = ({ onContinueRound }) => {
+  const phase = useMatchStore((s) => s.phase);
+  const setPhase = useMatchStore((s) => s.setPhase);
+
+  const handleContinue = () => {
+    if (onContinueRound) {
+      onContinueRound();
+    } else {
+      setPhase('ROUND_ACTIVE');
+    }
+  };
 
   return (
-    <VStack gap={4} align="stretch">
-      <HStack justify="space-between" p={4} bg="#111622" borderRadius="md" border="1px solid #1F293D">
-        <Text fontWeight="bold">Ви: {myScore} pts</Text>
-        <Text color="cyan.400" fontSize="xl">⏱️ 00:{timerSec < 10 ? `0${timerSec}` : timerSec}</Text>
-        <Text fontWeight="bold">{opponent?.callsign || 'Суперник'}: {opponentScore} pts</Text>
-      </HStack>
+    <Flex
+      direction="column"
+      w="100%"
+      h="100%"
+      minH="calc(100vh - 64px)"
+      bg="#070A13"
+      position="relative"
+      overflow="hidden"
+    >
+      {/* Top HUD with Score and Countdown */}
+      <ScoreHUD />
 
-      <Box minH="350px">
-        {currentRound?.mini_game === 'astro_guessr' && <AstroGuessrGame payload={currentRound.payload} />}
-        {currentRound?.mini_game === 'forensic_sol' && <ForensicSolGame payload={currentRound.payload} />}
-        {currentRound?.mini_game === 'mission_hangar' && <MissionHangarGame payload={currentRound.payload} />}
-        {!currentRound && <Text textAlign="center" color="gray.500">Очікування початку раунду...</Text>}
+      {/* Opponent Progress indicator */}
+      <Box px={4} pt={2} pb={1}>
+        <OpponentProgress />
       </Box>
-    </VStack>
+
+      {/* Main Mini-Game Canvas / Active Zone */}
+      <Box flex="1" p={{ base: 2, md: 4 }} display="flex" flexDirection="column">
+        <VStack flex="1" w="100%" maxW="1200px" mx="auto" align="stretch">
+          <MiniGameRenderer />
+        </VStack>
+      </Box>
+
+      {/* Round Result Overlay */}
+      {phase === 'ROUND_RESULT' && <RoundResultOverlay onContinue={handleContinue} />}
+    </Flex>
   );
 };

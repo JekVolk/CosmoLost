@@ -1,3 +1,11 @@
-﻿export { useAuthStore } from './model/useAuthStore';
-export type { UserProfile } from './model/useAuthStore';
-export { userRepository } from './api/user-repository';
+export {
+  useAuthStore,
+  type AuthState,
+  type AuthUser,
+} from './model/useAuthStore';
+export {
+  userRepository,
+  type UserProfile,
+  type PublicGameProfile,
+  type ShowcaseItem,
+} from './api/user-repository';

@@ -1,19 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { Box, Layers, Maximize2, Minimize2, Pause, Play, RefreshCw, RotateCcw } from 'lucide-react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { Model3DViewerProps } from '../types';
 import { resolveGlbModelUrl } from '../model/cdnModels';
-import {
-  RotateCcw,
-  Play,
-  Pause,
-  Maximize2,
-  Minimize2,
-  Box,
-  Layers,
-  RefreshCw,
-} from 'lucide-react';
+import type { Model3DViewerProps } from '../types';
 
 export const Model3DViewer: React.FC<Model3DViewerProps> = ({
   artifact,
@@ -356,8 +348,9 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
         },
         () => {
           setLoading(false);
-          setModelLoadError('NASA GLB model could not be loaded. Check the source URL or try again.');
-        }
+          setModelLoadError('NASA GLB model could not be loaded. Displaying procedural model.');
+          buildProceduralModel(artifact.type);
+        },
       );
     } else {
       buildProceduralModel(artifact.type);

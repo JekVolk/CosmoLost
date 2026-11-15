@@ -1,4 +1,15 @@
-﻿export { useContainerStore } from './model/useContainerStore';
-export type { ContainerSlot } from './model/useContainerStore';
-export { containerRepository } from './api/container-repository';
-export { ContainerSlotView } from './ui/ContainerSlotView';
+export {
+  useContainerStore,
+  type ContainerState,
+} from './model/useContainerStore';
+export {
+  containerRepository,
+  type ContainerSlot as ContainerSlotData,
+  type ContainerSlotsResponse,
+  type DailyClaimState,
+  type MatchCreateResponse,
+} from './api/container-repository';
+export {
+  ContainerSlot,
+  type ContainerSlotProps,
+} from './ui/ContainerSlot';

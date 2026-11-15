@@ -10,28 +10,38 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome lint src",
     "format": "biome format --write src",
-    "check": "biome check --write src"
+    "check": "biome check --write src",
+    "test": "vitest run"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.38.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.14.0",
     "@tanstack/react-query": "^5.66.0",
-    "lucide-react": "^0.475.0",
+    "@types/three": "^0.187.0",
+    "framer-motion": "^12.4.7",
+    "lucide-react": "^1.73.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
-    "three": "^0.173.0",
+    "recharts": "^2.15.1",
+    "three": "^0.187.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "@types/three": "^0.173.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.0.0",
     "typescript": "^5.7.3",
     "vite": "^6.1.0",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.5"
   }
 }

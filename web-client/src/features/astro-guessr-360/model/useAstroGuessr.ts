@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { portalApi, apiArtifactSummaryToSpaceArtifact } from '../../../shared/api/portalApi';
-import { haversineDistance, calculateAstroGuessrScore } from '../../../shared/lib/coordinates';
-import type { AstroGuessrRound, GuessResult, GamePhase } from './types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { apiArtifactSummaryToSpaceArtifact, portalApi } from '../../../shared/api/portalApi';
+import { calculateAstroGuessrScore, haversineDistance } from '../../../shared/lib/coordinates';
+import type { AstroGuessrRound, GamePhase, GuessResult } from './types';
 
 export const STATIC_ROUNDS: AstroGuessrRound[] = [
   {
@@ -22,9 +22,14 @@ export const STATIC_ROUNDS: AstroGuessrRound[] = [
       locationName: 'Perseverance Valley, Endeavour Crater',
       landingDate: '2004-01-25',
       brief: 'Longest-operating Mars rover, traveled 45.16 km across Meridiani Planum.',
-      description: 'Opportunity explored Meridiani Planum, finding hematite spherules and ancient aqueous signs.',
+      description:
+        'Opportunity explored Meridiani Planum, finding hematite spherules and ancient aqueous signs.',
       whyAbandoned: 'Global 2018 dust storm obscured solar panels.',
-      keyFacts: ['Traveled 45.16 km', 'Operating for 14 years, 138 days', 'Discovered Martian blueberries'],
+      keyFacts: [
+        'Traveled 45.16 km',
+        'Operating for 14 years, 138 days',
+        'Discovered Martian blueberries',
+      ],
       imageUrl: 'https://images-assets.nasa.gov/image/PIA20285/PIA20285~small.jpg',
       badgeColor: '#f97316',
     },
@@ -56,9 +61,14 @@ export const STATIC_ROUNDS: AstroGuessrRound[] = [
       locationName: 'Troy, West of Home Plate, Gusev Crater',
       landingDate: '2004-01-04',
       brief: 'Twin sister to Opportunity, conquered Husband Hill before resting at Troy.',
-      description: 'Spirit discovered pure hydrothermal silica deposits in Gusev Crater before becoming stuck in soft soil.',
+      description:
+        'Spirit discovered pure hydrothermal silica deposits in Gusev Crater before becoming stuck in soft soil.',
       whyAbandoned: 'Stuck in soft soil; winter sun angle did not suffice for battery recharge.',
-      keyFacts: ['Traveled 7.73 km in Gusev Crater', 'Discovered hydrothermal silica deposits', 'First rover to climb a martian hill'],
+      keyFacts: [
+        'Traveled 7.73 km in Gusev Crater',
+        'Discovered hydrothermal silica deposits',
+        'First rover to climb a martian hill',
+      ],
       imageUrl: 'https://images-assets.nasa.gov/image/PIA07075/PIA07075~small.jpg',
       badgeColor: '#f97316',
     },
@@ -92,7 +102,11 @@ export const STATIC_ROUNDS: AstroGuessrRound[] = [
       brief: 'The first human landing site on an extraterrestrial body.',
       description: 'Neil Armstrong and Buzz Aldrin spent 21.5 hours on the lunar surface.',
       whyAbandoned: 'Descent stage served as the launch platform for ascent module liftoff.',
-      keyFacts: ['First human landing site', 'Statio Tranquillitatis', 'Left golden olive branch and plaque'],
+      keyFacts: [
+        'First human landing site',
+        'Statio Tranquillitatis',
+        'Left golden olive branch and plaque',
+      ],
       imageUrl: 'https://images-assets.nasa.gov/image/KSC-as11-40-5964/KSC-as11-40-5964~medium.jpg',
       badgeColor: '#38bdf8',
     },
@@ -132,7 +146,9 @@ export function useAstroGuessr() {
 
         for (const item of all) {
           const media = await portalApi.getArtifactMedia(item.id);
-          const pan = media.find((m) => m.media_category === 'PANORAMA' || m.caption?.includes('360'));
+          const pan = media.find(
+            (m) => m.media_category === 'PANORAMA' || m.caption?.includes('360'),
+          );
           if (pan && !STATIC_ROUNDS.some((r) => r.artifact.id === item.id)) {
             const planetId: 'mars' | 'moon' = item.celestial_body === 'moon' ? 'moon' : 'mars';
             const mappedArtifact = apiArtifactSummaryToSpaceArtifact(item, planetId);
@@ -171,11 +187,14 @@ export function useAstroGuessr() {
   }, [roundScores]);
 
   // Handle pin placement on map
-  const handleSetPin = useCallback((coords: { lat: number; lon: number }) => {
-    if (phase === 'revealed' || phase === 'gameover') return;
-    setPlayerPin(coords);
-    setPhase('guessing');
-  }, [phase]);
+  const handleSetPin = useCallback(
+    (coords: { lat: number; lon: number }) => {
+      if (phase === 'revealed' || phase === 'gameover') return;
+      setPlayerPin(coords);
+      setPhase('guessing');
+    },
+    [phase],
+  );
 
   // Confirm guess and evaluate score using Haversine formula
   const handleConfirmGuess = useCallback(() => {
@@ -187,7 +206,7 @@ export function useAstroGuessr() {
       playerPin.lon,
       currentRound.trueCoordinates.lat,
       currentRound.trueCoordinates.lon,
-      radiusKm
+      radiusKm,
     );
 
     const score = calculateAstroGuessrScore(distanceKm);

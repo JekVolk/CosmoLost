@@ -1,4 +1,4 @@
-﻿import { create } from 'zustand';
+import { create } from 'zustand';
 
 export type MatchPhase =
   | 'IDLE'
@@ -8,57 +8,68 @@ export type MatchPhase =
   | 'ROUND_RESULT'
   | 'MATCH_END';
 
-export interface RoundInfo {
-  round_num: number;
-  mini_game: string;
-  artifact_id: number;
-  artifact_name: string;
+export interface RoundData {
+  round_index: number;
+  round_type: string;
   time_limit_sec: number;
   payload: Record<string, unknown>;
 }
 
-interface MatchState {
+export interface MatchOpponent {
+  callsign: string;
+  elo: number;
+  is_bot: boolean;
+}
+
+export interface MatchState {
   phase: MatchPhase;
-  matchId: string | null;
-  opponent: { callsign: string; elo: number; is_bot: boolean } | null;
-  myScore: number;
-  opponentScore: number;
-  currentRound: RoundInfo | null;
-  timerSec: number;
-  chestEarned: boolean;
-  setPhase: (phase: MatchPhase) => void;
-  setMatchData: (matchId: string, opponent: MatchState['opponent']) => void;
-  setRound: (round: RoundInfo, timer: number) => void;
+  match_id: string | null;
+  opponent: MatchOpponent | null;
+  my_score: number;
+  opponent_score: number;
+  current_round: RoundData | null;
+  round_timer_sec: number;
+  chest_earned: boolean;
+
+  setPhase: (p: MatchPhase) => void;
+  setMatchData: (match_id: string, opponent: MatchOpponent | null) => void;
+  setRound: (round: RoundData, timer: number) => void;
   tickTimer: () => void;
-  updateScores: (myScore: number, oppScore: number) => void;
-  endMatch: (chestEarned: boolean) => void;
+  updateScores: (my: number, opp: number) => void;
+  endMatch: (chest_earned: boolean) => void;
   reset: () => void;
 }
 
 export const useMatchStore = create<MatchState>((set) => ({
   phase: 'IDLE',
-  matchId: null,
+  match_id: null,
   opponent: null,
-  myScore: 0,
-  opponentScore: 0,
-  currentRound: null,
-  timerSec: 0,
-  chestEarned: false,
+  my_score: 0,
+  opponent_score: 0,
+  current_round: null,
+  round_timer_sec: 0,
+  chest_earned: false,
+
   setPhase: (phase) => set({ phase }),
-  setMatchData: (matchId, opponent) => set({ matchId, opponent, phase: 'IN_MATCH' }),
-  setRound: (round, timer) => set({ currentRound: round, timerSec: timer, phase: 'ROUND_ACTIVE' }),
-  tickTimer: () => set((s) => ({ timerSec: Math.max(0, s.timerSec - 1) })),
-  updateScores: (myScore, opponentScore) => set({ myScore, opponentScore }),
-  endMatch: (chestEarned) => set({ phase: 'MATCH_END', chestEarned }),
+  setMatchData: (match_id, opponent) => set({ match_id, opponent }),
+  setRound: (round, timer) =>
+    set({
+      current_round: round,
+      round_timer_sec: timer,
+      phase: 'ROUND_ACTIVE',
+    }),
+  tickTimer: () => set((s) => ({ round_timer_sec: Math.max(0, s.round_timer_sec - 1) })),
+  updateScores: (my_score, opponent_score) => set({ my_score, opponent_score }),
+  endMatch: (chest_earned) => set({ phase: 'MATCH_END', chest_earned }),
   reset: () =>
     set({
       phase: 'IDLE',
-      matchId: null,
+      match_id: null,
       opponent: null,
-      myScore: 0,
-      opponentScore: 0,
-      currentRound: null,
-      timerSec: 0,
-      chestEarned: false,
+      my_score: 0,
+      opponent_score: 0,
+      current_round: null,
+      round_timer_sec: 0,
+      chest_earned: false,
     }),
 }));
