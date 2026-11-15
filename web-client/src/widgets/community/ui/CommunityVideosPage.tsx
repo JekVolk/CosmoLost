@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { SpaceArtifact, PlanetId } from '../../../entities/planet/model/types';
+import type { SpaceArtifact, PlanetId, PlanetConfig } from '../../../entities/planet/model/types';
 import { PLANETS } from '../../../entities/planet/model/planetData';
 import { portalApi } from '../../../shared/api/portalApi';
 import type { CommunityPublication, PlatformType } from '../../../shared/api/types';
@@ -7,9 +7,10 @@ import { Sparkles, Plus, Play, ExternalLink, ShieldCheck, Heart, Eye, CheckCircl
 
 interface CommunityVideosPageProps {
   onOpenArtifact: (artifact: SpaceArtifact, planetId: PlanetId) => void;
+  planets?: Record<PlanetId, PlanetConfig>;
 }
 
-export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpenArtifact }) => {
+export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpenArtifact, planets }) => {
   const [publications, setPublications] = useState<CommunityPublication[]>([]);
   const [filterPlanet, setFilterPlanet] = useState<'all' | 'moon' | 'mars'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,8 +43,8 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({ onOpen
   }, []);
 
   const allArtifacts = [
-    ...PLANETS.moon.artifacts.map((a) => ({ ...a, planet: 'moon' as PlanetId })),
-    ...PLANETS.mars.artifacts.map((a) => ({ ...a, planet: 'mars' as PlanetId })),
+    ...((planets?.moon?.artifacts || PLANETS.moon.artifacts) || []).map((a: SpaceArtifact) => ({ ...a, planet: 'moon' as PlanetId })),
+    ...((planets?.mars?.artifacts || PLANETS.mars.artifacts) || []).map((a: SpaceArtifact) => ({ ...a, planet: 'mars' as PlanetId })),
   ];
 
   const filteredPubs = publications.filter((pub) => {

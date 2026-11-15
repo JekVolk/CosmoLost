@@ -1,14 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import type { SpaceArtifact, PlanetId } from '../../../entities/planet/model/types';
+import type { SpaceArtifact, PlanetId, PlanetConfig } from '../../../entities/planet/model/types';
 import { PLANETS } from '../../../entities/planet/model/planetData';
 import { Search, X, Sparkles, Filter, ExternalLink, Calendar, MapPin, Rocket, RotateCcw } from 'lucide-react';
 
 interface CatalogPageProps {
   onOpenDossier: (artifact: SpaceArtifact, planetId: PlanetId) => void;
   onBackToMap: () => void;
+  planets?: Record<PlanetId, PlanetConfig>;
 }
 
-export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier }) => {
+export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets = PLANETS }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlanet, setSelectedPlanet] = useState<'all' | 'moon' | 'mars'>('all');
   const [selectedType, setSelectedType] = useState<string>('all');
@@ -16,14 +17,14 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier }) => {
 
   const allArtifactsWithPlanet = useMemo(() => {
     const list: { artifact: SpaceArtifact; planetId: PlanetId }[] = [];
-    PLANETS.moon.artifacts.forEach((art) => list.push({ artifact: art, planetId: 'moon' }));
-    PLANETS.mars.artifacts.forEach((art) => list.push({ artifact: art, planetId: 'mars' }));
+    (planets.moon?.artifacts || []).forEach((art) => list.push({ artifact: art, planetId: 'moon' }));
+    (planets.mars?.artifacts || []).forEach((art) => list.push({ artifact: art, planetId: 'mars' }));
     return list;
-  }, []);
+  }, [planets]);
 
   const totalCount = allArtifactsWithPlanet.length;
-  const moonCount = PLANETS.moon.artifacts.length;
-  const marsCount = PLANETS.mars.artifacts.length;
+  const moonCount = planets.moon?.artifacts?.length || 0;
+  const marsCount = planets.mars?.artifacts?.length || 0;
 
   const filtered = useMemo(() => {
     return allArtifactsWithPlanet.filter(({ artifact, planetId }) => {

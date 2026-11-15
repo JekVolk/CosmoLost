@@ -131,7 +131,7 @@
             "in": "query",
             "schema": {
               "type": "number",
-              "default": 500
+              "default": 500.0
             }
           },
           {
@@ -578,7 +578,7 @@
           },
           "elevation_m": {
             "type": "number",
-            "example": -1420
+            "example": -1420.0
           },
           "coordinate_system": {
             "$ref": "#/components/schemas/CoordinateSystemType"
@@ -662,7 +662,7 @@
           "mass_kg": {
             "type": "number",
             "nullable": true,
-            "example": 185
+            "example": 185.0
           },
           "is_featured": {
             "type": "boolean",
@@ -733,7 +733,7 @@
           "mass_kg": {
             "type": "number",
             "nullable": true,
-            "example": 185
+            "example": 185.0
           },
           "last_contact_sol": {
             "type": "integer",
@@ -1147,4 +1147,3 @@
     }
   ]
 }
-

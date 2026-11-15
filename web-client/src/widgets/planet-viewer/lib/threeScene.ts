@@ -266,7 +266,23 @@ export class PlanetScene {
   }
 
   public setPlanet(planet: PlanetConfig) {
-    if (this.currentPlanet.id === planet.id) return;
+    if (this.currentPlanet.id === planet.id) {
+      this.currentPlanet = planet;
+      while (this.markersGroup.children.length > 0) {
+        const child = this.markersGroup.children[0];
+        this.markersGroup.remove(child);
+      }
+      this.markerMeshes = [];
+
+      while (this.traverseGroup.children.length > 0) {
+        const child = this.traverseGroup.children[0];
+        this.traverseGroup.remove(child);
+      }
+
+      this.buildArtifactMarkers(planet);
+      this.buildTraversePaths(planet);
+      return;
+    }
     this.loadPlanet(planet);
   }
 

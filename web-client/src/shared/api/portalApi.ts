@@ -15,9 +15,9 @@ import type {
 } from './types';
 import { MOON_ARTIFACTS } from '../../entities/planet/model/artifactsMoon';
 import { MARS_ARTIFACTS } from '../../entities/planet/model/artifactsMars';
-import type { SpaceArtifact } from '../../entities/planet/model/types';
+import type { SpaceArtifact, PlanetId, ArtifactType, ArtifactStatus } from '../../entities/planet/model/types';
 
-const API_BASE_URL =
+export const API_BASE_URL =
   (import.meta as any).env?.VITE_API_URL ||
   (typeof window !== 'undefined'
     ? (window.location.port === '5173' || window.location.port === '3000'
@@ -26,6 +26,8 @@ const API_BASE_URL =
     : 'https://cosmolost.lihtar.org/api/v1/portal');
 
 const COMMUNITY_STORAGE_KEY = 'cosmolost_community_publications_v1';
+
+let isLiveBackendConnected = false;
 
 function getLocalCommunityPublications(): CommunityPublication[] {
   if (typeof window === 'undefined') return [];
@@ -71,6 +73,103 @@ function getLocalCommunityPublications(): CommunityPublication[] {
       created_at: '2026-11-05T18:40:00Z',
     },
   ];
+}
+
+export function apiArtifactSummaryToSpaceArtifact(summary: ArtifactSummary, bodyId: PlanetId): SpaceArtifact {
+  const localList = bodyId === 'mars' ? MARS_ARTIFACTS : MOON_ARTIFACTS;
+  const match = localList.find((a) => a.id === summary.id || a.name.toLowerCase() === summary.name.toLowerCase());
+
+  let mappedType: ArtifactType = 'lander';
+  switch (summary.artifact_type) {
+    case 'ROVER': mappedType = 'rover'; break;
+    case 'HELICOPTER': mappedType = 'helicopter'; break;
+    case 'LANDER': mappedType = 'lander'; break;
+    case 'DESCENT_STAGE': mappedType = 'descent_stage'; break;
+    case 'IMPACT_STAGE': mappedType = 'impact_stage'; break;
+    case 'INSTRUMENT': mappedType = 'instrument'; break;
+    case 'RETRO_REFLECTOR': mappedType = 'retro_reflector'; break;
+    case 'SAMPLE_TUBE': mappedType = 'sample_depot'; break;
+    case 'ENTRY_DEBRIS': mappedType = 'entry_debris'; break;
+    default: mappedType = 'lander';
+  }
+
+  let mappedStatus: ArtifactStatus = 'silent';
+  switch (summary.operational_status) {
+    case 'ACTIVE_TRANSMITTING': mappedStatus = 'operational'; break;
+    case 'PASSIVE_ACTIVE': mappedStatus = 'historic'; break;
+    case 'DESTROYED_ON_IMPACT': mappedStatus = 'crashed'; break;
+    case 'DORMANT': mappedStatus = 'silent'; break;
+  }
+
+  return {
+    id: summary.id,
+    name: summary.name,
+    mission: summary.mission_name,
+    agency: summary.is_nasa_hardware ? 'NASA' : (match?.agency || 'International'),
+    country: summary.is_nasa_hardware ? 'USA' : (match?.country || 'International'),
+    type: mappedType,
+    status: mappedStatus,
+    operationalStatus: summary.operational_status as any,
+    statusLabel: summary.operational_status.replace(/_/g, ' '),
+    lat: summary.coordinates.latitude,
+    lon: summary.coordinates.longitude,
+    locationName: summary.coordinates.location_name,
+    massKg: summary.mass_kg || match?.massKg || undefined,
+    landingDate: match?.landingDate || 'Historical',
+    lastContactDate: match?.lastContactDate,
+    operationalDays: match?.operationalDays,
+    distanceTraveledKm: match?.distanceTraveledKm,
+    brief: match?.brief || summary.mission_name,
+    description: match?.description || `${summary.name} located at ${summary.coordinates.location_name}.`,
+    whyAbandoned: match?.whyAbandoned || 'Mission operations completed.',
+    firstPersonMonologue: match?.firstPersonMonologue,
+    howItWorked: match?.howItWorked,
+    scienceLegacy: match?.scienceLegacy,
+    orbitalSpottedBy: match?.orbitalSpottedBy,
+    keyInstruments: match?.keyInstruments,
+    lastTelemetry: match?.lastTelemetry,
+    traversePath: match?.traversePath,
+    keyFacts: match?.keyFacts || [
+      `Target body: ${bodyId.toUpperCase()}`,
+      `Coordinate system: ${summary.coordinates.coordinate_system}`,
+      `Site: ${summary.coordinates.location_name}`,
+      summary.is_nasa_hardware ? 'NASA Deep Space Exploration Program' : 'International Space Mission',
+    ],
+    imageUrl: summary.preview_image_url || match?.imageUrl,
+    badgeColor: match?.badgeColor || (bodyId === 'mars' ? '#f97316' : '#38bdf8'),
+  };
+}
+
+export function apiArtifactDetailToSpaceArtifact(detail: ArtifactDetail, bodyId: PlanetId): SpaceArtifact {
+  const localList = bodyId === 'mars' ? MARS_ARTIFACTS : MOON_ARTIFACTS;
+  const match = localList.find((a) => a.id === detail.id || a.name.toLowerCase() === detail.name.toLowerCase());
+
+  const summaryArt = apiArtifactSummaryToSpaceArtifact(
+    {
+      ...detail,
+      mission_name: detail.mission.name,
+      cluster_info: { is_clustered: false, cluster_count: 1 },
+      preview_image_url: detail.media?.[0]?.media_url || match?.imageUrl || '',
+      cosmolost_url: `https://cosmolost.lihtar.org/?artifact=${detail.id}&planet=${bodyId}`,
+    },
+    bodyId
+  );
+
+  return {
+    ...summaryArt,
+    firstPersonMonologue: detail.first_person_monologue || match?.firstPersonMonologue,
+    whyAbandoned: detail.cause_of_deactivation || match?.whyAbandoned || 'Mission finished.',
+    imageUrl: detail.media?.[0]?.media_url || match?.imageUrl,
+    keyInstruments:
+      detail.discoveries && detail.discoveries.length > 0
+        ? detail.discoveries.map((d) => ({
+            acronym: d.instrument_acronym,
+            fullName: d.instrument_full_name,
+            purpose: d.title,
+            discovery: d.scientific_fact,
+          }))
+        : match?.keyInstruments,
+  };
 }
 
 function mapLocalArtifactToSummary(art: SpaceArtifact, bodyId: string): ArtifactSummary {
@@ -167,11 +266,32 @@ function mapLocalArtifactToDetail(art: SpaceArtifact, bodyId: string): ArtifactD
 export const portalApi = {
   baseUrl: API_BASE_URL,
 
+  getConnectionStatus(): { isLive: boolean; url: string } {
+    return { isLive: isLiveBackendConnected, url: API_BASE_URL };
+  },
+
+  async checkHealth(): Promise<boolean> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/celestial-bodies/`, { signal: AbortSignal.timeout(2000) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return true;
+      }
+    } catch {}
+    isLiveBackendConnected = false;
+    return false;
+  },
+
   async getCelestialBodies(): Promise<CelestialBody[]> {
     try {
-      const res = await fetch(`${API_BASE_URL}/celestial-bodies/`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return await res.json();
+      const res = await fetch(`${API_BASE_URL}/celestial-bodies/`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
     } catch {}
+
     return [
       {
         id: 'mars',
@@ -193,43 +313,77 @@ export const portalApi = {
   },
 
   async getCelestialBodyDetail(id: string): Promise<CelestialBody | null> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/celestial-bodies/${id}/`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return await res.json();
+      }
+    } catch {}
+
     const list = await this.getCelestialBodies();
     return list.find((b) => b.id === id) || null;
   },
 
-  async listArtifacts(params?: { body?: string; search?: string; type?: string; limit?: number; offset?: number }): Promise<ArtifactListResponse> {
+  async listArtifacts(params?: {
+    body?: string;
+    search?: string;
+    type?: string;
+    status?: string;
+    is_featured?: boolean;
+    is_nasa_hardware?: boolean;
+    limit?: number;
+    offset?: number;
+  }): Promise<ArtifactListResponse> {
     const body = params?.body || 'mars';
     try {
       const q = new URLSearchParams();
       if (params?.body) q.set('body', params.body);
       if (params?.search) q.set('search', params.search);
       if (params?.type) q.set('type', params.type);
+      if (params?.status) q.set('status', params.status);
+      if (params?.is_featured !== undefined) q.set('is_featured', String(params.is_featured));
+      if (params?.is_nasa_hardware !== undefined) q.set('is_nasa_hardware', String(params.is_nasa_hardware));
       if (params?.limit) q.set('limit', String(params.limit));
       if (params?.offset) q.set('offset', String(params.offset));
 
-      const res = await fetch(`${API_BASE_URL}/artifacts/?${q.toString()}`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return await res.json();
+      const res = await fetch(`${API_BASE_URL}/artifacts/?${q.toString()}`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        const json = await res.json();
+        if (json && Array.isArray(json.results) && json.results.length > 0) {
+          return json;
+        }
+      }
     } catch {}
 
     const source = body === 'moon' ? MOON_ARTIFACTS : MARS_ARTIFACTS;
     let filtered = source;
     if (params?.search) {
       const term = params.search.toLowerCase();
-      filtered = filtered.filter((a) => a.name.toLowerCase().includes(term) || a.mission.toLowerCase().includes(term));
+      filtered = filtered.filter(
+        (a) =>
+          a.name.toLowerCase().includes(term) ||
+          a.mission.toLowerCase().includes(term) ||
+          a.locationName.toLowerCase().includes(term)
+      );
     }
     const results = filtered.map((a) => mapLocalArtifactToSummary(a, body));
     return {
       total: results.length,
-      limit: params?.limit || 50,
+      limit: params?.limit || 100,
       offset: params?.offset || 0,
-      results: results.slice(params?.offset || 0, (params?.offset || 0) + (params?.limit || 50)),
+      results: results.slice(params?.offset || 0, (params?.offset || 0) + (params?.limit || 100)),
     };
   },
 
   async getArtifactDetail(id: string): Promise<ArtifactDetail | null> {
     try {
-      const res = await fetch(`${API_BASE_URL}/artifacts/${id}/`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return await res.json();
+      const res = await fetch(`${API_BASE_URL}/artifacts/${id}/`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return await res.json();
+      }
     } catch {}
 
     const foundMars = MARS_ARTIFACTS.find((a) => a.id === id);
@@ -243,8 +397,11 @@ export const portalApi = {
 
   async getArtifactWaypoints(id: string): Promise<TraverseWaypoint[]> {
     try {
-      const res = await fetch(`${API_BASE_URL}/artifacts/${id}/waypoints/`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return await res.json();
+      const res = await fetch(`${API_BASE_URL}/artifacts/${id}/waypoints/`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return await res.json();
+      }
     } catch {}
 
     const art = MARS_ARTIFACTS.find((a) => a.id === id) || MOON_ARTIFACTS.find((a) => a.id === id);
@@ -264,8 +421,11 @@ export const portalApi = {
 
   async getArtifactDiscoveries(id: string): Promise<ScientificDiscovery[]> {
     try {
-      const res = await fetch(`${API_BASE_URL}/artifacts/${id}/discoveries/`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return await res.json();
+      const res = await fetch(`${API_BASE_URL}/artifacts/${id}/discoveries/`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return await res.json();
+      }
     } catch {}
 
     const detail = await this.getArtifactDetail(id);
@@ -274,8 +434,11 @@ export const portalApi = {
 
   async getArtifactMedia(id: string): Promise<ArtifactMedia[]> {
     try {
-      const res = await fetch(`${API_BASE_URL}/artifacts/${id}/media/`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return await res.json();
+      const res = await fetch(`${API_BASE_URL}/artifacts/${id}/media/`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return await res.json();
+      }
     } catch {}
 
     const detail = await this.getArtifactDetail(id);
@@ -284,8 +447,11 @@ export const portalApi = {
 
   async listMissions(): Promise<MissionListResponse> {
     try {
-      const res = await fetch(`${API_BASE_URL}/missions/`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return await res.json();
+      const res = await fetch(`${API_BASE_URL}/missions/`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return await res.json();
+      }
     } catch {}
 
     const missionMap = new Map<string, MissionDetail>();
@@ -314,8 +480,11 @@ export const portalApi = {
       const q = new URLSearchParams();
       if (params?.artifact_id) q.set('artifact_id', params.artifact_id);
       if (params?.mission_id) q.set('mission_id', params.mission_id);
-      const res = await fetch(`${API_BASE_URL}/community-publications/?${q.toString()}`, { signal: AbortSignal.timeout(3000) });
-      if (res.ok) return await res.json();
+      const res = await fetch(`${API_BASE_URL}/community-publications/?${q.toString()}`, { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return await res.json();
+      }
     } catch {}
 
     let all = getLocalCommunityPublications();
@@ -334,9 +503,12 @@ export const portalApi = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(4000),
       });
-      if (res.ok) return await res.json();
+      if (res.ok) {
+        isLiveBackendConnected = true;
+        return await res.json();
+      }
     } catch {}
 
     const newId = `pub-${Date.now()}`;
