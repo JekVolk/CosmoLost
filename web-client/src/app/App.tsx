@@ -13,6 +13,7 @@ import { ViewControls } from '../features/view-controls/ui/ViewControls';
 import { DossierPage } from '../widgets/dossier/ui/DossierPage';
 import { CatalogPage } from '../widgets/catalog/ui/CatalogPage';
 import { CommunityVideosPage } from '../widgets/community/ui/CommunityVideosPage';
+import { AstroGuessrGame } from '../features/astro-guessr-360';
 import { AboutModal } from '../widgets/about/ui/AboutModal';
 import './styles/global.css';
 
@@ -249,6 +250,16 @@ export const App: React.FC = () => {
             handleOpenDossier(art, pId);
           }}
           planets={planets}
+        />
+      )}
+
+      {currentView === 'astro-guessr' && (
+        <AstroGuessrGame
+          onExit={() => setCurrentView('map')}
+          onOpenDossier={(art, pId) => {
+            setCurrentPlanetId(pId);
+            handleOpenDossier(art, pId);
+          }}
         />
       )}
 
