@@ -474,6 +474,16 @@ class GameApiTests(TestCase):
         self.assertIn('refresh', data)
         self.assertEqual(data['callsign'], 'pilot_alpha')
 
+    def test_google_oauth2_login_get_redirects(self):
+        res = self.client.get('/auth/login/google-oauth2/')
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('accounts.google.com', res['Location'])
+
+    def test_google_oauth2_login_post_redirects(self):
+        res = self.client.post('/auth/login/google-oauth2/')
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('accounts.google.com', res['Location'])
+
 
 class WebSocketDuelTests(TestCase):
     def setUp(self):
