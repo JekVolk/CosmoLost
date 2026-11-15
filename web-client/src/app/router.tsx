@@ -1,12 +1,15 @@
-﻿import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+﻿import { ArenaPage } from '@/pages/arena';
 import { HomePage } from '@/pages/home';
-import { ArenaPage } from '@/pages/arena';
-import { ProfilePage } from '@/pages/profile';
 import { LeaderboardsPage } from '@/pages/leaderboards';
+import { McpConnectPage } from '@/pages/mcp-connect';
+import { ProfilePage } from '@/pages/profile';
+import type React from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 const router = createBrowserRouter([
   { path: '/', element: <HomePage /> },
+  { path: '/connect', element: <McpConnectPage /> },
+  { path: '/mcp', element: <McpConnectPage /> },
   { path: '/arena', element: <ArenaPage /> },
   { path: '/profile/:callsign', element: <ProfilePage /> },
   { path: '/leaderboards', element: <LeaderboardsPage /> },
