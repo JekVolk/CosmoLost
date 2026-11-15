@@ -46,15 +46,16 @@ class CelestialBodyAdmin(ModelAdmin):
 
     @unfold_action(description=_('Sync NASA Catalog (Full Ingest)'), icon='sync', variant=ActionVariant.PRIMARY)
     def trigger_full_ingest_action(self, request):
-        from loader.tasks import sync_nasa_catalog_task
-        task_result = sync_nasa_catalog_task.enqueue(force=True)
-        ret = task_result.return_value or {}
+        from loader.tasks import run_nasa_sync
+        ret = run_nasa_sync(force=True)
         self.message_user(
             request,
             _(
                 f"Full NASA Ingest completed: {ret.get('celestial_bodies_new', 0)} bodies, "
-                f"{ret.get('artifacts_new', 0)} new artifacts, {ret.get('artifacts_updated', 0)} updated. "
-                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}."
+                f"{ret.get('missions_new', 0)} new missions ({ret.get('missions_updated', 0)} updated), "
+                f"{ret.get('artifacts_new', 0)} new artifacts ({ret.get('artifacts_updated', 0)} updated). "
+                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}, "
+                f"Discoveries: {ret.get('discoveries_inserted', 0)}."
             ),
             level=messages.SUCCESS,
         )
@@ -88,15 +89,16 @@ class MissionAdmin(ModelAdmin):
 
     @unfold_action(description=_('Sync NASA Catalog (Full Ingest)'), icon='sync', variant=ActionVariant.PRIMARY)
     def trigger_full_ingest_action(self, request):
-        from loader.tasks import sync_nasa_catalog_task
-        task_result = sync_nasa_catalog_task.enqueue(force=True)
-        ret = task_result.return_value or {}
+        from loader.tasks import run_nasa_sync
+        ret = run_nasa_sync(force=True)
         self.message_user(
             request,
             _(
                 f"Full NASA Ingest completed: {ret.get('celestial_bodies_new', 0)} bodies, "
-                f"{ret.get('artifacts_new', 0)} new artifacts, {ret.get('artifacts_updated', 0)} updated. "
-                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}."
+                f"{ret.get('missions_new', 0)} new missions ({ret.get('missions_updated', 0)} updated), "
+                f"{ret.get('artifacts_new', 0)} new artifacts ({ret.get('artifacts_updated', 0)} updated). "
+                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}, "
+                f"Discoveries: {ret.get('discoveries_inserted', 0)}."
             ),
             level=messages.SUCCESS,
         )
@@ -133,14 +135,16 @@ class ArtifactAdmin(ModelAdmin):
 
     @unfold_action(description=_('Sync NASA Catalog (Full Ingest)'), icon='sync', variant=ActionVariant.PRIMARY)
     def trigger_full_ingest_action(self, request):
-        from loader.tasks import sync_nasa_catalog_task
-        task_result = sync_nasa_catalog_task.enqueue(force=True)
-        ret = task_result.return_value or {}
+        from loader.tasks import run_nasa_sync
+        ret = run_nasa_sync(force=True)
         self.message_user(
             request,
             _(
-                f"Full NASA Ingest completed: {ret.get('artifacts_new', 0)} new, {ret.get('artifacts_updated', 0)} updated. "
-                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}."
+                f"Full NASA Ingest completed: {ret.get('celestial_bodies_new', 0)} bodies, "
+                f"{ret.get('missions_new', 0)} new missions ({ret.get('missions_updated', 0)} updated), "
+                f"{ret.get('artifacts_new', 0)} new artifacts ({ret.get('artifacts_updated', 0)} updated). "
+                f"Waypoints: {ret.get('waypoints_inserted', 0)}, Media: {ret.get('media_inserted', 0)}, "
+                f"Discoveries: {ret.get('discoveries_inserted', 0)}."
             ),
             level=messages.SUCCESS,
         )
