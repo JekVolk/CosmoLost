@@ -1,63 +1,72 @@
-﻿import { ENV } from '../config/env';
+// Singleton WebSocket manager
+let socket: WebSocket | null = null;
+const listeners = new Map<string, Set<(data: unknown) => void>>();
 
-type Listener = (payload: unknown) => void;
+export const wsClient = {
+  connect(wsUrl: string): void {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      return;
+    }
 
-class WsClient {
-  private socket: WebSocket | null = null;
-  private listeners: Map<string, Set<Listener>> = new Map();
+    let resolvedUrl: string;
+    if (typeof window !== 'undefined' && window.location) {
+      const url = new URL(wsUrl, window.location.href);
+      url.protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      resolvedUrl = url.toString();
+    } else {
+      resolvedUrl = wsUrl;
+    }
 
-  connect(token?: string): void {
-    if (this.socket && this.socket.readyState === WebSocket.OPEN) return;
+    socket = new WebSocket(resolvedUrl);
 
-    const authToken = token || localStorage.getItem('cosmo_access_token') || 'anonymous';
-    const url = `${ENV.WS_URL}/ws/game/?token=${authToken}`;
-
-    this.socket = new WebSocket(url);
-
-    this.socket.onmessage = (event) => {
+    socket.onmessage = (event: MessageEvent) => {
       try {
-        const data = JSON.parse(event.data);
-        const callbacks = this.listeners.get(data.type);
-        if (callbacks) {
-          for (const cb of callbacks) cb(data.payload);
+        const msg = (typeof event.data === 'string' ? JSON.parse(event.data) : event.data) as {
+          event: string;
+          [key: string]: unknown;
+        };
+
+        if (msg && typeof msg.event === 'string') {
+          const callbacks = listeners.get(msg.event);
+          if (callbacks) {
+            for (const cb of callbacks) {
+              cb(msg);
+            }
+          }
         }
-      } catch (err) {
-        console.error('WS parse error:', err);
+      } catch {
+        // ignore parse error for non-json frames
       }
     };
+  },
 
-    this.socket.onerror = (err) => {
-      console.warn('WS error:', err);
-    };
-
-    this.socket.onclose = () => {
-      this.socket = null;
-    };
-  }
-
-  send(type: string, payload: unknown): void {
-    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify({ type, payload }));
+  send(action: string, fields: Record<string, unknown> = {}): void {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ action, ...fields }));
     }
-  }
+  },
 
-  on(type: string, listener: Listener): () => void {
-    if (!this.listeners.has(type)) {
-      this.listeners.set(type, new Set());
+  on(event: string, cb: (data: unknown) => void): () => void {
+    let set = listeners.get(event);
+    if (!set) {
+      set = new Set();
+      listeners.set(event, set);
     }
-    this.listeners.get(type)!.add(listener);
+    set.add(cb);
 
     return () => {
-      this.listeners.get(type)?.delete(listener);
+      listeners.get(event)?.delete(cb);
     };
-  }
+  },
 
   disconnect(): void {
-    if (this.socket) {
-      this.socket.close();
-      this.socket = null;
+    if (socket) {
+      socket.close();
+      socket = null;
     }
-  }
-}
+  },
 
-export const wsClient = new WsClient();
+  getSocket(): WebSocket | null {
+    return socket;
+  },
+};

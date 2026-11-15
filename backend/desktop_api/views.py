@@ -149,7 +149,10 @@ def recommend_next_topic(request):
     current_id = req_serializer.validated_data['current_artifact_id']
     rubric_id = req_serializer.validated_data['rubric_id']
 
-    current_art = Artifact.objects.select_related('mission', 'celestial_body').get(id=current_id)
+    current_art = get_object_or_404(
+        Artifact.objects.select_related('mission', 'celestial_body'),
+        id=current_id,
+    )
 
     # 1. Look for sibling in same mission
     candidate = None

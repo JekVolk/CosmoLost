@@ -19,7 +19,11 @@ export function validateVideoUrl(rawUrl: string): VideoUrlValidationResult {
   }
 
   try {
-    const url = new URL(trimmed.startsWith('http://') || trimmed.startsWith('https://') ? trimmed : `https://${trimmed}`);
+    const url = new URL(
+      trimmed.startsWith('http://') || trimmed.startsWith('https://')
+        ? trimmed
+        : `https://${trimmed}`,
+    );
     const host = url.hostname.toLowerCase().replace(/^www\./, '');
 
     // 1. YouTube
@@ -45,7 +49,8 @@ export function validateVideoUrl(rawUrl: string): VideoUrlValidationResult {
       }
       return {
         isValid: false,
-        error: 'Invalid YouTube link: missing video ID. Format: https://youtube.com/watch?v=... or https://youtu.be/...',
+        error:
+          'Invalid YouTube link: missing video ID. Format: https://youtube.com/watch?v=... or https://youtu.be/...',
       };
     }
 
@@ -63,7 +68,8 @@ export function validateVideoUrl(rawUrl: string): VideoUrlValidationResult {
       }
       return {
         isValid: false,
-        error: 'Invalid Instagram link. Accepted formats: https://instagram.com/reel/... or https://instagram.com/p/...',
+        error:
+          'Invalid Instagram link. Accepted formats: https://instagram.com/reel/... or https://instagram.com/p/...',
       };
     }
 
@@ -79,7 +85,11 @@ export function validateVideoUrl(rawUrl: string): VideoUrlValidationResult {
           embedUrl: `https://www.tiktok.com/embed/v2/${videoId}`,
         };
       }
-      if (host.includes('vm.tiktok.com') || host.includes('vt.tiktok.com') || url.pathname.length > 2) {
+      if (
+        host.includes('vm.tiktok.com') ||
+        host.includes('vt.tiktok.com') ||
+        url.pathname.length > 2
+      ) {
         return {
           isValid: true,
           platform: 'TIKTOK',
@@ -89,7 +99,8 @@ export function validateVideoUrl(rawUrl: string): VideoUrlValidationResult {
       }
       return {
         isValid: false,
-        error: 'Invalid TikTok link. Format: https://www.tiktok.com/@creator/video/123456... or https://vm.tiktok.com/...',
+        error:
+          'Invalid TikTok link. Format: https://www.tiktok.com/@creator/video/123456... or https://vm.tiktok.com/...',
       };
     }
 
@@ -125,7 +136,8 @@ export function validateVideoUrl(rawUrl: string): VideoUrlValidationResult {
 
     return {
       isValid: false,
-      error: 'Unsupported domain. Please provide a video link from YouTube, Instagram, TikTok, Vimeo, or NASA Archive.',
+      error:
+        'Unsupported domain. Please provide a video link from YouTube, Instagram, TikTok, Vimeo, or NASA Archive.',
     };
   } catch {
     return {

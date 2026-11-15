@@ -1,19 +1,20 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import * as THREE from 'three';
 import {
-  X,
+  AlertCircle,
   Compass,
+  ExternalLink,
   Maximize2,
   Minimize2,
-  Plus,
   Minus,
+  Plus,
   RotateCcw,
-  AlertCircle,
-  ExternalLink,
+  X,
 } from 'lucide-react';
-import type { PhotosphereViewerProps } from './types';
-import styles from './PhotosphereViewer.module.css';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 import { API_BASE_URL } from '../../api/portalApi';
+import styles from './PhotosphereViewer.module.css';
+import type { PhotosphereViewerProps } from './types';
 
 function getCompassHeading(azimuthDeg: number): string {
   const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
@@ -88,9 +89,15 @@ export const PhotosphereViewer: React.FC<PhotosphereViewerProps> = ({
   const handleToggleFullscreen = useCallback(() => {
     if (!containerRef.current) return;
     if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+      containerRef.current
+        .requestFullscreen()
+        .then(() => setIsFullscreen(true))
+        .catch(() => {});
     } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+      document
+        .exitFullscreen()
+        .then(() => setIsFullscreen(false))
+        .catch(() => {});
     }
   }, []);
 
@@ -236,7 +243,7 @@ export const PhotosphereViewer: React.FC<PhotosphereViewerProps> = ({
           setLoadError('Failed to load 360° spherical texture from NASA archive.');
         };
         img.src = textureUrl;
-      }
+      },
     );
 
     // 5. Animation loop with smooth damping
@@ -518,7 +525,12 @@ export const PhotosphereViewer: React.FC<PhotosphereViewerProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             className={styles.retryBtn}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              textDecoration: 'none',
+            }}
           >
             <ExternalLink size={14} />
             <span>Open Direct Image in NASA Archive</span>

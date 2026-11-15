@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg_eq" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <polygon points="96,24 416,24 488,96 488,416 416,488 96,488 24,416 24,96" fill="url(#bg_eq)" stroke="#475569" stroke-width="14"/>
+  <polygon points="108,44 404,44 468,108 468,404 404,468 108,468 44,404 44,108" fill="none" stroke="#334155" stroke-width="4"/>
+  
+      <!-- Rocker-Bogie Rover Suspension & Wheels -->
+      <polygon points="130,150 382,150 410,210 102,210" fill="#4A5568" stroke="#CBD5E0" stroke-width="10"/>
+      <polyline points="130,340 200,220 280,220 382,340" fill="none" stroke="#ECC94B" stroke-width="16" stroke-linejoin="round"/>
+      <line x1="256" y1="220" x2="256" y2="340" stroke="#A0AEC0" stroke-width="14"/>
+      <circle cx="130" cy="340" r="52" fill="#1A202C" stroke="#E2E8F0" stroke-width="14" stroke-dasharray="18 10"/>
+      <circle cx="130" cy="340" r="22" fill="#ED8936"/>
+      <circle cx="256" cy="340" r="52" fill="#1A202C" stroke="#E2E8F0" stroke-width="14" stroke-dasharray="18 10"/>
+      <circle cx="256" cy="340" r="22" fill="#ED8936"/>
+      <circle cx="382" cy="340" r="52" fill="#1A202C" stroke="#E2E8F0" stroke-width="14" stroke-dasharray="18 10"/>
+      <circle cx="382" cy="340" r="22" fill="#ED8936"/>
+    
+    <!-- SI-generated Badge -->
+  <g id="si-generated-badge" transform="translate(408, 480)">
+    <rect x="0" y="0" width="92" height="20" rx="6" ry="6" fill="#0A0B10" fill-opacity="0.75" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1"/>
+    <text x="46" y="14" fill="#E2E8F0" font-family="'Segoe UI', 'Inter', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" letter-spacing="0.3">SI-generated</text>
+  </g>
+</svg>

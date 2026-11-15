@@ -269,6 +269,18 @@ class Artifact(models.Model):
             lon = lon - 360.0
         return self.latitude, lon
 
+    def clean(self):
+        super().clean()
+        if self.model_3d_url and ('github' in self.model_3d_url.lower() or 'raw.githubusercontent.com' in self.model_3d_url.lower()):
+            from loader.constants import resolve_3d_model_url
+            self.model_3d_url = resolve_3d_model_url(self.id, self.model_3d_url)
+
+    def save(self, *args, **kwargs):
+        if self.model_3d_url and ('github' in self.model_3d_url.lower() or 'raw.githubusercontent.com' in self.model_3d_url.lower()):
+            from loader.constants import resolve_3d_model_url
+            self.model_3d_url = resolve_3d_model_url(self.id, self.model_3d_url)
+        super().save(*args, **kwargs)
+
 
 class TraverseWaypoint(models.Model):
     """Waypoint along an artifact traverse route."""

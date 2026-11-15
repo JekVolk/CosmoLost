@@ -1,5 +1,14 @@
-import React, { useRef, useState, useCallback, useMemo } from 'react';
-import { MapPin, Navigation, CheckCircle2, ZoomIn, ZoomOut, Maximize2, Minimize2 } from 'lucide-react';
+import {
+  CheckCircle2,
+  MapPin,
+  Maximize2,
+  Minimize2,
+  Navigation,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react';
+import type React from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { normalizeLongitude } from '../../../shared/lib/coordinates';
 import styles from './AstroGuessr.module.css';
 
@@ -11,6 +20,7 @@ interface AstroGuessrMiniMapProps {
   onSetPin: (coords: { lat: number; lon: number }) => void;
   onConfirmGuess: () => void;
   accentColor: string;
+  compact?: boolean;
 }
 
 function coordsToPercent(lat: number, lon: number) {
@@ -28,6 +38,7 @@ export const AstroGuessrMiniMap: React.FC<AstroGuessrMiniMapProps> = ({
   onSetPin,
   onConfirmGuess,
   accentColor,
+  compact = false,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [hoverCoords, setHoverCoords] = useState<{ lat: number; lon: number } | null>(null);
@@ -90,43 +101,47 @@ export const AstroGuessrMiniMap: React.FC<AstroGuessrMiniMapProps> = ({
   }, []);
 
   return (
-    <div className={`${styles.miniMapWrapper} ${isExpanded ? styles.miniMapExpanded : ''}`}>
+    <div
+      className={`${styles.miniMapWrapper} ${isExpanded ? styles.miniMapExpanded : ''} ${compact ? styles.miniMapCompact : ''}`}
+    >
       {/* Mini-map Top Header */}
-      <div className={styles.miniMapHeader}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Navigation size={14} style={{ color: accentColor }} />
-          <span className={styles.miniMapTitle}>
-            NASA TREKS CARTOGRAPHY • {planetId.toUpperCase()}
-          </span>
-        </div>
+      {!compact && (
+        <div className={styles.miniMapHeader}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Navigation size={14} style={{ color: accentColor }} />
+            <span className={styles.miniMapTitle}>
+              NASA TREKS CARTOGRAPHY • {planetId.toUpperCase()}
+            </span>
+          </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <button
-            type="button"
-            className={styles.mapToolBtn}
-            onClick={() => toggleZoom('in')}
-            title="Zoom In"
-          >
-            <ZoomIn size={13} />
-          </button>
-          <button
-            type="button"
-            className={styles.mapToolBtn}
-            onClick={() => toggleZoom('out')}
-            title="Zoom Out"
-          >
-            <ZoomOut size={13} />
-          </button>
-          <button
-            type="button"
-            className={styles.mapToolBtn}
-            onClick={() => setIsExpanded((prev) => !prev)}
-            title={isExpanded ? 'Collapse Map' : 'Expand Map'}
-          >
-            {isExpanded ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <button
+              type="button"
+              className={styles.mapToolBtn}
+              onClick={() => toggleZoom('in')}
+              title="Zoom In"
+            >
+              <ZoomIn size={13} />
+            </button>
+            <button
+              type="button"
+              className={styles.mapToolBtn}
+              onClick={() => toggleZoom('out')}
+              title="Zoom Out"
+            >
+              <ZoomOut size={13} />
+            </button>
+            <button
+              type="button"
+              className={styles.mapToolBtn}
+              onClick={() => setIsExpanded((prev) => !prev)}
+              title={isExpanded ? 'Collapse Map' : 'Expand Map'}
+            >
+              {isExpanded ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Surface Map Viewport */}
       <div
@@ -226,24 +241,26 @@ export const AstroGuessrMiniMap: React.FC<AstroGuessrMiniMapProps> = ({
       </div>
 
       {/* Mini-map Footer / Confirm Action */}
-      <div className={styles.miniMapFooter}>
-        {!isRevealed ? (
-          <button
-            type="button"
-            className={`${styles.confirmGuessBtn} ${playerPin ? styles.confirmActive : ''} ${isMars ? styles.marsConfirm : styles.moonConfirm}`}
-            onClick={onConfirmGuess}
-            disabled={!playerPin}
-          >
-            <CheckCircle2 size={16} />
-            <span>CONFIRM COORDINATES</span>
-          </button>
-        ) : (
-          <div className={styles.revealedCoordsNotice}>
-            <MapPin size={14} style={{ color: '#10b981' }} />
-            <span>Target telemetry decoded & verified</span>
-          </div>
-        )}
-      </div>
+      {!compact && (
+        <div className={styles.miniMapFooter}>
+          {!isRevealed ? (
+            <button
+              type="button"
+              className={`${styles.confirmGuessBtn} ${playerPin ? styles.confirmActive : ''} ${isMars ? styles.marsConfirm : styles.moonConfirm}`}
+              onClick={onConfirmGuess}
+              disabled={!playerPin}
+            >
+              <CheckCircle2 size={16} />
+              <span>CONFIRM COORDINATES</span>
+            </button>
+          ) : (
+            <div className={styles.revealedCoordsNotice}>
+              <MapPin size={14} style={{ color: '#10b981' }} />
+              <span>Target telemetry decoded & verified</span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

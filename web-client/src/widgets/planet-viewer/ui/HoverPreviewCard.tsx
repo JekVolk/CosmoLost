@@ -1,6 +1,6 @@
-import React from 'react';
-import type { SpaceArtifact, PlanetId } from '../../../entities/planet/model/types';
 import { ExternalLink, MapPin } from 'lucide-react';
+import type React from 'react';
+import type { PlanetId, SpaceArtifact } from '../../../entities/planet/model/types';
 
 interface HoverPreviewCardProps {
   artifact: SpaceArtifact;
@@ -75,13 +75,23 @@ export const HoverPreviewCard: React.FC<HoverPreviewCardProps> = ({
           <span className="preview-agency" style={{ color: themeColor }}>
             {artifact.agency} • {artifact.country}
           </span>
-          <span className="preview-status" style={{ borderColor: artifact.badgeColor || themeColor }}>
+          <span
+            className="preview-status"
+            style={{ borderColor: artifact.badgeColor || themeColor }}
+          >
             {artifact.operationalStatus || artifact.type.toUpperCase().replace('_', ' ')}
           </span>
         </div>
 
         {artifact.nssdcaId && (
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-dim)', marginBottom: '4px' }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '10px',
+              color: 'var(--text-dim)',
+              marginBottom: '4px',
+            }}
+          >
             NSSDCA
           </div>
         )}
@@ -103,7 +113,15 @@ export const HoverPreviewCard: React.FC<HoverPreviewCardProps> = ({
           <span style={{ color: 'var(--text-dim)' }}>
             Landed: <strong style={{ color: '#fff' }}>{artifact.landingDate.split(' ')[0]}</strong>
           </span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: themeColor, fontWeight: 600 }}>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              color: themeColor,
+              fontWeight: 600,
+            }}
+          >
             <span>Dossier</span>
             <ExternalLink size={13} />
           </span>

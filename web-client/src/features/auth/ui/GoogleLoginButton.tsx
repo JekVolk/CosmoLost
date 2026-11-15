@@ -1,14 +1,34 @@
-﻿import React from 'react';
-import { Button } from '@chakra-ui/react';
+﻿import { API_URL } from '@/shared/config/env';
+import { getCsrfToken } from '@/shared/lib';
+import { Button, type ButtonProps } from '@chakra-ui/react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 
-export const GoogleLoginButton: React.FC = () => {
-  const handleLogin = () => {
-    window.location.href = 'http://localhost:8000/auth/login/google-oauth2/';
-  };
+export interface GoogleLoginButtonProps extends ButtonProps {
+  formStyle?: React.CSSProperties;
+}
+
+export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
+  children = 'Увійти через Google',
+  formStyle,
+  ...buttonProps
+}) => {
+  const [csrfToken, setCsrfToken] = useState<string | null>(() => getCsrfToken());
+
+  useEffect(() => {
+    setCsrfToken(getCsrfToken());
+  }, []);
 
   return (
-    <Button colorPalette="blue" variant="surface" onClick={handleLogin}>
-      Увійти через Google
-    </Button>
+    <form
+      method="POST"
+      action={`${API_URL.replace(/\/+$/, '')}/auth/login/google-oauth2/`}
+      style={formStyle}
+    >
+      {csrfToken ? <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} /> : null}
+      <Button type="submit" colorPalette="blue" variant="surface" {...buttonProps}>
+        {children}
+      </Button>
+    </form>
   );
 };

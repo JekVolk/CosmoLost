@@ -1,33 +1,32 @@
-﻿import { create } from 'zustand';
+import { setAuthTokenProvider } from '@/shared/api';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-export interface UserProfile {
-  id: number;
+export interface AuthUser {
   callsign: string;
-  avatar_url: string | null;
-  elo: number;
-  rp_balance: number;
-  win_streak: number;
-  container_slots: number;
+  elo_rating: number;
 }
 
-interface AuthState {
+export interface AuthState {
   token: string | null;
-  user: UserProfile | null;
-  isAuthenticated: boolean;
-  setAuth: (token: string, user: UserProfile) => void;
+  user: AuthUser | null;
+  setToken: (token: string | null) => void;
+  setUser: (user: AuthUser | null) => void;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  token: localStorage.getItem('cosmo_access_token'),
-  user: null,
-  isAuthenticated: !!localStorage.getItem('cosmo_access_token'),
-  setAuth: (token, user) => {
-    localStorage.setItem('cosmo_access_token', token);
-    set({ token, user, isAuthenticated: true });
-  },
-  logout: () => {
-    localStorage.removeItem('cosmo_access_token');
-    set({ token: null, user: null, isAuthenticated: false });
-  },
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      token: null,
+      user: null,
+      setToken: (token) => set({ token }),
+      setUser: (user) => set({ user }),
+      logout: () => set({ token: null, user: null }),
+    }),
+    { name: 'cosmo-auth' },
+  ),
+);
+
+// Register token getter with httpClient
+setAuthTokenProvider(() => useAuthStore.getState().token);

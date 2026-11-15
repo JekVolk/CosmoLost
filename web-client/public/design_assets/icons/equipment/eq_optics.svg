@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg_eq" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <polygon points="96,24 416,24 488,96 488,416 416,488 96,488 24,416 24,96" fill="url(#bg_eq)" stroke="#475569" stroke-width="14"/>
+  <polygon points="108,44 404,44 468,108 468,404 404,468 108,468 44,404 44,108" fill="none" stroke="#334155" stroke-width="4"/>
+  
+      <!-- Multi-spectral Mastcam / Spectrometer -->
+      <rect x="110" y="130" width="292" height="220" rx="28" fill="#2D3748" stroke="#63B3ED" stroke-width="12"/>
+      <circle cx="220" cy="240" r="82" fill="#1A202C" stroke="#90CDF4" stroke-width="14"/>
+      <circle cx="220" cy="240" r="52" fill="#3182CE"/>
+      <circle cx="220" cy="240" r="24" fill="#1A365D"/>
+      <circle cx="242" cy="218" r="14" fill="#EBF8FF"/>
+      <circle cx="345" cy="195" r="28" fill="#1A202C" stroke="#4FD1C5" stroke-width="8"/>
+      <circle cx="345" cy="195" r="12" fill="#81E6D9"/>
+      <rect x="322" y="255" width="46" height="55" rx="8" fill="#E53E3E"/>
+      <rect x="210" y="350" width="92" height="55" fill="#4A5568"/>
+    
+    <!-- SI-generated Badge -->
+  <g id="si-generated-badge" transform="translate(408, 480)">
+    <rect x="0" y="0" width="92" height="20" rx="6" ry="6" fill="#0A0B10" fill-opacity="0.75" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1"/>
+    <text x="46" y="14" fill="#E2E8F0" font-family="'Segoe UI', 'Inter', -apple-system, sans-serif" font-size="11" font-weight="500" text-anchor="middle" letter-spacing="0.3">SI-generated</text>
+  </g>
+</svg>

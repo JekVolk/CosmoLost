@@ -1,6 +1,6 @@
-import type { PlanetConfig } from './types';
 import { MARS_ARTIFACTS } from './artifactsMars';
 import { MOON_ARTIFACTS } from './artifactsMoon';
+import type { PlanetConfig } from './types';
 
 export { MARS_ARTIFACTS } from './artifactsMars';
 export { MOON_ARTIFACTS } from './artifactsMoon';
@@ -12,7 +12,8 @@ export const PLANETS: Record<'mars' | 'moon', PlanetConfig> = {
     nameEn: 'Mars',
     title: 'The Red Planet',
     symbol: '♂',
-    tagline: 'A desert world carved by ancient rivers, harboring humanity\'s legendary rovers, landers, and discarded exploration hardware.',
+    tagline:
+      "A desert world carved by ancient rivers, harboring humanity's legendary rovers, landers, and discarded exploration hardware.",
     colorMap: '/textures/mars_color.jpg',
     bumpMap: '/textures/mars_bump.jpg',
     bumpScale: 1.2,
@@ -45,13 +46,14 @@ export const PLANETS: Record<'mars' | 'moon', PlanetConfig> = {
     id: 'moon',
     name: 'Moon',
     nameEn: 'Moon',
-    title: 'Earth\'s Natural Satellite',
+    title: "Earth's Natural Satellite",
     symbol: '☾',
-    tagline: 'A half-century archive of human daring: Apollo descent stages, pioneering Soviet Lunokhods, and robotic precursors.',
+    tagline:
+      'A half-century archive of human daring: Apollo descent stages, pioneering Soviet Lunokhods, and robotic precursors.',
     colorMap: '/textures/moon_color.jpg',
     bumpMap: '/textures/moon_bump.jpg',
     bumpScale: 2.1,
-    roughness: 0.90,
+    roughness: 0.9,
     metalness: 0.02,
     radius: 2.0,
     rotationSpeed: 0.001,

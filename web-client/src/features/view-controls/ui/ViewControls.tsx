@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { RotateCw, Compass, MapPin, Maximize, Minimize } from 'lucide-react';
+import { Compass, MapPin, Maximize, Minimize, RotateCw } from 'lucide-react';
+import type React from 'react';
+import { useState } from 'react';
 
 interface ViewControlsProps {
   isAutoRotating: boolean;
@@ -22,9 +23,15 @@ export const ViewControls: React.FC<ViewControlsProps> = ({
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+      document.documentElement
+        .requestFullscreen()
+        .then(() => setIsFullscreen(true))
+        .catch(() => {});
     } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+      document
+        .exitFullscreen()
+        .then(() => setIsFullscreen(false))
+        .catch(() => {});
     }
   };
 

@@ -24,19 +24,22 @@ if _env_path.exists():
 # Silenced system checks (urls.W005 is expected due to intentional alias routes for API compatibility)
 SILENCED_SYSTEM_CHECKS = ['urls.W005']
 
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+
 # Security & environment settings
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
-    'django-insecure-m!6m4)xc#03dcyfoymebe8gw=_b-5%csol^7hpdhoxlf))8o58',
+    'django-insecure-m!6m4)xc#03dcyfoymebe8gw=_b-5%csol^7hpdhoxlf))8o58' if DEBUG else '',
 )
-
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
+if not DEBUG and not SECRET_KEY:
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured("DJANGO_SECRET_KEY environment variable is required in production (DEBUG=False).")
 
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         'DJANGO_ALLOWED_HOSTS',
-        'localhost,127.0.0.1,0.0.0.0,backend,testserver,cosmolost.lihtar.org,.lihtar.org',
+        'localhost,127.0.0.1,0.0.0.0,backend,testserver,cosmolost.lihtar.org,.lihtar.org,cosmolost.lixtar.org,.lixtar.org',
     ).split(',')
     if host.strip()
 ]
@@ -45,10 +48,14 @@ CSRF_TRUSTED_ORIGINS = [
     host.strip()
     for host in os.environ.get(
         'DJANGO_CSRF_TRUSTED_ORIGINS',
-        'http://localhost:9088,http://127.0.0.1:9088,http://testserver:9088,http://localhost:8000,http://127.0.0.1:8000,http://testserver:8000,http://backend:8000,https://cosmolost.lihtar.org,http://cosmolost.lihtar.org',
+        'http://localhost:9088,http://127.0.0.1:9088,http://testserver:9088,http://localhost:8000,http://127.0.0.1:8000,http://testserver:8000,http://backend:8000,https://cosmolost.lihtar.org,http://cosmolost.lihtar.org,https://cosmolost.lixtar.org,http://cosmolost.lixtar.org',
     ).split(',')
     if host.strip()
 ]
+
+# The public gateway terminates TLS and forwards the original scheme to Django.
+# OAuth must use that public HTTPS scheme when constructing Google's callback URI.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -88,7 +95,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'config.middleware.SimpleCorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -183,6 +189,14 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '300/minute',
+        'user': '1200/minute',
+    },
 }
 
 # Channels & ASGI configuration
@@ -231,6 +245,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
+LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', '/auth/callback')
 
 
 # Mailers configuration (Django 6.1+)

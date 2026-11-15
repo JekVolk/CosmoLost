@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background-color: #201D38;
-            color: #F8FAFC;
+            background-color: #080D17;
+            color: #EAF2FF;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow: hidden;
             width: 100vw;
             height: 100vh;
         }
+
         #canvas-container {
             width: 100%;
             height: 100%;
@@ -24,17 +31,21 @@
             left: 0;
             cursor: grab;
         }
+
         #canvas-container:active {
             cursor: grabbing;
         }
+
         .hud-overlay {
             position: absolute;
             pointer-events: none;
             z-index: 10;
         }
+
         .interactive {
             pointer-events: auto;
         }
+
         .header {
             top: 24px;
             left: 32px;
@@ -42,12 +53,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(23, 21, 43, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(129, 140, 248, 0.2);
+            background: rgba(16, 26, 42, 0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
             padding: 12px 24px;
         }
+
         .brand {
             display: flex;
             align-items: center;
@@ -55,101 +67,119 @@
             font-weight: 700;
             letter-spacing: 1.5px;
             font-size: 14px;
-            color: #FFFFFF;
+            color: #EAF2FF;
         }
+
         .badge {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(99, 102, 241, 0.15);
-            border: 1px solid rgba(99, 102, 241, 0.35);
+            background: rgba(0, 217, 245, 0.15);
+            border: 1px solid rgba(0, 217, 245, 0.4);
             border-radius: 20px;
             padding: 6px 14px;
             font-size: 12px;
-            color: #E0E7FF;
+            color: #00D9F5;
         }
+
         .badge-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #10B981;
-            box-shadow: 0 0 8px #10B981;
+            background: #22C55E;
+            box-shadow: 0 0 8px #22C55E;
         }
+
         .btn-link {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(129, 140, 248, 0.12);
-            border: 1px solid rgba(129, 140, 248, 0.3);
+            background: rgba(0, 217, 245, 0.12);
+            border: 1px solid rgba(0, 217, 245, 0.3);
             border-radius: 8px;
             padding: 8px 16px;
-            color: #818CF8;
+            color: #00D9F5;
             font-size: 13px;
             text-decoration: none;
             transition: all 0.2s;
         }
+
         .btn-link:hover {
-            background: rgba(129, 140, 248, 0.25);
+            background: rgba(0, 217, 245, 0.25);
             color: #FFFFFF;
         }
+
         .left-card {
             top: 100px;
             left: 32px;
             width: 300px;
-            background: rgba(23, 21, 43, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(129, 140, 248, 0.2);
+            background: rgba(16, 26, 42, 0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
+
         .card-title {
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 1.2px;
-            color: #818CF8;
+            color: #00D9F5;
         }
+
         .card-row {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
         }
-        .card-row .label { color: #94A3B8; }
-        .card-row .val { font-weight: 600; color: #F8FAFC; }
+
+        .card-row .label {
+            color: #8FA2B8;
+        }
+
+        .card-row .val {
+            font-weight: 600;
+            color: #EAF2FF;
+        }
 
         .hint-bar {
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(23, 21, 43, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(129, 140, 248, 0.2);
+            background: rgba(16, 26, 42, 0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 30px;
             padding: 10px 24px;
             display: flex;
             align-items: center;
             gap: 16px;
             font-size: 13px;
-            color: #CBD5E1;
+            color: #8FA2B8;
         }
+
         .hint-key {
-            background: rgba(129, 140, 248, 0.2);
-            border: 1px solid rgba(129, 140, 248, 0.4);
+            background: rgba(0, 217, 245, 0.15);
+            border: 1px solid rgba(0, 217, 245, 0.35);
             border-radius: 6px;
             padding: 2px 8px;
             font-weight: 600;
-            color: #FFFFFF;
+            color: #00D9F5;
         }
     </style>
 </head>
+
 <body>
     <div id="canvas-container"></div>
 
     <div class="hud-overlay header interactive">
         <div class="brand">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
             COSMOLOST / 3D INTERACTIVE MOON
         </div>
         <div class="badge">
@@ -158,7 +188,11 @@
         </div>
         <a href="https://trek.nasa.gov/moon/#" target="_blank" class="btn-link">
             <span>NASA Moon Trek Portal</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
         </a>
     </div>
 
@@ -168,7 +202,8 @@
         <div class="card-row"><span class="label">Coordinates</span><span class="val">0.6740° N, 23.4720° E</span></div>
         <div class="card-row"><span class="label">Region</span><span class="val">Mare Tranquillitatis</span></div>
         <div class="card-row"><span class="label">Radius</span><span class="val">1,737.4 km</span></div>
-        <div class="card-row"><span class="label">Surface Gravity</span><span class="val">1.622 m/s² (0.166 g)</span></div>
+        <div class="card-row"><span class="label">Surface Gravity</span><span class="val">1.622 m/s² (0.166 g)</span>
+        </div>
         <div class="card-row"><span class="label">Orbital Period</span><span class="val">27.32 Days</span></div>
         <div class="card-row"><span class="label">Distance to Earth</span><span class="val">384,400 km</span></div>
     </div>
@@ -230,7 +265,7 @@
         const starsGeo = new THREE.BufferGeometry();
         const starsCount = 1200;
         const starPositions = new Float32Array(starsCount * 3);
-        for(let i = 0; i < starsCount * 3; i++) {
+        for (let i = 0; i < starsCount * 3; i++) {
             starPositions[i] = (Math.random() - 0.5) * 60;
         }
         starsGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
@@ -255,4 +290,5 @@
         animate();
     </script>
 </body>
+
 </html>

@@ -6,6 +6,7 @@ import math
 from typing import Any, Dict, Optional
 from urllib.parse import urlparse
 
+from loader.constants import resolve_3d_model_url
 from loader.domain.dtos import (
     ArtifactDTO,
     CelestialBodyDTO,
@@ -124,7 +125,10 @@ class NASAJsonMapper:
             is_featured=bool(raw.get('is_featured', False)),
             is_nasa_hardware=bool(raw.get('is_nasa_hardware', True)),
             first_person_monologue=str(raw.get('first_person_monologue', '')).strip(),
-            model_3d_url=cls.sanitize_url(raw.get('model_3d_url'))[:500],
+            model_3d_url=resolve_3d_model_url(
+                str(raw['id']),
+                cls.sanitize_url(raw.get('model_3d_url'))
+            )[:500],
         )
 
     @classmethod

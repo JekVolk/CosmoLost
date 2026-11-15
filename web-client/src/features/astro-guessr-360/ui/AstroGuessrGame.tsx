@@ -1,30 +1,28 @@
-import React, { useState } from 'react';
 import {
   ArrowLeft,
-  Trophy,
-  Sparkles,
-  HelpCircle,
+  CheckCircle2,
   ChevronRight,
-  RotateCcw,
   FileText,
   Gamepad2,
-  CheckCircle2,
+  HelpCircle,
+  RotateCcw,
+  Sparkles,
+  Trophy,
 } from 'lucide-react';
+import type React from 'react';
+import { useState } from 'react';
 import type { SpaceArtifact } from '../../../entities/planet/model/types';
 import { PhotosphereViewer } from '../../../shared/ui/photosphere-viewer';
 import { useAstroGuessr } from '../model/useAstroGuessr';
-import { AstroGuessrMiniMap } from './AstroGuessrMiniMap';
 import styles from './AstroGuessr.module.css';
+import { AstroGuessrMiniMap } from './AstroGuessrMiniMap';
 
 interface AstroGuessrGameProps {
   onExit: () => void;
   onOpenDossier?: (artifact: SpaceArtifact, planetId: 'mars' | 'moon') => void;
 }
 
-export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({
-  onExit,
-  onOpenDossier,
-}) => {
+export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({ onExit, onOpenDossier }) => {
   const {
     currentRound,
     currentRoundIndex,
@@ -49,7 +47,7 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({
     const ratio = maxScore > 0 ? score / maxScore : 0;
     if (ratio >= 0.85) return 'CHIEF PLANETARY ARCHAEOLOGIST';
     if (ratio >= 0.65) return 'SENIOR MISSION RECON OPERATOR';
-    if (ratio >= 0.40) return 'SURFACE TELEMETRY ANALYST';
+    if (ratio >= 0.4) return 'SURFACE TELEMETRY ANALYST';
     return 'ORBITAL CADET EXPLORER';
   };
 
@@ -100,7 +98,18 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({
       {/* Terrain Geological Clue Popover */}
       {showClue && currentRound.clue && (
         <div className={styles.clueBanner}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: accentColor, fontWeight: 700, fontSize: '11px', marginBottom: '4px', textTransform: 'uppercase' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: accentColor,
+              fontWeight: 700,
+              fontSize: '11px',
+              marginBottom: '4px',
+              textTransform: 'uppercase',
+            }}
+          >
             <Sparkles size={13} />
             <span>Orbital Reconnaissance Clue</span>
           </div>
@@ -164,13 +173,30 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({
 
               <div className={styles.resultScoreRow}>
                 <span className={styles.scoreHuge}>+{lastResult.score}</span>
-                <span style={{ color: '#94a3b8', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>POINTS</span>
+                <span
+                  style={{ color: '#94a3b8', fontSize: '13px', fontFamily: 'var(--font-mono)' }}
+                >
+                  POINTS
+                </span>
               </div>
             </div>
 
             <div className={styles.errorDistance}>
-              Deviation Error: <strong style={{ color: accentColor }}>{lastResult.distanceKm} km</strong> from actual site
+              Deviation Error:{' '}
+              <strong style={{ color: accentColor }}>{lastResult.distanceKm} km</strong> from actual
+              site
             </div>
+
+            <AstroGuessrMiniMap
+              planetId={currentRound.planetId}
+              playerPin={{ lat: lastResult.guessLat, lon: lastResult.guessLon }}
+              trueCoordinates={currentRound.trueCoordinates}
+              isRevealed={true}
+              onSetPin={() => undefined}
+              onConfirmGuess={() => undefined}
+              accentColor={accentColor}
+              compact
+            />
 
             {/* Target Hardware Identity Card */}
             <div className={styles.targetCard}>
@@ -182,20 +208,29 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({
                 />
               )}
               <div className={styles.targetInfo}>
-                <div style={{ fontSize: '10.5px', color: accentColor, fontWeight: 700, textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
+                <div
+                  style={{
+                    fontSize: '10.5px',
+                    color: accentColor,
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                >
                   {currentRound.artifact.agency} • {currentRound.artifact.mission}
                 </div>
                 <div className={styles.targetName}>{currentRound.artifact.name}</div>
                 <div className={styles.targetLocation}>
-                  Site: <strong style={{ color: '#f1f5f9' }}>{currentRound.trueCoordinates.locationName}</strong>
+                  Site:{' '}
+                  <strong style={{ color: '#f1f5f9' }}>
+                    {currentRound.trueCoordinates.locationName}
+                  </strong>
                 </div>
               </div>
             </div>
 
             {/* Feedback message */}
-            <div className={styles.targetFeedback}>
-              {lastResult.ratingFeedback}
-            </div>
+            <div className={styles.targetFeedback}>{lastResult.ratingFeedback}</div>
 
             {/* Modal Actions */}
             <div className={styles.resultActions}>
@@ -210,12 +245,10 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({
                 </button>
               )}
 
-              <button
-                type="button"
-                className={styles.btnPrimary}
-                onClick={nextRound}
-              >
-                <span>{currentRoundIndex + 1 < totalRounds ? 'NEXT ROUND' : 'VIEW FINAL RESULTS'}</span>
+              <button type="button" className={styles.btnPrimary} onClick={nextRound}>
+                <span>
+                  {currentRoundIndex + 1 < totalRounds ? 'NEXT ROUND' : 'VIEW FINAL RESULTS'}
+                </span>
                 <ChevronRight size={16} />
               </button>
             </div>
@@ -231,13 +264,19 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({
               <Trophy size={36} />
             </div>
 
-            <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.1em', fontFamily: 'var(--font-mono)' }}>
+            <div
+              style={{
+                fontSize: '11px',
+                color: '#94a3b8',
+                fontWeight: 700,
+                letterSpacing: '0.1em',
+                fontFamily: 'var(--font-mono)',
+              }}
+            >
               EXPEDITION RECON EVALUATION COMPLETE
             </div>
 
-            <div className={styles.rankTitle}>
-              {getRankTitle(totalScore, totalRounds * 100)}
-            </div>
+            <div className={styles.rankTitle}>{getRankTitle(totalScore, totalRounds * 100)}</div>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
               <span className={styles.scoreHuge}>{totalScore}</span>
@@ -246,26 +285,26 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({
               </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#10b981', fontSize: '13px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                color: '#10b981',
+                fontSize: '13px',
+              }}
+            >
               <CheckCircle2 size={16} />
               <span>All planetary sectors verified with NASA telemetry</span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
-              <button
-                type="button"
-                className={styles.btnSecondary}
-                onClick={restartGame}
-              >
+              <button type="button" className={styles.btnSecondary} onClick={restartGame}>
                 <RotateCcw size={14} />
                 <span>PLAY AGAIN</span>
               </button>
 
-              <button
-                type="button"
-                className={styles.btnPrimary}
-                onClick={onExit}
-              >
+              <button type="button" className={styles.btnPrimary} onClick={onExit}>
                 <span>BACK TO 3D ORBIT MAP</span>
               </button>
             </div>

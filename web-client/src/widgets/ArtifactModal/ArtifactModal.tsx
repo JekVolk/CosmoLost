@@ -1,16 +1,9 @@
-import React, { useState } from 'react';
-import type { SpaceArtifact, PlanetConfig } from '../../entities/planet/model/types';
+import { Box, Calendar, Camera, Compass, MapPin, Sparkles, X } from 'lucide-react';
+import type React from 'react';
+import { useState } from 'react';
+import type { PlanetConfig, SpaceArtifact } from '../../entities/planet/model/types';
 import { Model3DViewer } from '../../features/artifact-3d-viewer';
 import { PhotosphereViewer } from '../../shared/ui/photosphere-viewer';
-import {
-  X,
-  Box,
-  Camera,
-  Compass,
-  MapPin,
-  Calendar,
-  Sparkles,
-} from 'lucide-react';
 
 export interface ArtifactModalProps {
   isOpen: boolean;
@@ -138,7 +131,10 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
               border: 'none',
               background: activeTab === '3d' ? `${themeColor}25` : 'rgba(15, 23, 42, 0.8)',
               color: activeTab === '3d' ? themeColor : '#94a3b8',
-              outline: activeTab === '3d' ? `1px solid ${themeColor}` : '1px solid rgba(255, 255, 255, 0.1)',
+              outline:
+                activeTab === '3d'
+                  ? `1px solid ${themeColor}`
+                  : '1px solid rgba(255, 255, 255, 0.1)',
             }}
           >
             <Box size={14} />
@@ -162,7 +158,10 @@ export const ArtifactModal: React.FC<ArtifactModalProps> = ({
                 border: 'none',
                 background: activeTab === 'photo' ? `${themeColor}25` : 'rgba(15, 23, 42, 0.8)',
                 color: activeTab === 'photo' ? themeColor : '#94a3b8',
-                outline: activeTab === 'photo' ? `1px solid ${themeColor}` : '1px solid rgba(255, 255, 255, 0.1)',
+                outline:
+                  activeTab === 'photo'
+                    ? `1px solid ${themeColor}`
+                    : '1px solid rgba(255, 255, 255, 0.1)',
               }}
             >
               <Camera size={14} />

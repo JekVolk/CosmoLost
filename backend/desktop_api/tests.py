@@ -13,6 +13,7 @@ from core.models import (
     Mission,
     OperationalStatus,
 )
+from loader.constants import NASA_3D_MODEL_CDN_MAP
 
 
 @pytest.fixture
@@ -65,7 +66,7 @@ def editor_sample_data(db):
         location_name='Gusev Crater',
         cause_of_deactivation='Stuck in Troy soft sand patch and lost solar power during Martian winter',
         first_person_monologue='Spirit signing off from Gusev Crater. Sol 2210 was my final transmission.',
-        model_3d_url='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/spirit.glb',
+        model_3d_url=NASA_3D_MODEL_CDN_MAP['spirit-rover'],
     )
 
     opportunity = Artifact.objects.create(
@@ -80,7 +81,7 @@ def editor_sample_data(db):
         location_name='Perseverance Valley',
         cause_of_deactivation='Global dust storm covering solar panels',
         first_person_monologue='My battery is low and it is getting dark.',
-        model_3d_url='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/opportunity.glb',
+        model_3d_url=NASA_3D_MODEL_CDN_MAP['opportunity-rover'],
     )
 
     apollo_descent = Artifact.objects.create(
@@ -190,7 +191,7 @@ def test_artifact_asset_bundle_success(api_client, editor_sample_data):
 
     # High-res photos check (retrieved from ArtifactMedia)
     assert 'https://photojournal.jpl.nasa.gov/jpeg/PIA05555.jpg' in data['high_res_photos']
-    assert data['model_3d_glb_url'] == 'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/spirit.glb'
+    assert data['model_3d_glb_url'] == NASA_3D_MODEL_CDN_MAP['spirit-rover']
 
 
 @pytest.mark.django_db

@@ -25,7 +25,7 @@ export function haversineDistance(
   lon1: number,
   lat2: number,
   lon2: number,
-  radiusKm = 3389.5
+  radiusKm = 3389.5,
 ): number {
   const toRad = (deg: number) => (deg * Math.PI) / 180;
   const nLon1 = normalizeLongitude(lon1);
@@ -47,4 +47,3 @@ export function haversineDistance(
 export function calculateAstroGuessrScore(distanceKm: number): number {
   return Math.max(0, Math.round(100 * Math.exp(-distanceKm / 50)));
 }
-

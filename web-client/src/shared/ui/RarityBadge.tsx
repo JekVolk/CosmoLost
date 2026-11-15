@@ -1,30 +1,52 @@
-﻿import React from 'react';
-import { Badge } from '@chakra-ui/react';
+import { Badge, type BadgeProps, HStack, Image } from '@chakra-ui/react';
+import { getRarityBadgeIconUrl } from '../lib/assets';
 
-export type RarityType =
-  | 'SCRAP'
-  | 'STANDARD'
-  | 'SPECIALIZED'
-  | 'PROTOTYPE'
-  | 'AUTONOMOUS'
-  | 'HISTORIC'
-  | 'ANOMALY';
-
-const RARITY_MAP: Record<RarityType, { label: string; colorScheme: string }> = {
-  SCRAP: { label: 'Scrap', colorScheme: 'gray' },
-  STANDARD: { label: 'Standard', colorScheme: 'slate' },
-  SPECIALIZED: { label: 'Specialized', colorScheme: 'green' },
-  PROTOTYPE: { label: 'Prototype', colorScheme: 'blue' },
-  AUTONOMOUS: { label: 'Autonomous', colorScheme: 'purple' },
-  HISTORIC: { label: 'Historic', colorScheme: 'yellow' },
-  ANOMALY: { label: 'Anomaly', colorScheme: 'red' },
+export const RARITY_COLORS: Record<string, string> = {
+  SCRAP: 'gray.500',
+  STANDARD: 'gray.200',
+  SPECIALIZED: 'green.500',
+  PROTOTYPE: 'blue.500',
+  AUTONOMOUS: 'purple.500',
+  HISTORIC: 'yellow.500',
+  ANOMALY: 'red.500',
 };
 
-export const RarityBadge: React.FC<{ rarity: RarityType }> = ({ rarity }) => {
-  const info = RARITY_MAP[rarity] || { label: rarity, colorScheme: 'gray' };
+export const RARITY_PALETTES: Record<string, string> = {
+  SCRAP: 'gray',
+  STANDARD: 'gray',
+  SPECIALIZED: 'green',
+  PROTOTYPE: 'blue',
+  AUTONOMOUS: 'purple',
+  HISTORIC: 'yellow',
+  ANOMALY: 'red',
+};
+
+export interface RarityBadgeProps extends BadgeProps {
+  rarity: string;
+  showIcon?: boolean;
+}
+
+export function RarityBadge({ rarity, showIcon = true, ...props }: RarityBadgeProps) {
+  const normalized = rarity.toUpperCase();
+  const palette = RARITY_PALETTES[normalized] ?? 'gray';
+  const colorToken = RARITY_COLORS[normalized] ?? 'gray.500';
+  const iconUrl = getRarityBadgeIconUrl(normalized);
+
   return (
-    <Badge colorPalette={info.colorScheme} variant="subtle" size="sm">
-      {info.label}
+    <Badge colorPalette={palette} borderColor={colorToken} data-rarity={normalized} {...props}>
+      <HStack gap={1.5} display="inline-flex" alignItems="center">
+        {showIcon && (
+          <Image
+            src={iconUrl}
+            alt=""
+            width="12px"
+            height="12px"
+            objectFit="contain"
+            aria-hidden="true"
+          />
+        )}
+        <span>{rarity}</span>
+      </HStack>
     </Badge>
   );
-};
+}

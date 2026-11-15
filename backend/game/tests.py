@@ -474,6 +474,25 @@ class GameApiTests(TestCase):
         self.assertIn('refresh', data)
         self.assertEqual(data['callsign'], 'pilot_alpha')
 
+    def test_google_oauth2_login_get_redirects(self):
+        res = self.client.get('/auth/login/google-oauth2/')
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('accounts.google.com', res['Location'])
+
+    def test_google_oauth2_login_post_redirects(self):
+        res = self.client.post('/auth/login/google-oauth2/')
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('accounts.google.com', res['Location'])
+
+    def test_google_oauth2_login_uses_forwarded_https_scheme(self):
+        res = self.client.get(
+            '/auth/login/google-oauth2/',
+            HTTP_X_FORWARDED_PROTO='https',
+            HTTP_HOST='cosmolost.lixtar.org',
+        )
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('redirect_uri=https%3A%2F%2Fcosmolost.lixtar.org%2Fauth%2Fcomplete%2F', res['Location'])
+
 
 class WebSocketDuelTests(TestCase):
     def setUp(self):
@@ -531,44 +550,113 @@ class WebSocketDuelTests(TestCase):
 
     def test_ws_connected_and_zero_knowledge_round_start(self):
         async def _run():
-            communicator = WebsocketCommunicator(
+            comm1 = WebsocketCommunicator(
                 DuelConsumer.as_asgi(),
                 f"/ws/game/duel/{self.match.id}/",
             )
-            communicator.scope['url_route'] = {'kwargs': {'match_id': self.match.id}}
-            communicator.scope['user'] = self.user
-            connected, _ = await communicator.connect()
-            self.assertTrue(connected)
+            comm1.scope['url_route'] = {'kwargs': {'match_id': self.match.id}}
+            comm1.scope['user'] = self.user
+            connected1, _ = await comm1.connect()
+            self.assertTrue(connected1)
 
-            # Receive game.matched
-            res_matched = await communicator.receive_json_from()
-            self.assertEqual(res_matched['event'], 'game.matched')
+            comm2 = WebsocketCommunicator(
+                DuelConsumer.as_asgi(),
+                f"/ws/game/duel/{self.match.id}/",
+            )
+            comm2.scope['url_route'] = {'kwargs': {'match_id': self.match.id}}
+            comm2.scope['user'] = self.user2
+            connected2, _ = await comm2.connect()
+            self.assertTrue(connected2)
 
-            # Receive round.start
-            res_round = await communicator.receive_json_from()
-            self.assertEqual(res_round['event'], 'round.start')
+            # Receive game.matched & round.start on comm1
+            res_matched1 = await comm1.receive_json_from()
+            self.assertEqual(res_matched1['event'], 'game.matched')
+            res_round1 = await comm1.receive_json_from()
+            self.assertEqual(res_round1['event'], 'round.start')
             # Verify Zero-Knowledge: no target_lat, target_lon, or true_mass_kg
-            self.assertNotIn('target_lat', res_round['payload'])
-            self.assertNotIn('target_lon', res_round['payload'])
-            self.assertNotIn('true_mass_kg', res_round['payload'])
+            self.assertNotIn('target_lat', res_round1['payload'])
+            self.assertNotIn('target_lon', res_round1['payload'])
+            self.assertNotIn('true_mass_kg', res_round1['payload'])
 
-            # Submit guess
-            await communicator.send_json_to({
+            # Drain welcome events on comm2
+            await comm2.receive_json_from()
+            await comm2.receive_json_from()
+
+            # Player 1 submits guess
+            await comm1.send_json_to({
                 'action': 'submit_guess',
                 'latitude': 20.0,
                 'longitude': 50.0,
             })
 
-            # Receive answer accepted
-            res_accepted = await communicator.receive_json_from()
+            # Player 1 receives answer accepted
+            res_accepted1 = await comm1.receive_json_from()
+            self.assertEqual(res_accepted1['event'], 'round.answer_accepted')
+
+            # Player 2 receives opponent acted notice without score leakage
+            res_opp = await comm2.receive_json_from()
+            self.assertEqual(res_opp['event'], 'round.opponent_acted')
+            self.assertNotIn('score', res_opp)
+
+            # Player 2 submits guess
+            await comm2.send_json_to({
+                'action': 'submit_guess',
+                'latitude': 20.0,
+                'longitude': 50.0,
+            })
+
+            res_accepted2 = await comm2.receive_json_from()
+            self.assertEqual(res_accepted2['event'], 'round.answer_accepted')
+
+            # Player 1 receives notice that opponent acted
+            res_opp_p1 = await comm1.receive_json_from()
+            self.assertEqual(res_opp_p1['event'], 'round.opponent_acted')
+
+            # Now both receive round result once both answered
+            res_result1 = await comm1.receive_json_from()
+            self.assertEqual(res_result1['event'], 'round.result')
+            self.assertGreaterEqual(res_result1['score'], 90)
+
+            res_result2 = await comm2.receive_json_from()
+            self.assertEqual(res_result2['event'], 'round.result')
+            self.assertGreaterEqual(res_result2['score'], 90)
+
+            await comm1.disconnect()
+            await comm2.disconnect()
+
+        async_to_sync(_run)()
+
+    def test_ws_bot_match_immediate_result(self):
+        self.match.is_bot_match = True
+        self.match.save()
+
+        async def _run():
+            comm = WebsocketCommunicator(
+                DuelConsumer.as_asgi(),
+                f"/ws/game/duel/{self.match.id}/",
+            )
+            comm.scope['url_route'] = {'kwargs': {'match_id': self.match.id}}
+            comm.scope['user'] = self.user
+            connected, _ = await comm.connect()
+            self.assertTrue(connected)
+
+            await comm.receive_json_from()  # game.matched
+            await comm.receive_json_from()  # round.start
+
+            await comm.send_json_to({
+                'action': 'submit_guess',
+                'latitude': 20.0,
+                'longitude': 50.0,
+            })
+
+            res_accepted = await comm.receive_json_from()
             self.assertEqual(res_accepted['event'], 'round.answer_accepted')
 
-            # Receive round result
-            res_result = await communicator.receive_json_from()
+            res_result = await comm.receive_json_from()
             self.assertEqual(res_result['event'], 'round.result')
             self.assertGreaterEqual(res_result['score'], 90)
 
-            await communicator.disconnect()
+            await comm.disconnect()
 
         async_to_sync(_run)()
 
