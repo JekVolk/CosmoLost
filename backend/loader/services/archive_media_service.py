@@ -15,6 +15,7 @@ logger = logging.getLogger('loader.services.archive_media')
 CURATED_MEDIA_QUERIES: Dict[str, List[tuple[str, str]]] = {
     'apollo-11-descent-stage': [
         ('Apollo 11 Lunar Module Eagle surface', 'SURFACE_PHOTO'),
+        ('Apollo 11 panorama', 'PANORAMA'),
         ('Tranquility Base LROC orbital', 'ORBITAL'),
     ],
     'opportunity-rover': [
@@ -23,6 +24,7 @@ CURATED_MEDIA_QUERIES: Dict[str, List[tuple[str, str]]] = {
     ],
     'spirit-rover': [
         ('Spirit rover Columbia Hills Gusev', 'SURFACE_PHOTO'),
+        ('Spirit rover panorama', 'PANORAMA'),
     ],
     'insight-lander': [
         ('InSight lander Elysium Planitia SEIS', 'SURFACE_PHOTO'),

@@ -19,6 +19,7 @@ cp .env.example .env
 | `NASA_API_KEYS` | Пул токенів NASA через кому без пробілів | `DEMO_KEY` | Зареєструвати 2–4 безкоштовні ключі на [api.nasa.gov](https://api.nasa.gov) |
 | `NASA_API_BASE_URL` | Базовий шлюз NASA REST API | `https://api.nasa.gov` | `https://api.nasa.gov` |
 | `NASA_IMAGES_API_URL` | Ендпоінт медіабібліотеки NASA (без ключа) | `https://images-api.nasa.gov` | `https://images-api.nasa.gov` |
+| `MARS_ROVER_API_BASE_URL` | (Опціонально) Дзеркало для Mars Rover Photos | `None` (офіційний NASA Image Archive) | `None` або URL дзеркала |
 | `NASA_SYNC_INTERVAL_SEC` | Інтервал синхронізації для daemon-режиму | `3600` (1 година) | `3600` або `7200` |
 | `NASA_RATE_LIMIT_DELAY` | Затримка між запитами (секунди) | `0.25` | `0.25` |
 | `NASA_REQUEST_TIMEOUT` | Таймаут одного HTTP-запиту (секунди) | `15` | `15` |
