@@ -4,6 +4,7 @@ URL configuration for CosmoLost backend project.
 from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import include, path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from loader import views as loader_views
 
 
@@ -39,4 +40,10 @@ urlpatterns = [
     # Routes for NASA Loader / Catalog Sync
     path('loader/sync-nasa-catalog/', loader_views.sync_nasa_catalog, name='sync-nasa-catalog'),
     path('api/v1/loader/sync-nasa-catalog/', loader_views.sync_nasa_catalog, name='api-sync-nasa-catalog'),
+
+    # Routes for Game Module
+    path('api/game/', include('game.urls')),
+    path('auth/', include('social_django.urls', namespace='social')),
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
