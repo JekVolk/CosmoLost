@@ -1,6 +1,7 @@
 import {
   Activity,
   Check,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Compass,
@@ -33,6 +34,9 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState<boolean>(false);
+
+  const activeFiltersCount = selectedTypes.length + selectedStatuses.length;
 
   const isMars = planet.id === 'mars';
   const themeColor = isMars ? '#f97316' : '#00F0FF';
@@ -156,7 +160,8 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
               background: 'rgba(15, 23, 42, 0.7)',
               borderRadius: '8px',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              marginBottom: '12px',
+              marginBottom: '2px',
+              flexShrink: 0,
             }}
           >
             <button
@@ -364,13 +369,17 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
                     </div>
                     <div
                       style={{
-                        fontSize: '12px',
+                        fontSize: '11px',
                         fontWeight: 700,
                         color: '#38bdf8',
                         fontFamily: 'var(--font-mono)',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
                       }}
+                      title={planet.telemetry.dayLength}
                     >
-                      {planet.telemetry.dayLength.split(' ')[0]}
+                      {isMars ? '24h 37m (1 sol)' : '27.3 Earth days'}
                     </div>
                   </div>
                 </div>
@@ -488,47 +497,82 @@ export const PlanetTelemetry: React.FC<PlanetTelemetryProps> = ({
                 )}
               </div>
 
-              <div className="pen-filter-section">
-                <div className="pen-section-title">Object Type</div>
-                <div className="pen-checkbox-grid">
-                  {typeOptions.map((opt) => {
-                    const active = selectedTypes.includes(opt.id);
-                    return (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        className={`pen-chip-btn ${active ? 'active' : ''}`}
-                        style={{ '--chip-accent': themeColor } as React.CSSProperties}
-                        onClick={() => toggleType(opt.id)}
-                      >
-                        <span className="pen-chip-box">{active && <Check size={10} />}</span>
-                        <span>{opt.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+              {/* Collapsible Filter Bar to preserve vertical space for the list */}
+              <div className="pen-filter-toggle-row">
+                <button
+                  type="button"
+                  className={`pen-filter-toggle-btn ${activeFiltersCount > 0 ? 'has-active' : ''}`}
+                  onClick={() => setIsFiltersExpanded((prev) => !prev)}
+                >
+                  <Filter size={12} style={{ color: themeColor }} />
+                  <span>Filters {activeFiltersCount > 0 ? `(${activeFiltersCount})` : ''}</span>
+                  <ChevronDown
+                    size={13}
+                    style={{
+                      transform: isFiltersExpanded ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.2s ease',
+                    }}
+                  />
+                </button>
+                {activeFiltersCount > 0 && (
+                  <button
+                    type="button"
+                    className="pen-filter-reset-btn"
+                    onClick={() => {
+                      setSelectedTypes([]);
+                      setSelectedStatuses([]);
+                    }}
+                  >
+                    Reset
+                  </button>
+                )}
               </div>
 
-              <div className="pen-filter-section">
-                <div className="pen-section-title">Operational Status</div>
-                <div className="pen-checkbox-grid">
-                  {statusOptions.map((opt) => {
-                    const active = selectedStatuses.includes(opt.id);
-                    return (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        className={`pen-chip-btn ${active ? 'active' : ''}`}
-                        style={{ '--chip-accent': themeColor } as React.CSSProperties}
-                        onClick={() => toggleStatus(opt.id)}
-                      >
-                        <span className="pen-chip-box">{active && <Check size={10} />}</span>
-                        <span>{opt.label}</span>
-                      </button>
-                    );
-                  })}
+              {isFiltersExpanded && (
+                <div className="pen-filters-collapsible-content">
+                  <div className="pen-filter-section">
+                    <div className="pen-section-title">Object Type</div>
+                    <div className="pen-checkbox-grid">
+                      {typeOptions.map((opt) => {
+                        const active = selectedTypes.includes(opt.id);
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            className={`pen-chip-btn ${active ? 'active' : ''}`}
+                            style={{ '--chip-accent': themeColor } as React.CSSProperties}
+                            onClick={() => toggleType(opt.id)}
+                          >
+                            <span className="pen-chip-box">{active && <Check size={10} />}</span>
+                            <span>{opt.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="pen-filter-section">
+                    <div className="pen-section-title">Operational Status</div>
+                    <div className="pen-checkbox-grid">
+                      {statusOptions.map((opt) => {
+                        const active = selectedStatuses.includes(opt.id);
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            className={`pen-chip-btn ${active ? 'active' : ''}`}
+                            style={{ '--chip-accent': themeColor } as React.CSSProperties}
+                            onClick={() => toggleStatus(opt.id)}
+                          >
+                            <span className="pen-chip-box">{active && <Check size={10} />}</span>
+                            <span>{opt.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="pen-registry-header">
                 <div className="pen-registry-title">

@@ -2192,7 +2192,7 @@
                   "id": "LFLEN",
                   "name": "Slider Title",
                   "fill": "#38bdf8",
-                  "content": "ХРОНОЛОГІЯ АРТЕФАКТІВ // 1960 – 2026",
+                  "content": "ARTIFACT TIMELINE // 1960 – 2026",
                   "fontFamily": "Space Mono",
                   "fontSize": 9,
                   "fontWeight": "700",
@@ -2203,7 +2203,7 @@
                   "id": "muxJF",
                   "name": "Active Epoch",
                   "fill": "#f59e0b",
-                  "content": "1969 · ЕРА АПОЛЛОН (APOLLO 11)",
+                  "content": "1969 · APOLLO ERA (APOLLO 11)",
                   "fontFamily": "Inter",
                   "fontSize": 10,
                   "fontWeight": "700"
@@ -2457,7 +2457,7 @@
                       "id": "D7mgw",
                       "name": "Txt",
                       "fill": "#f59e0b",
-                      "content": "Заснув (1969)",
+                      "content": "Dormant (1969)",
                       "fontFamily": "Inter",
                       "fontSize": 9,
                       "fontWeight": "600"
@@ -2494,7 +2494,7 @@
                   "id": "a9SoO",
                   "name": "Caption",
                   "fill": "#64748b",
-                  "content": "📷 Архів NASA: Спускний ступінь Eagle",
+                  "content": "📷 NASA Archive: Eagle Descent Stage",
                   "fontFamily": "Inter",
                   "fontSize": 10,
                   "fontWeight": "600"
@@ -2524,7 +2524,7 @@
                   "id": "sVGAt",
                   "name": "Link",
                   "fill": "#7dd3fc",
-                  "content": "Детальніше ↗",
+                  "content": "Details ↗",
                   "fontFamily": "Inter",
                   "fontSize": 10,
                   "fontWeight": "700"
@@ -4587,7 +4587,7 @@
                   "id": "xMYFd",
                   "name": "Slider Title",
                   "fill": "#f97316",
-                  "content": "ХРОНОЛОГІЯ АРТЕФАКТІВ МАРСА // 1960 – 2026",
+                  "content": "MARS ARTIFACT TIMELINE // 1960 – 2026",
                   "fontFamily": "Space Mono",
                   "fontSize": 9,
                   "fontWeight": "700",
@@ -4598,7 +4598,7 @@
                   "id": "sR365",
                   "name": "Active Epoch",
                   "fill": "#10b981",
-                  "content": "2021 · ЕРА PERSEVERANCE & INGENUITY",
+                  "content": "2021 · PERSEVERANCE & INGENUITY ERA",
                   "fontFamily": "Inter",
                   "fontSize": 10,
                   "fontWeight": "700"
@@ -4872,7 +4872,7 @@
                       "id": "J36sG",
                       "name": "Txt",
                       "fill": "#10b981",
-                      "content": "Активний (2026)",
+                      "content": "Active (2026)",
                       "fontFamily": "Inter",
                       "fontSize": 9,
                       "fontWeight": "600"
@@ -4909,7 +4909,7 @@
                   "id": "rh6ie",
                   "name": "Caption",
                   "fill": "#78716c",
-                  "content": "📷 Mastcam-Z: Панорама кратера Єзеро",
+                  "content": "📷 Mastcam-Z: Jezero Crater Panorama",
                   "fontFamily": "Inter",
                   "fontSize": 10,
                   "fontWeight": "600"
@@ -4939,7 +4939,7 @@
                   "id": "ln5Nl",
                   "name": "Link",
                   "fill": "#fdba74",
-                  "content": "Детальніше ↗",
+                  "content": "Details ↗",
                   "fontFamily": "Inter",
                   "fontSize": 10,
                   "fontWeight": "700"
@@ -5190,7 +5190,7 @@
                   "id": "P13bSJ",
                   "name": "Mob Moon Text",
                   "fill": "#ffffff",
-                  "content": "Місяць",
+                  "content": "Moon",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "700"
@@ -5223,7 +5223,7 @@
                   "id": "SuyKe",
                   "name": "Mob Mars Text",
                   "fill": "#94a3b8",
-                  "content": "Марс",
+                  "content": "Mars",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "600"
@@ -5245,7 +5245,7 @@
             {
               "type": "frame",
               "id": "Y5YE2",
-              "name": "MChip Активні",
+              "name": "MChip Active",
               "fill": "#22c55e1a",
               "cornerRadius": 16,
               "stroke": "#22c55e40",
@@ -5270,7 +5270,7 @@
                   "id": "WD09W",
                   "name": "Text",
                   "fill": "#f8fafc",
-                  "content": "Активні (12)",
+                  "content": "Active (12)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -5280,7 +5280,7 @@
             {
               "type": "frame",
               "id": "MkGOJ",
-              "name": "MChip Заснули",
+              "name": "MChip Dormant",
               "fill": "#f973161a",
               "cornerRadius": 16,
               "stroke": "#f9731640",
@@ -5305,7 +5305,7 @@
                   "id": "kt7qK",
                   "name": "Text",
                   "fill": "#f8fafc",
-                  "content": "Заснули (34)",
+                  "content": "Dormant (34)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -5315,7 +5315,7 @@
             {
               "type": "frame",
               "id": "T3jgm1",
-              "name": "MChip Розбиті",
+              "name": "MChip Impacted",
               "fill": "#94a3b81a",
               "cornerRadius": 16,
               "stroke": "#94a3b840",
@@ -5340,7 +5340,7 @@
                   "id": "MSDBp",
                   "name": "Text",
                   "fill": "#f8fafc",
-                  "content": "Розбиті (18)",
+                  "content": "Impacted (18)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -5480,7 +5480,7 @@
                       "id": "wDGE1",
                       "name": "Status",
                       "fill": "#fb923c",
-                      "content": "● Заснув",
+                      "content": "● Dormant",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "700"
@@ -5506,7 +5506,7 @@
               "fill": "#cbd5e1",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Спускний ступінь першого пілотованого місячного модуля. Знаходиться у Морі Спокою (0.6740° N, 23.4720° E).",
+              "content": "Descent stage of humanity’s first crewed lunar module. Located in Mare Tranquillitatis (0.6740° N, 23.4720° E).",
               "lineHeight": 1.4,
               "fontFamily": "Inter",
               "fontSize": 11,
@@ -5532,7 +5532,7 @@
                       "id": "H6TgEI",
                       "name": "Lbl",
                       "fill": "#64748b",
-                      "content": "Епоха артефакту",
+                      "content": "Artifact Era",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "normal"
@@ -5542,7 +5542,7 @@
                       "id": "CN5Sr",
                       "name": "Yr",
                       "fill": "#38bdf8",
-                      "content": "1969 рік",
+                      "content": "Year 1969",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -5605,7 +5605,7 @@
                   "id": "bNDVj",
                   "name": "Btn Text",
                   "fill": "#ffffff",
-                  "content": "Відкрити повну 3D картку →",
+                  "content": "Open full 3D dossier →",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "700"
@@ -5772,7 +5772,7 @@
                   "id": "micDb",
                   "name": "Crumb",
                   "fill": "#38bdf8",
-                  "content": "Місяць  >  Море Спокою  >  Кластер «Apollo 11 Site (5)» [Радіальний Spiderfying]",
+                  "content": "Moon  >  Sea of Tranquility  >  Cluster “Apollo 11 Site (5)” [Radial Spiderfying]",
                   "fontFamily": "Inter",
                   "fontSize": 13,
                   "fontWeight": "600"
@@ -5799,7 +5799,7 @@
                   "id": "T8jcx",
                   "name": "Zoom Text",
                   "fill": "#f8fafc",
-                  "content": "🔍 Масштаб: 100 м (Мікро-локація)",
+                  "content": "🔍 Scale: 100 m (Micro-Location)",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "600"
@@ -5828,7 +5828,7 @@
               "id": "AMBBm",
               "name": "Title",
               "fill": "#38bdf8",
-              "content": "КЛАСТЕРИЗАЦІЯ ТОЧОК",
+              "content": "POINT CLUSTERING",
               "fontFamily": "Inter",
               "fontSize": 11,
               "fontWeight": "700",
@@ -5851,7 +5851,7 @@
               "fill": "#94a3b8",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "5 взаємопов'язаних науково-історичних артефактів у радіусі 100 метрів. На загальній мапі згортаються у числовий Circle Badge.",
+              "content": "5 interrelated scientific and historical artifacts within a 100-meter radius. Collapses into a numeric Circle Badge on the global map.",
               "lineHeight": 1.45,
               "fontFamily": "Inter",
               "fontSize": 12,
@@ -5870,7 +5870,7 @@
                   "id": "QElGl",
                   "name": "Lbl",
                   "fill": "#64748b",
-                  "content": "СТАН ВІДОБРАЖЕННЯ:",
+                  "content": "DISPLAY STATE:",
                   "fontFamily": "Inter",
                   "fontSize": 10,
                   "fontWeight": "700"
@@ -5933,7 +5933,7 @@
                           "id": "gOrtS",
                           "name": "Txt",
                           "fill": "#ffffff",
-                          "content": "✦ Spiderfying (Активно)",
+                          "content": "✦ Spiderfying (Active)",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -5949,7 +5949,7 @@
               "id": "kcTzd",
               "name": "List Title",
               "fill": "#64748b",
-              "content": "АРТЕФАКТИ КЛАСТЕРА (5 ОД.):",
+              "content": "CLUSTER ARTIFACTS (5 UNITS):",
               "fontFamily": "Inter",
               "fontSize": 11,
               "fontWeight": "700"
@@ -6002,7 +6002,7 @@
                   "id": "Fwe4r",
                   "name": "Item Dist",
                   "fill": "#38bdf8",
-                  "content": "0 м (Центр)",
+                  "content": "0 m (Center)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6045,7 +6045,7 @@
                       "fill": "#f8fafc",
                       "textGrowth": "fixed-width",
                       "width": 170,
-                      "content": "LRRR Ретрорефлектор",
+                      "content": "LRRR Retroreflector",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
@@ -6057,7 +6057,7 @@
                   "id": "KuEjr",
                   "name": "Item Dist",
                   "fill": "#38bdf8",
-                  "content": "+16 м",
+                  "content": "+16 m",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6100,7 +6100,7 @@
                       "fill": "#f8fafc",
                       "textGrowth": "fixed-width",
                       "width": 170,
-                      "content": "Прапор США (Flag Assembly)",
+                      "content": "US Flag (Flag Assembly)",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
@@ -6112,7 +6112,7 @@
                   "id": "qECmS",
                   "name": "Item Dist",
                   "fill": "#38bdf8",
-                  "content": "+8 м",
+                  "content": "+8 m",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6155,7 +6155,7 @@
                       "fill": "#f8fafc",
                       "textGrowth": "fixed-width",
                       "width": 170,
-                      "content": "Сейсмометр PSEP",
+                      "content": "PSEP Seismometer",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
@@ -6167,7 +6167,7 @@
                   "id": "PDrpg",
                   "name": "Item Dist",
                   "fill": "#38bdf8",
-                  "content": "+14 м",
+                  "content": "+14 m",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6210,7 +6210,7 @@
                       "fill": "#f8fafc",
                       "textGrowth": "fixed-width",
                       "width": 170,
-                      "content": "Камера MESA TV",
+                      "content": "MESA TV Camera",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
@@ -6222,7 +6222,7 @@
                   "id": "ifKew",
                   "name": "Item Dist",
                   "fill": "#38bdf8",
-                  "content": "+12 м",
+                  "content": "+12 m",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6250,7 +6250,7 @@
               "id": "u4ivS7",
               "x": 460,
               "y": 380,
-              "name": "Range Circle 25 м",
+              "name": "Range Circle 25 m",
               "width": 140,
               "height": 140,
               "stroke": "#38bdf826",
@@ -6263,7 +6263,7 @@
               "y": 445,
               "name": "Range Label",
               "fill": "#64748b",
-              "content": "25 м",
+              "content": "25 m",
               "fontFamily": "Inter",
               "fontSize": 10,
               "fontWeight": "normal"
@@ -6273,7 +6273,7 @@
               "id": "vJStM",
               "x": 390,
               "y": 310,
-              "name": "Range Circle 50 м",
+              "name": "Range Circle 50 m",
               "width": 280,
               "height": 280,
               "stroke": "#38bdf826",
@@ -6286,7 +6286,7 @@
               "y": 445,
               "name": "Range Label",
               "fill": "#64748b",
-              "content": "50 м",
+              "content": "50 m",
               "fontFamily": "Inter",
               "fontSize": 10,
               "fontWeight": "normal"
@@ -6296,7 +6296,7 @@
               "id": "uVMZL",
               "x": 320,
               "y": 240,
-              "name": "Range Circle 75 м",
+              "name": "Range Circle 75 m",
               "width": 420,
               "height": 420,
               "stroke": "#38bdf826",
@@ -6309,7 +6309,7 @@
               "y": 445,
               "name": "Range Label",
               "fill": "#64748b",
-              "content": "75 м",
+              "content": "75 m",
               "fontFamily": "Inter",
               "fontSize": 10,
               "fontWeight": "normal"
@@ -6319,7 +6319,7 @@
               "id": "zQRFM",
               "x": 250,
               "y": 170,
-              "name": "Range Circle 100 м",
+              "name": "Range Circle 100 m",
               "width": 560,
               "height": 560,
               "stroke": "#38bdf826",
@@ -6332,7 +6332,7 @@
               "y": 445,
               "name": "Range Label",
               "fill": "#64748b",
-              "content": "100 м",
+              "content": "100 m",
               "fontFamily": "Inter",
               "fontSize": 10,
               "fontWeight": "normal"
@@ -6388,7 +6388,7 @@
               "id": "hWTdj",
               "x": 0,
               "y": 0,
-              "name": "Spider Line to LRRR Ретрорефлектор",
+              "name": "Spider Line to LRRR Retroreflector",
               "geometry": "M530 450l250-200",
               "width": 0,
               "height": 0,
@@ -6400,7 +6400,7 @@
               "id": "O02zte",
               "x": 740,
               "y": 220,
-              "name": "Spider Node: LRRR Ретрорефлектор",
+              "name": "Spider Node: LRRR Retroreflector",
               "width": 200,
               "fill": "#1e293bf2",
               "cornerRadius": 14,
@@ -6440,7 +6440,7 @@
                           "id": "Kbu2G",
                           "name": "Dist",
                           "fill": "#38bdf8",
-                          "content": "+16 м",
+                          "content": "+16 m",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -6452,7 +6452,7 @@
                       "id": "ZxYyU",
                       "name": "Status",
                       "fill": "#22c55e",
-                      "content": "● Активний досі",
+                      "content": "● Still Active",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "600"
@@ -6464,7 +6464,7 @@
                   "id": "qev0x",
                   "name": "Name",
                   "fill": "#ffffff",
-                  "content": "LRRR Ретрорефлектор",
+                  "content": "LRRR Retroreflector",
                   "fontFamily": "Inter",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -6474,7 +6474,7 @@
                   "id": "wLe9a",
                   "name": "Type",
                   "fill": "#94a3b8",
-                  "content": "Лазерний рефлектор",
+                  "content": "Laser Retroreflector",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6486,7 +6486,7 @@
               "id": "eMHR0",
               "x": 0,
               "y": 0,
-              "name": "Spider Line to Прапор США",
+              "name": "Spider Line to US Flag",
               "geometry": "M530 450l-230-180",
               "width": 0,
               "height": 0,
@@ -6498,7 +6498,7 @@
               "id": "YohU6",
               "x": 260,
               "y": 240,
-              "name": "Spider Node: Прапор США",
+              "name": "Spider Node: US Flag",
               "width": 200,
               "fill": "#1e293bf2",
               "cornerRadius": 14,
@@ -6538,7 +6538,7 @@
                           "id": "mrw67",
                           "name": "Dist",
                           "fill": "#38bdf8",
-                          "content": "+8 м",
+                          "content": "+8 m",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -6550,7 +6550,7 @@
                       "id": "m7pwD",
                       "name": "Status",
                       "fill": "#94a3b8",
-                      "content": "● Меморіальний релікт",
+                      "content": "● Memorial Relic",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "600"
@@ -6562,7 +6562,7 @@
                   "id": "WYoUL",
                   "name": "Name",
                   "fill": "#ffffff",
-                  "content": "Прапор США",
+                  "content": "US Flag",
                   "fontFamily": "Inter",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -6584,7 +6584,7 @@
               "id": "m0WBO",
               "x": 0,
               "y": 0,
-              "name": "Spider Line to Сейсмометр PSEP",
+              "name": "Spider Line to PSEP Seismometer",
               "geometry": "M530 450l270 220",
               "width": 0,
               "height": 0,
@@ -6596,7 +6596,7 @@
               "id": "uVpsl",
               "x": 760,
               "y": 640,
-              "name": "Spider Node: Сейсмометр PSEP",
+              "name": "Spider Node: PSEP Seismometer",
               "width": 200,
               "fill": "#1e293bf2",
               "cornerRadius": 14,
@@ -6636,7 +6636,7 @@
                           "id": "Xt9JT",
                           "name": "Dist",
                           "fill": "#38bdf8",
-                          "content": "+14 м",
+                          "content": "+14 m",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -6648,7 +6648,7 @@
                       "id": "C5YiLi",
                       "name": "Status",
                       "fill": "#f97316",
-                      "content": "● Заснув (1969)",
+                      "content": "● Dormant (1969)",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "600"
@@ -6660,7 +6660,7 @@
                   "id": "S1keE",
                   "name": "Name",
                   "fill": "#ffffff",
-                  "content": "Сейсмометр PSEP",
+                  "content": "PSEP Seismometer",
                   "fontFamily": "Inter",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -6670,7 +6670,7 @@
                   "id": "vEJEm",
                   "name": "Type",
                   "fill": "#94a3b8",
-                  "content": "Сейсмічний сенсор",
+                  "content": "Seismic Sensor",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6734,7 +6734,7 @@
                           "id": "bXwNq",
                           "name": "Dist",
                           "fill": "#38bdf8",
-                          "content": "+12 м",
+                          "content": "+12 m",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -6746,7 +6746,7 @@
                       "id": "C4R3gY",
                       "name": "Status",
                       "fill": "#f97316",
-                      "content": "● Заснув (1969)",
+                      "content": "● Dormant (1969)",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "600"
@@ -6768,7 +6768,7 @@
                   "id": "b1lnPl",
                   "name": "Type",
                   "fill": "#94a3b8",
-                  "content": "Телекамера трансляції",
+                  "content": "Broadcast Television Camera",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6780,7 +6780,7 @@
               "id": "c6XSlO",
               "x": 0,
               "y": 0,
-              "name": "Spider Line to Пам'ятна табличка",
+              "name": "Spider Line to Commemorative Plaque",
               "geometry": "M530 450l-350 0",
               "width": 0,
               "height": 0,
@@ -6792,7 +6792,7 @@
               "id": "POzqY",
               "x": 140,
               "y": 420,
-              "name": "Spider Node: Пам'ятна табличка",
+              "name": "Spider Node: Commemorative Plaque",
               "width": 200,
               "fill": "#1e293bf2",
               "cornerRadius": 14,
@@ -6832,7 +6832,7 @@
                           "id": "AWVRU",
                           "name": "Dist",
                           "fill": "#38bdf8",
-                          "content": "+5 м",
+                          "content": "+5 m",
                           "fontFamily": "Inter",
                           "fontSize": 11,
                           "fontWeight": "700"
@@ -6844,7 +6844,7 @@
                       "id": "Kl8ra",
                       "name": "Status",
                       "fill": "#f8fafc",
-                      "content": "● Непорушний релікт",
+                      "content": "● Undisturbed Relic",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "600"
@@ -6856,7 +6856,7 @@
                   "id": "mFW4l",
                   "name": "Name",
                   "fill": "#ffffff",
-                  "content": "Пам'ятна табличка",
+                  "content": "Commemorative Plaque",
                   "fontFamily": "Inter",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -6895,7 +6895,7 @@
               "id": "U1O7N",
               "name": "Detail Title",
               "fill": "#22c55e",
-              "content": "ОБРАНИЙ АРТЕФАКТ ВУЗЛА",
+              "content": "NODE SELECTED ARTIFACT",
               "fontFamily": "Inter",
               "fontSize": 11,
               "fontWeight": "700",
@@ -6906,7 +6906,7 @@
               "id": "T0v63s",
               "name": "Art Title",
               "fill": "#ffffff",
-              "content": "LRRR Ретрорефлектор",
+              "content": "LRRR Retroreflector",
               "fontFamily": "Inter",
               "fontSize": 18,
               "fontWeight": "800"
@@ -6928,7 +6928,7 @@
               "fill": "#cbd5e1",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Єдиний науковий прилад місії Аполлон-11, що функціонує досі. Масив із 100 кварцових призм відбиває лазерні імпульси з Землі, доводячи, що Місяць віддаляється на 3.8 см щороку.",
+              "content": "The only Apollo 11 scientific instrument still operational. An array of 100 quartz corner cubes reflects laser pulses from Earth, confirming the Moon drifts away by 3.8 cm per year.",
               "lineHeight": 1.45,
               "fontFamily": "Inter",
               "fontSize": 12,
@@ -6947,7 +6947,7 @@
                   "id": "MOwsW",
                   "name": "K",
                   "fill": "#64748b",
-                  "content": "Дистанція від Eagle",
+                  "content": "Distance from Eagle",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6957,7 +6957,7 @@
                   "id": "uDQvv",
                   "name": "V",
                   "fill": "#f8fafc",
-                  "content": "16.1 метрів на південний захід",
+                  "content": "16.1 meters southwest",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -6977,7 +6977,7 @@
                   "id": "Fr6oU",
                   "name": "K",
                   "fill": "#64748b",
-                  "content": "Встановлено",
+                  "content": "Installed",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -6987,7 +6987,7 @@
                   "id": "eOJE5",
                   "name": "V",
                   "fill": "#f8fafc",
-                  "content": "21 липня 1969 (Базз Олдрін)",
+                  "content": "July 21, 1969 (Buzz Aldrin)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -7007,7 +7007,7 @@
                   "id": "exaOv",
                   "name": "K",
                   "fill": "#64748b",
-                  "content": "Матеріал",
+                  "content": "Material",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -7017,7 +7017,7 @@
                   "id": "mZLwm",
                   "name": "V",
                   "fill": "#f8fafc",
-                  "content": "Кварцові призми Suprasil-1",
+                  "content": "Suprasil-1 Quartz Prisms",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -7037,7 +7037,7 @@
                   "id": "Lbcgs",
                   "name": "K",
                   "fill": "#64748b",
-                  "content": "Статус зв'язку",
+                  "content": "Telemetry Status",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -7047,7 +7047,7 @@
                   "id": "O4C5U",
                   "name": "V",
                   "fill": "#f8fafc",
-                  "content": "Пасивний оптичний відгук",
+                  "content": "Passive Optical Response",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -7073,7 +7073,7 @@
                   "id": "oFyhY",
                   "name": "Btn Text",
                   "fill": "#ffffff",
-                  "content": "Відкрити картку артефакту /artifacts/lrrr →",
+                  "content": "Open artifact dossier /artifacts/lrrr →",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "700"
@@ -7127,7 +7127,7 @@
                   "id": "xcS7C",
                   "name": "Back Link",
                   "fill": "#38bdf8",
-                  "content": "← Назад до 3D-мапи",
+                  "content": "← Back to 3D Map",
                   "fontFamily": "Inter",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -7147,7 +7147,7 @@
                   "id": "w6HD8Z",
                   "name": "Page Title",
                   "fill": "#ffffff",
-                  "content": "АРТЕФАКТ: LUNAR MODULE EAGLE (LM-5)",
+                  "content": "ARTIFACT: LUNAR MODULE EAGLE (LM-5)",
                   "fontFamily": "Inter",
                   "fontSize": 13,
                   "fontWeight": "600",
@@ -7225,7 +7225,7 @@
                       "id": "zE5uw",
                       "name": "Date",
                       "fill": "#94a3b8",
-                      "content": "Посадка: 20 липня 1969, 20:17:40 UTC",
+                      "content": "Landing: July 20, 1969, 20:17:40 UTC",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -7271,7 +7271,7 @@
                       "id": "e8NNH",
                       "name": "Txt",
                       "fill": "#f8fafc",
-                      "content": "Місяць · Море Спокою",
+                      "content": "Moon · Sea of Tranquility",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
@@ -7306,7 +7306,7 @@
                       "id": "VM8KB",
                       "name": "Txt",
                       "fill": "#fb923c",
-                      "content": "Історичний пам'ятник / Заснув",
+                      "content": "Historical Monument / Dormant",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "700"
@@ -7400,7 +7400,7 @@
                   "fill": "#94a3b8",
                   "textGrowth": "fixed-width",
                   "width": 340,
-                  "content": "Повна полігональна сітка LM-5 Eagle з текстурами золотистої каптонової термоізоляції",
+                  "content": "Full polygonal mesh of LM-5 Eagle with golden Kapton insulation textures",
                   "textAlign": "center",
                   "fontFamily": "Inter",
                   "fontSize": 12,
@@ -7428,7 +7428,7 @@
                 {
                   "type": "frame",
                   "id": "v8Y3ac",
-                  "name": "Tool 🔄 Обертати",
+                  "name": "Tool 🔄 Rotate",
                   "fill": "#1e293b",
                   "cornerRadius": 8,
                   "padding": [
@@ -7442,7 +7442,7 @@
                       "id": "l11EsJ",
                       "name": "Txt",
                       "fill": "#f8fafc",
-                      "content": "🔄 Обертати",
+                      "content": "🔄 Rotate",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "600"
@@ -7452,7 +7452,7 @@
                 {
                   "type": "frame",
                   "id": "Lp7zd",
-                  "name": "Tool 🔍+ Зум",
+                  "name": "Tool 🔍+ Zoom In",
                   "fill": "#1e293b",
                   "cornerRadius": 8,
                   "padding": [
@@ -7466,7 +7466,7 @@
                       "id": "WQtV9",
                       "name": "Txt",
                       "fill": "#f8fafc",
-                      "content": "🔍+ Зум",
+                      "content": "🔍+ Zoom In",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "600"
@@ -7476,7 +7476,7 @@
                 {
                   "type": "frame",
                   "id": "psPMg",
-                  "name": "Tool 🔍- Віддалити",
+                  "name": "Tool 🔍- Zoom Out",
                   "fill": "#1e293b",
                   "cornerRadius": 8,
                   "padding": [
@@ -7490,7 +7490,7 @@
                       "id": "POCLX",
                       "name": "Txt",
                       "fill": "#f8fafc",
-                      "content": "🔍- Віддалити",
+                      "content": "🔍- Zoom Out",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "600"
@@ -7500,7 +7500,7 @@
                 {
                   "type": "frame",
                   "id": "HjENK",
-                  "name": "Tool ⟲ Скинути камеру",
+                  "name": "Tool ⟲ Reset Camera",
                   "fill": "#1e293b",
                   "cornerRadius": 8,
                   "padding": [
@@ -7514,7 +7514,7 @@
                       "id": "N0DkPU",
                       "name": "Txt",
                       "fill": "#f8fafc",
-                      "content": "⟲ Скинути камеру",
+                      "content": "⟲ Reset Camera",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "600"
@@ -7546,7 +7546,7 @@
               "id": "GL5pj",
               "name": "Gallery Title",
               "fill": "#38bdf8",
-              "content": "PILLOW-BOX МЕДІАГАЛЕРЕЯ (АРХІВНІ ФОТО 4:3 ТА 800x600)",
+              "content": "PILLOW-BOX MEDIA GALLERY (4:3 ARCHIVAL PHOTOS & 800x600)",
               "fontFamily": "Inter",
               "fontSize": 11,
               "fontWeight": "700",
@@ -7604,7 +7604,7 @@
                       "id": "uzv0y",
                       "name": "Sub",
                       "fill": "#94a3b8",
-                      "content": "Оригінал 4:3 на розмитому тлі без чорних рамок",
+                      "content": "4:3 original on blurred backdrop without letterbox bars",
                       "textAlign": "center",
                       "fontFamily": "Inter",
                       "fontSize": 10,
@@ -7656,7 +7656,7 @@
                       "id": "XYrt5",
                       "name": "Icon",
                       "fill": "#ffffff",
-                      "content": "📷 Пам'ятна пластина та трап",
+                      "content": "📷 Commemorative Plaque & Ladder",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "600"
@@ -7666,7 +7666,7 @@
                       "id": "L0Vja4",
                       "name": "Sub",
                       "fill": "#94a3b8",
-                      "content": "«Ми прийшли з миром від усього людства»",
+                      "content": "“Here men from the planet Earth first set foot upon the Moon. We came in peace for all mankind.”",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "normal"
@@ -7705,7 +7705,7 @@
                   "id": "bCozT",
                   "name": "Mono Title",
                   "fill": "#fb923c",
-                  "content": "МОНОЛОГ 1-Ї ОСОБИ",
+                  "content": "1ST PERSON MONOLOGUE",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "700",
@@ -7718,7 +7718,7 @@
                   "fill": "#f8fafc",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "«Я стою тут уже понад півстоліття у безмовному Морі Спокою. Мої золотисті каптонові опори навіки зафіксували перші сліди людини у місячному реголіті. Мій злітний ступінь з Нілом та Баззом полетів додому, але я залишився тут — першим вічним форпостом людської цивілізації на іншому космічному тілі...»",
+                  "content": "“I have stood here for over half a century in the silent Sea of Tranquility. My golden Kapton landing pads permanently anchored humanity’s first footprints in the lunar regolith. My ascent stage carried Neil and Buzz home, but I remained—the first eternal outpost of human civilization on another celestial body...”",
                   "lineHeight": 1.55,
                   "fontFamily": "Inter",
                   "fontSize": 13,
@@ -7730,7 +7730,7 @@
                   "id": "Kydrh",
                   "name": "Mono Sign",
                   "fill": "#94a3b8",
-                  "content": "— Спускний ступінь Eagle LM-5, 2026 рік",
+                  "content": "— Eagle LM-5 Descent Stage, 2026",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -7755,7 +7755,7 @@
                   "id": "uMOrK",
                   "name": "Leg Title",
                   "fill": "#38bdf8",
-                  "content": "НАУКОВА СПАДЩИНА ТА ШЛЮЗИ NASA",
+                  "content": "SCIENTIFIC LEGACY & NASA ARCHIVES",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "700",
@@ -7768,7 +7768,7 @@
                   "fill": "#cbd5e1",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Спускний ступінь Eagle продемонстрував надійність посадкового радара Ryan, регульованого РРД DPS та алюмінієвих стільникових амортизаторів, заклавши основу програми Artemis.",
+                  "content": "The Eagle descent stage validated the Ryan landing radar, throttleable DPS engine, and aluminum honeycomb crushables, laying the technical foundation for the Artemis program.",
                   "lineHeight": 1.45,
                   "fontFamily": "Inter",
                   "fontSize": 12,
@@ -7881,7 +7881,7 @@
                   "id": "F4rNAd",
                   "name": "Cite Title",
                   "fill": "#22c55e",
-                  "content": "БЛОК ЦИТУВАННЯ ДЛЯ РЕФЕРАТУ (1-КЛІК)",
+                  "content": "CITATION BLOCK FOR ACADEMIC REFERENCE (1-CLICK)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "700",
@@ -7943,7 +7943,7 @@
                       "id": "K46rW",
                       "name": "Copy Text",
                       "fill": "#0f172a",
-                      "content": "Скопіювати бібліографію для реферату (APA/IEEE)",
+                      "content": "Copy academic bibliography (APA/IEEE)",
                       "fontFamily": "Inter",
                       "fontSize": 12,
                       "fontWeight": "700"
@@ -8017,7 +8017,7 @@
               "id": "FU49F",
               "name": "Top Warning Text",
               "fill": "#f87171",
-              "content": "⚠️ ВЕРХНЯ МЕРТВА ЗОНА (220 px) · Статусбар, аватарка профілю, вкладки соцмереж",
+              "content": "⚠️ TOP DEAD ZONE (220 px) · Status bar, profile avatar, social tabs",
               "fontFamily": "Inter",
               "fontSize": 13,
               "fontWeight": "700"
@@ -8046,7 +8046,7 @@
               "id": "F5oCG",
               "name": "Btm Warning Text",
               "fill": "#f87171",
-              "content": "⚠️ НИЖНЯ МЕРТВА ЗОНА (420 px) · Назва акаунту, опис Reels/Shorts, звук, хештеги",
+              "content": "⚠️ BOTTOM DEAD ZONE (420 px) · Account handle, Reels/Shorts caption, audio, hashtags",
               "fontFamily": "Inter",
               "fontSize": 13,
               "fontWeight": "700"
@@ -8075,7 +8075,7 @@
               "id": "R5yAs",
               "name": "Right Warning Text",
               "fill": "#f87171",
-              "content": "ПРАВА МЕРТВА ЗОНА (150 px)\nЛайки, коментарі, шери, закладки",
+              "content": "RIGHT DEAD ZONE (150 px)\nLikes, comments, shares, bookmarks",
               "textAlign": "center",
               "fontFamily": "Inter",
               "fontSize": 11,
@@ -8116,7 +8116,7 @@
                   "id": "SdZfg",
                   "name": "Txt",
                   "fill": "#4ade80",
-                  "content": "✓ БЕЗПЕЧНА ЗОНА СУБТИТРІВ ТА ГРАФІКИ (Y: 300 — 1400 px)",
+                  "content": "✓ SUBTITLES & GRAPHICS SAFE ZONE (Y: 300 — 1400 px)",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "700"
@@ -8142,7 +8142,7 @@
                   "id": "S9QM2G",
                   "name": "Sub Tag",
                   "fill": "#38bdf8",
-                  "content": "ПРИКЛАД ВІДЕО-СУБТИТРІВ COSMOLOST",
+                  "content": "COSMOLOST VIDEO SUBTITLES SAMPLE",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "700",
@@ -8155,7 +8155,7 @@
                   "fill": "#ffffff",
                   "textGrowth": "fixed-width",
                   "width": 760,
-                  "content": "«Марсохід Opportunity заснув після 5111 Солів, але його місія назавжди змінила науку!»",
+                  "content": "“The Opportunity rover fell silent after 5111 Sols, but its mission revolutionized planetary science forever!”",
                   "lineHeight": 1.4,
                   "textAlign": "center",
                   "fontFamily": "Inter",
@@ -8180,7 +8180,7 @@
                   "id": "jUv69",
                   "name": "Matrix Header",
                   "fill": "#38bdf8",
-                  "content": "МАТРИЦЯ 8 СПРАЙТІВ 512x512 ALPHA PNG (ВІОЛЕТТА)",
+                  "content": "8-SPRITE MATRIX 512x512 ALPHA PNG (VIOLETTE)",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "700"
@@ -8196,7 +8196,7 @@
                     {
                       "type": "frame",
                       "id": "Gs6AA",
-                      "name": "Exp Row: 1. Idle (Спокійний)",
+                      "name": "Exp Row: 1. Idle (Neutral)",
                       "width": "fill_container",
                       "fill": "#0f172a99",
                       "cornerRadius": 12,
@@ -8236,7 +8236,7 @@
                                   "id": "XksEs",
                                   "name": "Exp Name",
                                   "fill": "#f8fafc",
-                                  "content": "1. Idle (Спокійний)",
+                                  "content": "1. Idle (Neutral)",
                                   "fontFamily": "Inter",
                                   "fontSize": 13,
                                   "fontWeight": "700"
@@ -8246,7 +8246,7 @@
                                   "id": "aWJje",
                                   "name": "Exp Desc",
                                   "fill": "#94a3b8",
-                                  "content": "Фоновий стан / Слухає",
+                                  "content": "Idle State / Listening",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "normal"
@@ -8279,7 +8279,7 @@
                                   "id": "oYcyn",
                                   "name": "Txt",
                                   "fill": "#cbd5e1",
-                                  "content": "🤐 Рот закритий",
+                                  "content": "🤐 Mouth Closed",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "600"
@@ -8306,7 +8306,7 @@
                                   "id": "mYsqH",
                                   "name": "Txt",
                                   "fill": "#60a5fa",
-                                  "content": "🗣️ Рот відкритий",
+                                  "content": "🗣️ Mouth Open",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "600"
@@ -8320,7 +8320,7 @@
                     {
                       "type": "frame",
                       "id": "k4K08",
-                      "name": "Exp Row: 2. Expert (В окулярах)",
+                      "name": "Exp Row: 2. Expert (Glasses)",
                       "width": "fill_container",
                       "fill": "#0f172a99",
                       "cornerRadius": 12,
@@ -8360,7 +8360,7 @@
                                   "id": "Dep09",
                                   "name": "Exp Name",
                                   "fill": "#f8fafc",
-                                  "content": "2. Expert (В окулярах)",
+                                  "content": "2. Expert (Glasses)",
                                   "fontFamily": "Inter",
                                   "fontSize": 13,
                                   "fontWeight": "700"
@@ -8370,7 +8370,7 @@
                                   "id": "mnmLw",
                                   "name": "Exp Desc",
                                   "fill": "#94a3b8",
-                                  "content": "Пояснює історію артефакту",
+                                  "content": "Explains artifact history",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "normal"
@@ -8403,7 +8403,7 @@
                                   "id": "p5MO9",
                                   "name": "Txt",
                                   "fill": "#cbd5e1",
-                                  "content": "🤐 Рот закритий",
+                                  "content": "🤐 Mouth Closed",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "600"
@@ -8430,7 +8430,7 @@
                                   "id": "NvoTI",
                                   "name": "Txt",
                                   "fill": "#60a5fa",
-                                  "content": "🗣️ Рот відкритий",
+                                  "content": "🗣️ Mouth Open",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "600"
@@ -8444,7 +8444,7 @@
                     {
                       "type": "frame",
                       "id": "aMTMp",
-                      "name": "Exp Row: 3. Shock (Трагедія Сола)",
+                      "name": "Exp Row: 3. Shock (Sol Tragedy)",
                       "width": "fill_container",
                       "fill": "#0f172a99",
                       "cornerRadius": 12,
@@ -8484,7 +8484,7 @@
                                   "id": "b3w3pR",
                                   "name": "Exp Name",
                                   "fill": "#f8fafc",
-                                  "content": "3. Shock (Трагедія Сола)",
+                                  "content": "3. Shock (Sol Tragedy)",
                                   "fontFamily": "Inter",
                                   "fontSize": 13,
                                   "fontWeight": "700"
@@ -8494,7 +8494,7 @@
                                   "id": "mVIF1",
                                   "name": "Exp Desc",
                                   "fill": "#94a3b8",
-                                  "content": "Втрата зв'язку / Пилова буря",
+                                  "content": "Loss of Signal / Dust Storm",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "normal"
@@ -8527,7 +8527,7 @@
                                   "id": "GAE9H",
                                   "name": "Txt",
                                   "fill": "#cbd5e1",
-                                  "content": "🤐 Рот закритий",
+                                  "content": "🤐 Mouth Closed",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "600"
@@ -8554,7 +8554,7 @@
                                   "id": "MzIPE",
                                   "name": "Txt",
                                   "fill": "#60a5fa",
-                                  "content": "🗣️ Рот відкритий",
+                                  "content": "🗣️ Mouth Open",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "600"
@@ -8568,7 +8568,7 @@
                     {
                       "type": "frame",
                       "id": "xlrKy",
-                      "name": "Exp Row: 4. Hype (Тріумф відкриття)",
+                      "name": "Exp Row: 4. Hype (Discovery Triumph)",
                       "width": "fill_container",
                       "fill": "#0f172a99",
                       "cornerRadius": 12,
@@ -8608,7 +8608,7 @@
                                   "id": "MqArx",
                                   "name": "Exp Name",
                                   "fill": "#f8fafc",
-                                  "content": "4. Hype (Тріумф відкриття)",
+                                  "content": "4. Hype (Discovery Triumph)",
                                   "fontFamily": "Inter",
                                   "fontSize": 13,
                                   "fontWeight": "700"
@@ -8618,7 +8618,7 @@
                                   "id": "TVzDG",
                                   "name": "Exp Desc",
                                   "fill": "#94a3b8",
-                                  "content": "Успішна знахідка / Еврика!",
+                                  "content": "Successful Discovery / Eureka!",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "normal"
@@ -8651,7 +8651,7 @@
                                   "id": "YZV8E",
                                   "name": "Txt",
                                   "fill": "#cbd5e1",
-                                  "content": "🤐 Рот закритий",
+                                  "content": "🤐 Mouth Closed",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "600"
@@ -8678,7 +8678,7 @@
                                   "id": "VYAMT",
                                   "name": "Txt",
                                   "fill": "#60a5fa",
-                                  "content": "🗣️ Рот відкритий",
+                                  "content": "🗣️ Mouth Open",
                                   "fontFamily": "Inter",
                                   "fontSize": 11,
                                   "fontWeight": "600"
@@ -8743,7 +8743,7 @@
                   "id": "BmfK2",
                   "name": "Y Badge Text",
                   "fill": "#0f172a",
-                  "content": "Аватар: Y = 1500 px (Строго над описом TikTok)",
+                  "content": "Avatar: Y = 1500 px (Strictly above TikTok caption)",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "800"
@@ -8823,7 +8823,7 @@
                   "id": "lO21q",
                   "name": "Modal Title",
                   "fill": "#F7FAFC",
-                  "content": "Публікація контенту CosmoLost",
+                  "content": "CosmoLost Content Publishing",
                   "fontFamily": "Inter",
                   "fontSize": 20,
                   "fontWeight": "700"
@@ -8853,7 +8853,7 @@
                   "id": "Q0jYvo",
                   "name": "Plat Title",
                   "fill": "#63B3ED",
-                  "content": "ЦІЛЬОВІ ПЛАТФОРМИ ДИСТРИБУЦІЇ",
+                  "content": "TARGET DISTRIBUTION PLATFORMS",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "700",
@@ -8939,7 +8939,7 @@
                     {
                       "type": "frame",
                       "id": "f9iRW",
-                      "name": "Checkbox: [✓] Відкрити папку для TikTok",
+                      "name": "Checkbox: [✓] Open folder for TikTok",
                       "fill": "#2D3748",
                       "cornerRadius": 10,
                       "stroke": "#4A5568",
@@ -8964,7 +8964,7 @@
                           "id": "t4R4uv",
                           "name": "Txt",
                           "fill": "#EDF2F7",
-                          "content": "[✓] Відкрити папку для TikTok",
+                          "content": "[✓] Open folder for TikTok",
                           "fontFamily": "Inter",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -8996,7 +8996,7 @@
                       "id": "c1ofW",
                       "name": "SEO Title",
                       "fill": "#63B3ED",
-                      "content": "ЗГЕНЕРОВАНИЙ SEO-ОПИС (3-РЯДКОВИЙ ПРЕВ'Ю)",
+                      "content": "GENERATED SEO DESCRIPTION (3-LINE PREVIEW)",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "700",
@@ -9007,7 +9007,7 @@
                       "id": "MI1wR",
                       "name": "Byte Count",
                       "fill": "#48BB78",
-                      "content": "168 символів / 184 байти",
+                      "content": "168 characters / 184 bytes",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "600"
@@ -9032,7 +9032,7 @@
                       "fill": "#F7FAFC",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Таємниця останнього сигналу ровера Opportunity на Марсі! 🚀 Чому NASA не змогли його розбудити після пилової бурі? Повна історія релікта у #CosmoLost. #Mars #Space #NASA #Opportunity",
+                      "content": "Mystery of Opportunity rover’s final transmission on Mars! 🚀 Why could NASA not awaken it after the global dust storm? Full story of the relic in #CosmoLost. #Mars #Space #NASA #Opportunity",
                       "lineHeight": 1.5,
                       "fontFamily": "Inter",
                       "fontSize": 13,
@@ -9068,7 +9068,7 @@
                       "id": "Jglgr",
                       "name": "Pin Title",
                       "fill": "#63B3ED",
-                      "content": "📌 ЗАКРІПЛЕНИЙ КОМЕНТАР (PIN COMMENT)",
+                      "content": "📌 PINNED COMMENT (PIN COMMENT)",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "700",
@@ -9083,7 +9083,7 @@
                   "fill": "#E2E8F0",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "«Інтерактивна 3D-мапа артефактів Марса та Місяця вже відкрита за посиланням у профілі! Який забутий космічний корабель показати у наступному відео? Напишіть у коментарях! 👇»",
+                  "content": "“The interactive 3D map of Moon and Mars artifacts is now live via the link in bio! Which forgotten spacecraft should we feature next? Let us know in the comments! 👇”",
                   "lineHeight": 1.45,
                   "fontFamily": "Inter",
                   "fontSize": 12,
@@ -9118,7 +9118,7 @@
                       "id": "e3PWPj",
                       "name": "Copy Text",
                       "fill": "#ffffff",
-                      "content": "Скопіювати Pin Comment в 1 клік",
+                      "content": "Copy Pin Comment in 1-click",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -9152,7 +9152,7 @@
                       "id": "r8fUHZ",
                       "name": "Cancel Text",
                       "fill": "#CBD5E0",
-                      "content": "Скасувати",
+                      "content": "Cancel",
                       "fontFamily": "Inter",
                       "fontSize": 13,
                       "fontWeight": "600"
@@ -9187,7 +9187,7 @@
                       "id": "CbSpG",
                       "name": "Publish Text",
                       "fill": "#ffffff",
-                      "content": "Опублікувати та відкрити папку",
+                      "content": "Publish and Open Folder",
                       "fontFamily": "Inter",
                       "fontSize": 13,
                       "fontWeight": "700"
@@ -9239,7 +9239,7 @@
                   "id": "aPzEV",
                   "name": "Toast Title",
                   "fill": "#F0FFF4",
-                  "content": "Папку відкрито, SEO-пакет у буфері обміну!",
+                  "content": "Folder opened, SEO bundle copied to clipboard!",
                   "fontFamily": "Inter",
                   "fontSize": 14,
                   "fontWeight": "700"
@@ -9249,7 +9249,7 @@
                   "id": "JvjAr",
                   "name": "Toast Desc",
                   "fill": "#C6F6D5",
-                  "content": "Файли 9:16 підготовлені для завантаження у TikTok, YouTube Shorts та Telegram.",
+                  "content": "9:16 files prepared for upload to TikTok, YouTube Shorts, and Telegram.",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -9292,7 +9292,7 @@
           "id": "mx6iv",
           "name": "Kit Subtitle",
           "fill": "#94a3b8",
-          "content": "Багаторазові дизайн-токени та компоненти для десктопу (1920x1080), мобільної версії (390x844) та відео-шаблонів (1080x1920)",
+          "content": "Reusable design tokens and components for desktop (1920x1080), mobile (390x844), and video templates (1080x1920)",
           "fontFamily": "Inter",
           "fontSize": 12,
           "fontWeight": "normal"
@@ -9730,7 +9730,7 @@
                   "fill": "#94a3b8",
                   "textGrowth": "fixed-width",
                   "width": 280,
-                  "content": "Згорнутий числовий бейдж. При наближенні анімується у радіальний розліт ліній Spiderfying.",
+                  "content": "Collapsed numeric badge. Animates into radial Spiderfying leader lines on zoom.",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -10017,7 +10017,7 @@
                   "id": "wfwQu",
                   "name": "Box Title",
                   "fill": "#64748b",
-                  "content": "5. СТАНИ СИСТЕМИ (STATES)",
+                  "content": "5. SYSTEM STATES",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "700"
@@ -10043,7 +10043,7 @@
                       "id": "n7H5Mz",
                       "name": "State Label",
                       "fill": "#38bdf8",
-                      "content": "⏳ LOADING (СКЕЛЕТОН)",
+                      "content": "⏳ LOADING (SKELETON)",
                       "fontFamily": "Space Mono",
                       "fontSize": 9,
                       "fontWeight": "700"
@@ -10099,7 +10099,7 @@
                       "id": "uSP2n",
                       "name": "Empty Text",
                       "fill": "#94a3b8",
-                      "content": "EMPTY: Артефактів не знайдено",
+                      "content": "EMPTY: No artifacts found",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "600"
@@ -10137,7 +10137,7 @@
                       "id": "panqZ",
                       "name": "Err Text",
                       "fill": "#f87171",
-                      "content": "ERROR: Збій DSN телеметрії",
+                      "content": "ERROR: DSN telemetry failure",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "600"
@@ -10418,7 +10418,7 @@
                   "id": "P22OK",
                   "name": "Mob Moon Text",
                   "fill": "#94a3b8",
-                  "content": "Місяць",
+                  "content": "Moon",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "600"
@@ -10452,7 +10452,7 @@
                   "id": "TeYpn",
                   "name": "Mob Mars Text",
                   "fill": "#ffffff",
-                  "content": "Марс",
+                  "content": "Mars",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "700"
@@ -10474,7 +10474,7 @@
             {
               "type": "frame",
               "id": "f4bvoh",
-              "name": "MChip Активні",
+              "name": "MChip Active",
               "fill": "#22c55e1a",
               "cornerRadius": 16,
               "stroke": "#22c55e40",
@@ -10499,7 +10499,7 @@
                   "id": "lUlLc",
                   "name": "Text",
                   "fill": "#f8fafc",
-                  "content": "Активні (3)",
+                  "content": "Active (3)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -10509,7 +10509,7 @@
             {
               "type": "frame",
               "id": "z3V4f",
-              "name": "MChip Заснули",
+              "name": "MChip Dormant",
               "fill": "#f973161a",
               "cornerRadius": 16,
               "stroke": "#f9731640",
@@ -10534,7 +10534,7 @@
                   "id": "Iyh3T",
                   "name": "Text",
                   "fill": "#f8fafc",
-                  "content": "Заснули (14)",
+                  "content": "Dormant (14)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -10544,7 +10544,7 @@
             {
               "type": "frame",
               "id": "PKCQK",
-              "name": "MChip Розбиті",
+              "name": "MChip Impacted",
               "fill": "#94a3b81a",
               "cornerRadius": 16,
               "stroke": "#94a3b840",
@@ -10569,7 +10569,7 @@
                   "id": "HMwDS",
                   "name": "Text",
                   "fill": "#f8fafc",
-                  "content": "Розбиті (9)",
+                  "content": "Impacted (9)",
                   "fontFamily": "Inter",
                   "fontSize": 11,
                   "fontWeight": "600"
@@ -10709,7 +10709,7 @@
                       "id": "TxpF7",
                       "name": "Status",
                       "fill": "#fb923c",
-                      "content": "● Заснув (Сол 5111)",
+                      "content": "● Dormant (Sol 5111)",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "700"
@@ -10735,7 +10735,7 @@
               "fill": "#cbd5e1",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Досліджував Плато Меридіана понад 14 років. Останній сигнал отримано перед глобальною пиловою бурею (1.9462° S, 354.4734° E).",
+              "content": "Explored Meridiani Planum for over 14 years. Final telemetry received before the global dust storm (1.9462° S, 354.4734° E).",
               "lineHeight": 1.4,
               "fontFamily": "Inter",
               "fontSize": 11,
@@ -10761,7 +10761,7 @@
                       "id": "hGgu9",
                       "name": "Lbl",
                       "fill": "#64748b",
-                      "content": "Епоха марсохода",
+                      "content": "Rover Era",
                       "fontFamily": "Inter",
                       "fontSize": 10,
                       "fontWeight": "normal"
@@ -10771,7 +10771,7 @@
                       "id": "chJ86",
                       "name": "Yr",
                       "fill": "#ea580c",
-                      "content": "2004 рік (MER)",
+                      "content": "Year 2004 (MER)",
                       "fontFamily": "Inter",
                       "fontSize": 11,
                       "fontWeight": "700"
@@ -10834,7 +10834,7 @@
                   "id": "H3hH8",
                   "name": "Btn Text",
                   "fill": "#ffffff",
-                  "content": "Переглянути 3D артефакт Марса →",
+                  "content": "Inspect 3D Mars Artifact →",
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "700"

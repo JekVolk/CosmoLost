@@ -1,8 +1,10 @@
 import { useMatchStore } from '@/entities/game';
+import { playSfx } from '@/shared/lib';
 import { Badge, Box, Button, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, ChevronRight, TrendingUp } from 'lucide-react';
 import type React from 'react';
+import { useEffect } from 'react';
 
 export interface RoundResultOverlayProps {
   onContinue?: () => void;
@@ -26,6 +28,14 @@ export const RoundResultOverlay: React.FC<RoundResultOverlayProps> = ({
 
   const isWin = myRoundScore >= opponentRoundScore;
   const roundNum = currentRound?.round_index ?? 1;
+
+  useEffect(() => {
+    if (isWin) {
+      playSfx('answer_correct');
+    } else {
+      playSfx('answer_wrong');
+    }
+  }, [isWin]);
 
   return (
     <Box

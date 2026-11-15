@@ -5,6 +5,14 @@ import { App as PortalApp } from './App';
 
 export const router = createBrowserRouter([
   {
+    path: '/',
+    element: <PortalApp />,
+  },
+  {
+    path: '/portal',
+    element: <PortalApp />,
+  },
+  {
     path: '/auth/callback',
     element: <OAuthCallback />,
   },
@@ -13,16 +21,16 @@ export const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: '/portal',
-    element: <PortalApp />,
+    path: '/leaderboards',
+    element: <LeaderboardsPage />,
+  },
+  {
+    path: '/profile/:callsign',
+    element: <ProfilePage />,
   },
   {
     element: <RequireAuth />,
     children: [
-      {
-        path: '/',
-        element: <HomePage />,
-      },
       {
         path: '/game',
         element: <HomePage />,
@@ -36,16 +44,8 @@ export const router = createBrowserRouter([
         element: <ArenaPage />,
       },
       {
-        path: '/profile/:callsign',
-        element: <ProfilePage />,
-      },
-      {
         path: '/game/profile/:callsign',
         element: <ProfilePage />,
-      },
-      {
-        path: '/leaderboards',
-        element: <LeaderboardsPage />,
       },
       {
         path: '/game/leaderboards',

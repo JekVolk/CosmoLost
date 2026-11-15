@@ -46,7 +46,7 @@ describe('useContainerStore', () => {
 
     vi.spyOn(containerRepository, 'startMatchWithSlot').mockResolvedValueOnce({
       match_id: 'match-xyz',
-      ws_url: 'ws://localhost:8000/ws/game/match-xyz/',
+      ws_url: '/ws/game/match-xyz/',
     });
 
     const res = await useContainerStore.getState().startMatchWithSlot(0);

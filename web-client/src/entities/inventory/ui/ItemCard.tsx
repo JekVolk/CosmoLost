@@ -1,5 +1,6 @@
-import { AssetPlaceholder, RarityBadge } from '@/shared/ui';
-import { Box, Image, Text, VStack } from '@chakra-ui/react';
+import { getEquipmentIconUrl, getRarityBadgeIconUrl } from '@/shared/lib';
+import { RarityBadge } from '@/shared/ui';
+import { Box, HStack, Image, Text, VStack } from '@chakra-ui/react';
 import type { InventoryItem } from '../api/inventory-repository';
 
 export interface ItemCardProps {
@@ -8,6 +9,9 @@ export interface ItemCardProps {
 }
 
 export function ItemCard({ item, onClick }: ItemCardProps) {
+  const rarityIcon = getRarityBadgeIconUrl(item.rarity);
+  const equipmentIcon = getEquipmentIconUrl(item.equipment_class);
+
   return (
     <Box
       borderWidth="1px"
@@ -29,6 +33,9 @@ export function ItemCard({ item, onClick }: ItemCardProps) {
         display="flex"
         alignItems="center"
         justifyContent="center"
+        bg="rgba(0, 0, 0, 0.3)"
+        borderRadius="md"
+        p={2}
       >
         {item.image_url ? (
           <Image
@@ -39,12 +46,32 @@ export function ItemCard({ item, onClick }: ItemCardProps) {
             objectFit="contain"
           />
         ) : (
-          <AssetPlaceholder label="Artifact asset pending" height="140px" />
+          <VStack gap={2} align="center">
+            <Image
+              src={rarityIcon}
+              alt={item.rarity}
+              width="64px"
+              height="64px"
+              objectFit="contain"
+            />
+            <Text fontSize="2xs" color="gray.500" letterSpacing="wider" textTransform="uppercase">
+              {item.equipment_class}
+            </Text>
+          </VStack>
         )}
       </Box>
 
       <VStack align="start" gap={1}>
-        <RarityBadge rarity={item.rarity} size="xs" />
+        <HStack justify="space-between" width="100%" align="center">
+          <RarityBadge rarity={item.rarity} size="xs" />
+          <Image
+            src={equipmentIcon}
+            alt={item.equipment_class}
+            width="14px"
+            height="14px"
+            opacity={0.7}
+          />
+        </HStack>
         <Text
           fontSize="sm"
           fontWeight="bold"

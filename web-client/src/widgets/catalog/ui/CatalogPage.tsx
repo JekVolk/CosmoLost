@@ -81,11 +81,36 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({ onOpenDossier, planets
       })
       .sort((a, b) => {
         if (sortBy === 'mass-desc') {
-          return (b.artifact.massKg || 0) - (a.artifact.massKg || 0);
+          const massA = a.artifact.massKg || 0;
+          const massB = b.artifact.massKg || 0;
+          if (massB !== massA) return massB - massA;
+          return a.artifact.name.localeCompare(b.artifact.name);
         }
-        const dateA = new Date(a.artifact.landingDate).getTime() || 0;
-        const dateB = new Date(b.artifact.landingDate).getTime() || 0;
-        return sortBy === 'date-desc' ? dateB - dateA : dateA - dateB;
+
+        const parseDateVal = (val: string | undefined): number => {
+          if (!val || val === 'Historical') return 0;
+          const t = new Date(val).getTime();
+          if (!Number.isNaN(t)) return t;
+          const yr = val.match(/\b(19\d\d|20\d\d)\b/);
+          if (yr) return new Date(`${yr[1]}-01-01`).getTime();
+          return 0;
+        };
+
+        const dateA = parseDateVal(a.artifact.landingDate);
+        const dateB = parseDateVal(b.artifact.landingDate);
+
+        if (sortBy === 'date-desc') {
+          if (dateA === 0 && dateB !== 0) return 1;
+          if (dateB === 0 && dateA !== 0) return -1;
+          if (dateB !== dateA) return dateB - dateA;
+          return a.artifact.name.localeCompare(b.artifact.name);
+        }
+
+        // date-asc: oldest first
+        if (dateA === 0 && dateB !== 0) return 1;
+        if (dateB === 0 && dateA !== 0) return -1;
+        if (dateA !== dateB) return dateA - dateB;
+        return a.artifact.name.localeCompare(b.artifact.name);
       });
   }, [allArtifactsWithPlanet, selectedPlanet, selectedType, searchQuery, sortBy]);
 

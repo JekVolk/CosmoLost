@@ -57,6 +57,8 @@ export interface ArtifactSummary {
   id: string;
   name: string;
   mission_name: string;
+  landing_date?: string | null;
+  launch_date?: string | null;
   celestial_body: string;
   is_nasa_hardware: boolean;
   artifact_type: ArtifactType;

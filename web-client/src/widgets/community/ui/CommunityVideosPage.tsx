@@ -186,18 +186,25 @@ export const CommunityVideosPage: React.FC<CommunityVideosPageProps> = ({
           </div>
 
           <div className="pen-metrics-bar">
-            <div className="pen-metric-item">
-              <span className="pen-metric-num cyan">{publications.length} STORIES</span>
+            <div className="pen-metric-card">
+              <div className="pen-metric-header">
+                <span className="pen-metric-val cyan">{publications.length}</span>
+                <span className="pen-metric-tag cyan">STORIES</span>
+              </div>
               <span className="pen-metric-lbl">COMMUNITY ARCHIVE</span>
             </div>
-            <div className="pen-metric-sep" />
-            <div className="pen-metric-item">
-              <span className="pen-metric-num">9:16 VERTICAL</span>
+            <div className="pen-metric-card">
+              <div className="pen-metric-header">
+                <span className="pen-metric-val">9:16</span>
+                <span className="pen-metric-tag">VERTICAL</span>
+              </div>
               <span className="pen-metric-lbl">MOBILE & DESKTOP</span>
             </div>
-            <div className="pen-metric-sep" />
-            <div className="pen-metric-item">
-              <span className="pen-metric-num rust">VERIFIED PDS</span>
+            <div className="pen-metric-card">
+              <div className="pen-metric-header">
+                <span className="pen-metric-val rust">VERIFIED</span>
+                <span className="pen-metric-tag rust">PDS</span>
+              </div>
               <span className="pen-metric-lbl">PEER REVIEWED</span>
             </div>
           </div>

@@ -133,7 +133,8 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({ onExit, onOpen
             nasaIdOrPia={phase === 'revealed' ? currentRound.artifact.nssdcaId : undefined}
             credit={phase === 'revealed' ? currentRound.credit : undefined}
             planetTheme={currentRound.planetId}
-            showHeadingCompass={true}
+            showHeadingCompass={false}
+            showTopHud={false}
           />
         </div>
 
@@ -186,6 +187,17 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({ onExit, onOpen
               <strong style={{ color: accentColor }}>{lastResult.distanceKm} km</strong> from actual
               site
             </div>
+
+            <AstroGuessrMiniMap
+              planetId={currentRound.planetId}
+              playerPin={{ lat: lastResult.guessLat, lon: lastResult.guessLon }}
+              trueCoordinates={currentRound.trueCoordinates}
+              isRevealed={true}
+              onSetPin={() => undefined}
+              onConfirmGuess={() => undefined}
+              accentColor={accentColor}
+              compact
+            />
 
             {/* Target Hardware Identity Card */}
             <div className={styles.targetCard}>

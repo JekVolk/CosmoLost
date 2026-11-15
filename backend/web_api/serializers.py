@@ -76,11 +76,15 @@ class MissionSummarySerializer(serializers.ModelSerializer):
             'nssdca_id',
             'name',
             'agency',
+            'launch_date',
+            'landing_date',
         ]
 
 
 class ArtifactSummarySerializer(serializers.ModelSerializer):
     mission_name = serializers.CharField(source='mission.name', read_only=True, default='')
+    landing_date = serializers.DateField(source='mission.landing_date', read_only=True, allow_null=True)
+    launch_date = serializers.DateField(source='mission.launch_date', read_only=True, allow_null=True)
     celestial_body = serializers.CharField(source='celestial_body_id', read_only=True)
     coordinates = serializers.SerializerMethodField()
     cluster_info = serializers.SerializerMethodField()
@@ -93,6 +97,8 @@ class ArtifactSummarySerializer(serializers.ModelSerializer):
             'id',
             'name',
             'mission_name',
+            'landing_date',
+            'launch_date',
             'celestial_body',
             'is_nasa_hardware',
             'artifact_type',
@@ -152,6 +158,8 @@ class ArtifactSummarySerializer(serializers.ModelSerializer):
 class ArtifactDetailSerializer(serializers.ModelSerializer):
     mission = MissionSummarySerializer(read_only=True)
     mission_name = serializers.CharField(source='mission.name', read_only=True, default='')
+    landing_date = serializers.DateField(source='mission.landing_date', read_only=True, allow_null=True)
+    launch_date = serializers.DateField(source='mission.launch_date', read_only=True, allow_null=True)
     celestial_body = serializers.CharField(source='celestial_body_id', read_only=True)
     coordinates = serializers.SerializerMethodField()
     media = ArtifactMediaSerializer(many=True, read_only=True)
@@ -164,6 +172,8 @@ class ArtifactDetailSerializer(serializers.ModelSerializer):
             'name',
             'mission',
             'mission_name',
+            'landing_date',
+            'launch_date',
             'celestial_body',
             'artifact_type',
             'operational_status',

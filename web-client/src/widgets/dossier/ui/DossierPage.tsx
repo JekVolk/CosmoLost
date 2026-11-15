@@ -84,6 +84,16 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
   const displayedCause = liveDetail?.cause_of_deactivation || artifact.whyAbandoned;
   const rawModel3dUrl = liveDetail?.model_3d_url || artifact.model3dUrl;
   const effectiveModel3dUrl = resolveGlbModelUrl(artifact.id, rawModel3dUrl);
+  const effectiveLandingDate =
+    liveDetail?.landing_date ||
+    (liveDetail?.mission as any)?.landing_date ||
+    (artifact.landingDate && artifact.landingDate !== 'Historical'
+      ? artifact.landingDate
+      : artifact.id.includes('apollo-11')
+      ? '1969-07-20'
+      : artifact.id.includes('apollo-13')
+      ? '1970-04-14'
+      : '1969-07-20');
   const effectiveWaypoints =
     liveWaypoints.length > 0
       ? liveWaypoints.map((w) => ({
@@ -101,147 +111,94 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
       <div className="dossier-container">
         {}
         <div className="dossier-nav-bar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0, flex: 1, overflow: 'hidden' }}>
             <button type="button" className="btn-back" onClick={onBackToMap}>
               <ArrowLeft size={16} />
               <span>Back to 3D Map</span>
             </button>
             <div
+              className="dossier-breadcrumbs"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
                 fontSize: '11px',
                 color: 'var(--text-dim)',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                minWidth: 0,
               }}
             >
-              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>
+              <span style={{ cursor: 'pointer', color: '#94A3B8', flexShrink: 0 }} onClick={onBackToMap}>
                 Home
               </span>
-              <span>/</span>
-              <span style={{ cursor: 'pointer', color: '#94A3B8' }} onClick={onBackToMap}>
+              <span style={{ flexShrink: 0 }}>/</span>
+              <span style={{ cursor: 'pointer', color: '#94A3B8', flexShrink: 0 }} onClick={onBackToMap}>
                 Catalog
               </span>
-              <span>/</span>
-              <span style={{ color: themeColor, fontWeight: 600 }}>{artifact.name}</span>
+              <span style={{ flexShrink: 0 }}>/</span>
+              <span
+                style={{
+                  color: themeColor,
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '220px',
+                  display: 'inline-block',
+                }}
+                title={artifact.name}
+              >
+                {artifact.name}
+              </span>
             </div>
           </div>
 
           <div
-            style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-dim)' }}
+            className="dossier-archive-badge"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              color: 'var(--text-dim)',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
           >
             NASA SPACE APPS 2026 ARCHIVE
           </div>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: 'rgba(11, 17, 31, 0.85)',
-            border: '1px solid #1E293B',
-            borderRadius: '14px',
-            padding: '12px 24px',
-            marginBottom: '20px',
-            flexWrap: 'wrap',
-            gap: '16px',
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              LANDING DATE
-            </div>
-            <div
-              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
-            >
-              {artifact.landingDate}
-            </div>
+        <div className="dossier-metrics-bar">
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">LANDING DATE</div>
+            <div className="dossier-metric-val">{effectiveLandingDate}</div>
           </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              PLANET
-            </div>
-            <div
-              style={{ fontSize: '12.5px', color: themeColor, fontWeight: 700, marginTop: '2px' }}
-            >
+          <div className="dossier-metric-divider" />
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">PLANET</div>
+            <div className="dossier-metric-val" style={{ color: themeColor }}>
               {planet.nameEn.toUpperCase()}
             </div>
           </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              LOCATION
-            </div>
-            <div
-              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
-            >
+          <div className="dossier-metric-divider" />
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">LOCATION</div>
+            <div className="dossier-metric-val" title={artifact.locationName}>
               {artifact.locationName}
             </div>
           </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              HARDWARE MASS
-            </div>
-            <div
-              style={{ fontSize: '12.5px', color: '#FFFFFF', fontWeight: 600, marginTop: '2px' }}
-            >
-              {artifact.massKg
-                ? `${artifact.massKg.toLocaleString()} kg`
-                : 'Telemetry Not Available'}
+          <div className="dossier-metric-divider" />
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">HARDWARE MASS</div>
+            <div className="dossier-metric-val">
+              {artifact.massKg ? `${artifact.massKg.toLocaleString()} kg` : 'Telemetry Not Available'}
             </div>
           </div>
-          <div style={{ width: '1px', height: '24px', background: '#1E293B' }} />
-          <div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                color: '#64748B',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
-              COORDINATES
-            </div>
-            <div
-              style={{
-                fontSize: '12.5px',
-                color: '#38bdf8',
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 600,
-                marginTop: '2px',
-              }}
-            >
+          <div className="dossier-metric-divider" />
+          <div className="dossier-metric-cell">
+            <div className="dossier-metric-label">COORDINATES</div>
+            <div className="dossier-metric-val mono">
               {Math.abs(artifact.lat).toFixed(2)}°{artifact.lat >= 0 ? 'N' : 'S'},{' '}
               {Math.abs(artifact.lon).toFixed(2)}°{artifact.lon >= 0 ? 'E' : 'W'}
             </div>
@@ -395,13 +352,17 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
               <p className="dossier-brief">{artifact.brief}</p>
 
               <div className="coords-box">
-                <span>
-                  LANDING COORDINATES: {artifact.lat.toFixed(4)}° {artifact.lat >= 0 ? 'N' : 'S'},{' '}
-                  {artifact.lon.toFixed(4)}° {artifact.lon >= 0 ? 'E' : 'W'}
-                </span>
-                <span style={{ color: 'var(--text-dim)' }}>
-                  PLANETARY REGISTRY: {planet.telemetry.designation}
-                </span>
+                <div className="coords-row">
+                  <span className="coords-label">LANDING COORDINATES:</span>
+                  <span className="coords-val">
+                    {artifact.lat.toFixed(4)}° {artifact.lat >= 0 ? 'N' : 'S'},{' '}
+                    {artifact.lon.toFixed(4)}° {artifact.lon >= 0 ? 'E' : 'W'}
+                  </span>
+                </div>
+                <div className="coords-row">
+                  <span className="coords-label">PLANETARY REGISTRY:</span>
+                  <span className="coords-val">{planet.telemetry.designation}</span>
+                </div>
               </div>
             </div>
 
@@ -1030,7 +991,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
                     Landing Date:
                   </span>
                   <span style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>
-                    {artifact.landingDate}
+                    {effectiveLandingDate}
                   </span>
                 </div>
 

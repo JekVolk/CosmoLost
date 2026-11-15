@@ -72,6 +72,19 @@ export const PlanetaryTerrarium: React.FC<PlanetaryTerrariumProps> = ({
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x070a13);
 
+    // Load starry skybox cubemap
+    const cubeLoader = new THREE.CubeTextureLoader();
+    cubeLoader.setPath('/assets/3d/skybox/milkyway_cubemap/').load(
+      ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'],
+      (cubeMap) => {
+        scene.background = cubeMap;
+      },
+      undefined,
+      () => {
+        scene.background = new THREE.Color(0x070a13);
+      },
+    );
+
     const camera = new THREE.PerspectiveCamera(45, width / heightPx, 0.1, 1000);
     camera.position.set(0, 0, 5.5);
 
@@ -80,18 +93,23 @@ export const PlanetaryTerrarium: React.FC<PlanetaryTerrariumProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Planet procedural sphere
+    // Planet photorealistic textured sphere
     const isMars = currentPlanet === 'mars';
-    const planetColor = isMars ? 0xc1440e : 0x888c94;
-    const emissiveColor = isMars ? 0x2d0d02 : 0x111116;
+    const textureLoader = new THREE.TextureLoader();
+    const diffuseUrl = isMars
+      ? '/assets/3d/planets/mars_diffuse_2k.jpg'
+      : '/assets/3d/planets/moon_diffuse_2k.jpg';
+    const bumpUrl = isMars
+      ? '/assets/3d/planets/mars_bump_2k.jpg'
+      : '/assets/3d/planets/moon_bump_2k.jpg';
 
     const planetGeo = new THREE.SphereGeometry(planetRadius, 64, 64);
     const planetMat = new THREE.MeshStandardMaterial({
-      color: planetColor,
-      roughness: 0.8,
-      metalness: 0.1,
-      emissive: emissiveColor,
-      emissiveIntensity: 0.2,
+      map: textureLoader.load(diffuseUrl),
+      bumpMap: textureLoader.load(bumpUrl),
+      bumpScale: isMars ? 0.04 : 0.08,
+      roughness: 0.85,
+      metalness: 0.05,
     });
     const planetMesh = new THREE.Mesh(planetGeo, planetMat);
     scene.add(planetMesh);

@@ -77,9 +77,9 @@ export const LeaderboardsPage: React.FC = () => {
           size="sm"
           color="gray.400"
           alignSelf="flex-start"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(-1)}
         >
-          <ArrowLeft size={16} /> Back to Command Center
+          <ArrowLeft size={16} /> Back
         </Button>
 
         {/* Title & Tabs */}

@@ -15,5 +15,6 @@ urlpatterns = [
     path('leaderboard/elo/', views.LeaderboardEloView.as_view(), name='leaderboard-elo'),
     path('leaderboard/curator/', views.LeaderboardCuratorView.as_view(), name='leaderboard-curator'),
     path('inventory/', views.InventoryView.as_view(), name='inventory-list'),
-    path('auth/google/done/', views.GoogleAuthCallbackView.as_view(), name='auth-google-done'),
+    path('auth/demo/', views.DemoLoginView.as_view(), name='auth-demo'),
+    path('auth/callback/', views.GoogleAuthCallbackView.as_view(), name='auth-google-done'),
 ]

@@ -35,6 +35,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
+    credentials: init?.credentials ?? 'include',
     headers: {
       ...headers,
       ...(init?.headers as Record<string, string> | undefined),

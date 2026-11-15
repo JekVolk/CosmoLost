@@ -12,8 +12,8 @@ import {
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import styles from './PhotosphereViewer.module.css';
 import { API_BASE_URL } from '../../api/portalApi';
+import styles from './PhotosphereViewer.module.css';
 import type { PhotosphereViewerProps } from './types';
 
 function getCompassHeading(azimuthDeg: number): string {
@@ -32,6 +32,7 @@ export const PhotosphereViewer: React.FC<PhotosphereViewerProps> = ({
   planetTheme = 'mars',
   mode = 'modal',
   showHeadingCompass = true,
+  showTopHud = true,
   initialFov = 75,
   onHeadingChange,
 }) => {
@@ -413,50 +414,52 @@ export const PhotosphereViewer: React.FC<PhotosphereViewerProps> = ({
       {/* HUD Layer */}
       <div className={styles.hudLayer}>
         {/* Top Header */}
-        <div className={styles.hudTop}>
-          <div className={styles.hudTopLeft}>
-            <span className={`${styles.badge} ${isMars ? styles.badgeMars : styles.badgeMoon}`}>
-              <Compass size={13} />
-              <span>360° {planetTheme.toUpperCase()} SURFACE PANORAMA</span>
-            </span>
+        {showTopHud && (
+          <div className={styles.hudTop}>
+            <div className={styles.hudTopLeft}>
+              <span className={`${styles.badge} ${isMars ? styles.badgeMars : styles.badgeMoon}`}>
+                <Compass size={13} />
+                <span>360° {planetTheme.toUpperCase()} SURFACE PANORAMA</span>
+              </span>
 
-            {showHeadingCompass && (
-              <div className={styles.compassCard} title="Azimuth / Direction Heading">
-                <div
-                  className={styles.compassDial}
-                  style={{ transform: `rotate(${-headingDeg}deg)` }}
-                >
-                  <div className={styles.compassNeedle} />
+              {showHeadingCompass && (
+                <div className={styles.compassCard} title="Azimuth / Direction Heading">
+                  <div
+                    className={styles.compassDial}
+                    style={{ transform: `rotate(${-headingDeg}deg)` }}
+                  >
+                    <div className={styles.compassNeedle} />
+                  </div>
+                  <span>{getCompassHeading(headingDeg)}</span>
+                  <span style={{ color: '#64748b' }}>•</span>
+                  <span style={{ color: '#94a3b8', fontSize: '11px' }}>FOV {currentFov}°</span>
                 </div>
-                <span>{getCompassHeading(headingDeg)}</span>
-                <span style={{ color: '#64748b' }}>•</span>
-                <span style={{ color: '#94a3b8', fontSize: '11px' }}>FOV {currentFov}°</span>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          <div className={styles.hudTopRight}>
-            <button
-              type="button"
-              className={styles.iconBtn}
-              onClick={handleToggleFullscreen}
-              title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-            >
-              {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-            </button>
-
-            {mode === 'modal' && onClose && (
+            <div className={styles.hudTopRight}>
               <button
                 type="button"
-                className={`${styles.iconBtn} ${styles.closeBtn}`}
-                onClick={onClose}
-                title="Close 360° Viewer (Esc)"
+                className={styles.iconBtn}
+                onClick={handleToggleFullscreen}
+                title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
               >
-                <X size={18} />
+                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
               </button>
-            )}
+
+              {mode === 'modal' && onClose && (
+                <button
+                  type="button"
+                  className={`${styles.iconBtn} ${styles.closeBtn}`}
+                  onClick={onClose}
+                  title="Close 360° Viewer (Esc)"
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Right Floating Controls */}
         <div className={styles.hudRightControls}>

@@ -1,16 +1,19 @@
 import { useMatchStore } from '@/entities/game';
-import { Box, Heading, Text, VStack } from '@chakra-ui/react';
+import { wsClient } from '@/shared/api/ws-client';
+import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 
 interface MatchmakingModalProps {
   isOpen?: boolean;
+  onCancel?: () => void;
 }
 
-export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen }) => {
+export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen, onCancel }) => {
   const phase = useMatchStore((s) => s.phase);
   const opponent = useMatchStore((s) => s.opponent);
+  const reset = useMatchStore((s) => s.reset);
   const [seconds, setSeconds] = useState(0);
 
   const isVisible = isOpen !== undefined ? isOpen && phase === 'SEARCHING' : phase === 'SEARCHING';
@@ -27,6 +30,16 @@ export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen }) =>
 
     return () => clearInterval(interval);
   }, [isVisible]);
+
+  const handleCancel = () => {
+    try {
+      wsClient.disconnect();
+    } catch {}
+    reset();
+    if (onCancel) {
+      onCancel();
+    }
+  };
 
   // Modal automatically closes when phase is no longer SEARCHING (e.g. IN_MATCH)
   if (!isVisible) {
@@ -60,7 +73,7 @@ export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen }) =>
         textAlign="center"
       >
         <Heading size="lg" color="white">
-          Пошук суперника
+          Finding Opponent
         </Heading>
 
         {/* Pulsating radar circle with Framer Motion */}
@@ -116,7 +129,7 @@ export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen }) =>
               {seconds}s
             </Text>
             <Text fontSize="2xs" color="gray.400" textTransform="uppercase" letterSpacing="wider">
-              Очікування
+              SEARCHING
             </Text>
           </Box>
         </Box>
@@ -124,15 +137,33 @@ export const MatchmakingModal: React.FC<MatchmakingModalProps> = ({ isOpen }) =>
         <VStack gap={1}>
           <Text color="gray.300" fontSize="sm">
             {isBotFallback
-              ? 'Підбір автономного суперника (Бот)...'
-              : 'Сканування орбіти та пошук гравця...'}
+              ? 'Pairing autonomous drone opponent (Bot)...'
+              : 'Scanning orbital telemetry for match...'}
           </Text>
           <Text color="gray.500" fontSize="xs">
             {seconds <= 8
-              ? `Максимальний час очікування: 8 секунд (${8 - Math.min(seconds, 8)}s залишилось)`
-              : 'Завершення підключення до матчу...'}
+              ? `Maximum wait time: 8s (${8 - Math.min(seconds, 8)}s remaining)`
+              : 'Connecting to match session...'}
           </Text>
         </VStack>
+
+        <Button
+          size="sm"
+          variant="outline"
+          colorPalette="red"
+          cursor="pointer"
+          onClick={handleCancel}
+          style={{
+            borderColor: 'rgba(239, 68, 68, 0.5)',
+            color: '#f87171',
+            borderRadius: '10px',
+            padding: '6px 16px',
+            fontSize: '13px',
+            fontWeight: 600,
+          }}
+        >
+          Cancel Search
+        </Button>
       </VStack>
     </Box>
   );

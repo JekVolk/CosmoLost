@@ -4,6 +4,7 @@ import { PLANETS } from '../entities/planet/model/planetData';
 import type { PlanetConfig, PlanetId, SpaceArtifact } from '../entities/planet/model/types';
 import { AstroGuessrGame } from '../features/astro-guessr-360';
 import { ViewControls } from '../features/view-controls/ui/ViewControls';
+import { ArenaPage } from '../pages/arena';
 import {
   apiArtifactDetailToSpaceArtifact,
   apiArtifactSummaryToSpaceArtifact,
@@ -12,7 +13,6 @@ import {
 import { AboutModal } from '../widgets/about/ui/AboutModal';
 import { CatalogPage } from '../widgets/catalog/ui/CatalogPage';
 import { CommunityVideosPage } from '../widgets/community/ui/CommunityVideosPage';
-import { ArenaPage } from '../pages/arena';
 import { DossierPage } from '../widgets/dossier/ui/DossierPage';
 import { type AppView, Header } from '../widgets/header/ui/Header';
 import { PlanetTelemetry } from '../widgets/planet-telemetry/ui/PlanetTelemetry';
@@ -199,23 +199,25 @@ export const App: React.FC = () => {
   return (
     <AppProviders>
       <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-        <Header
-          currentPlanetId={currentPlanetId}
-          onSelectPlanet={(id) => {
-            setCurrentPlanetId(id);
-            setActiveArtifact(null);
-          }}
-          artifactCount={currentPlanet?.artifacts?.length || 0}
-          currentView={currentView}
-          onSelectView={(view) => {
-            setCurrentView(view);
-            if (view !== 'map') {
+        {currentView !== 'astro-guessr' && (
+          <Header
+            currentPlanetId={currentPlanetId}
+            onSelectPlanet={(id) => {
+              setCurrentPlanetId(id);
               setActiveArtifact(null);
-            }
-          }}
-          onOpenAbout={() => setIsAboutOpen(true)}
-          isLiveApi={apiOnline}
-        />
+            }}
+            artifactCount={currentPlanet?.artifacts?.length || 0}
+            currentView={currentView}
+            onSelectView={(view) => {
+              setCurrentView(view);
+              if (view !== 'map') {
+                setActiveArtifact(null);
+              }
+            }}
+            onOpenAbout={() => setIsAboutOpen(true)}
+            isLiveApi={apiOnline}
+          />
+        )}
 
         {currentView === 'map' && currentPlanet && (
           <>
@@ -284,10 +286,7 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        <AboutModal
-          isOpen={isAboutOpen}
-          onClose={() => setIsAboutOpen(false)}
-        />
+        <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
       </div>
     </AppProviders>
   );

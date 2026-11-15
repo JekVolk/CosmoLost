@@ -1,6 +1,7 @@
 import { useMatchStore } from '@/entities/game';
 import { useAuthStore } from '@/entities/user';
-import { Badge, Box, Flex, HStack, Text, VStack } from '@chakra-ui/react';
+import { ELO_RANK_CADET_ICON_URL } from '@/shared/lib';
+import { Badge, Box, Flex, HStack, Image, Text, VStack } from '@chakra-ui/react';
 import { Bot, Swords, User } from 'lucide-react';
 import type React from 'react';
 import { RoundTimer } from './RoundTimer';
@@ -57,9 +58,12 @@ export const ScoreHUD: React.FC<ScoreHUDProps> = ({ totalRounds = 3 }) => {
                 YOU
               </Badge>
             </HStack>
-            <Text fontSize="xs" color="gray.400" fontFamily="mono">
-              ELO {playerElo}
-            </Text>
+            <HStack gap={1} align="center">
+              <Image src={ELO_RANK_CADET_ICON_URL} alt="Rank" width="13px" height="13px" />
+              <Text fontSize="xs" color="gray.400" fontFamily="mono">
+                ELO {playerElo}
+              </Text>
+            </HStack>
           </VStack>
         </HStack>
 
@@ -107,9 +111,12 @@ export const ScoreHUD: React.FC<ScoreHUDProps> = ({ totalRounds = 3 }) => {
                 {opponentCallsign}
               </Text>
             </HStack>
-            <Text fontSize="xs" color="gray.400" fontFamily="mono">
-              ELO {opponentElo}
-            </Text>
+            <HStack gap={1} align="center">
+              <Image src={ELO_RANK_CADET_ICON_URL} alt="Rank" width="13px" height="13px" />
+              <Text fontSize="xs" color="gray.400" fontFamily="mono">
+                ELO {opponentElo}
+              </Text>
+            </HStack>
           </VStack>
           <Box
             p={2}
