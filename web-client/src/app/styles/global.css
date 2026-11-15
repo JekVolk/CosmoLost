@@ -2458,7 +2458,8 @@ body:has(.dossier-page),
 
 .pen-modal-card {
   width: 100%;
-  max-width: 520px;
+  max-width: 560px;
+  box-sizing: border-box;
   background: rgba(11, 21, 40, 0.96);
   border: 1px solid #1E293B;
   border-radius: 20px;
@@ -2507,12 +2508,17 @@ body:has(.dossier-page),
   display: flex;
   flex-direction: column;
   gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .pen-form-field {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .pen-form-field label {
@@ -2526,6 +2532,10 @@ body:has(.dossier-page),
 .pen-form-field input,
 .pen-form-field select,
 .pen-form-field textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
   background: rgba(7, 14, 30, 0.85);
   border: 1px solid #1E293B;
   border-radius: 10px;
@@ -2534,6 +2544,19 @@ body:has(.dossier-page),
   font-size: 14px;
   outline: none;
   font-family: var(--font-main);
+  transition: border-color 0.2s ease;
+}
+
+.pen-form-field select {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pen-form-field select option {
+  background: #0B1528;
+  color: #FFFFFF;
 }
 
 .pen-form-field input:focus,
@@ -2544,8 +2567,15 @@ body:has(.dossier-page),
 
 .pen-form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
   gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.pen-form-row > .pen-form-field {
+  min-width: 0;
 }
 
 .pen-modal-actions {

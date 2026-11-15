@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { portalApi } from '../../../shared/api/portalApi';
+import type { ArtifactDetail, TraverseWaypoint } from '../../../shared/api/types';
 import type { SpaceArtifact, PlanetConfig } from '../../../entities/planet/model/types';
 import { CommunityPublicationsSection } from './CommunityPublicationsSection';
 import {
@@ -34,6 +36,41 @@ export const DossierPage: React.FC<DossierPageProps> = ({
   const isMars = planet.id === 'mars';
   const themeColor = isMars ? '#f97316' : '#38bdf8';
   const [isPhotoExpanded, setIsPhotoExpanded] = useState(false);
+  const [liveDetail, setLiveDetail] = useState<ArtifactDetail | null>(null);
+  const [liveWaypoints, setLiveWaypoints] = useState<TraverseWaypoint[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    async function fetchApiArtifact() {
+      try {
+        const [detail, waypoints] = await Promise.all([
+          portalApi.getArtifactDetail(artifact.id),
+          portalApi.getArtifactWaypoints(artifact.id),
+        ]);
+        if (!active) return;
+        if (detail) setLiveDetail(detail);
+        if (waypoints && waypoints.length > 0) setLiveWaypoints(waypoints);
+      } catch {}
+    }
+    fetchApiArtifact();
+    return () => {
+      active = false;
+    };
+  }, [artifact.id]);
+
+  const displayedMonologue = liveDetail?.first_person_monologue || artifact.firstPersonMonologue;
+  const displayedCause = liveDetail?.cause_of_deactivation || artifact.whyAbandoned;
+  const model3dUrl = liveDetail?.model_3d_url;
+  const effectiveWaypoints = liveWaypoints.length > 0
+    ? liveWaypoints.map((w) => ({
+        solOrStep: w.sol_or_step,
+        lat: w.latitude,
+        lon: w.longitude,
+        odometryM: (w as any).odometry_m ?? (w as any).odometryM ?? (w.sol_or_step * 250),
+        title: (w.telemetry_snapshot as any)?.stepName || `Waypoint ${w.sol_or_step}`,
+        storySnippet: w.story_snippet || undefined,
+      }))
+    : artifact.traversePath || [];
 
   return (
     <div className="dossier-page">
@@ -172,6 +209,30 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                   </span>
                 )}
 
+                {model3dUrl && (
+                  <a
+                    href={model3dUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      color: '#22c55e',
+                      background: 'rgba(34, 197, 94, 0.12)',
+                      border: '1px solid rgba(34, 197, 94, 0.35)',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Sparkles size={12} />
+                    <span>3D GLB Model</span>
+                  </a>
+                )}
+
                 {artifact.massKg && (
                   <span
                     style={{
@@ -265,7 +326,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
         </div>
 
         {}
-        {artifact.firstPersonMonologue && (
+        {displayedMonologue && (
           <div
             className="cosmo-glass"
             style={{
@@ -299,7 +360,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                 margin: 0,
               }}
             >
-              "{artifact.firstPersonMonologue}"
+              "{displayedMonologue}"
             </p>
           </div>
         )}
@@ -347,7 +408,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                 <AlertTriangle size={18} style={{ color: '#f59e0b' }} />
                 <span>Why It Remained (Abandoned but Not Forgotten)</span>
               </h3>
-              <p className="dossier-text">{artifact.whyAbandoned}</p>
+              <p className="dossier-text">{displayedCause}</p>
             </div>
 
             {}
@@ -388,7 +449,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
             )}
 
             {}
-            {artifact.traversePath && artifact.traversePath.length > 0 && (
+            {effectiveWaypoints.length > 0 && (
               <div className="cosmo-glass dossier-block">
                 <h3 className="dossier-block-title">
                   <Navigation size={18} style={{ color: themeColor }} />
@@ -396,7 +457,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({
                 </h3>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {artifact.traversePath.map((step, idx) => (
+                  {effectiveWaypoints.map((step, idx) => (
                     <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                       <div
                         style={{
