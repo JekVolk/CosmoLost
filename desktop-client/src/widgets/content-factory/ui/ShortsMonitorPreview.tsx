@@ -756,17 +756,17 @@ export const ShortsMonitorPreview: React.FC = () => {
       </Box>
 
       {/* Expression Quick-Bar & Avatar Customization Trigger */}
-      <Box p="2.5" borderRadius="lg" bg="bg.surface" borderWidth="1px" borderColor="border.subtle">
-        <Flex justify="space-between" align="center" wrap="wrap" gap="2">
-          <HStack gap="1.5">
+      <Box p="4" borderRadius="lg" bg="bg.surface" borderWidth="1px" borderColor="border.subtle">
+        <Flex justify="space-between" align="center" wrap="wrap" gap="3">
+          <HStack gap="2">
             <Text fontSize="2xs" color="fg.muted">
               Емоція аватара:
             </Text>
-            <HStack gap="1">
+            <HStack gap="1.5">
               {(['IDLE', 'EXPERT', 'SHOCK', 'HYPE'] as const).map((em) => (
                 <Button
                   key={em}
-                  size="xs"
+                  size="sm"
                   variant={effectiveEmotion === em ? 'solid' : 'ghost'}
                   colorPalette={effectiveEmotion === em ? 'cyan' : 'gray'}
                   onClick={() => selectEmotion(em)}
@@ -779,7 +779,7 @@ export const ShortsMonitorPreview: React.FC = () => {
           </HStack>
 
           <Button
-            size="xs"
+            size="sm"
             variant="outline"
             colorPalette="teal"
             onClick={openAvatarEditor}
@@ -793,11 +793,11 @@ export const ShortsMonitorPreview: React.FC = () => {
       </Box>
 
       {/* Scrubber & Playback Controls */}
-      <Box p="2.5" borderRadius="lg" bg="bg.surface" borderWidth="1px" borderColor="border.subtle">
-        <Flex justify="space-between" align="center" mb="1.5">
-          <HStack gap="2">
+      <Box p="4" borderRadius="lg" bg="bg.surface" borderWidth="1px" borderColor="border.subtle">
+        <Flex justify="space-between" align="center" mb="3">
+          <HStack gap="3">
             <Button
-              size="xs"
+              size="sm"
               variant="solid"
               colorPalette={isPlaying ? 'yellow' : 'cyan'}
               onClick={() => setIsPlaying(!isPlaying)}
@@ -808,7 +808,7 @@ export const ShortsMonitorPreview: React.FC = () => {
               {isPlaying ? 'Пауза' : 'Превʼю'}
             </Button>
             <Button
-              size="xs"
+              size="sm"
               variant="ghost"
               colorPalette="gray"
               onClick={() => {
@@ -830,7 +830,7 @@ export const ShortsMonitorPreview: React.FC = () => {
         {/* Scrubber Bar */}
         <Box
           width="100%"
-          height="6px"
+          height="10px"
           borderRadius="full"
           bg="bg.muted"
           position="relative"
@@ -873,10 +873,10 @@ export const ShortsMonitorPreview: React.FC = () => {
       </Box>
 
       {/* Action Buttons Below Monitor */}
-      <VStack align="stretch" gap="1.5">
-        <HStack gap="2">
+      <VStack align="stretch" gap="3">
+        <HStack gap="3">
           <Button
-            size="xs"
+            size="sm"
             variant="outline"
             colorPalette={copiedSeo ? 'green' : 'gray'}
             onClick={handleCopySeo}
@@ -889,7 +889,7 @@ export const ShortsMonitorPreview: React.FC = () => {
           </Button>
 
           <Button
-            size="xs"
+            size="sm"
             variant="outline"
             colorPalette={copiedPin ? 'green' : 'gray'}
             onClick={handleCopyPin}
@@ -903,7 +903,7 @@ export const ShortsMonitorPreview: React.FC = () => {
         </HStack>
 
         <Button
-          size="xs"
+          size="sm"
           variant="solid"
           colorPalette={folderOpened ? 'green' : 'teal'}
           onClick={handleOpenFolder}

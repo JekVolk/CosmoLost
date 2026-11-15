@@ -1,3 +1,4 @@
+import { PIPELINE_STAGES } from '@/features/node-editor';
 import { Box, HStack, Text } from '@chakra-ui/react';
 import { CheckCircle2, ChevronRight, Layers, Mic, Rocket, Sparkles, Terminal } from 'lucide-react';
 import type React from 'react';
@@ -8,38 +9,15 @@ interface StudioStepperProps {
 }
 
 export const StudioStepper: React.FC<StudioStepperProps> = ({ currentStage, onSelectStage }) => {
-  const steps = [
-    {
-      num: 1,
-      label: 'Artifact Source',
-      desc: 'NASA Data & 3D GLB',
-      icon: Terminal,
-      color: 'cyan.500',
-    },
-    {
-      num: 2,
-      label: 'Script & Cues',
-      desc: 'SMM Rubric & Hook',
-      icon: Sparkles,
-      color: 'green.500',
-    },
-    { num: 3, label: 'Audio & Sync', desc: 'Cosmo TTS & Phonemes', icon: Mic, color: 'yellow.500' },
-    {
-      num: 4,
-      label: 'Visual Composite',
-      desc: '9:16 & Safe Zones',
-      icon: Layers,
-      color: 'purple.500',
-    },
-    {
-      num: 5,
-      label: 'Export & Publish',
-      desc: 'Shorts, TG, TikTok',
-      icon: Rocket,
-      color: 'orange.500',
-    },
-  ];
-
+  const icons = [Terminal, Sparkles, Mic, Layers, Rocket];
+  const colors = ['cyan.500', 'green.500', 'yellow.500', 'purple.500', 'orange.500'];
+  const steps = PIPELINE_STAGES.map((stage, index) => ({
+    num: index + 1,
+    label: stage.label,
+    desc: stage.description,
+    icon: icons[index] ?? Terminal,
+    color: colors[index] ?? 'cyan.500',
+  }));
   return (
     <Box
       bg="bg.panel"

@@ -1,6 +1,5 @@
 import { useArtifactStore, useArtifactsQuery } from '@/entities/artifact';
 import { usePublicationStore } from '@/entities/publication';
-import { getStoredFFmpegStatus, useSystemInfoStore } from '@/entities/system-info';
 import { tauriCommands } from '@/shared/api';
 import {
   Badge,
@@ -44,28 +43,37 @@ const TIMEOUT_PRESETS = [
   { sec: 180, label: '180с', desc: 'Complex B-Roll' },
 ];
 
+interface FfmpegStatus {
+  installed: boolean;
+  version: string | null;
+  path: string | null;
+}
+
 export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen, onClose }) => {
   const currentProject = usePublicationStore((s) => s.currentProject);
   const setRenderTimeout = usePublicationStore((s) => s.setRenderTimeout);
   const renderTimeoutSec = currentProject?.renderTimeoutSec ?? 40;
 
   const selectedArtifactId = useArtifactStore((s) => s.selectedArtifactId);
-  const selectedPlanet = useArtifactStore((s) => s.selectedPlanet);
   const { data: artifacts = [] } = useArtifactsQuery();
 
   const selectedArtifact =
     artifacts.find((a) => a.id === selectedArtifactId) ||
     artifacts.find((a) => a.id === currentProject?.artifactId) ||
-    artifacts.find((a) => a.celestialBody === selectedPlanet) ||
     artifacts[0];
+
+  const selectedPlanet = selectedArtifact?.celestialBody ?? 'moon';
 
   const formattedCoordinates = selectedArtifact?.coordinates
     ? `${selectedArtifact.coordinates.latitude}° N, ${selectedArtifact.coordinates.longitude}° E`
     : '0.67408° N, 23.47297° E';
 
   // Persistent FFmpeg State & Diagnostics
-  const ffmpegStatus = useSystemInfoStore((s) => s.ffmpegStatus);
-  const setFfmpegStatus = useSystemInfoStore((s) => s.setFfmpegStatus);
+  const [ffmpegStatus, setFfmpegStatus] = useState<FfmpegStatus>({
+    installed: false,
+    version: null,
+    path: null,
+  });
   const [isInstallingFfmpeg, setIsInstallingFfmpeg] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
 
@@ -89,10 +97,6 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
             path: res.path || 'C:\\ProgramData\\chocolatey\\bin\\ffmpeg.exe',
           });
         } else {
-          const stored = getStoredFFmpegStatus();
-          if (stored.installed) {
-            return;
-          }
           setFfmpegStatus({
             installed: false,
             version: null,
@@ -106,7 +110,7 @@ export const StudioSettingsModal: React.FC<StudioSettingsModalProps> = ({ isOpen
       .finally(() => {
         setIsDetecting(false);
       });
-  }, [setFfmpegStatus]);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
