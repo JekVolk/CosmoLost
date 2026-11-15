@@ -16,6 +16,7 @@ from core.models import (
     ArtifactMedia,
     MediaCategory,
 )
+from loader.constants import NASA_3D_MODEL_CDN_MAP
 
 
 class Command(BaseCommand):
@@ -104,7 +105,7 @@ class Command(BaseCommand):
                 'is_nasa_hardware': True,
                 'cause_of_deactivation': 'Passive retroreflector array still operational after 55+ years with no power supply.',
                 'first_person_monologue': 'I am the only Apollo 11 instrument still working today. When Earth lasers strike my quartz prisms, I bounce the photon beam back.',
-                'model_3d_url': 'https://science.nasa.gov/wp-content/uploads/2023/06/lrrr-3d-model.glb',
+                'model_3d_url': '',
             }
         )
 
@@ -125,7 +126,7 @@ class Command(BaseCommand):
                 'is_nasa_hardware': True,
                 'cause_of_deactivation': 'Descent rocket engine fuel depleted upon touchdown; served as launch pad for ascent module.',
                 'first_person_monologue': 'Houston, Tranquility Base here. The Eagle has landed.',
-                'model_3d_url': 'https://science.nasa.gov/wp-content/uploads/2023/06/lm-descent-stage.glb',
+                'model_3d_url': NASA_3D_MODEL_CDN_MAP['apollo-11-descent-stage'],
             }
         )
 
@@ -147,7 +148,7 @@ class Command(BaseCommand):
                 'is_nasa_hardware': True,
                 'cause_of_deactivation': '',
                 'first_person_monologue': 'I am exploring an ancient lake and delta system on Mars, caching sample tubes for future return to Earth.',
-                'model_3d_url': 'https://science.nasa.gov/wp-content/uploads/2023/06/perseverance-rover.glb',
+                'model_3d_url': NASA_3D_MODEL_CDN_MAP['perseverance-rover'],
             }
         )
 
@@ -169,7 +170,7 @@ class Command(BaseCommand):
                 'is_nasa_hardware': True,
                 'cause_of_deactivation': 'Global 2018 Martian dust storm cut solar panel illumination below operational threshold.',
                 'first_person_monologue': 'My battery is low and it is getting dark. I completed a 90-day mission that lasted over 14 years.',
-                'model_3d_url': 'https://science.nasa.gov/wp-content/uploads/2023/06/opportunity-rover.glb',
+                'model_3d_url': NASA_3D_MODEL_CDN_MAP['opportunity-rover'],
             }
         )
 

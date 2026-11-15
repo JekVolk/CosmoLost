@@ -291,9 +291,7 @@ export const Model3DViewer: React.FC<Model3DViewerProps> = ({
     // Candidate NASA CDN model URL or fallback
     const candidateUrl =
       resolveGlbModelUrl(artifact.id, modelUrl || artifact.model3dUrl) ||
-      (artifact.model3dName
-        ? `https://raw.githubusercontent.com/nasa/3d-models/main/${artifact.model3dName}.glb`
-        : null);
+      (artifact.model3dName ? resolveGlbModelUrl(artifact.model3dName) : null);
 
     setLoading(true);
     setLoadProgress(0);

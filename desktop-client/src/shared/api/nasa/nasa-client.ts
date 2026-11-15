@@ -22,7 +22,7 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
       },
     ],
     model3dGlbUrl:
-      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Opportunity%20Rover/opportunity.glb',
+      'https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/mars-exploration-rover---opportunity-(mer-b)/Mars%20Exploration%20Rover%20-%20Opportunity%20(MER-B).glb',
     telemetrySnapshot: {
       sol: 5111,
       dustTau: 10.8,
@@ -52,7 +52,7 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
       },
     ],
     model3dGlbUrl:
-      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Spirit%20Rover/spirit.glb',
+      'https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/mars-exploration-rover---opportunity-(mer-b)/Mars%20Exploration%20Rover%20-%20Opportunity%20(MER-B).glb',
     telemetrySnapshot: {
       sol: 2210,
       dustTau: 6.2,
@@ -82,7 +82,7 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
       },
     ],
     model3dGlbUrl:
-      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Lunar%20Module/lunar_module.glb',
+      'https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/apollo-lunar-module/Apollo%20Lunar%20Module.glb',
     telemetrySnapshot: {
       sol: 1,
       dustTau: 0.0,
@@ -112,7 +112,7 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
       },
     ],
     model3dGlbUrl:
-      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Lunar%20Module/lunar_module.glb',
+      'https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/apollo-lunar-module/Apollo%20Lunar%20Module.glb',
     telemetrySnapshot: {
       sol: 1,
       dustTau: 0.0,
@@ -170,7 +170,7 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
       },
     ],
     model3dGlbUrl:
-      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/InSight/insight.glb',
+      'https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/insight-cruise-lander/InSight%20Cruise%20Lander%20(panels%20deployed).glb',
     telemetrySnapshot: {
       sol: 1445,
       dustTau: 3.5,
@@ -199,7 +199,7 @@ const MOCK_NASA_CATALOG: Record<string, NasaAssetPackage> = {
       },
     ],
     model3dGlbUrl:
-      'https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Ingenuity/ingenuity.glb',
+      'https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/ingenuity-mars-helicopter/Ingenuity%20Mars%20Helicopter.glb',
     telemetrySnapshot: {
       sol: 1042,
       dustTau: 0.6,
