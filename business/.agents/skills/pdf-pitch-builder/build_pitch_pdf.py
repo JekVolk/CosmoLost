@@ -66,7 +66,7 @@ class NumberedCanvas(canvas.Canvas):
         # Нижній колонтитул
         page_text = f"Сторінка {self._pageNumber} з {page_count}"
         self.drawRightString(802, 25, page_text)
-        self.drawString(40, 25, "Конфіденційно • Тільки ключова вижимка бізнес-специфікації")
+        self.drawString(40, 25, "Командний матеріал • Короткий виклад пропозиції")
         self.setStrokeColor(colors.HexColor("#E2E8F0"))
         self.setLineWidth(0.5)
         self.line(40, 36, 802, 36)
@@ -173,7 +173,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
         ],
         [
             Paragraph(data.get('subtitle', ''), subtitle_style),
-            Paragraph("<font color='#64748B'>Формат: Executive One-Pager Brief</font>", ParagraphStyle('SubR', parent=body_style, alignment=2))
+            Paragraph("<font color='#64748B'>Формат: Team Decision Brief</font>", ParagraphStyle('SubR', parent=body_style, alignment=2))
         ]
     ]
     header_table = Table(header_data, colWidths=[560, 202])
@@ -204,7 +204,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
     story.append(Spacer(1, 16))
 
     # Цільова аудиторія
-    story.append(Paragraph("Цільові Сегменти Аудиторії (Хто платить і використовує):", section_heading))
+    story.append(Paragraph("Цільові сегменти аудиторії:", section_heading))
     ta_rows = []
     for seg, desc in data.get('target_audience', []):
         ta_rows.append([
@@ -236,7 +236,7 @@ def create_pitch_pdf(output_path="pitch_presentation.pdf", data=None):
         feat_content.append(Paragraph(f_desc, body_style))
         feat_content.append(Spacer(1, 4))
 
-    monet_content = [Paragraph("<b>Модель Монетизації (Revenue):</b>", section_heading)]
+    monet_content = [Paragraph("<b>Економіка та бізнес-рішення:</b>", section_heading)]
     for m_name, m_desc in data.get('monetization', []):
         monet_content.append(Paragraph(f"<b>{m_name}</b>", bold_item))
         monet_content.append(Paragraph(m_desc, body_style))
