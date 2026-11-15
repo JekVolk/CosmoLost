@@ -36,6 +36,7 @@ services:
   backend:
     build: ./../backend
     container_name: cosmolost-backend
+    image: cosmolost-backend:latest
     restart: always
     env_file:
         - ./../backend/.env
@@ -49,6 +50,18 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      - cosmolost-network
+
+  mcp-service:
+    container_name: cosmolost-mcp-service
+    image: cosmolost-backend:latest
+    restart: unless-stopped
+    env_file:
+      - ./../backend/.env
+    command: uv run mcp/server.py --transport sse --port 8001 --host 0.0.0.0
+    depends_on:
+      - backend
     networks:
       - cosmolost-network
 
