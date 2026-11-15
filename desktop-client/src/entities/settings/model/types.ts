@@ -1,12 +1,22 @@
 import type {
   AccentColor,
+  AgentProfile,
+  ContentGenerationLanguage,
   DesktopSettings,
   Language,
   SettingsExportData,
   ThemeMode,
 } from './schema';
 
-export type { AccentColor, ThemeMode, Language, DesktopSettings, SettingsExportData };
+export type {
+  AccentColor,
+  AgentProfile,
+  ThemeMode,
+  Language,
+  ContentGenerationLanguage,
+  DesktopSettings,
+  SettingsExportData,
+};
 
 export interface SettingsState {
   settings: DesktopSettings;
@@ -14,6 +24,7 @@ export interface SettingsState {
   setAccentColor: (accentColor: AccentColor) => void;
   setThemeMode: (themeMode: ThemeMode) => void;
   setLanguage: (language: Language) => void;
+  setContentGenerationLanguage: (contentLanguage: ContentGenerationLanguage) => void;
   setAutoRefresh: (enabled: boolean) => void;
   setRefreshInterval: (seconds: number) => void;
   toggleCompactMode: () => void;

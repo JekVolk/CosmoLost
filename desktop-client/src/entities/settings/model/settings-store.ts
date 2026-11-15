@@ -4,7 +4,14 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { DEFAULT_SETTINGS } from './defaults';
 import { DesktopSettingsSchema } from './schema';
-import type { AccentColor, DesktopSettings, Language, SettingsState, ThemeMode } from './types';
+import type {
+  AccentColor,
+  ContentGenerationLanguage,
+  DesktopSettings,
+  Language,
+  SettingsState,
+  ThemeMode,
+} from './types';
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
@@ -28,6 +35,11 @@ export const useSettingsStore = create<SettingsState>()(
           settings: { ...state.settings, language },
         }));
       },
+
+      setContentGenerationLanguage: (contentGenerationLanguage: ContentGenerationLanguage) =>
+        set((state) => ({
+          settings: { ...state.settings, contentGenerationLanguage },
+        })),
 
       setAutoRefresh: (autoRefreshMetrics: boolean) =>
         set((state) => ({

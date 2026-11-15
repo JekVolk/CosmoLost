@@ -32,9 +32,10 @@ export class McpToolTaskExecutor implements TaskExecutorStrategy {
       message: `MCP Scheduler tick for [${task.name}]`,
     });
     if (res.isError) {
-      throw new Error(res.content[0]?.text || 'MCP execution failed');
+      throw new Error(res.content?.[0]?.text || 'MCP execution failed');
     }
-    return `MCP response: ${res.content[0]?.text.slice(0, 80)}`;
+    const snippet = res.content?.[0]?.text?.slice(0, 80) ?? 'Empty payload';
+    return `MCP response: ${snippet}`;
   }
 }
 

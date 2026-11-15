@@ -1,6 +1,6 @@
 import { useSettingsStore } from '@/entities/settings';
 import { Badge, Box, Flex, HStack, Text } from '@/shared/ui';
-import { Activity, CheckCircle2, Database, Shield } from 'lucide-react';
+import { Activity, CheckCircle2, Database, Sparkles } from 'lucide-react';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
@@ -52,10 +52,17 @@ export const Statusbar: React.FC = () => {
 
       <HStack gap="3">
         <HStack gap="1.5">
-          <Shield size={12} color="#a855f7" />
-          <Text fontSize="2xs">{t('statusbar.fsdEnforced')}</Text>
+          <Sparkles size={12} color="#38bdf8" />
+          <Text fontSize="2xs">Shorts Studio • 1080p 60FPS</Text>
         </HStack>
-        <Badge size="xs" variant="surface" colorPalette={settings.accentColor}>
+        <Badge
+          size="xs"
+          variant="surface"
+          colorPalette={settings.accentColor}
+          px="2"
+          py="0.5"
+          borderRadius="md"
+        >
           {t('statusbar.theme')}: {settings.themeMode.toUpperCase()} / {settings.accentColor}
         </Badge>
       </HStack>

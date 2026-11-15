@@ -3,10 +3,44 @@
   color-scheme: dark;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
   margin: 0;
-  padding: 0;
+}
+
+/* Polished global button ergonomics and padding */
+.chakra-button {
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-weight: 500;
+  transition: all 0.16s ease;
+}
+
+/* Maintain square dimensions for icon-only action buttons */
+.chakra-button[aria-label] {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 html,
@@ -32,4 +66,15 @@ input,
   app-region: no-drag;
   -webkit-app-region: no-drag;
   pointer-events: auto;
+}
+
+/* Polished global badge padding to eliminate tight borders */
+.chakra-badge {
+  padding-left: 0.55rem;
+  padding-right: 0.55rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.02em;
 }

@@ -10,37 +10,37 @@ export const TaskStatusBadge: React.FC<TaskStatusBadgeProps> = ({ status }) => {
   switch (status) {
     case 'running':
       return (
-        <Badge colorPalette="blue" variant="solid" size="xs">
+        <Badge colorPalette="blue" variant="solid" size="xs" px="2.5" py="0.5" borderRadius="md">
           Running
         </Badge>
       );
     case 'success':
       return (
-        <Badge colorPalette="green" variant="subtle" size="xs">
+        <Badge colorPalette="green" variant="subtle" size="xs" px="2.5" py="0.5" borderRadius="md">
           Active (OK)
         </Badge>
       );
     case 'error':
       return (
-        <Badge colorPalette="red" variant="solid" size="xs">
+        <Badge colorPalette="red" variant="solid" size="xs" px="2.5" py="0.5" borderRadius="md">
           Failed
         </Badge>
       );
     case 'paused':
       return (
-        <Badge colorPalette="gray" variant="surface" size="xs">
+        <Badge colorPalette="gray" variant="surface" size="xs" px="2.5" py="0.5" borderRadius="md">
           Paused
         </Badge>
       );
     case 'idle':
       return (
-        <Badge colorPalette="teal" variant="subtle" size="xs">
+        <Badge colorPalette="teal" variant="subtle" size="xs" px="2.5" py="0.5" borderRadius="md">
           Idle (Scheduled)
         </Badge>
       );
     default:
       return (
-        <Badge colorPalette="teal" variant="subtle" size="xs">
+        <Badge colorPalette="teal" variant="subtle" size="xs" px="2.5" py="0.5" borderRadius="md">
           Idle (Scheduled)
         </Badge>
       );

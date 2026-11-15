@@ -27,17 +27,26 @@ export function useSchedulerEngine() {
     return await executor.execute(task);
   }, []);
 
-  // Sync scheduled tasks with schedulerService
+  // Memoized signature of task configuration: only changes when tasks are added, removed, enabled/disabled, or intervals change.
+  // Prevents timer restarts whenever execution metrics (runCount, lastRunAt, duration) update.
+  const scheduleSignature = tasks
+    .map((t) => `${t.id}:${t.enabled}:${t.intervalSec}:${t.type}`)
+    .join('|');
+
+  // Sync scheduled tasks with schedulerService without timer starvation
   useEffect(() => {
     if (!isHydrated) return;
+    void scheduleSignature;
 
-    for (const task of tasks) {
+    for (const task of tasksRef.current) {
       if (task.enabled) {
         schedulerService.start(
           task.id,
           task.intervalSec,
-          async () => {
-            return await executeTask(task);
+          async (taskId) => {
+            const currentTask = tasksRef.current.find((t) => t.id === taskId);
+            if (!currentTask) return 'Task not found';
+            return await executeTask(currentTask);
           },
           false,
         );
@@ -45,7 +54,7 @@ export function useSchedulerEngine() {
         schedulerService.stop(task.id);
       }
     }
-  }, [tasks, isHydrated, executeTask]);
+  }, [scheduleSignature, isHydrated, executeTask]);
 
   // Hook into event listeners
   useEffect(() => {

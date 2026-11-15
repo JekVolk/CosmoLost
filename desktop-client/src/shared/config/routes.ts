@@ -1,6 +1,7 @@
 export const ROUTES = {
   ROOT: '/',
   OVERVIEW: '/overview',
+  CONTENT_FACTORY: '/content-factory',
   FSD: '/fsd',
   IPC: '/ipc',
   SCHEDULER: '/scheduler',
