@@ -17,6 +17,46 @@ KEY_ROVER_SOLS: Dict[str, tuple[str, int]] = {
     'spirit-rover': ('spirit', 2210),
 }
 
+# Curated seed photos for offline fallback or when Mars Photos API is unavailable
+CURATED_SEED_ROVER_PHOTOS: Dict[str, List[MediaDTO]] = {
+    'opportunity-rover': [
+        MediaDTO(
+            artifact_id='opportunity-rover',
+            media_category='LAST_KNOWN_PHOTO',
+            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA23000.jpg',
+            nasa_id_or_pia='PIA23000-oppy-last',
+            caption='Opportunity final 360-degree panorama from Perseverance Valley before the 2018 global dust storm.',
+            credit='NASA/JPL-Caltech/Cornell/ASU',
+        ),
+        MediaDTO(
+            artifact_id='opportunity-rover',
+            media_category='SURFACE_PHOTO',
+            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA05556.jpg',
+            nasa_id_or_pia='PIA05556-oppy-blueberries',
+            caption='Microscopic Imager view of spherical hematite "blueberries" in Eagle Crater.',
+            credit='NASA/JPL/Cornell/USGS',
+        ),
+    ],
+    'spirit-rover': [
+        MediaDTO(
+            artifact_id='spirit-rover',
+            media_category='LAST_KNOWN_PHOTO',
+            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA05200.jpg',
+            nasa_id_or_pia='PIA05200-spirit-home',
+            caption='Spirit rover view looking back toward Columbia Memorial Station in Gusev Crater.',
+            credit='NASA/JPL-Caltech',
+        ),
+        MediaDTO(
+            artifact_id='spirit-rover',
+            media_category='SURFACE_PHOTO',
+            media_url='https://photojournal.jpl.nasa.gov/jpeg/PIA10214.jpg',
+            nasa_id_or_pia='PIA10214-spirit-silica',
+            caption='Bright soil churned up by Spirit rover wheels revealing 90% pure opaline silica at Home Plate.',
+            credit='NASA/JPL-Caltech/Cornell',
+        ),
+    ],
+}
+
 
 class RoverPhotosIngestService:
     """Service to fetch and sync Mars rover photos from api.nasa.gov."""
@@ -44,14 +84,18 @@ class RoverPhotosIngestService:
         try:
             stats.api_calls_made += 1
             raw_photos = self.client.fetch_rover_photos(rover_name=rover_name, sol=target_sol)
-            if not raw_photos:
-                # If no photos on exact sol, fallback or try manifest check
-                return []
-
             media_dtos: List[MediaDTO] = []
-            for photo in raw_photos[:limit]:
-                dto = NASAJsonMapper.rover_photo_to_media_dto(photo, artifact_id=artifact_id)
-                media_dtos.append(dto)
+
+            if raw_photos:
+                for photo in raw_photos[:limit]:
+                    dto = NASAJsonMapper.rover_photo_to_media_dto(photo, artifact_id=artifact_id)
+                    media_dtos.append(dto)
+            else:
+                # Fallback to curated seed photos when live endpoint returns no data or 404
+                seed_photos = CURATED_SEED_ROVER_PHOTOS.get(artifact_id, [])
+                if seed_photos:
+                    logger.info(f"Using {len(seed_photos)} curated seed rover photos for {artifact_id}.")
+                    media_dtos.extend(seed_photos)
 
             if media_dtos and not dry_run:
                 inserted = self.repository.upsert_media(artifact_id, media_dtos)
