@@ -78,15 +78,20 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
                 },
             )
 
-            # Finalize round
-            await self.channel_layer.group_send(
-                self.group_name,
-                {
-                    'type': 'broadcast_round_result',
-                    'player_id': self.user.id,
-                    'score': score,
-                },
-            )
+            # Record guess in match state
+            is_round_complete, all_guesses = await self.record_player_guess(self.user.id, score)
+
+            # Finalize round and broadcast result only when both players have submitted (or bot/solo match)
+            if is_round_complete:
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'broadcast_round_result',
+                        'player_id': self.user.id,
+                        'score': score,
+                        'scores': all_guesses,
+                    },
+                )
 
         elif action in ('buzzer_click', 'drag_drop'):
             await self.send_json({
@@ -137,12 +142,15 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
             await self.send_json({'event': 'round.opponent_acted'})
 
     async def broadcast_round_result(self, event):
-        await self.send_json({
+        payload = {
             'event': 'round.result',
             'round_index': 1,
             'player_id': event['player_id'],
             'score': event['score'],
-        })
+        }
+        if 'scores' in event:
+            payload['scores'] = event['scores']
+        await self.send_json(payload)
 
     @database_sync_to_async
     def get_match_participant_data(self, match_id, user_id):
@@ -188,6 +196,31 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         # Exponential decay scoring (max 100 points within 50 km)
         score = max(0, min(100, int(100 * math.exp(-dist_km / 500.0))))
         return score
+
+    @database_sync_to_async
+    def record_player_guess(self, user_id, score):
+        match = GameMatch.objects.filter(id=self.match_id).first()
+        if not match:
+            return True, {str(user_id): score}
+
+        round_data = match.round_data or {}
+        guesses = round_data.get('guesses', {})
+        guesses[str(user_id)] = score
+        round_data['guesses'] = guesses
+        match.round_data = round_data
+        match.save(update_fields=['round_data'])
+
+        # Solo or bot match: finishes after player answer
+        if match.is_bot_match or not match.player2_id:
+            return True, guesses
+
+        # PvP match: check if both human players submitted
+        p1_id = str(match.player1_id)
+        p2_id = str(match.player2_id)
+        if p1_id in guesses and p2_id in guesses:
+            return True, guesses
+
+        return False, guesses
 
     @database_sync_to_async
     def check_stat_guesser(self, object_ids):
