@@ -19,7 +19,7 @@
 | Тести | Vitest + Testing Library, мінімум: кожен store + кожен міні-ігровий hook |
 | MVP games | AstroGuessr (2D NASA map), ForensicSol, MissionHangar; no unsupported-mode fallback |
 | Scores | 0–100 per round, 0–300 per match; proposed chest threshold 150 is pending sign-off |
-| Reveal | Do not render answer, target location, or opponent score until both answers are locked |
+| Reveal | Shared answers/target/opponent score only after both lock; StatGuesser feedback is private to the player and never includes target mass |
 
 ---
 
@@ -161,11 +161,10 @@ export default defineConfig({
 User → GET /auth/login/google-oauth2/   (Django redirect)
      → Google consent screen
      → GET /auth/complete/google-oauth2/ (Django callback)
-     → Django видає JWT → redirect до /auth/callback?token=<JWT>
-     → React зберігає JWT → redirect до /
+     → Django створює профіль/сесію → frontend завершує auth через погоджений secure exchange
 ```
 
-> **Примітка для бекенду**: Redirect URL після OAuth має містити `?token=<access_jwt>&refresh=<refresh_jwt>` — уточнити з BE.
+> **Блокер інтеграції**: спосіб видати frontend JWT ще треба погодити з BE/reviewer. Не передавати access/refresh JWT у query string або fragment; не логувати секрети.
 
 ### 2.2 Файли
 
@@ -174,19 +173,47 @@ User → GET /auth/login/google-oauth2/   (Django redirect)
 import { httpClient } from '@/shared/api/http-client';
 
 export interface UserProfile {
-  id: number;
   callsign: string;
-  avatar_url: string | null;
-  elo: number;
-  rp_balance: number;
-  container_slots: number;
-  win_streak: number;
+  bio: string;
+  avatar_frame: string;
+  favorite_planet: 'mars' | 'moon';
+  elo_rating: number;
+  rank: string;
+  curator_index: number;
+  container_count: number;
+  research_points: number;
+  matches_played: number;
+  matches_won: number;
+  current_win_streak: number;
+  is_public: boolean;
+  inventory_count: number;
+  win_rate: number;
+}
+
+export interface PublicGameProfile {
+  callsign: string;
+  avatar_frame: string;
+  rank: string;
+  collection_count: number;
+  showcase: ShowcaseItem[];
+}
+
+export interface ShowcaseItem {
+  equipment: {
+    id: string;
+    name: string;
+    description: string;
+    equipment_class: string;
+    rarity: string;
+    image_url: string | null;
+  };
+  artifact_location: { latitude: number; longitude: number } | null;
 }
 
 export const userRepository = {
-  getMe: () => httpClient.get<UserProfile>('/api/web/game/profile/me/'),
+  getMe: () => httpClient.get<UserProfile>('/api/game/profile/me/'),
   getProfile: (callsign: string) =>
-    httpClient.get<UserProfile>(`/api/web/game/profile/${callsign}/`),
+    httpClient.get<PublicGameProfile>(`/api/game/profile/${callsign}/`),
 };
 ```
 
@@ -197,7 +224,7 @@ import { persist } from 'zustand/middleware';
 
 interface AuthState {
   token: string | null;
-  user: { id: number; callsign: string; elo: number } | null;
+  user: { callsign: string; elo_rating: number } | null;
   setToken: (token: string) => void;
   setUser: (user: AuthState['user']) => void;
   logout: () => void;
@@ -217,31 +244,7 @@ export const useAuthStore = create<AuthState>()(
 );
 ```
 
-**`features/auth/ui/OAuthCallback.tsx`**
-```tsx
-// Парсить ?token= з URL, зберігає в store, перенаправляє на /
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/entities/user';
-
-export function OAuthCallback() {
-  const navigate = useNavigate();
-  const setToken = useAuthStore((s) => s.setToken);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    if (token) {
-      setToken(token);
-      navigate('/');
-    } else {
-      navigate('/login?error=oauth_failed');
-    }
-  }, [navigate, setToken]);
-
-  return <p>Авторизація...</p>;
-}
-```
+**`features/auth/ui/OAuthCallback.tsx`**: після sign-off викликає `authRepository.completeOAuth()`, зберігає отриманий access token і переводить користувача на головну сторінку. До погодження secure exchange/session contract не підставляти endpoint навмання; callback ніколи не читає access/refresh JWT із URL.
 
 **`app/router.tsx`** — маршрути:
 ```tsx
@@ -303,21 +306,25 @@ let socket: WebSocket | null = null;
 const listeners = new Map<string, Set<(data: unknown) => void>>();
 
 export const wsClient = {
-  connect(token: string) {
+  connect(wsUrl: string) {
     if (socket?.readyState === WebSocket.OPEN) return;
-    socket = new WebSocket(`ws://${location.host}/ws/game/?token=${token}`);
+    const url = new URL(wsUrl, window.location.href);
+    url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    // Auth transport must match the backend-approved contract.
+    // Never put an access/refresh JWT in the URL query string.
+    socket = new WebSocket(url);
     socket.onmessage = (event) => {
-      const msg = JSON.parse(event.data as string) as { type: string; payload: unknown };
-      listeners.get(msg.type)?.forEach((cb) => cb(msg.payload));
+      const msg = JSON.parse(event.data as string) as { event: string; [key: string]: unknown };
+      listeners.get(msg.event)?.forEach((cb) => cb(msg));
     };
   },
-  send(type: string, payload: unknown) {
-    socket?.send(JSON.stringify({ type, payload }));
+  send(action: string, fields: Record<string, unknown> = {}) {
+    socket?.send(JSON.stringify({ action, ...fields }));
   },
-  on(type: string, cb: (data: unknown) => void) {
-    if (!listeners.has(type)) listeners.set(type, new Set());
-    listeners.get(type)!.add(cb);
-    return () => listeners.get(type)!.delete(cb);
+  on(event: string, cb: (data: unknown) => void) {
+    if (!listeners.has(event)) listeners.set(event, new Set());
+    listeners.get(event)!.add(cb);
+    return () => listeners.get(event)!.delete(cb);
   },
   disconnect() {
     socket?.close();
@@ -340,10 +347,8 @@ export type MatchPhase =
   | 'MATCH_END';
 
 export interface RoundData {
-  round_num: number;
-  mini_game: string;        // 'astro_guessr' | 'forensic_sol' | ...
-  artifact_id: number;
-  artifact_name: string;
+  round_index: number;
+  round_type: string;        // 'ASTRO_GUESSR' | 'FORENSIC_SOL' | ...
   time_limit_sec: number;
   payload: Record<string, unknown>; // дані міні-гри (без правильної відповіді!)
 }
@@ -399,11 +404,16 @@ export const useMatchStore = create<MatchState>((set) => ({
 Підключає WS події до стору:
 
 ```ts
-// WS event → store action mapping
-// match.found     → setMatchData + setPhase('IN_MATCH')
-// round.start     → setRound
-// round.result    → updateScores + setPhase('ROUND_RESULT')
-// match.end       → endMatch
+// WS event → store action mapping; messages use FEAT-11's top-level `event`.
+// game.matched          → setMatchData + setPhase('IN_MATCH')
+// round.start           → setRound
+// round.answer_accepted → acknowledge only this player's submission
+// round.opponent_acted  → show generic activity only
+// round.result          → updateScores + setPhase('ROUND_RESULT')
+// stat_guesser.feedback → update only this player's private calibration state
+// stat_guesser.ready    → allow editing the pile for the next attempt
+// match.finish          → endMatch
+// match.private_reward  → update this player's inventory/reward only
 ```
 
 ### 3.4 Public API (`entities/game/index.ts`)
@@ -425,9 +435,15 @@ export type { MatchPhase, RoundData, MatchState } from './model/useMatchStore';
 // entities/container/model/useContainerStore.ts
 interface ContainerSlot {
   slot_index: number;    // 0–9
+  container_type: string;
   filled_at: string;     // ISO timestamp
   seal_progress: 0 | 50; // прогрес прив'язаний до конкретного слота
   is_reserved: boolean;
+}
+
+interface ContainerSlotsResponse {
+  slots: ContainerSlot[];
+  next_fill_at: string | null;
 }
 
 interface ContainerState {
@@ -438,8 +454,8 @@ interface ContainerState {
 }
 
 interface DailyClaimState {
-  status: 'available' | 'pending_space' | 'claimed' | 'expired';
-  expires_at: string; // UTC boundary
+  status: 'claimed' | 'pending_space' | 'already_claimed';
+  expires_at: string | null; // UTC boundary
 }
 ```
 
@@ -448,10 +464,10 @@ interface DailyClaimState {
 ```ts
 // entities/container/api/container-repository.ts
 export const containerRepository = {
-  getSlots: () => httpClient.get<ContainerSlot[]>('/api/web/game/containers/'),
+  getSlots: () => httpClient.get<ContainerSlotsResponse>('/api/game/containers/'),
   startMatchWithSlot: (slot_index: number) =>
-    httpClient.post('/api/web/game/match/create/', { slot_index }),
-  claimDaily: () => httpClient.post<DailyClaimState>('/api/web/game/containers/daily/', {}),
+    httpClient.post('/api/game/match/create/', { slot_index }),
+  claimDaily: () => httpClient.post<DailyClaimState>('/api/game/containers/daily/', {}),
 };
 ```
 
@@ -494,11 +510,9 @@ export type { ContainerSlot as ContainerSlotData } from './model/useContainerSto
 **`entities/inventory/api/inventory-repository.ts`**
 ```ts
 export const inventoryRepository = {
-  getInventory: () => httpClient.get<InventoryItem[]>('/api/web/game/inventory/'),
+  getInventory: () => httpClient.get<InventoryItem[]>('/api/game/inventory/'),
   getPublicShowcase: (callsign: string) =>
-    httpClient.get<ShowcaseItem[]>(`/api/web/game/showcase/${callsign}/`),
-  scrapItem: (item_id: number) =>
-    httpClient.post<{ rp_gained: number }>('/api/web/game/inventory/scrap/', { item_id }),
+    httpClient.get<PublicGameProfile>(`/api/game/profile/${callsign}/`),
 };
 ```
 
@@ -533,9 +547,10 @@ export function RarityBadge({ rarity }: { rarity: string }) {
 ### 6.1 Флоу
 
 ```
-User click "PLAY" → POST /api/web/game/matchmaking/join/
-                  → phase = 'SEARCHING'
-                  → WS: match.found (≤8s) OR bot.assigned (fallback)
+User click "PLAY" → POST /api/game/match/create/ with {slot_index}
+                  → response: {match_id, ws_url, config}
+                  → phase = 'SEARCHING'; connect to returned ws_url
+                  → WS: game.matched (≤8s; is_bot=true after bot fallback)
                   → phase = 'IN_MATCH'
 ```
 
@@ -543,8 +558,8 @@ User click "PLAY" → POST /api/web/game/matchmaking/join/
 
 - **Анімація**: пульсуючий круг (Framer Motion `animate={{ scale: [1, 1.2, 1] }}`)
 - **Таймер**: відображає 0–8s очікування
-- **Fallback**: якщо bot.assigned → "Суперник не знайдений. Підключаємо бота (ELO ~{botElo})"
-- **Cancel**: кнопка `Скасувати` → DELETE `/api/web/game/matchmaking/leave/`
+- **Fallback**: обробити `game.matched` з `opponent.is_bot === true`; окремої події `bot.assigned` немає.
+- **Cancel**: окремого cancel endpoint у BE-контракті поки немає; не надсилати вигаданий URL. Узгодити endpoint із BE до показу кнопки скасування.
 - Закривається автоматично при `phase === 'IN_MATCH'`
 
 ### 6.3 Public API (`features/matchmaking/index.ts`)
@@ -559,7 +574,7 @@ export { useMatchmaking } from './model/useMatchmaking';
 
 > Всі міні-ігри:
 > - Отримують дані через `current_round.payload` зі стору
-> - Надсилають відповідь через `wsClient.send('round.answer', { answer })`
+> - Надсилають action із FEAT-11: AstroGuessr — `submit_guess {lat, lon}`, ForensicSol — `buzzer_click {selected_id}`, MissionHangar — `drag_drop {slot, item_id}`
 > - НЕ знають правильної відповіді (Zero-Knowledge)
 > - Мають `disabled` стан після відправки відповіді
 
@@ -758,13 +773,13 @@ export { ChestOpeningModal } from './ui/ChestOpeningModal';
 ```ts
 export const showcaseRepository = {
   getShowcase: (callsign: string) =>
-    httpClient.get<InventoryItem[]>(`/api/web/game/showcase/${callsign}/`),
-  updateShowcase: (item_ids: number[]) =>
-    httpClient.post('/api/web/game/showcase/', { item_ids }),
+    httpClient.get<PublicGameProfile>(`/api/game/profile/${callsign}/`),
+  updateShowcase: (slots: { inventory_item_id: number; slot: number }[]) =>
+    httpClient.post('/api/game/showcase/update/', { slots }),
 };
 ```
 
-> **Залежність BE**: endpoint `GET/POST /api/web/game/showcase/` має бути реалізований у BE-04.
+> **Залежність BE**: публічна вітрина входить у `GET /api/game/profile/{callsign}/`; оновлення власної — `POST /api/game/showcase/update/`. Scrap endpoint не входить до API-контракту MVP.
 
 ---
 
@@ -838,21 +853,20 @@ phase === 'MATCH_END'      → <ChestOpeningModal /> (якщо chest_earned)
 2. **Planetary Terrarium**: `<PlanetaryTerrarium />` (3D планета)
 3. **Curator Showcase**: `<CuratorShowcase />` (5 вибраних артефактів)
 4. **Inventory Grid**: повний інвентар і фільтри — лише власнику; відвідувач бачить тільки showcase
-5. **Stats**: win_streak, matches_played, total_rp_earned — лише власнику
+5. **Stats**: `current_win_streak`, `matches_played`, `matches_won`, `research_points`, ELO — лише власнику; не очікувати `total_rp_earned`, бо такого поля немає в BE serializer.
 
 > Якщо `callsign === me` → show edit controls для showcase. Інакше — read-only.
 
 ### 12.4 `pages/leaderboards/`
 
-- Таблиця: rank, callsign, ELO, win_streak, рідкісний артефакт (найбільш рідкісний в showcase)
-- Пагінація (20 на сторінку)
-- Фільтр: `All Time` / `This Week`
+- Таблиця за полями BE: `rank`, `callsign`, `elo_rating`, `matches_won`; список — до 100 public профілів.
+- Показувати по 20 рядків на сторінку клієнтською пагінацією; не показувати `win_streak`, рідкісний артефакт чи часові фільтри, яких немає в API.
 
 ---
 
 ## FE-13 — Міні-ігри (non-MVP: 6 шт.)
 
-Реалізувати після MVP, тільки skeleton + TODO коментарі у Sprint 2+:
+Ці шість режимів не входять до MVP. Повну реалізацію починати лише після MVP та підготовки перевірених payloads; не підміняти ними недоступний режим у матчах MVP.
 
 | Slug | Назва | Суть |
 |------|-------|------|
@@ -860,8 +874,21 @@ phase === 'MATCH_END'      → <ChestOpeningModal /> (якщо chest_earned)
 | `scale_matcher` | Scale Matcher | 3D порівняння розмірів об'єктів — більший/менший/рівний відомому об'єкту |
 | `traverse_tracer` | Traverse Tracer | По `TraverseWaypoint` (sol, odometry, elevation) відтворити маршрут ровера на карті |
 | `component_dissect` | Component Dissect | По зображенні деталі визначити її функцію (наука/зв'язок/живлення/мобільність) |
-| `stat_guesser` | Stat Guesser | Вгадати числову характеристику місії (маса, дальність, тривалість) ±N% |
+| `stat_guesser` | StatGuesser — АстроТерези | Перетягнути побутові предмети на шальку та спрогнозувати `<`, `=` або `>` відносно прихованої маси апарата |
 | `mission_stack` | Mission Stack | Хронологічно впорядкувати події місії (DnD-сортування) |
+
+### FE-13.1 — StatGuesser: АстроТерези (post-MVP)
+
+**FSD slice**: `features/stat-guesser/` (`ui/`, `model/`, `index.ts`); зовнішній імпорт — лише через public API slice.
+
+- Показати назву/зображення апарата та список серверних еталонних предметів із назвою й масою; не показувати масу апарата ні до, ні після `round.result`.
+- Дозволити перетягувати предмети на шальку, прибирати їх і бачити поточну суму. Додати доступне клавіатурне керування як альтернативу drag-and-drop.
+- Кожне натискання «Підтвердити» надсилає лише `object_ids` через `stat_guesser_check`; клієнт не надсилає масу чи оператор порівняння.
+- Після відповіді приватно показати лише «апарат важчий (`<`)», «предмети важчі (`>`)» або «баланс (`=`)», без маси апарата/різниці. Якщо балансу немає — запитати «Продовжити?»: так — надіслати `stat_guesser_continue` і відновити редагування після `stat_guesser.ready`; ні — надіслати `stat_guesser_stop`.
+- Після кожної спроби апарат залишається на другій шальці, терези оновлюють нахил. Точну масу апарата не показувати ні після окремої спроби, ні у фінальному результаті; стан суперника не показувати до завершення раунду.
+- Баланс відповідає серверному допуску (початково до 1% маси апарата). Успіх дає 100 балів і приватний RP за кількість спроб; stop/timeout без балансу — 0 балів і RP.
+
+**Готово, коли** поточна сума оновлюється при зміні набору, submit блокує повторне надсилання тієї самої спроби, після невдалого зважування можна продовжити/завершити, а UI ніколи не рендерить target mass.
 
 ---
 
@@ -873,6 +900,7 @@ phase === 'MATCH_END'      → <ChestOpeningModal /> (якщо chest_earned)
 | `entities/container/model/useContainerStore.test.ts` | fetchSlots, openContainer (mock HTTP), daily claim |
 | `entities/user/model/useAuthStore.test.ts` | setToken, logout, persist |
 | `features/astro-guessr/model/useAstroGuessr.test.ts` | pin placement, submit disables form |
+| `features/stat-guesser/model/useStatGuesser.test.ts` | сума предметів, feedback-стани, continue/stop, спроби й приватний RP без показу маси апарата |
 | `widgets/battle-arena/ui/RoundTimer.test.ts` | interval ticks, calls tickTimer, clears on unmount |
 | `shared/api/ws-client.test.ts` | connect singleton, event dispatch, disconnect |
 
@@ -896,7 +924,8 @@ pnpm vitest run
 | **S-FE-7** | 2 | FE-09 + FE-12: ChestOpening animation + all 3 pages |
 | **S-FE-8** | 3 | FE-10 + FE-11: Curator showcase + Planetary Terrarium (Three.js) |
 | **S-FE-9** | 2 | FE-13 skeletons + FE-14 tests + Biome pass |
-| **Total** | **~23 дні** | |
+| **Total** | **~23 дні** | Не включає окремо оцінювані post-MVP мініігри |
+| **Post-MVP** | Оцінити окремо | FE-13.1: StatGuesser — АстроТерези після підготовки reference-mass payload |
 
 > ⚠️ **Не запускати арену (FE-08) до завершення S-BE-4** (WS consumer готовий на бекенді).
 

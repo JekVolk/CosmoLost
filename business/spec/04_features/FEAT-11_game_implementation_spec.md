@@ -77,7 +77,7 @@ class MiniGameType(models.TextChoices):
     SCALE_MATCHER     = 'SCALE_MATCHER',     'Космічний Масштаб'
     MISSION_HANGAR    = 'MISSION_HANGAR',    'Монтажний Ангар: Збірка місії'
     COMPONENT_DISSECT = 'COMPONENT_DISSECT', '3D-Інженер: Знайди прилад'
-    STAT_GUESSER      = 'STAT_GUESSER',      'Характеристики Навмання'
+    STAT_GUESSER      = 'STAT_GUESSER',      'StatGuesser: АстроТерези'
     MISSION_STACK     = 'MISSION_STACK',     'Складання Капсули-Ракети'
 
 class ContainerType(models.TextChoices):
@@ -494,6 +494,7 @@ class LootService:
 ```python
 # backend/game/consumers.py
 import math, asyncio, random
+from decimal import Decimal
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from game.models import GameMatch, UserGameProfile
 from game.services.loot_service import LootService
@@ -508,21 +509,44 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.match_id = self.scope['url_route']['kwargs']['match_id']
         self.user     = self.scope['user']
+        # WS auth transport is a blocking integration decision; raw JWT in a
+        # query string is forbidden. Verify auth and match participation first.
+        if not self.user.is_authenticated:
+            await self.close()
+            return
+        match = await self._get_match_for_participant(self.match_id, self.user.id)
+        if match is None:
+            await self.close()
+            return
         self.group    = f'match_{self.match_id}'
         await self.channel_layer.group_add(self.group, self.channel_name)
         await self.accept()
 
     async def receive_json(self, content):
+        if not isinstance(content, dict):
+            await self._send_private(self.user.id, {
+                'event': 'round.error',
+                'code': 'invalid_message',
+            })
+            return
         action = content.get('action')
         handlers = {
             'submit_guess':    self.on_submit_guess,
             'buzzer_click':    self.on_buzzer_click,
             'drag_drop':       self.on_drag_drop,
             'scale_lock':      self.on_scale_lock,
+            'stat_guesser_check': self.on_stat_guesser_check,
+            'stat_guesser_continue': self.on_stat_guesser_continue,
+            'stat_guesser_stop': self.on_stat_guesser_stop,
         }
         handler = handlers.get(action)
-        if handler:
-            await handler(content)
+        if handler is None:
+            await self._send_private(self.user.id, {
+                'event': 'round.error',
+                'code': 'unknown_action',
+            })
+            return
+        await handler(content)
 
     # ── AstroGuessr ──────────────────────────────
     async def on_submit_guess(self, data):
@@ -567,6 +591,89 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         await self._send_private(self.user.id, {'event': 'round.answer_accepted'})
         if await self._all_human_answers_locked(match):
             await self._broadcast_locked_round_result(match)
+
+    async def on_stat_guesser_check(self, data):
+        """Privately return the balance state; the player may retry until balanced."""
+        match = await self._get_match()
+        if not await self._stat_guesser_can_check(match, self.user.id):
+            await self._send_private(self.user.id, {
+                'event': 'round.error',
+                'code': 'stat_guesser_continue_required',
+            })
+            return
+        round_state = match.round_data['current_round']
+        available = {
+            item['id']: Decimal(str(item['mass_kg']))
+            for item in round_state['objects']
+        }
+        object_ids = data.get('object_ids')
+        if (
+            not isinstance(object_ids, list) or not object_ids
+            or any(not isinstance(item_id, str) for item_id in object_ids)
+            or len(object_ids) != len(set(object_ids))
+            or any(item_id not in available for item_id in object_ids)
+        ):
+            await self._send_private(self.user.id, {
+                'event': 'round.error',
+                'code': 'invalid_stat_guesser_answer',
+            })
+            return
+
+        selected_mass = sum(
+            (available[item_id] for item_id in object_ids), Decimal('0')
+        )
+        target_mass = Decimal(str(round_state['true_mass_kg']))
+        difference_pct = abs(selected_mass - target_mass) / target_mass * 100
+        state = (
+            'balanced'
+            if difference_pct <= Decimal(str(round_state['balance_tolerance_pct']))
+            else 'objects_heavier' if selected_mass > target_mass
+            else 'spacecraft_heavier'
+        )
+        attempts = await self._record_stat_guesser_attempt(match, self.user.id)
+        balanced = state == 'balanced'
+        if balanced:
+            await self._save_round_score(match, self.user.id, 100)
+            await self._set_stat_guesser_complete(match, self.user.id)
+            rp_earned = await self._award_stat_guesser_rp(
+                self.user.id, attempts
+            )
+        else:
+            rp_earned = 0
+            await self._set_stat_guesser_continue_pending(match, self.user.id)
+
+        # Per-attempt feedback is private; never include target mass or the
+        # difference, even after the round is complete.
+        await self._send_private(self.user.id, {
+            'event': 'stat_guesser.feedback',
+            'state': state,
+            'attempts_used': attempts,
+            'can_continue': not balanced,
+            'rp_earned': rp_earned if balanced else None,
+        })
+        if balanced and await self._all_human_answers_locked(match):
+            await self._broadcast_locked_round_result(match)
+
+    async def on_stat_guesser_continue(self, data):
+        """Allow exactly one new comparison after the player accepts the prompt."""
+        match = await self._get_match()
+        await self._set_stat_guesser_ready(match, self.user.id)
+        await self._send_private(self.user.id, {
+            'event': 'stat_guesser.ready',
+        })
+
+    async def on_stat_guesser_stop(self, data):
+        """End an unsolved challenge when the player declines to continue."""
+        match = await self._get_match()
+        await self._save_round_score(match, self.user.id, 0)
+        await self._set_stat_guesser_complete(match, self.user.id)
+        if await self._all_human_answers_locked(match):
+            await self._broadcast_locked_round_result(match)
+
+    # Enforce per-player transitions atomically:
+    # ready -> checking -> continue_pending (unbalanced) or complete (balanced);
+    # continue_pending -> ready only after an explicit continue; stop is valid
+    # only from continue_pending. Reject duplicate/out-of-order WS actions.
 
     async def finish_match(self, match):
         """Finalize both human players independently; this excerpt shows player 1."""
@@ -645,7 +752,10 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
             max_err  = 150 * (1 - accuracy)
             dist_km  = random.uniform(0, max_err)
             score    = max(0, round(100 * math.exp(-dist_km / 50.0)))
-        elif round_type in ('FORENSIC_SOL', 'STAT_GUESSER', 'MISSION_STACK'):
+        elif round_type == 'STAT_GUESSER':
+            # The bot uses the same comparator loop; accuracy affects tries to balance.
+            score = await self._simulate_stat_guesser(match, accuracy)
+        elif round_type in ('FORENSIC_SOL', 'MISSION_STACK'):
             score = 100 if random.random() < accuracy else 0
         elif round_type == 'SCALE_MATCHER':
             score = 100 if random.random() < accuracy else (50 if random.random() < 0.5 else 0)
@@ -661,6 +771,8 @@ class DuelConsumer(AsyncJsonWebsocketConsumer):
         jitter = random.uniform(-0.5, 0.8)
         return max(1.0, base + jitter)
 ```
+
+`_simulate_stat_guesser(match, accuracy)` повторює серверний цикл порівняння для бота: моделює кілька наборів предметів до балансу або тайм-ауту, повертає 100/0 балів і не створює RP-профілю для бота. Супернику надсилається лише загальний `opponent_action`, не стан терезів і не кількість спроб.
 
 > **Важливо:** приклад фіналізує лише гравця 1. Production-обробник має симетрично й незалежно оновити для гравця 2 ELO, лічильники/ранг, його зарезервований слот і приватну нагороду; матч із ботом не створює профільної нагороди для бота. Нічия не має `winner_id`; ELO-сервіс рахує її як нічию, а поведінка серії поразок потребує sign-off.
 
@@ -790,15 +902,43 @@ def get_match_config(profile: UserGameProfile) -> dict:
   }
 }
 
+// StatGuesser round.start: public object masses, but no spacecraft mass.
+// These example masses are placeholders; production values come from the sourced catalog.
+{ "event": "round.start",
+  "round_type": "STAT_GUESSER",
+  "payload": {
+    "artifact_label": "Opportunity rover",
+    "objects": [
+      { "id": "water_bottle", "label": "Пляшка води", "mass_kg": 1.0 },
+      { "id": "bicycle", "label": "Велосипед", "mass_kg": 12.0 }
+    ],
+    "balance_tolerance_pct": 1
+    // true_mass_kg ніколи не надсилається клієнту
+  }
+}
+
 // Опонент відповів (без деталей)
 { "event": "round.opponent_acted", "hint": "Опонент зробив вибір..." }
+
+// Приватний результат однієї спроби; дозволено продовжити калібрування.
+{ "event": "stat_guesser.feedback",
+  "state": "spacecraft_heavier",
+  "attempts_used": 1,
+  "can_continue": true }
+// Дозволені state: spacecraft_heavier, objects_heavier, balanced.
+// Відповідні знаки: <, >, =.
+// Ніколи не повертати true_mass_kg чи різницю мас, навіть після балансування.
+// Набір ID нижче і всі маси у прикладах — умовні; у production брати лише
+// значення з кураторського каталогу з перевіреними джерелами.
 
 // Результат раунду (правда розкривається ПІСЛЯ вибору обох)
 { "event": "round.result",
   "scores": { "p1": 85, "p2": 40 },
   "reveal": { "true_lat": -1.95, "true_lon": 354.47, "dist_km_p1": 8.3 },
   "fun_fact": "Opportunity проїхав 45.16 км — відстань Нью-Йорк–Бостон!" }
-// Надсилати обом лише після submit/timeout обох гравців; до того opponent бачить лише answer_accepted.
+// Надсилати обом лише після завершення раунду обома гравцями або тайм-ауту.
+// У спільному round.result для StatGuesser — лише рахунок; жодних станів
+// терезів, кількості спроб або маси. Вони залишаються приватними гравцю.
 
 // Фінал матчу
 { "event": "match.finish",
@@ -821,6 +961,16 @@ def get_match_config(profile: UserGameProfile) -> dict:
 
 // Scale Matcher
 { "action": "scale_lock",     "scale_factor": 1.45 }
+
+// Кожне підтвердження набору — одна спроба калібрування.
+{ "action": "stat_guesser_check",
+  "object_ids": ["water_bottle", "bicycle"] }
+
+// Дозволити наступну спробу лише після явної згоди на «Продовжити?».
+{ "action": "stat_guesser_continue" }
+
+// Decline another attempt while the scale is not balanced.
+{ "action": "stat_guesser_stop" }
 
 // Buzzer (Тіньовий Проектор / Оптичний дешифратор)
 { "action": "buzzer_click",   "selected_id": "ingenuity" }
@@ -895,7 +1045,7 @@ pages/
 | **S-5** (5 днів) | Фронтенд: matchmaking + 3 перші міні-ігри (AstroGuessr, ForensicSol, MissionHangar) | Перший повний матч |
 | **S-6** (4 дні) | Фронтенд: ChestOpenAnimation + ContainerSlots + InventoryItemCard | Відкриття контейнера з анімацією |
 | **S-7** (4 дні) | PlanetaryTerrarium + CuratorShowcase + PublicProfile | Публічна вітрина профілю |
-| **S-8** (3 дні) | Решта міні-ігор (Shadow, Scale, Traverse, 3D-Engineer) | Повний пул з 9 ігор |
+| **S-8** (3 дні) | Решта post-MVP міні-ігор, зокрема StatGuesser — АстроТерези з повторними спробами та RP за успішне балансування | Повний пул з 9 ігор; RP_BASE/RP_STEP окремо балансуються |
 | **S-9** (2 дні) | Leaderboard + Pity + Guest-to-OAuth flow | Готово до бета-тесту |
 
 > [!TIP]

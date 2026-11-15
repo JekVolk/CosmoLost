@@ -35,9 +35,10 @@
 | **JB-01** | **Моделі бази даних `game`** | Створити застосунок `backend/game`, описати моделі `UserGameProfile`, `ContainerSlot`, `InventoryArtifact`, `GameMatch`, `MatchRound` відповідно до [`FEAT-11`](./FEAT-11_game_implementation_spec.md). Зробити міграції. | — | `backend/game/models.py`, міграція `0001_initial.py` |
 | **JB-02** | **Seed-скрипт та симуляція артефактів** | Написати management command `python manage.py seed_game_artifacts`, яка перевіряє 118 артефактів у `backend/core` і призначає їм базові класи обладнання та тири рідкості. | JB-01 | `management/commands/seed_game_artifacts.py` |
 | **JB-03** | **Django Unfold Admin інтерфейс** | Зареєструвати ігрові моделі в `game/admin.py` з фільтрами за ELO, тиром рідкості, статусом матчу, красивими бейджами Unfold. | JB-01 | Налаштований Django Admin для гейм-майстрів |
-| **JB-04** | **DRF Serializers та базові CRUD Views** | Реалізувати `UserProfileSerializer`, `InventoryItemSerializer`, `ContainerSlotSerializer`, ендпоінти читання інвентарю та публічного профілю (`/api/web/game/profile/{callsign}/`). | JB-01 | Ендпоінти REST API з пермішенами |
+| **JB-04** | **DRF Serializers та базові CRUD Views** | Реалізувати приватний/публічний профілі, `InventoryItemSerializer`, `ContainerSlotSerializer` та endpoints з FEAT-11 під `/api/game/`; публічний callsign endpoint не повертає приватні поля. | JB-01 | REST API з пермішенами й тестами ownership |
 | **JB-05** | **Сервіс розрахунку ELO (`EloService`)** | Написати чисті функції для розрахунку нового рейтингу гравця та бота за формулою FIDE: $R_{new} = R + K \cdot (S - E)$. Покрити unit-тестами. | — | `game/services/elo_service.py`, тести в `tests/test_elo.py` |
 | **JB-06** | **Юніт-тести Pity та Лут-таблиць** | Перевірити, що після 60 послідовних дропів без Historic+ 61-ше відкриття гарантує Historic або вище; Anomaly guarantee на 500-му не входить до MVP без окремого sign-off. | MB-02 | `tests/test_loot_system.py` |
+| **JB-07** | **Кураторський каталог побутових мас (post-MVP)** | Підготувати перевірений набір побутових предметів із назвою, масою в кг та джерелом для StatGuesser; не додавати неперевірені або непозитивні значення. | JB-01 | Версіонований каталог еталонних мас для ігрових payloads |
 
 ---
 
@@ -50,9 +51,10 @@
 | **MB-01** | **Google OAuth + JWT Pipeline** | Інтеграція `social-auth-app-django`, створення кастомного пайплайну `create_game_profile`, випуск JWT (access/refresh), генерація callsign гравця. | JB-01 | Працюючий OAuth флоу, створення профілю при першому вході |
 | **MB-02** | **Сервіс генерації луту (`LootService`)** | Алгоритм видачі предметів з контейнера з динамічним шансом (Pity Counter), захист від дублікатів з конвертацією в Research Points (RP), нарахування щоденних скриньок. | JB-01 | `game/services/loot_service.py` |
 | **MB-03** | **Zero-Knowledge генератор раундів** | Відбирати лише три MVP-режими з повним перевіреним payload: AstroGuessr (карта), ForensicSol, MissionHangar. Маскувати координати/відповіді; за нестачі даних не підміняти режим і не стартувати неповний матч. | JB-02 | `game/services/round_orchestrator.py` |
-| **MB-04** | **WebSocket Consumer (`DuelConsumer`)** | Асинхронний споживач Django Channels: JWT-авторизація, таймери та серверний розрахунок. Не розкривати відповідь/оцінку опоненту після першого submit; round result — лише після submit/timeout обох. | JB-05, MB-03 | `backend/game/consumers.py`, `routing.py` |
+| **MB-04** | **WebSocket Consumer (`DuelConsumer`)** | Асинхронний споживач Django Channels: авторизація затвердженим транспортом (не JWT у query string), перевірка участі в матчі до підписки на group, таймери й серверний розрахунок. Не розкривати оцінку опоненту після першого submit; round result — після submit/timeout обох. | JB-05, MB-03 | `backend/game/consumers.py`, `routing.py` |
 | **MB-05** | **Matchmaking черга в Redis** | Логіка очікування суперника (до 8 секунд). Якщо суперник не знайдений — безшовне підключення `SpaceBot` з ELO, наближеним до рейтингу гравця. | MB-04 | Redis Matchmaker з fallback на бота |
 | **MB-06** | **Налаштування Daphne, ASGI та каналів** | Оновлення `config/asgi.py`, інтеграція `channels_redis`, конфігурація для продакшн середовища з захистом від флуду та розривів зв'язку. | MB-04 | `backend/config/asgi.py` |
+| **MB-07** | **StatGuesser: серверне калібрування терезів (post-MVP)** | Формувати payload з еталонними предметами; тримати масу апарата прихованою; рахувати приватний стан терезів і спроби; вимагати явне продовження/stop; нараховувати менше RP зі зростанням спроб. | JB-07, MB-04 | WS перевірка `stat_guesser_check`/`continue`/`stop`, тести станів і економіки |
 
 ---
 
@@ -71,6 +73,7 @@
 | **MF-07** | **Віджет Арени (`BattleArena`)** | HUD бою: таймер раунду, рахунок гравця і суперника, плавне перемикання між 3 раундами, екран підсумків матчу та підрахунку ELO. | MF-04, MF-05, MF-06 | `widgets/battle-arena` |
 | **MF-08** | **3D Планетарій («Планетарний тераріум»)** | Three.js сцена з глобусом Місяця/Марса, розстановка виграних 3D артефактів гравця за координатами, клік з плавним наближенням камери (`flyTo`). | JB-04 | `widgets/planetary-terrarium` |
 | **MF-09** | **Анімація відкриття скриньки** | Ефект тряски контейнера, розпакування, спалах світла з кольором рідкості (Framer Motion), нарахування Research Points при дублікаті. | MB-02, MF-03 | `features/chest-opening` |
+| **MF-10** | **StatGuesser — АстроТерези (post-MVP)** | FSD feature: перетягувати побутові предмети, підтверджувати спробу та змінювати набір за приватним станом терезів; UI не показує масу апарата. | MF-01, MB-07 | `features/stat-guesser` з клавіатурною альтернативою drag-and-drop |
 
 ---
 

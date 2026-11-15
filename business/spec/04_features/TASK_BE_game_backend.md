@@ -1,7 +1,7 @@
 # TASK-BE: Ігровий модуль — Backend (Django ORM, REST API, WebSocket, Google OAuth)
 
-> **Виконавець**: Senior / Middle Backend Developer  
-> **Стек**: Python 3.12 · Django 5 · Django REST Framework · Django Channels · `social-auth-app-django` · Redis · PostgreSQL  
+> **Виконавець**: Junior Backend Developer · **обов'язковий review**: Middle/Senior Backend Developer
+> **Стек**: Python/Django/DRF версій, закріплених у `backend` · Django Channels · `social-auth-app-django` · Redis · БД згідно з наявною конфігурацією (SQLite local / PostgreSQL production)
 > **Вхідні дані**: [`FEAT-11_game_implementation_spec.md`](./FEAT-11_game_implementation_spec.md) · [`backend/core/models.py`](../../backend/core/models.py) · [`backend/config/settings.py`](../../backend/config/settings.py)  
 > **Гілка**: `feature/game-backend` від `develop`
 
@@ -12,11 +12,42 @@
 **Всі розрахунки, таймери, RNG та валідація відповідей — виключно на бекенді.**  
 Клієнт отримує лише медіа-URL та дескриптори раундів. Правильна відповідь передається клієнту тільки після його вибору.
 
+## План виконання для Junior
+
+Роби кроки послідовно. Після кожного кроку запускай його перевірки й показуй результат reviewer-у до переходу далі. Не копіюй цілі блоки налаштувань із цієї задачі поверх поточного проєкту: інтегруй лише потрібні зміни, зберігаючи наявні `AUTH_USER_MODEL`, middleware, API та команди запуску.
+
+| Крок | Залежить від | Що зробити | Готово, коли |
+|---|---|---|---|
+| **J0 · Перевірити базу** | — | Прочитати FEAT-11 §§6–7, перевірити `backend/requirements*`, `settings.py`, `urls.py`, `asgi.py`, чинні auth та команди запуску. Зафіксувати невідповідності до змін. | Django запускається до змін; відомі чинні версії залежностей і схема авторизації. |
+| **J1 · Під'єднати Channels** | J0 | Створити мінімальний `game` app skeleton; додати сумісні Channels/Redis залежності, ASGI router, game URL include, Redis channel layer і health/startup перевірки. Не прибирати HTTP/WSGI підтримку. | HTTP продовжує працювати; ASGI піднімається; тестовий WS route приймає запит; Redis недоступність дає явну помилку. |
+| **J2 · Дані та міграції** | J0, J1 | Додати game-моделі, constraints, міграції та Django Admin. | Міграції застосовуються з чистої БД і на копії наявної схеми; admin відкривається. |
+| **J3 · Серверні сервіси** | J2 | Реалізувати loot, ELO, контейнерні правила, вибір перевірених раундів і matchmaking як окремі функції/сервіси. | Unit-тести перевіряють правила, граничні випадки й транзакції без WebSocket. |
+| **J4 · REST API** | J2, J3 | Реалізувати контракти таблиці «REST API» нижче: serializers, permissions, views, routes і API-тести. | Кожен endpoint має позитивний тест, тест авторизації/власності та тест помилкового вводу; OpenAPI/приклади відповідають маршрутам. |
+| **J5 · WebSocket** | J1, J3, J4 + auth sign-off | Після auth-рішення нижче під'єднати маршрут, перевірити користувача й учасника матчу, реалізувати події та переходи станів. | Інтеграційний тест проходить повний матч двох клієнтів; перевірені бот-fallback, timeout, reconnect та відсутність витоку секретів. |
+| **J6 · Передача** | J0–J5 | Запустити повний набір перевірок із фінального checklist, додати команди запуску/міграцій і короткий опис локального тесту двома клієнтами. | Reviewer може повторити перевірки з чистого середовища; усі чекбокси виконані або мають явно погоджений blocker. |
+
+### Блокуюче рішення до реалізації WS-авторизації
+
+REST використовує JWT Bearer, але `AuthMiddlewareStack` сам по собі не читає цей JWT; попередній frontend-приклад передавав JWT у query string. **Не надсилати access/refresh JWT у URL.** Перед J5 reviewer має затвердити один транспорт для WebSocket-авторизації та записати його однаково у FEAT-11, цій задачі й frontend-задачі. До цього можна зробити ASGI/route та тести неавторизованого з'єднання, але не вважати авторизований WS готовим.
+
+Окремо узгодити OAuth callback: backend-приклад повертає JWT JSON-відповіддю, тоді як старий frontend-приклад передавав їх у redirect URL. Реалізувати лише погоджений secure exchange/session flow; не видавати JWT через query string.
+
+Також frontend-опис має кнопку скасування пошуку, але FEAT-11 не визначає cancel endpoint і правила звільнення зарезервованого слота. Reviewer має або затвердити endpoint/state transition і додати його до FEAT-11, або прибрати кнопку з MVP; Junior не вигадує URL чи економічну поведінку самостійно.
+
+## Межі контракту: REST і WebSocket
+
+- Канонічні маршрути та ігрові події наведені у [`FEAT-11_game_implementation_spec.md` §§6–7](./FEAT-11_game_implementation_spec.md). Якщо приклад коду в цій задачі відрізняється від таблиці, узгодити його з reviewer-ом і виправити до merge.
+- API prefix — `/api/game/`; WS path — `/ws/game/duel/{match_id}/`. Клієнт використовує `ws_url`, отриманий від API, а не конструює іншу адресу.
+- Вхідне WS-повідомлення має `action`, вихідне — `event` на верхньому рівні JSON. Не додавати паралельний envelope `{type, payload}` без узгодженої зміни FEAT-11 і frontend.
+- Публічний REST/WS payload не містить прихованої правильної відповіді, координат, точних мас, внутрішньої різниці мас або приватної історії іншого гравця.
+
 ---
 
 ## BE-01 · Встановлення залежностей та Google OAuth
 
 **Що зробити:**
+
+Спершу звір `requirements.txt`/lockfile з J0. Додавай лише відсутні пакети сумісних версій; не змінюй версію Django та не дублюй уже встановлені залежності.
 
 1. Додати в `requirements.txt`:
 ```
@@ -85,15 +116,19 @@ REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = [
 3. Оновити `backend/config/asgi.py`:
 ```python
 import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+
 from django.core.asgi import get_asgi_application
+django_asgi_app = get_asgi_application()
+
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 import game.routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-
 application = ProtocolTypeRouter({
-    'http':      get_asgi_application(),
+    'http':      django_asgi_app,
+    # AuthMiddlewareStack authenticates Django sessions, not REST JWTs.
+    # Replace/extend only after the WebSocket auth transport is approved.
     'websocket': AuthMiddlewareStack(URLRouter(game.routing.websocket_urlpatterns)),
 })
 ```
@@ -108,7 +143,6 @@ urlpatterns = [
     path('auth/',               include('social_django.urls', namespace='social')),
     path('api/auth/token/',     TokenObtainPairView.as_view()),
     path('api/auth/token/refresh/', TokenRefreshView.as_view()),
-    path('api/auth/google/callback/', include('game.auth_views')),
 ]
 ```
 
@@ -244,6 +278,68 @@ def get_match_config(profile: UserGameProfile) -> dict:
 
 ## BE-04 · REST API Views + Serializers
 
+### Порядок реалізації endpoint-ів
+
+1. Додай serializers і тести до кожного serializer.
+2. Реалізуй read-only профілі та інвентар; перевір, що приватні поля не потрапляють у public serializer.
+3. Реалізуй слоти контейнерів і daily claim у транзакціях: повторний запит не створює другу нагороду, повне сховище повертає pending claim із UTC expiry.
+4. Реалізуй match create/status: приймай лише `slot_index`, який належить поточному користувачу; слот резервується атомарно і не може бути використаний у двох матчах.
+5. Реалізуй showcase/craft/leaderboards; перевір ownership, ліміти й баланс RP на сервері.
+6. Зареєструй усі маршрути в `backend/game/urls.py`, підключи їх через існуючий `config/urls.py`; не створюй дубль API prefix.
+7. Для кожного рядка таблиці нижче додай окремі API-тести на успіх, авторизацію/власність і невалідний запит.
+
+### Контракт REST API
+
+Base path: `/api/game/`. Приватні endpoints вимагають `Authorization: Bearer <access_token>`. Public endpoints не повинні використовувати приватний serializer.
+
+| Метод і шлях | Запит | Успішна відповідь / перевірка |
+|---|---|---|
+| `GET /profile/me/` | Без body | `200`; власні callsign, статистика, ELO/rank, RP і кількість контейнерів. Інший користувач не може отримати ці дані через цей endpoint. |
+| `GET /profile/{callsign}/` | Без body | `200`; лише public поля й до 5 предметів вітрини. Для `is_public=false` — `403`; без email, точного RP, інвентарю, pity та історії матчів. |
+| `GET /containers/` | Без body | `200`; `{slots:[...] , next_fill_at}`. Слот містить власні `slot_index`, `container_type`, `filled_at`, `seal_progress`, `is_reserved`; не більше 10 слотів. `is_reserved` обчислюється сервером з активного матчу. |
+| `POST /containers/daily/` | Порожній JSON `{}` | `200`; `status` — `claimed`, `pending_space` або `already_claimed`, `expires_at` — UTC timestamp/null. Повтор у ту саму UTC-добу не видає контейнер удруге. |
+| `POST /match/create/` | `{"slot_index": 0}` | `201`; `match_id`, `ws_url`, серверна конфігурація. Невалідний/чужий/зарезервований слот не запускає матч. Потрібні 3 валідні MVP payloads; інакше `409` без створення матчу й без резерву слота. Пошук суперника триває до 8 с, потім допускається bot fallback; не створювати бота одразу. |
+| `GET /match/{id}/` | Без body | `200`; статус тільки матчу, в якому поточний користувач є учасником. Відповіді, координати та приховані маси не повертаються. |
+| `POST /container/craft/` | `{"container_type":"STANDARD","target_class":null}` | `200`; результат відкриття, duplicate/RP та новий баланс. Витрата RP і видача предмета атомарні; недостатній баланс не змінюється. |
+| `POST /showcase/update/` | `{"slots":[{"inventory_item_id":12,"slot":1}]}` | `200`; оновлена вітрина. Приймаються лише власні inventory IDs, максимум 5 унікальних слотів; валідувати весь запит до будь-якого запису. |
+| `GET /inventory/` | Без body | `200`; тільки власний інвентар. |
+| `GET /leaderboard/elo/` | Без body | `200`; до 100 public профілів, відсортованих за ELO; без приватних полів. |
+| `GET /leaderboard/curator/` | Без body | `200`; public профілі, відсортовані за Curator Index. |
+
+У всіх endpoints перевірити: неавторизований запит не проходить, чужі записи не читаються/змінюються, вхідні поля валідовані serializer-ом, а помилка не створює часткових змін. Для match/container/RP операцій використовувати транзакції та блокування там, де паралельні запити можуть витратити один слот або баланс двічі. Статуси помилок і формат DRF-відповідей зафіксувати у тестах та API-документації.
+
+Приклади успішних відповідей, які треба закріпити тестами:
+
+```json
+// GET /api/game/containers/
+{
+  "slots": [
+    {
+      "slot_index": 0,
+      "container_type": "DAILY",
+      "filled_at": "2026-11-15T12:00:00Z",
+      "seal_progress": 0,
+      "is_reserved": false
+    }
+  ],
+  "next_fill_at": "2026-11-15T16:00:00Z"
+}
+```
+
+```json
+// POST /api/game/containers/daily/
+{ "status": "pending_space", "expires_at": "2026-11-16T00:00:00Z" }
+
+// POST /api/game/match/create/
+{
+  "match_id": "UUID",
+  "ws_url": "/ws/game/duel/UUID/",
+  "config": { "time_limit_sec": 15, "elo_protection": false }
+}
+```
+
+Помилки зафіксувати послідовно: `400` для невалідного body, `401` для відсутнього/невалідного credential, `403` для забороненої операції, `404` для відсутнього або недоступного чужого ресурсу, `409` для конфлікту стану/зарезервованого слота чи `insufficient_round_content`. Не включати в `detail` приховані дані або підтвердження існування чужого матчу.
+
 **`backend/game/serializers.py`**:
 ```python
 from rest_framework import serializers
@@ -372,40 +468,26 @@ class ShowcaseUpdateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        slots = request.data.get('slots', [])  # [{inventory_item_id, slot}]
-        # Скидаємо всі showcase
-        request.user.inventory.update(is_showcased=False, showcase_slot=None)
-        for entry in slots[:5]:
-            request.user.inventory.filter(id=entry['id']).update(
-                is_showcased=True, showcase_slot=entry['slot'])
-        return Response({'ok': True})
+        # 1. Validate the entire {slots: [{inventory_item_id, slot}]} body.
+        # 2. Verify every ID belongs to request.user and slots are unique/in-range.
+        # 3. In one transaction, clear this user's old showcase and apply new slots.
+        # Never truncate invalid input or update a foreign user's inventory.
+        ...
 
 
 class MatchCreateView(APIView):
-    """Старт матчу: вибір артефакту, конфігурація, повернення match_id."""
+    """Резервує слот і створює матч у стані WAITING."""
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        from game.models import GameMatch
-        profile  = request.user.game_profile
-        config   = get_match_config(profile)
-        artifact = pick_target_artifact(request.user.id)
-        accuracy = build_bot_accuracy(profile.elo_rating)
-
-        match = GameMatch.objects.create(
-            player1         = request.user,
-            is_bot_match    = True,   # PvP підключається через WS після
-            bot_accuracy    = accuracy,
-            target_artifact = artifact,
-        )
-        match.mini_games = match.select_mini_games()
-        match.save(update_fields=['mini_games'])
-
-        return Response({
-            'match_id':       str(match.id),
-            'config':         config,
-            'ws_url':         f'/ws/game/duel/{match.id}/',
-        })
+        # 1. Validate slot_index in request.data.
+        # 2. In a transaction, lock and reserve a slot owned by request.user.
+        # 3. Create GameMatch(status='WAITING', is_bot_match=False) and queue it.
+        # 4. Return 201 with match_id, ws_url, and public match config.
+        # 5. The queue tries PvP for up to 8 seconds; only then assign a bot.
+        # Never set is_bot_match=True at creation or trust a client-supplied user,
+        # opponent, artifact, score, ELO, answer, or bot accuracy.
+        ...
 
 
 class ContainerCraftView(APIView):
@@ -474,11 +556,15 @@ from game import views
 urlpatterns = [
     path('profile/me/',             views.MyProfileView.as_view()),
     path('profile/<str:callsign>/', views.PublicProfileView.as_view()),
-    path('inventory/',              views.InventoryView.as_view()),
-    path('showcase/update/',        views.ShowcaseUpdateView.as_view()),
+    path('containers/',             views.ContainerSlotsView.as_view()),
+    path('containers/daily/',       views.DailyContainerClaimView.as_view()),
     path('match/create/',           views.MatchCreateView.as_view()),
+    path('match/<uuid:match_id>/',  views.MatchStatusView.as_view()),
     path('container/craft/',        views.ContainerCraftView.as_view()),
+    path('showcase/update/',        views.ShowcaseUpdateView.as_view()),
     path('leaderboard/elo/',        views.LeaderboardEloView.as_view()),
+    path('leaderboard/curator/',   views.LeaderboardCuratorView.as_view()),
+    path('inventory/',              views.InventoryView.as_view()),
     path('auth/google/done/',       views.GoogleAuthCallbackView.as_view()),
 ]
 ```
@@ -489,20 +575,68 @@ urlpatterns = [
 
 **`backend/game/routing.py`**:
 ```python
-from django.urls import re_path
+from django.urls import path
 from game import consumers
 
 websocket_urlpatterns = [
-    re_path(r'ws/game/duel/(?P<match_id>[^/]+)/$', consumers.DuelConsumer.as_asgi()),
+    path('ws/game/duel/<uuid:match_id>/', consumers.DuelConsumer.as_asgi()),
 ]
 ```
 
 **`backend/game/consumers.py`** — повний код із [`FEAT-11_game_implementation_spec.md §3`](./FEAT-11_game_implementation_spec.md).
 
-Ключові правила реалізації:
-- `round_data` у `GameMatch` — Python dict, що зберігається в JSONField. Правильні відповіді (`target_lat`, `target_lon`, `true_mass_kg`) зберігаються тут. **Ніколи не відправляти їх у WS до отримання відповіді гравця.**
-- `run_bot_turn()` запускається через `asyncio.create_task()` одразу після `round.start`.
+### Порядок реалізації з'єднання
+
+1. У `backend/config/asgi.py` спочатку ініціалізувати Django ASGI app, потім під'єднати `ProtocolTypeRouter`: HTTP лишається на Django, WebSocket іде в `URLRouter(game.routing.websocket_urlpatterns)`.
+2. Додати Redis channel layer через `REDIS_URL`; локальне значення для розробки не має ставати production fallback. Задокументувати запуск Redis і перевірити, що два процеси бачать один match group.
+3. До `accept()` перевірити затверджений спосіб WS-авторизації, чинність match UUID, `status`, і що `scope["user"]` є одним з учасників. Чужому користувачу не повертати, чи існує матч; не додавати його до channel group.
+4. Після успішної перевірки додати канал у групу `match_{match_id}`, прийняти socket і надіслати потрібний стан матчу. Повторне з'єднання того самого учасника відновлює серверний стан, а не створює новий матч/раунд.
+5. Розбирати тільки JSON object з валідним `action`. Невідома подія, неправильний тип даних, неправильний порядок дій або надмірний payload мають повертати контрольований `round.error`; не ігнорувати та не піднімати raw exception клієнту.
+6. Використовувати один wire format: клієнт → сервер `{"action":"...", ...fields}`, сервер → клієнт `{"event":"...", ...fields}`. Перевіряти розмір/типи полів до бізнес-логіки; DB-запити з async consumer виконувати через Channels async ORM API або `database_sync_to_async`.
+7. Передавати `round.start` із публічним payload, приймати дію, зберігати score серверно, приватно підтвердити дію, і надсилати `round.result` лише коли обидва гравці lock-нули відповідь або сплив серверний таймер. Потім стартувати наступний раунд або завершити матч.
+8. На disconnect очистити лише connection-local heartbeat/tasks; authoritative match timer продовжує працювати на сервері. Дозволити до 3 reconnect-спроб за 5 секунд (FEAT-12); успішне повторне з'єднання відновлює серверний стан, а не створює новий матч/раунд. Повторний submit не нараховує score, RP, ELO чи chest двічі.
+
+### Wire contract і готові сценарії перевірки
+
+| Напрямок | Мінімальні події | Очікувана поведінка |
+|---|---|---|
+| Server → client | `game.matched` | Містить callsign/ELO/rank і `is_bot`; бот призначається після черги до 8 с, не відразу при `match/create`. |
+| Server → client | `round.start` | Має `round_index`, `round_type`, `time_limit_sec`, перевірений `payload`; не має правильних відповідей. |
+| Client → server | `submit_guess` | Приймає лише координати гравця; сервер рахує відстань/score. |
+| Client → server | `buzzer_click`, `drag_drop` | Перевіряє дозволені ID/слоти та стан поточного раунду; score клієнту не довіряє. |
+| Server → client | `round.answer_accepted`, `round.opponent_acted` | Підтверджує submit лише автору; опонент бачить лише загальний факт дії. |
+| Server → client | `round.result` | Спільний результат лише після двох відповідей або timeout; для StatGuesser не включає стани/спроби/масу. |
+| Server → client | `match.finish` | Рахунок/переможець/ELO; нічия має `winner_id: null`. |
+| Server → конкретний гравець | `match.private_reward` | Лише власнику слота; містить тільки його loot/RP. |
+| Client → server | `stat_guesser_check`, `stat_guesser_continue`, `stat_guesser_stop` | Лише post-MVP: спроби рахуються сервером; continue потрібен перед повтором; feedback приватний. |
+
+Точні приклади полів — у FEAT-11 §7. Під час інтеграції не перейменовувати `event` на `type`, не обгортати payload і не використовувати `match.found`/`match.end`: канонічні назви — `game.matched`/`match.finish`.
+
+### Зв'язок REST → WebSocket
+
+1. Клієнт надсилає `POST /api/game/match/create/` із Bearer JWT та `{"slot_index": n}`.
+2. API відповідає `match_id` та `ws_url`; slot уже зарезервований сервером.
+3. Клієнт підключається саме до повернутого `ws_url` через `ws:` локально або `wss:` у production. Production не має downgrade на незашифрований socket.
+4. Сервер перевіряє учасника/авторизацію й тільки тоді приймає з'єднання. Після `game.matched` надсилає `round.start`.
+5. Після `match.finish` клієнт оновлює профіль/контейнери через REST або використовує відповідь приватної нагороди; не вважає повідомлення клієнта джерелом істини.
+
+### Мінімальні WS-тести
+
+- Неавторизований, прострочений credential, неіснуючий матч і користувач, який не є учасником, не можуть отримати матчеві події.
+- Два учасники приєднуються до одного матчу; сторонній socket не отримує жодного group event.
+- `round.start` не містить target-полів; після першої відповіді опонент не отримує score/відстань/правильну відповідь.
+- Після другої відповіді та окремо після timeout обидва отримують рівно один `round.result`.
+- Повторне/паралельне повідомлення не дублює submit, нагороду або фіналізацію.
+- Перевірити reconnect у межах погодженого вікна, закриття socket, очищення group і таймерів.
+- Перевірити tie, bot fallback, `match.finish`, приватність `match.private_reward`, та StatGuesser переходи/приватний feedback (post-MVP).
+
+Ключові правила Zero-Knowledge:
+- `round_data` у `GameMatch` — Python dict, що зберігається в JSONField. Правильні відповіді (`target_lat`, `target_lon`, `true_mass_kg`) зберігаються тут. **Ніколи не відправляти їх у WS до блокування відповідей обох гравців або тайм-ауту.**
+- `run_bot_turn()` запускається через `asyncio.create_task()` після `round.start`; для StatGuesser бот проходить той самий цикл порівнянь/спроб, але супернику надсилається лише загальний індикатор дії.
 - Таймер раунду — `asyncio.sleep(time_limit_sec + 2)` → якщо гравець не відповів, сервер зараховує 0 балів автоматично.
+- **StatGuesser — АстроТерези (post-MVP):** публічний payload містить назву апарата, `objects: [{id, label, mass_kg}]` і допуск балансу; прихована `true_mass_kg` лишається тільки в серверному `round_data`. Приймати `stat_guesser_check` лише з `object_ids`, перевіряти їх та рахувати суму за серверними значеннями.
+- Після кожної спроби приватно повертати тільки `spacecraft_heavier` (`<`), `objects_heavier` (`>`) або `balanced` (`=`) — без маси апарата й різниці. Атомарно переходити між станами `ready → checking → continue_pending` або `complete`; продовження/stop приймати лише з `continue_pending`, а наступний check — лише після явного `stat_guesser_continue`. Спільний `round.result` не містить стану терезів чи спроб; вони залишаються приватними. Спроби рахувати на сервері, таймер раунду залишається серверним.
+- `balanced` — різниця до 1% маси апарата (початковий поріг для плейтесту). Баланс дає 100 балів і RP за формулою `max(0, RP_BASE - (attempts - 1) * RP_STEP)`; timeout/stop без балансу дає 0 балів і 0 RP. `RP_BASE`/`RP_STEP` налаштовуються після перевірки економіки. Не розкривати точну масу навіть у фінальному результаті.
 
 ---
 
@@ -623,21 +757,70 @@ class EloServiceTest(TestCase):
         self.assertEqual(d1 + d2, 0)  # сума завжди 0 при рівному ELO
 ```
 
+**Додаткові backend-тести для StatGuesser (post-MVP):**
+- Відхиляти невідомі/повторені `object_ids` і порожній набір; не використовувати підставлені клієнтом маси.
+- Перевірити три стани, межу допуску балансу, лічильник спроб, вимогу continue перед повтором, 100 балів/RP при балансі та 0 при stop/timeout без балансу.
+- Перевірити, що feedback приватний, не містить маси/різниці та не надсилається опоненту; RP гарантовано зменшується зі зростанням спроб.
+
 Запуск: `python manage.py test game`
 
 ---
 
 ## Чеклист здачі BE
 
-- [ ] `python manage.py migrate` проходить без помилок
-- [ ] `GET /api/game/profile/me/` → 200 після JWT-авторизації
-- [ ] `GET /api/game/containers/` → власні слоти з прогресом пломби
-- [ ] `POST /api/game/containers/daily/` → claimed/pending_space/already_claimed і UTC expiry
-- [ ] Pending daily claim автоматично видається після звільнення слота в ту саму UTC-добу; прострочений claim не переноситься
-- [ ] `GET /auth/login/google-oauth2/` → редирект на Google
-- [ ] Після Google callback → `UserGameProfile` створено автоматично через pipeline
-- [ ] `POST /api/game/match/create/` → повертає `match_id` + `ws_url`
-- [ ] WS `ws/game/duel/{id}/` → accept + `round.start` без правильних координат
-- [ ] `submit_guess` → сервер рахує Гаверсин; персональне підтвердження submit без розкриття опоненту, `round.result` із `true_lat/lon` лише після submit/timeout обох
-- [ ] `match.finish` → `ContainerCraft` запис створено, ELO оновлено
-- [ ] `python manage.py test game` → всі тести зелені
+### Підготовка та конфігурація
+
+- [ ] Зафіксовано версії залежностей із наявного backend; немає непогодженого downgrade Django/DRF.
+- [ ] `python manage.py check` проходить до й після змін.
+- [ ] HTTP-роутинг працює як раніше; ASGI завантажується через `config.asgi:application`.
+- [ ] Channels під'єднується до Redis із `REDIS_URL`; локальний Redis старт і production env задокументовані.
+- [ ] WS-auth транспорт письмово затверджений; raw JWT не передається в URL.
+- [ ] OAuth token delivery погоджений; скасування matchmaking або специфіковане в FEAT-11, або виключене з MVP UI.
+
+### Дані та бізнес-логіка
+
+- [ ] `python manage.py makemigrations --check --dry-run` не знаходить незакомічених змін моделі.
+- [ ] `python manage.py migrate` проходить на чистій БД; constraints слотів та унікальності працюють.
+- [ ] Django Admin відкривається для EquipmentItem, профілю, матчу й ContainerCraft.
+- [ ] Unit-тести покривають pity/duplicates/RP, ELO, daily claims, вибір перевірених раундів і threshold score.
+- [ ] Match/slot/RP фіналізація транзакційна та ідемпотентна: повторний запит не списує/не видає нагороду двічі.
+
+### REST API
+
+- [ ] Усі маршрути з FEAT-11 §6 зареєстровані під `/api/game/`; тестами перевірені метод, auth і код відповіді.
+- [ ] `/profile/me/` повертає лише власний приватний профіль; `/profile/{callsign}/` — окремий public serializer і максимум 5 showcase предметів.
+- [ ] `/containers/` повертає лише власні слоти; daily endpoint повертає `claimed`/`pending_space`/`already_claimed` та UTC expiry.
+- [ ] Daily claim при повному сховищі видається після звільнення місця до кінця тієї ж UTC-доби; прострочений claim не переноситься.
+- [ ] `/match/create/` приймає власний вільний `slot_index`, атомарно резервує його і повертає `match_id` + `ws_url`; queue чекає до 8 с перед bot fallback.
+- [ ] Якщо немає трьох валідних MVP payloads, `/match/create/` повертає `409` і не створює матч/резерв слота.
+- [ ] `/match/{id}/` відмовляє користувачу, який не є учасником; не повертає target/відповіді/приватні дані.
+- [ ] `/inventory/`, `/showcase/update/`, `/container/craft/` перевіряють ownership, ліміти, валідність і баланс до запису; невалідний запит не змінює дані.
+- [ ] ELO/Curator leaderboards містять лише public профілі й не повертають приватні поля.
+- [ ] Google OAuth → game profile → JWT перевірено наскрізним тестом; секрети не зберігаються в коді або URL.
+
+### WebSocket і матч
+
+- [ ] `ws_url` веде на `/ws/game/duel/{match_id}/`; HTTP deployment використовує `ws:`, production — тільки `wss:`.
+- [ ] До `accept()` перевіряються auth, UUID/status матчу й участь гравця; чужий socket не додається до group.
+- [ ] Фронтенд і бекенд використовують однаковий wire format (`action` → `event`) і назви `game.matched`, `round.start`, `round.result`, `match.finish`.
+- [ ] `game.matched` приходить після PvP match або bot fallback; bot не призначається одразу при створенні матчу.
+- [ ] Два тестові клієнти проходять усі три MVP-раунди; серверний таймер завершує пропущену відповідь.
+- [ ] Після першої відповіді опонент бачить лише загальний `round.opponent_acted`; `round.result` надходить обом лише після двох відповідей або timeout.
+- [ ] Перевірені disconnect/reconnect, cleanup груп/таймерів, невідомі дії, невалідний payload, duplicate і паралельний submit.
+- [ ] `match.finish` оновлює обох людських гравців симетрично; нічия має `winner_id: null`; loot/RP надходить лише власнику нагороди.
+- [ ] StatGuesser (post-MVP) має окремі тести на стани, явний continue, приховану масу, приватний feedback і RP за кількість спроб.
+
+### Команди перевірки й передача
+
+Запускати з каталогу `backend/`:
+
+```bash
+python manage.py check
+python manage.py makemigrations --check --dry-run
+python manage.py migrate
+python manage.py test game
+```
+
+- [ ] Усі команди завершуються успішно; інтеграційні WS-тести запускаються з Redis test layer або погодженим in-memory layer.
+- [ ] У задачі/PR є перелік змінених маршрутів, приклади REST/WS запитів, команди запуску Redis/ASGI та відомі обмеження.
+- [ ] Для кожного невиконаного пункту вказаний blocker і погоджений reviewer; не позначати задачу готовою лише за фактом успішного запуску сервера.
