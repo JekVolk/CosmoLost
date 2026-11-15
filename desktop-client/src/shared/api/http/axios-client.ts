@@ -1,9 +1,5 @@
-import axios, {
-  type AxiosError,
-  type AxiosInstance,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
-} from 'axios';
+import { APP_CONFIG } from '@/shared/config';
+import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios';
 
 export interface ApiErrorPayload {
   message: string;
@@ -26,57 +22,88 @@ export class ApiError extends Error {
   }
 }
 
-export function createHttpClient(baseURL = ''): AxiosInstance {
-  const instance = axios.create({
-    baseURL,
-    timeout: 15000,
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  });
+export const axiosInstance: AxiosInstance = axios.create({
+  adapter: 'fetch',
+  baseURL: APP_CONFIG.apiBaseUrl,
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+});
 
-  instance.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-      config.headers = config.headers || {};
-      config.headers['X-Client-Platform'] = 'CosmoLost-Desktop';
-      config.headers['X-Request-Timestamp'] = Date.now().toString();
-      return config;
-    },
-    (error: AxiosError) => {
-      return Promise.reject(
-        new ApiError({
-          message: error.message || 'Request initialization failed',
-          statusCode: 400,
-          code: 'REQUEST_INIT_ERROR',
-        }),
-      );
-    },
-  );
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<Record<string, unknown>>) => {
+    if (error.response) {
+      const { status, data } = error.response;
+      let message: string | undefined;
 
-  instance.interceptors.response.use(
-    (response: AxiosResponse) => response,
-    (error: AxiosError<{ message?: string; error?: string }>) => {
-      const statusCode = error.response?.status ?? 500;
-      const message =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        error.message ||
-        'Network error occurred';
-      const code = error.code || 'API_RESPONSE_ERROR';
+      if (typeof data === 'object' && data !== null) {
+        if (typeof data.message === 'string') message = data.message;
+        else if (typeof data.error === 'string') message = data.error;
+        else if (typeof data.detail === 'string') message = data.detail;
+        else {
+          const fieldErrors = Object.entries(data)
+            .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : String(v)}`)
+            .join('; ');
+          if (fieldErrors) message = fieldErrors;
+        }
+      }
 
+      message = message || `HTTP Error ${status}: ${error.message}`;
       return Promise.reject(
         new ApiError({
           message,
-          statusCode,
-          code,
-          details: error.response?.data,
+          statusCode: status,
+          code: typeof data?.error === 'string' ? data.error : `HTTP_${status}`,
+          details: data,
         }),
       );
-    },
-  );
+    }
+    if (error.code === 'ECONNABORTED') {
+      return Promise.reject(
+        new ApiError({
+          message: 'Запит перевищив ліміт очікування (15с)',
+          statusCode: 408,
+          code: 'TIMEOUT',
+        }),
+      );
+    }
+    return Promise.reject(
+      new ApiError({
+        message: error.message || 'Помилка мережі при зʼєднанні з сервером CosmoLost',
+        statusCode: 0,
+        code: 'NETWORK_ERROR',
+        details: error,
+      }),
+    );
+  },
+);
 
-  return instance;
-}
+export const axiosClient = {
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const res = await axiosInstance.get<T>(url, config);
+    return res.data;
+  },
 
-export const httpClient = createHttpClient();
+  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const res = await axiosInstance.post<T>(url, data, config);
+    return res.data;
+  },
+
+  async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const res = await axiosInstance.put<T>(url, data, config);
+    return res.data;
+  },
+
+  async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const res = await axiosInstance.patch<T>(url, data, config);
+    return res.data;
+  },
+
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const res = await axiosInstance.delete<T>(url, config);
+    return res.data;
+  },
+};

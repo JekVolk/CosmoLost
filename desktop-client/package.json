@@ -19,7 +19,8 @@
     "format": "biome format --write src",
     "mcp:server": "node scripts/cosmolost-mcp-server.mjs",
     "check:fsd": "node scripts/check-fsd.mjs",
-    "check": "biome check --write src && node scripts/check-fsd.mjs"
+    "check": "biome check --write src && node scripts/check-fsd.mjs",
+    "test": "vitest run"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.8.3",
@@ -28,6 +29,7 @@
     "@tauri-apps/api": "^2.2.0",
     "@tauri-apps/plugin-opener": "^2.2.5",
     "@tauri-apps/plugin-store": "^2.5.1",
+    "@xyflow/react": "^12.12.1",
     "axios": "^1.21.1",
     "i18next": "^27.1.1",
     "lucide-react": "^0.475.0",
@@ -41,12 +43,16 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@tauri-apps/cli": "^2.2.4",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.10",
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
+    "happy-dom": "^21.0.4",
     "typescript": "^5.7.3",
     "vite": "^6.1.0",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^5.1.0"
   }
 }

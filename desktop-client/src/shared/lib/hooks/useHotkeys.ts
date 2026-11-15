@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export interface HotkeyOptions {
   key: string;
@@ -8,21 +8,44 @@ export interface HotkeyOptions {
 }
 
 export function useHotkey(options: HotkeyOptions, callback: () => void): void {
+  const { key, ctrlOrCmd = false, shift = false, alt = false } = options;
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const isMac = navigator.platform.toUpperCase().includes('MAC');
-      const isModifierActive = options.ctrlOrCmd ? (isMac ? event.metaKey : event.ctrlKey) : true;
-      const isShiftActive = options.shift !== undefined ? event.shiftKey === options.shift : true;
-      const isAltActive = options.alt !== undefined ? event.altKey === options.alt : true;
-      const isKeyMatch = event.key.toLowerCase() === options.key.toLowerCase();
+      // Ignore global hotkeys when typing inside editable fields
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
 
-      if (isKeyMatch && isModifierActive && isShiftActive && isAltActive) {
+      const isMac =
+        typeof navigator !== 'undefined' && navigator.platform.toUpperCase().includes('MAC');
+
+      const expectedCtrlOrCmd = ctrlOrCmd;
+      const actualCtrlOrCmd = isMac ? event.metaKey : event.ctrlKey;
+      if (actualCtrlOrCmd !== expectedCtrlOrCmd) return;
+
+      const expectedAlt = alt;
+      if (event.altKey !== expectedAlt) return;
+
+      const expectedShift = shift;
+      if (event.shiftKey !== expectedShift) return;
+
+      if (event.key.toLowerCase() === key.toLowerCase()) {
         event.preventDefault();
-        callback();
+        callbackRef.current();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [options, callback]);
+  }, [key, ctrlOrCmd, shift, alt]);
 }
