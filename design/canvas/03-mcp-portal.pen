@@ -1,0 +1,3197 @@
+{
+  "version": "2.22",
+  "children": [
+    {
+      "type": "frame",
+      "id": "E8jjj",
+      "x": 0,
+      "y": 0,
+      "name": "Desktop · MCP Connect Portal (/connect)",
+      "clip": true,
+      "width": 1440,
+      "height": 1730,
+      "fill": "#080D17",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "wGD86",
+          "x": 0,
+          "y": 0,
+          "name": "Cosmic Background Layer",
+          "width": 1440,
+          "height": 1730,
+          "layout": "none",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "gHgUw",
+              "x": 750,
+              "y": 60,
+              "name": "Nebula Glow Cyan Top",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "radial",
+                "enabled": true,
+                "rotation": 0,
+                "size": {
+                  "width": 1,
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#00F0FF14",
+                    "position": 0
+                  },
+                  {
+                    "color": "#0284C708",
+                    "position": 0.55
+                  },
+                  {
+                    "color": "#080D1700",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": 700,
+              "height": 700
+            },
+            {
+              "type": "ellipse",
+              "id": "nYsKw",
+              "x": -100,
+              "y": 350,
+              "name": "Deep Space Ambience Violet",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "radial",
+                "enabled": true,
+                "rotation": 0,
+                "size": {
+                  "width": 1,
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#1E1B4B18",
+                    "position": 0
+                  },
+                  {
+                    "color": "#080D1700",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": 600,
+              "height": 600
+            },
+            {
+              "type": "ellipse",
+              "id": "Q0377r",
+              "x": 950,
+              "y": 1100,
+              "name": "Nebula Glow Mars Middle",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "radial",
+                "enabled": true,
+                "rotation": 0,
+                "size": {
+                  "width": 1,
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#FF9D3510",
+                    "position": 0
+                  },
+                  {
+                    "color": "#EA580C05",
+                    "position": 0.6
+                  },
+                  {
+                    "color": "#080D1700",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": 650,
+              "height": 650
+            },
+            {
+              "type": "ellipse",
+              "id": "X2GwqW",
+              "x": 100,
+              "y": 1100,
+              "name": "Nebula Glow Cyan Bottom",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "radial",
+                "enabled": true,
+                "rotation": 0,
+                "size": {
+                  "width": 1,
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#00F0FF0F",
+                    "position": 0
+                  },
+                  {
+                    "color": "#080D1700",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": 600,
+              "height": 600
+            },
+            {
+              "type": "rectangle",
+              "id": "XQ2oh",
+              "x": 80,
+              "y": 70,
+              "name": "Star 1",
+              "fill": "#FFFFFF70",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "EE3H5",
+              "x": 210,
+              "y": 140,
+              "name": "Star 2",
+              "fill": "#00F0FF90",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "JpfUc",
+              "x": 340,
+              "y": 95,
+              "name": "Star 3",
+              "fill": "#FFFFFF50",
+              "width": 1,
+              "height": 1
+            },
+            {
+              "type": "rectangle",
+              "id": "sapjj",
+              "x": 520,
+              "y": 180,
+              "name": "Star 4",
+              "fill": "#FFFFFF60",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "UcH2V",
+              "x": 690,
+              "y": 80,
+              "name": "Star 5",
+              "fill": "#00D9F580",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "V9IWyt",
+              "x": 880,
+              "y": 160,
+              "name": "Star 6",
+              "fill": "#FFFFFF80",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "dpZDL",
+              "x": 1050,
+              "y": 110,
+              "name": "Star 7",
+              "fill": "#FFB80070",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "uKQbT",
+              "x": 1220,
+              "y": 75,
+              "name": "Star 8",
+              "fill": "#FFFFFF60",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "iO57s",
+              "x": 1360,
+              "y": 150,
+              "name": "Star 9",
+              "fill": "#FFFFFF40",
+              "width": 1,
+              "height": 1
+            },
+            {
+              "type": "rectangle",
+              "id": "PZYZj",
+              "x": 120,
+              "y": 520,
+              "name": "Star 10",
+              "fill": "#FFFFFF60",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "C9UgiH",
+              "x": 310,
+              "y": 680,
+              "name": "Star 11",
+              "fill": "#00F0FF70",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "kyRA4",
+              "x": 780,
+              "y": 620,
+              "name": "Star 12",
+              "fill": "#FFFFFF50",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "OFLOc",
+              "x": 1140,
+              "y": 580,
+              "name": "Star 13",
+              "fill": "#FF9D3570",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "pG0us",
+              "x": 1320,
+              "y": 710,
+              "name": "Star 14",
+              "fill": "#FFFFFF80",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "PoiaY",
+              "x": 90,
+              "y": 1150,
+              "name": "Star 15",
+              "fill": "#FFFFFF60",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "tAzdU",
+              "x": 450,
+              "y": 1220,
+              "name": "Star 16",
+              "fill": "#00F0FF80",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "IFKat",
+              "x": 820,
+              "y": 1180,
+              "name": "Star 17",
+              "fill": "#FFFFFF50",
+              "width": 1,
+              "height": 1
+            },
+            {
+              "type": "rectangle",
+              "id": "okVoy",
+              "x": 1260,
+              "y": 1290,
+              "name": "Star 18",
+              "fill": "#FF9D3580",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "slRHe",
+              "x": 160,
+              "y": 1680,
+              "name": "Star 19",
+              "fill": "#FFFFFF70",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "Bmp8R",
+              "x": 520,
+              "y": 920,
+              "name": "Star 20",
+              "fill": "#00F0FF70",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "dzvLW",
+              "x": 990,
+              "y": 1620,
+              "name": "Star 21",
+              "fill": "#FFFFFF60",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "zDtdX",
+              "x": 880,
+              "y": 1050,
+              "name": "Star 22",
+              "fill": "#FFFFFF80",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "RXhh8",
+              "x": 180,
+              "y": 1420,
+              "name": "Star 23",
+              "fill": "#00D9F580",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "chrzp",
+              "x": 420,
+              "y": 1510,
+              "name": "Star 24",
+              "fill": "#FFFFFF50",
+              "width": 1,
+              "height": 1
+            },
+            {
+              "type": "rectangle",
+              "id": "qoD4t",
+              "x": 760,
+              "y": 1460,
+              "name": "Star 25",
+              "fill": "#FFB80070",
+              "width": 2,
+              "height": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "tKzQc",
+              "x": 1120,
+              "y": 1490,
+              "name": "Star 26",
+              "fill": "#FFFFFF60",
+              "width": 1.5,
+              "height": 1.5
+            },
+            {
+              "type": "rectangle",
+              "id": "BTV4o",
+              "x": 1290,
+              "y": 1380,
+              "name": "Star 27",
+              "fill": "#00F0FF70",
+              "width": 2,
+              "height": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "g0yl4a",
+          "x": 24,
+          "y": 16,
+          "name": "Top Navigation Bar",
+          "width": 1392,
+          "height": 56,
+          "fill": "#101A2AF2",
+          "cornerRadius": 12,
+          "stroke": "#1B2A42",
+          "strokeWidth": 1,
+          "padding": [
+            10,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "i8sF1",
+              "name": "Brand Logo Group",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "a2RYbk",
+                  "name": "Emblem Container",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "#070E1E",
+                  "cornerRadius": 18,
+                  "stroke": "#00D9F5",
+                  "strokeWidth": 1.5,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "FNnWP",
+                      "name": "Emblem Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "orbit",
+                      "library": "lucide",
+                      "fill": "#00D9F5"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yXB4I",
+                  "name": "Brand Text Stack",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "SiONC",
+                      "name": "Brand Title",
+                      "fill": "#EAF2FF",
+                      "content": "COSMOLOST",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "800",
+                      "letterSpacing": 1.5
+                    },
+                    {
+                      "type": "text",
+                      "id": "JPlBG",
+                      "name": "Brand Subtitle",
+                      "fill": "#00D9F5",
+                      "content": "NASA SPACE APPS 2026",
+                      "fontFamily": "Inter",
+                      "fontSize": 9,
+                      "fontWeight": "700",
+                      "letterSpacing": 1.2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NZ6PO",
+              "name": "Nav Links Group",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ZUIBU",
+                  "name": "Nav Link 3D Map",
+                  "cornerRadius": 8,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "J4YJC",
+                      "name": "Link Text",
+                      "fill": "#8FA2B8",
+                      "content": "3D Map",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "q1XXG",
+                  "name": "Nav Link Catalog",
+                  "cornerRadius": 8,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ZaNaV",
+                      "name": "Link Text",
+                      "fill": "#8FA2B8",
+                      "content": "Catalog",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FnnsM",
+                  "name": "Nav Link Missions",
+                  "cornerRadius": 8,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "JD5wK",
+                      "name": "Link Text",
+                      "fill": "#8FA2B8",
+                      "content": "Missions",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "udkxG",
+                  "name": "Nav Link MCP Connect (Active)",
+                  "fill": "#00D9F51A",
+                  "cornerRadius": 8,
+                  "stroke": "#00D9F560",
+                  "strokeWidth": 1,
+                  "gap": 6,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 2,
+                      "id": "h4gAvv",
+                      "name": "Active Dot",
+                      "fill": "#00D9F5",
+                      "width": 4,
+                      "height": 4
+                    },
+                    {
+                      "type": "text",
+                      "id": "hHQQk",
+                      "name": "Connect Text",
+                      "fill": "#00D9F5",
+                      "content": "MCP Connect",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "mswil",
+                  "name": "Nav Link About Project",
+                  "cornerRadius": 8,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "rB5LO",
+                      "name": "Link Text",
+                      "fill": "#8FA2B8",
+                      "content": "About Project",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "s69f80",
+              "name": "Right Controls Group",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "D6XdbT",
+                  "name": "Explore 3D Action Button",
+                  "height": 34,
+                  "fill": "#00D9F5",
+                  "cornerRadius": 6,
+                  "gap": 6,
+                  "padding": [
+                    0,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "T5URlS",
+                      "name": "Globe Icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "globe",
+                      "library": "lucide",
+                      "fill": "#080D17"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cjS0C",
+                      "name": "Explore Label",
+                      "fill": "#080D17",
+                      "content": "3D Explorer",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "DJyEy",
+          "x": 24,
+          "y": 104,
+          "name": "Hero Section",
+          "width": 1392,
+          "gap": 48,
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "jyAlq",
+              "name": "Hero Text & CTA Stack",
+              "width": 760,
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wrANy",
+                  "name": "Hero Welcome Pill",
+                  "fill": "#00D9F514",
+                  "cornerRadius": 9999,
+                  "stroke": "#00D9F550",
+                  "strokeWidth": 1,
+                  "gap": 6,
+                  "padding": [
+                    5,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "hLDFZ",
+                      "name": "Sparkles Icon",
+                      "width": 13,
+                      "height": 13,
+                      "icon": "sparkles",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "S7V3Q",
+                      "name": "Pill Label",
+                      "fill": "#00F0FF",
+                      "content": "КОСМІЧНІ ДАНІ У ТВОЄМУ ЧАТ-БОТІ",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.6
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "rph7m",
+                  "name": "Hero Headline",
+                  "fill": "#EAF2FF",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Навчи свій ШІ досліджувати космос",
+                  "lineHeight": 1.15,
+                  "fontFamily": "Inter",
+                  "fontSize": 40,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "M8NZN",
+                  "name": "Hero Subtitle",
+                  "fill": "#8FA2B8",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Підключи CosmoLost і досліджуй загублені космічні апарати, місії та відкриття за допомогою свого AI-помічника.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "Inter",
+                  "fontSize": 16
+                },
+                {
+                  "type": "frame",
+                  "id": "hnQPS",
+                  "name": "CTA Group",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "LnK2B",
+                      "name": "Primary Connect Button",
+                      "height": 46,
+                      "fill": "#00D9F5",
+                      "cornerRadius": 8,
+                      "gap": 8,
+                      "padding": [
+                        0,
+                        24
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "W6vO4g",
+                          "name": "Btn Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "sparkles",
+                          "library": "lucide",
+                          "fill": "#080D17"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ACZCm",
+                          "name": "Btn Text",
+                          "fill": "#080D17",
+                          "content": "Підключити свій ШІ",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "ouBA8",
+                      "name": "Sub CTA Hint",
+                      "fill": "#5A6E85",
+                      "content": "Безкоштовно · Без встановлення програм",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "KDDOC",
+              "name": "Cosmic Art Card",
+              "clip": true,
+              "width": 530,
+              "height": 250,
+              "fill": "#101A2AF0",
+              "cornerRadius": 18,
+              "stroke": "#1B2A42",
+              "strokeWidth": 1,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "wrjNZ",
+                  "x": 240,
+                  "y": 30,
+                  "name": "Art Nebula Cyan",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "radial",
+                    "enabled": true,
+                    "rotation": 0,
+                    "size": {
+                      "width": 1,
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#00F0FF18",
+                        "position": 0
+                      },
+                      {
+                        "color": "#101A2A00",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "width": 280,
+                  "height": 200
+                },
+                {
+                  "type": "ellipse",
+                  "id": "oIijt",
+                  "x": 40,
+                  "y": 80,
+                  "name": "Art Nebula Mars",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "radial",
+                    "enabled": true,
+                    "rotation": 0,
+                    "size": {
+                      "width": 1,
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#FF9D3512",
+                        "position": 0
+                      },
+                      {
+                        "color": "#101A2A00",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "width": 220,
+                  "height": 160
+                },
+                {
+                  "type": "ellipse",
+                  "id": "JZJln",
+                  "x": 90,
+                  "y": 35,
+                  "name": "Orbit Ring",
+                  "fill": "#00000000",
+                  "width": 350,
+                  "height": 180,
+                  "stroke": "#00D9F530",
+                  "strokeWidth": 1
+                },
+                {
+                  "type": "ellipse",
+                  "id": "k0y27",
+                  "x": 120,
+                  "y": 75,
+                  "name": "Moon Orb",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "radial",
+                    "enabled": true,
+                    "rotation": 0,
+                    "size": {
+                      "width": 1,
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#EAF2FF",
+                        "position": 0
+                      },
+                      {
+                        "color": "#8FA2B8",
+                        "position": 0.6
+                      },
+                      {
+                        "color": "#142033",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "width": 64,
+                  "height": 64
+                },
+                {
+                  "type": "ellipse",
+                  "id": "bXiCr",
+                  "x": 350,
+                  "y": 110,
+                  "name": "Mars Orb",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "radial",
+                    "enabled": true,
+                    "rotation": 0,
+                    "size": {
+                      "width": 1,
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#FFB800",
+                        "position": 0
+                      },
+                      {
+                        "color": "#EA580C",
+                        "position": 0.7
+                      },
+                      {
+                        "color": "#331A10",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "width": 48,
+                  "height": 48
+                },
+                {
+                  "type": "frame",
+                  "id": "JwfKL",
+                  "x": 100,
+                  "y": 180,
+                  "name": "Floating Prompt Bubble",
+                  "fill": "#070E1EF8",
+                  "cornerRadius": 9999,
+                  "stroke": "#00D9F560",
+                  "strokeWidth": 1,
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "M1yWA4",
+                      "name": "Bot Icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "bot",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q2xYe3",
+                      "name": "Prompt Bubble Text",
+                      "fill": "#EAF2FF",
+                      "content": "«Де зараз марсохід Perseverance?»",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ggCLh",
+                      "name": "AI Ready Tag",
+                      "fill": "#00D9F520",
+                      "cornerRadius": 4,
+                      "padding": [
+                        2,
+                        6
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "rwPnO",
+                          "name": "Tag Text",
+                          "fill": "#00F0FF",
+                          "content": "AI Ready",
+                          "fontFamily": "Inter",
+                          "fontSize": 9,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nLUEG",
+          "x": 24,
+          "y": 394,
+          "name": "AI Selection Section",
+          "width": 1392,
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "h82F6",
+              "name": "Select Header Stack",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "dEoQv",
+                  "name": "Select Title",
+                  "fill": "#EAF2FF",
+                  "content": "Яким ШІ ти користуєшся?",
+                  "fontFamily": "Inter",
+                  "fontSize": 24,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "Jusq4",
+                  "name": "Select Subtitle",
+                  "fill": "#8FA2B8",
+                  "content": "Обери свій сервіс, щоб отримати коротку та зрозумілу інструкцію підключення:",
+                  "fontFamily": "Inter",
+                  "fontSize": 14
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "iCFI7",
+              "name": "AI Cards Selector Row",
+              "width": "fill_container",
+              "gap": 24,
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Lq9s7",
+                  "name": "AI Card: Google Gemini (Active)",
+                  "width": 448,
+                  "fill": "#0B1E36",
+                  "cornerRadius": 14,
+                  "stroke": "#00D9F5",
+                  "strokeWidth": 2,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "C2ADQB",
+                      "name": "Gemini Card Top",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "UmOxU",
+                          "name": "Icon Box",
+                          "width": 32,
+                          "height": 32,
+                          "fill": "#070E1E",
+                          "cornerRadius": 8,
+                          "stroke": "#00D9F5",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "PQiHJ",
+                              "name": "Gemini Icon",
+                              "width": 18,
+                              "height": 18,
+                              "icon": "sparkles",
+                              "library": "lucide",
+                              "fill": "#00F0FF"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "rIFqF",
+                          "name": "Reco Badge",
+                          "fill": "#00D9F520",
+                          "cornerRadius": 4,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "TLfqq",
+                              "name": "Reco Text",
+                              "fill": "#00F0FF",
+                              "content": "Рекомендовано",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "em8JV",
+                      "name": "Gemini Title",
+                      "fill": "#EAF2FF",
+                      "content": "Google Gemini",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "MyE79",
+                      "name": "Gemini Desc",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Найпростіший спосіб: працює прямо в браузері без коду та програм.",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Inter",
+                      "fontSize": 12
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nJ5LY",
+                      "name": "Selected Status Pill",
+                      "fill": "#00D9F51A",
+                      "cornerRadius": 6,
+                      "stroke": "#00D9F560",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "YfXdV",
+                          "name": "Check Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "check",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "gVqqs",
+                          "name": "Pill Text",
+                          "fill": "#00F0FF",
+                          "content": "Обрано для перегляду",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "A7pmM",
+                  "name": "AI Card: Claude",
+                  "width": 448,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 14,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TYDpK",
+                      "name": "Claude Card Top",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "N0gxS8",
+                          "name": "Icon Box",
+                          "width": 32,
+                          "height": 32,
+                          "fill": "#070E1E",
+                          "cornerRadius": 8,
+                          "stroke": "#1B2A42",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "FwTQN",
+                              "name": "Claude Icon",
+                              "width": 18,
+                              "height": 18,
+                              "icon": "bot",
+                              "library": "lucide",
+                              "fill": "#FF9D35"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bbuPd",
+                          "name": "Desktop Badge",
+                          "fill": "#142033",
+                          "cornerRadius": 4,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "TjzLd",
+                              "name": "Badge Text",
+                              "fill": "#8FA2B8",
+                              "content": "Desktop Client",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "yPNIh",
+                      "name": "Claude Title",
+                      "fill": "#EAF2FF",
+                      "content": "Claude",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "MCI59",
+                      "name": "Claude Desc",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Підключення через конфігураційний файл у застосунку Claude Desktop.",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Inter",
+                      "fontSize": 12
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xd25u",
+                      "name": "Click Hint",
+                      "fill": "#070E1E",
+                      "cornerRadius": 6,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "rTMMs",
+                          "name": "Hint Text",
+                          "fill": "#8FA2B8",
+                          "content": "Натисни для інструкції",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nSPFG",
+                  "name": "AI Card: Other MCP Clients",
+                  "width": 448,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 14,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "uTMFy",
+                      "name": "Other Card Top",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ZThCs",
+                          "name": "Icon Box",
+                          "width": 32,
+                          "height": 32,
+                          "fill": "#070E1E",
+                          "cornerRadius": 8,
+                          "stroke": "#1B2A42",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "O66C6",
+                              "name": "Other Icon",
+                              "width": 18,
+                              "height": 18,
+                              "icon": "terminal",
+                              "library": "lucide",
+                              "fill": "#268BFF"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zSpJQ",
+                          "name": "Dev Badge",
+                          "fill": "#142033",
+                          "cornerRadius": 4,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "skzLL",
+                              "name": "Badge Text",
+                              "fill": "#8FA2B8",
+                              "content": "Для розробників",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "rt8MT",
+                      "name": "Other Title",
+                      "fill": "#EAF2FF",
+                      "content": "Cursor & інші клієнти",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "USSkQ",
+                      "name": "Other Desc",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Cursor, LibreChat, Open WebUI та будь-які клієнти з підтримкою MCP SSE.",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Inter",
+                      "fontSize": 12
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dd1aV",
+                      "name": "Ready Hint",
+                      "fill": "#070E1E",
+                      "cornerRadius": 6,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "r2Ha5Q",
+                          "name": "Hint Text",
+                          "fill": "#8FA2B8",
+                          "content": "Натисни для інструкції",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "WZ3AL",
+          "x": 24,
+          "y": 652,
+          "name": "Connection Instruction Section",
+          "width": 1392,
+          "fill": "#101A2AF8",
+          "cornerRadius": 18,
+          "stroke": "#00D9F560",
+          "strokeWidth": 1.5,
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "npvAX",
+              "name": "Instruction Header Row",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "dz1z8",
+                  "name": "Title Group",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "vCkIG",
+                      "name": "Book Icon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "sparkles",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "eAJSj",
+                      "name": "Instruction Title",
+                      "fill": "#EAF2FF",
+                      "content": "Інструкція підключення до Google Gemini",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "y1IHo",
+                  "name": "Speed Tag",
+                  "fill": "#00D9F51A",
+                  "cornerRadius": 9999,
+                  "stroke": "#00D9F540",
+                  "strokeWidth": 1,
+                  "gap": 6,
+                  "padding": [
+                    4,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "P4zvnn",
+                      "name": "Clock Icon",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "zap",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "yxllN",
+                      "name": "Tag Text",
+                      "fill": "#00F0FF",
+                      "content": "Підключення за 1 хвилину",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "gvDF5",
+              "name": "Server URL Bar",
+              "width": "fill_container",
+              "fill": "#070E1E",
+              "cornerRadius": 12,
+              "stroke": "#00D9F550",
+              "strokeWidth": 1,
+              "padding": [
+                12,
+                16
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gVo5R",
+                  "name": "URL Text Stack",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "w9hbi",
+                      "name": "Link Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "link",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CoWz9",
+                      "name": "Label and Val",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "o10Wii",
+                          "name": "URL Label",
+                          "fill": "#8FA2B8",
+                          "content": "Адреса сервера CosmoLost:",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "wQwyI",
+                          "name": "Server URL",
+                          "fill": "#00F0FF",
+                          "content": "https://api.cosmolost.space/mcp/sse",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "x9WuIR",
+                  "name": "Copy Button",
+                  "height": 38,
+                  "fill": "#00D9F5",
+                  "cornerRadius": 8,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "JWrOn",
+                      "name": "Copy Icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "copy",
+                      "library": "lucide",
+                      "fill": "#080D17"
+                    },
+                    {
+                      "type": "text",
+                      "id": "a04o2J",
+                      "name": "Copy Label",
+                      "fill": "#080D17",
+                      "content": "Скопіювати посилання",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "b1qy7",
+              "name": "Instruction Steps Row",
+              "width": "fill_container",
+              "gap": 16,
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "seaBo",
+                  "name": "Step 1 Card",
+                  "width": 440,
+                  "fill": "#0B1322",
+                  "cornerRadius": 12,
+                  "stroke": "#182438",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "s4kiR",
+                      "name": "Title Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "o67nl",
+                          "name": "Step Badge",
+                          "width": 22,
+                          "height": 22,
+                          "fill": "#00D9F5",
+                          "cornerRadius": 11,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Mzubi",
+                              "name": "Num",
+                              "fill": "#080D17",
+                              "content": "1",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "ER4ac",
+                          "name": "Step 1 Text",
+                          "fill": "#EAF2FF",
+                          "content": "Скопіюй адресу вище",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "ajdiZ",
+                      "name": "Step 1 Desc",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Натисни кнопку «Скопіювати посилання» у рядку вище. Посилання на базу CosmoLost збережеться в буфер обміну.",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Inter",
+                      "fontSize": 12
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "B0iWxW",
+                  "name": "Step 2 Card",
+                  "width": 440,
+                  "fill": "#0B1322",
+                  "cornerRadius": 12,
+                  "stroke": "#182438",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "e3L8QD",
+                      "name": "Title Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "l8rbT",
+                          "name": "Step Badge",
+                          "width": 22,
+                          "height": 22,
+                          "fill": "#1B2A42",
+                          "cornerRadius": 11,
+                          "stroke": "#00D9F560",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "NroO0",
+                              "name": "Num",
+                              "fill": "#00F0FF",
+                              "content": "2",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "oJcgA",
+                          "name": "Step 2 Text",
+                          "fill": "#EAF2FF",
+                          "content": "Відкрий Gemini Connectors",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "CUp9Y",
+                      "name": "Step 2 Desc",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Перейди на офіційну сторінку налаштувань конекторів Google Gemini у новій вкладці браузера:",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Inter",
+                      "fontSize": 12
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qIVRG",
+                      "name": "Open Gemini Link",
+                      "height": 32,
+                      "fill": "#142033",
+                      "cornerRadius": 6,
+                      "stroke": "#00D9F580",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        0,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "UWB90",
+                          "name": "Ext Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "external-link",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GjrKW",
+                          "name": "Open Label",
+                          "fill": "#EAF2FF",
+                          "content": "Відкрити Gemini Connectors",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nN7U6",
+                  "name": "Step 3 Card",
+                  "width": 440,
+                  "fill": "#0B1322",
+                  "cornerRadius": 12,
+                  "stroke": "#182438",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "zr8Gl",
+                      "name": "Title Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "LDMRq",
+                          "name": "Step Badge",
+                          "width": 22,
+                          "height": 22,
+                          "fill": "#1B2A42",
+                          "cornerRadius": 11,
+                          "stroke": "#00D9F560",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ZlDu8",
+                              "name": "Num",
+                              "fill": "#00F0FF",
+                              "content": "3",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "Q2o22",
+                          "name": "Step 3 Text",
+                          "fill": "#EAF2FF",
+                          "content": "Натисни «+ Інша» та встав",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "m6aSLE",
+                      "name": "Step 3 Desc",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "У вікні налаштувань натисни «+ Інша», встав скопійовану адресу та натисни «Далі». Готово!",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Inter",
+                      "fontSize": 12
+                    },
+                    {
+                      "type": "frame",
+                      "id": "u70B8z",
+                      "name": "Success Badge",
+                      "fill": "#22C55E1A",
+                      "cornerRadius": 6,
+                      "gap": 6,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "NxYpN",
+                          "name": "Check Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "check",
+                          "library": "lucide",
+                          "fill": "#22C55E"
+                        },
+                        {
+                          "type": "text",
+                          "id": "CsiXs",
+                          "name": "Success Text",
+                          "fill": "#22C55E",
+                          "content": "Космос підключено до чату",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DDC05",
+              "name": "Verification Notice Strip",
+              "width": "fill_container",
+              "fill": "#0B1524",
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": [
+                10,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "HHwKS",
+                  "name": "Info Icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "info",
+                  "library": "lucide",
+                  "fill": "#8FA2B8"
+                },
+                {
+                  "type": "text",
+                  "id": "qJFmU",
+                  "name": "Notice Text",
+                  "fill": "#8FA2B8",
+                  "content": "Примітка: для Google Gemini підключення працює прямо у браузері без коду. Для Claude та Cursor доступна швидка конфігурація.",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KmlDz",
+          "x": 24,
+          "y": 1066,
+          "name": "Try Space Assistant Section",
+          "width": 1392,
+          "layout": "vertical",
+          "gap": 18,
+          "children": [
+            {
+              "type": "frame",
+              "id": "sTp8a",
+              "name": "Prompts Header Row",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ZVzOu",
+                  "name": "Title Stack",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "F9bQS6",
+                      "name": "Section Title",
+                      "fill": "#EAF2FF",
+                      "content": "Перевір, на що здатен твій ШІ",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "o9aFR",
+                      "name": "Section Subtitle",
+                      "fill": "#8FA2B8",
+                      "content": "Скопіюй будь-яке запитання та надішли його своєму асистенту в чат:",
+                      "fontFamily": "Inter",
+                      "fontSize": 14
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "fE67O",
+                  "name": "Open Gemini Chat Action",
+                  "height": 38,
+                  "fill": "#142033",
+                  "cornerRadius": 8,
+                  "stroke": "#00D9F580",
+                  "strokeWidth": 1,
+                  "gap": 8,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "e2Oa66",
+                      "name": "Chat Icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "message-square",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "k2jEd",
+                      "name": "Chat Label",
+                      "fill": "#EAF2FF",
+                      "content": "Відкрити чат Gemini",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "UsW8m",
+                      "name": "Arrow Icon",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "external-link",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "oxvYP",
+              "name": "Prompts 4 Cards Row",
+              "width": "fill_container",
+              "gap": 16,
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "k8bYd",
+                  "name": "Prompt Card: МІСЯЦЬ · АРТЕФАКТИ",
+                  "width": 336,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 14,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L8DA48",
+                      "name": "Cat Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "H7jYH",
+                          "name": "Badge Box",
+                          "fill": "#00D9F51A",
+                          "cornerRadius": 4,
+                          "padding": [
+                            2,
+                            6
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "CAmSC",
+                              "name": "Cat Text",
+                              "fill": "#00D9F5",
+                              "content": "МІСЯЦЬ · АРТЕФАКТИ",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "Bcv0e",
+                          "name": "Cat Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "orbit",
+                          "library": "lucide",
+                          "fill": "#00D9F5"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TkXgZ",
+                      "name": "Text Box",
+                      "width": "fill_container",
+                      "fill": "#070E1E",
+                      "cornerRadius": 8,
+                      "stroke": "#182438",
+                      "strokeWidth": 1,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YWtuC",
+                          "name": "Prompt Content",
+                          "fill": "#EAF2FF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "«Знайди загублені космічні апарати на Місяці.»",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QNC3p",
+                      "name": "Copy Action Button",
+                      "width": "fill_container",
+                      "height": 34,
+                      "fill": "#142033",
+                      "cornerRadius": 6,
+                      "stroke": "#1B2A42",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "R3Hf2",
+                          "name": "Copy Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "copy",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "i3Fh5",
+                          "name": "Copy Label",
+                          "fill": "#EAF2FF",
+                          "content": "Скопіювати запит",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "b9U2p0",
+                  "name": "Prompt Card: ІСТОРІЯ · МІСІЇ",
+                  "width": 336,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 14,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qizZa",
+                      "name": "Cat Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ji02u",
+                          "name": "Badge Box",
+                          "fill": "#268BFF1A",
+                          "cornerRadius": 4,
+                          "padding": [
+                            2,
+                            6
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "zA3mM",
+                              "name": "Cat Text",
+                              "fill": "#268BFF",
+                              "content": "ІСТОРІЯ · МІСІЇ",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "xGp0u",
+                          "name": "Cat Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "#268BFF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EQ3xh",
+                      "name": "Text Box",
+                      "width": "fill_container",
+                      "fill": "#070E1E",
+                      "cornerRadius": 8,
+                      "stroke": "#182438",
+                      "strokeWidth": 1,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "VM57N",
+                          "name": "Prompt Content",
+                          "fill": "#EAF2FF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "«Розкажи історію місії Apollo 11.»",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "q8YnII",
+                      "name": "Copy Action Button",
+                      "width": "fill_container",
+                      "height": 34,
+                      "fill": "#142033",
+                      "cornerRadius": 6,
+                      "stroke": "#1B2A42",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "d0wARQ",
+                          "name": "Copy Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "copy",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "zMel2",
+                          "name": "Copy Label",
+                          "fill": "#EAF2FF",
+                          "content": "Скопіювати запит",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gZhjB",
+                  "name": "Prompt Card: МАРС · ДОСЛІДЖЕННЯ",
+                  "width": 336,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 14,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Dvsop",
+                      "name": "Cat Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "G97zYC",
+                          "name": "Badge Box",
+                          "fill": "#FF9D351A",
+                          "cornerRadius": 4,
+                          "padding": [
+                            2,
+                            6
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "VoZzq",
+                              "name": "Cat Text",
+                              "fill": "#FF9D35",
+                              "content": "МАРС · ДОСЛІДЖЕННЯ",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "ogDxq",
+                          "name": "Cat Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "compass",
+                          "library": "lucide",
+                          "fill": "#FF9D35"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EWeIx",
+                      "name": "Text Box",
+                      "width": "fill_container",
+                      "fill": "#070E1E",
+                      "cornerRadius": 8,
+                      "stroke": "#182438",
+                      "strokeWidth": 1,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Z9ojC0",
+                          "name": "Prompt Content",
+                          "fill": "#EAF2FF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "«Які космічні апарати досліджували Марс?»",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Xs4eP",
+                      "name": "Copy Action Button",
+                      "width": "fill_container",
+                      "height": 34,
+                      "fill": "#142033",
+                      "cornerRadius": 6,
+                      "stroke": "#1B2A42",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "wmk75",
+                          "name": "Copy Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "copy",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "YY2Wc",
+                          "name": "Copy Label",
+                          "fill": "#EAF2FF",
+                          "content": "Скопіювати запит",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "clZVq",
+                  "name": "Prompt Card: НАУКА · ВІДКРИТТЯ",
+                  "width": 336,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 14,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "r7kQc",
+                      "name": "Cat Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "oygZ8",
+                          "name": "Badge Box",
+                          "fill": "#00F0FF1A",
+                          "cornerRadius": 4,
+                          "padding": [
+                            2,
+                            6
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "CDT12",
+                              "name": "Cat Text",
+                              "fill": "#00F0FF",
+                              "content": "НАУКА · ВІДКРИТТЯ",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "J0amiU",
+                          "name": "Cat Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "sparkles",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TfXUy",
+                      "name": "Text Box",
+                      "width": "fill_container",
+                      "fill": "#070E1E",
+                      "cornerRadius": 8,
+                      "stroke": "#182438",
+                      "strokeWidth": 1,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "kMlwT",
+                          "name": "Prompt Content",
+                          "fill": "#EAF2FF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "«Покажи цікаві наукові відкриття.»",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zCmfo",
+                      "name": "Copy Action Button",
+                      "width": "fill_container",
+                      "height": 34,
+                      "fill": "#142033",
+                      "cornerRadius": 6,
+                      "stroke": "#1B2A42",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "GL8Cd",
+                          "name": "Copy Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "copy",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "lsLUp",
+                          "name": "Copy Label",
+                          "fill": "#EAF2FF",
+                          "content": "Скопіювати запит",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xVJG7",
+          "x": 24,
+          "y": 1324,
+          "name": "Simplified FAQ Section",
+          "width": 1392,
+          "layout": "vertical",
+          "gap": 18,
+          "children": [
+            {
+              "type": "frame",
+              "id": "QF0DP",
+              "name": "FAQ Header Stack",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "LC46g",
+                  "name": "FAQ Title",
+                  "fill": "#EAF2FF",
+                  "content": "Часті запитання",
+                  "fontFamily": "Inter",
+                  "fontSize": 24,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "yeMnG",
+                  "name": "FAQ Subtitle",
+                  "fill": "#8FA2B8",
+                  "content": "Найважливіше про безпеку, роботу та використання CosmoLost MCP:",
+                  "fontFamily": "Inter",
+                  "fontSize": 14
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "EhrsO",
+              "name": "FAQ Row 1",
+              "width": "fill_container",
+              "gap": 16,
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "psEH9",
+                  "name": "FAQ: Що таке MCP?",
+                  "width": 688,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 12,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "HpTxC",
+                      "name": "Q Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Lu2p9",
+                          "name": "Q Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "sparkles",
+                          "library": "lucide",
+                          "fill": "#00F0FF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "h8Nlh8",
+                          "name": "Question Text",
+                          "fill": "#EAF2FF",
+                          "content": "Що таке MCP?",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "pa41g",
+                      "name": "Answer Text",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Model Context Protocol (MCP) — це простий та безпечний спосіб дати штучному інтелекту доступ до достовірної бази CosmoLost, щоб він знав точні факти про космос.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Inter",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "O2HswC",
+                  "name": "FAQ: Чи потрібно щось встановлювати?",
+                  "width": 688,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 12,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ZNptv",
+                      "name": "Q Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "HziQW",
+                          "name": "Q Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "laptop",
+                          "library": "lucide",
+                          "fill": "#268BFF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "JD12T",
+                          "name": "Question Text",
+                          "fill": "#EAF2FF",
+                          "content": "Чи потрібно щось встановлювати?",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "i2TMU",
+                      "name": "Answer Text",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Ні! Для більшості користувачів усе працює прямо у веб-браузері (наприклад, у Google Gemini). Ніяких додаткових програм чи складних налаштувань.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Inter",
+                      "fontSize": 13
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LYPrc",
+              "name": "FAQ Row 2",
+              "width": "fill_container",
+              "gap": 16,
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "KOVgI",
+                  "name": "FAQ: Чи безкоштовне підключення?",
+                  "width": 688,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 12,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "p2mZA",
+                      "name": "Q Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "tZRPE",
+                          "name": "Q Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "heart",
+                          "library": "lucide",
+                          "fill": "#FF9D35"
+                        },
+                        {
+                          "type": "text",
+                          "id": "f39GbQ",
+                          "name": "Question Text",
+                          "fill": "#EAF2FF",
+                          "content": "Чи безкоштовне підключення?",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q5BWTr",
+                      "name": "Answer Text",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Так, CosmoLost — це відкрита некомерційна освітня ініціатива (Open Science). Підключення та всі запити повністю безкоштовні для кожного.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Inter",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "M6E7Rj",
+                  "name": "FAQ: Як відключити MCP?",
+                  "width": 688,
+                  "fill": "#101A2AF0",
+                  "cornerRadius": 12,
+                  "stroke": "#1B2A42",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "D7MQkw",
+                      "name": "Q Row",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "oAsgk",
+                          "name": "Q Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "power",
+                          "library": "lucide",
+                          "fill": "#22C55E"
+                        },
+                        {
+                          "type": "text",
+                          "id": "L14VR",
+                          "name": "Question Text",
+                          "fill": "#EAF2FF",
+                          "content": "Як відключити MCP?",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "FUhPo",
+                      "name": "Answer Text",
+                      "fill": "#8FA2B8",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "У будь-який момент ти можеш вимкнути або видалити конектор прямо в налаштуваннях свого чат-бота (у Gemini — розділ Connectors) в один клік.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Inter",
+                      "fontSize": 13
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "A403Fg",
+          "x": 24,
+          "y": 1640,
+          "name": "Page Footer Bar",
+          "width": 1392,
+          "height": 54,
+          "fill": "#101A2AF2",
+          "cornerRadius": 12,
+          "stroke": "#1B2A42",
+          "strokeWidth": 1,
+          "padding": [
+            10,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "saUNP",
+              "name": "Foot Left",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "s7ay6",
+                  "name": "Emblem",
+                  "width": 24,
+                  "height": 24,
+                  "fill": "#070E1E",
+                  "cornerRadius": 12,
+                  "stroke": "#00D9F5",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "JCwO7",
+                      "name": "Orbit",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "orbit",
+                      "library": "lucide",
+                      "fill": "#00F0FF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Xflra",
+                  "name": "Foot Brand",
+                  "fill": "#EAF2FF",
+                  "content": "COSMOLOST · Open Science Space Exploration",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "P1xxJ",
+              "name": "Foot Links",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "CleH4",
+                  "name": "Foot Link 3D Map",
+                  "fill": "#8FA2B8",
+                  "content": "3D Map",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "jfEUd",
+                  "name": "Foot Link Catalog",
+                  "fill": "#8FA2B8",
+                  "content": "Catalog",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "n2w59G",
+                  "name": "Foot Link Missions",
+                  "fill": "#8FA2B8",
+                  "content": "Missions",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "N7yzP",
+                  "name": "Foot Link About Project",
+                  "fill": "#8FA2B8",
+                  "content": "About Project",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "bh4ZW",
+              "name": "Foot Copy",
+              "fill": "#5A6E85",
+              "content": "NASA Space Apps Challenge 2026",
+              "fontFamily": "Inter",
+              "fontSize": 11,
+              "fontWeight": "600"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "S8I6q",
+      "x": 24,
+      "y": -150,
+      "name": "Component · MCP Promo Banner (Web Portal)",
+      "reusable": true,
+      "width": 1392,
+      "height": 96,
+      "fill": "#101A2AF8",
+      "cornerRadius": 14,
+      "stroke": "#00D9F550",
+      "strokeWidth": 1.5,
+      "padding": [
+        16,
+        24
+      ],
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "V4DdKl",
+          "name": "Banner Left Group",
+          "gap": 16,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "dNMGD",
+              "name": "Banner Emblem Box",
+              "width": 44,
+              "height": 44,
+              "fill": "#070E1E",
+              "cornerRadius": 10,
+              "stroke": "#00D9F5",
+              "strokeWidth": 1.5,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "yj9AM",
+                  "name": "Banner Icon",
+                  "width": 22,
+                  "height": 22,
+                  "icon": "orbit",
+                  "library": "lucide",
+                  "fill": "#00F0FF"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "E9uGu",
+              "name": "Banner Text Stack",
+              "layout": "vertical",
+              "gap": 3,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "i2Z71D",
+                  "name": "Banner Tag Row",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LzUIR",
+                      "name": "Banner Mini Tag",
+                      "fill": "#00F0FF",
+                      "content": "NEW · MODEL CONTEXT PROTOCOL",
+                      "fontFamily": "Inter",
+                      "fontSize": 10,
+                      "fontWeight": "800",
+                      "letterSpacing": 0.8
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Invn1",
+                  "name": "Banner Title",
+                  "fill": "#EAF2FF",
+                  "content": "А ти вже навчив свій ШІ досліджувати космос?",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "Ezh9y",
+                  "name": "Banner Subtitle",
+                  "fill": "#8FA2B8",
+                  "content": "Спробуй CosmoLost MCP та відкрий космічні дані у своєму AI-помічнику.",
+                  "fontFamily": "Inter",
+                  "fontSize": 13
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "h7ZBm",
+          "name": "Banner CTA Button",
+          "height": 42,
+          "fill": "#00D9F5",
+          "cornerRadius": 8,
+          "gap": 8,
+          "padding": [
+            0,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "KzwjU",
+              "name": "Btn Sparkle",
+              "width": 14,
+              "height": 14,
+              "icon": "sparkles",
+              "library": "lucide",
+              "fill": "#080D17"
+            },
+            {
+              "type": "text",
+              "id": "AH6L3",
+              "name": "Btn Text",
+              "fill": "#080D17",
+              "content": "Спробувати MCP",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "700"
+            },
+            {
+              "type": "icon",
+              "id": "t7iq6W",
+              "name": "Btn Arrow",
+              "width": 14,
+              "height": 14,
+              "icon": "arrow-right",
+              "library": "lucide",
+              "fill": "#080D17"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "bg-canvas": {
+      "type": "color",
+      "value": "#080D17"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#EAF2FF"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#8FA2B8"
+    },
+    "text-muted": {
+      "type": "color",
+      "value": "#5A6E85"
+    },
+    "cyan-primary": {
+      "type": "color",
+      "value": "#00F0FF"
+    },
+    "lunar-primary": {
+      "type": "color",
+      "value": "#00D9F5"
+    },
+    "mars-primary": {
+      "type": "color",
+      "value": "#FF9D35"
+    },
+    "amber-primary": {
+      "type": "color",
+      "value": "#FFB800"
+    },
+    "mars-red": {
+      "type": "color",
+      "value": "#E2583E"
+    },
+    "status-active": {
+      "type": "color",
+      "value": "#22C55E"
+    },
+    "surface-primary": {
+      "type": "color",
+      "value": "#101A2A"
+    },
+    "surface-secondary": {
+      "type": "color",
+      "value": "#142033"
+    },
+    "surface-tertiary": {
+      "type": "color",
+      "value": "#1B2A42"
+    },
+    "border-default": {
+      "type": "color",
+      "value": "#1B2A42"
+    }
+  },
+  "fileToken": "cf16b679-3b96-4f4a-9f80-0ec399f03991"
+}

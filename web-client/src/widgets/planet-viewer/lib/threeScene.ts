@@ -155,7 +155,7 @@ export class PlanetScene {
   private buildStars() {
     this.scene.add(this.starfieldGroup);
 
-    this.textureLoader.load('/textures/milkyway.jpg', (tex) => {
+    this.textureLoader.load('/textures/night_sky.png', (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace;
       const skyGeo = new THREE.SphereGeometry(120, 32, 32);
       const skyMat = new THREE.MeshBasicMaterial({
@@ -499,25 +499,74 @@ export class PlanetScene {
       if (!anyMoved) break;
     }
 
-    allMarkers.forEach((m) => {
-      const markerNormal = m.pos.clone().normalize();
+    // Optimized InstancedMesh for ground rings and beacon beams across the planet (REQ-MAP-09)
+    const totalMarkers = allMarkers.length;
+    if (totalMarkers > 0) {
+      const instGroundRingGeo = new THREE.RingGeometry(0.013, 0.017, 24);
+      instGroundRingGeo.rotateX(Math.PI / 2);
+      const instGroundRingMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.65,
+        side: THREE.DoubleSide,
+      });
+      const groundRingInstanced = new THREE.InstancedMesh(instGroundRingGeo, instGroundRingMat, totalMarkers);
 
-      if (m.hubCenter) {
-        const spokeGeo = new THREE.BufferGeometry().setFromPoints([
-          m.hubCenter.clone().multiplyScalar(1.002),
-          m.pos.clone().multiplyScalar(1.002),
-        ]);
-        const spokeMat = new THREE.LineBasicMaterial({
-          color: m.artifact.badgeColor ? new THREE.Color(m.artifact.badgeColor) : new THREE.Color(0x38bdf8),
-          transparent: true,
-          opacity: 0.45,
-        });
-        const spokeLine = new THREE.Line(spokeGeo, spokeMat);
-        this.markersGroup.add(spokeLine);
-      }
+      const instBeamGeo = new THREE.CylinderGeometry(0.003, 0.010, 0.080, 12, 1, true);
+      const instBeamMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      });
+      const beamInstanced = new THREE.InstancedMesh(instBeamGeo, instBeamMat, totalMarkers);
 
-      this.createSingleMarker(m.artifact, m.pos, markerNormal);
-    });
+      const dummy = new THREE.Object3D();
+      allMarkers.forEach((m, idx) => {
+        const markerNormal = m.pos.clone().normalize();
+        const colorHex = m.artifact.badgeColor ? new THREE.Color(m.artifact.badgeColor) : new THREE.Color(0x38bdf8);
+
+        // Ground ring matrix
+        dummy.position.copy(m.pos);
+        dummy.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), markerNormal);
+        dummy.scale.set(1, 1, 1);
+        dummy.updateMatrix();
+        groundRingInstanced.setMatrixAt(idx, dummy.matrix);
+        groundRingInstanced.setColorAt(idx, colorHex);
+
+        // Beam matrix (elevated along normal by 0.040)
+        dummy.position.copy(m.pos).addScaledVector(markerNormal, 0.040);
+        dummy.updateMatrix();
+        beamInstanced.setMatrixAt(idx, dummy.matrix);
+        beamInstanced.setColorAt(idx, colorHex);
+
+        if (m.hubCenter) {
+          const spokeGeo = new THREE.BufferGeometry().setFromPoints([
+            m.hubCenter.clone().multiplyScalar(1.002),
+            m.pos.clone().multiplyScalar(1.002),
+          ]);
+          const spokeMat = new THREE.LineBasicMaterial({
+            color: colorHex,
+            transparent: true,
+            opacity: 0.45,
+          });
+          const spokeLine = new THREE.Line(spokeGeo, spokeMat);
+          this.markersGroup.add(spokeLine);
+        }
+
+        this.createSingleMarker(m.artifact, m.pos, markerNormal);
+      });
+
+      groundRingInstanced.instanceMatrix.needsUpdate = true;
+      if (groundRingInstanced.instanceColor) groundRingInstanced.instanceColor.needsUpdate = true;
+      this.markersGroup.add(groundRingInstanced);
+
+      beamInstanced.instanceMatrix.needsUpdate = true;
+      if (beamInstanced.instanceColor) beamInstanced.instanceColor.needsUpdate = true;
+      this.markersGroup.add(beamInstanced);
+    }
   }
 
   private createSingleMarker(artifact: SpaceArtifact, pos: THREE.Vector3, normal: THREE.Vector3) {
