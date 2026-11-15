@@ -17,6 +17,7 @@ from core.models import (
     ScientificDiscovery,
     TraverseWaypoint,
 )
+from loader.constants import NASA_3D_MODEL_CDN_MAP
 
 
 @pytest.fixture
@@ -79,7 +80,7 @@ def sample_data(db):
         is_featured=True,
         is_nasa_hardware=True,
         first_person_monologue='My clock stopped on Sol 5111. The dust was thick enough to turn afternoon into midnight...',
-        model_3d_url='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Opportunity%20Rover/opportunity.glb',
+        model_3d_url=NASA_3D_MODEL_CDN_MAP['opportunity-rover'],
     )
     # Opportunity nearby hardware to test clustering (approx 100 meters away)
     opportunity_heat_shield = Artifact.objects.create(

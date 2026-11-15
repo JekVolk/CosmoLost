@@ -21,6 +21,7 @@ from core.models import (
     TimeStampedModel,
     TraverseWaypoint,
 )
+from loader.constants import NASA_3D_MODEL_CDN_MAP, resolve_3d_model_url
 
 
 class ConcreteTimeStampedModel(TimeStampedModel):
@@ -267,3 +268,93 @@ class AdminRegistrationTests(TestCase):
                 r_add = client.get(add_url)
                 self.assertEqual(r_cl.status_code, 200)
                 self.assertEqual(r_add.status_code, 200)
+
+
+class Artifact3DModelURLTests(TestCase):
+    """Tests for NASA Science CDN 3D model URL resolution, automatic sanitization, and data repair."""
+
+    def setUp(self):
+        self.body = CelestialBody.objects.create(
+            id='mars',
+            name='Mars',
+            radius_km=3389.5,
+            gravity_ms2=3.72,
+            coordinate_system_type=CoordinateSystemType.PLANETOCENTRIC_360,
+        )
+        self.mission = Mission.objects.create(
+            id='mer-b',
+            name='Opportunity',
+            agency='NASA',
+        )
+        self.oppy = Artifact.objects.create(
+            id='opportunity-rover',
+            mission=self.mission,
+            celestial_body=self.body,
+            name='Opportunity Rover',
+            artifact_type=ArtifactType.ROVER,
+            operational_status=OperationalStatus.DORMANT,
+            latitude=-1.9462,
+            longitude=354.4734,
+            model_3d_url=NASA_3D_MODEL_CDN_MAP['opportunity-rover'],
+        )
+
+    def test_artifact_save_normalizes_github_url_to_nasa_cdn(self):
+        """Verify Artifact.save() intercepts broken raw GitHub URLs and replaces them with NASA CDN."""
+        art = Artifact.objects.create(
+            id='ingenuity-helicopter',
+            mission=self.mission,
+            celestial_body=self.body,
+            name='Ingenuity Mars Helicopter',
+            artifact_type=ArtifactType.HELICOPTER,
+            operational_status=OperationalStatus.DORMANT,
+            latitude=18.4447,
+            longitude=77.4508,
+            model_3d_url='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Ingenuity/ingenuity.glb',
+        )
+        self.assertEqual(art.model_3d_url, NASA_3D_MODEL_CDN_MAP['ingenuity-helicopter'])
+        self.assertIn('assets.science.nasa.gov', art.model_3d_url)
+
+    def test_resolve_3d_model_url_mappings(self):
+        """Verify resolve_3d_model_url maps all supported NASA 3D assets to NASA Science CDN."""
+        cases = [
+            ('ingenuity-helicopter', '', NASA_3D_MODEL_CDN_MAP['ingenuity-helicopter']),
+            ('opportunity-rover', '', NASA_3D_MODEL_CDN_MAP['opportunity-rover']),
+            ('spirit-rover', '', NASA_3D_MODEL_CDN_MAP['spirit-rover']),
+            ('apollo-11-descent-stage', '', NASA_3D_MODEL_CDN_MAP['apollo-11-descent-stage']),
+            ('insight-lander', '', NASA_3D_MODEL_CDN_MAP['insight-lander']),
+            ('perseverance-rover', '', NASA_3D_MODEL_CDN_MAP['perseverance-rover']),
+            ('viking-lander', '', NASA_3D_MODEL_CDN_MAP['viking-lander']),
+            ('unknown-probe', 'https://raw.githubusercontent.com/nasa/unknown.glb', ''),
+        ]
+        for art_id, raw_url, expected in cases:
+            with self.subTest(art_id=art_id):
+                res = resolve_3d_model_url(art_id, raw_url)
+                self.assertEqual(res, expected)
+
+    def test_fix_artifact_3d_urls_command(self):
+        """Verify the fix_artifact_3d_urls management command safely updates database records."""
+        from django.core.management import call_command
+        from io import StringIO
+
+        # Set an artifact with legacy GitHub URL directly bypassing save hook
+        Artifact.objects.filter(id='opportunity-rover').update(
+            model_3d_url='https://raw.githubusercontent.com/nasa/legacy/opportunity.glb'
+        )
+        oppy = Artifact.objects.get(id='opportunity-rover')
+        self.assertIn('raw.githubusercontent.com', oppy.model_3d_url)
+
+        # Dry-run first: verify no changes made
+        out_dry = StringIO()
+        call_command('fix_artifact_3d_urls', '--dry-run', stdout=out_dry)
+        self.assertIn('DRY-RUN', out_dry.getvalue())
+        oppy.refresh_from_db()
+        self.assertIn('raw.githubusercontent.com', oppy.model_3d_url)
+
+        # Real execution: verify record updated to NASA CDN
+        out_real = StringIO()
+        call_command('fix_artifact_3d_urls', stdout=out_real)
+        self.assertIn('Successfully updated', out_real.getvalue())
+        oppy.refresh_from_db()
+        self.assertEqual(oppy.model_3d_url, NASA_3D_MODEL_CDN_MAP['opportunity-rover'])
+        self.assertIn('assets.science.nasa.gov', oppy.model_3d_url)
+
