@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:alpine
-    container_name: postgres_db
+    container_name: cosmolost-postgres
     restart: always
     env_file:
         - ./../backend/.env
@@ -14,9 +14,28 @@ services:
     networks:
       - cosmolost-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: cosmolost-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - cosmolost-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
   backend:
     build: ./../backend
-    container_name: django_backend
+    container_name: cosmolost-backend
     restart: always
     env_file:
         - ./../backend/.env
@@ -25,34 +44,38 @@ services:
       - USE_SQLITE=False
       - DB_HOST=db
       - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       - db
+      - redis
     networks:
       - cosmolost-network
 
-  frontend:
+  web-client:
     build: ./../web-client
-    container_name: vite_frontend
+    container_name: cosmolost-web-client
     restart: always
     depends_on:
       - backend
     networks:
       - cosmolost-network
 
-  nginx:
-    build: ./proxy
-    container_name: nginx_proxy
+  gateway:
+    build: ./gateway
+    container_name: cosmolost-gateway
     restart: always
     ports:
       - "9088:80"
     depends_on:
-      - frontend
+      - web-client
       - backend
     networks:
       - cosmolost-network
 
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   cosmolost-network:
