@@ -10,6 +10,7 @@ export interface PhotosphereViewerProps {
   planetTheme?: PlanetTheme;
   mode?: 'modal' | 'embedded';
   showHeadingCompass?: boolean;
+  showTopHud?: boolean;
   initialFov?: number;
   onHeadingChange?: (headingDeg: number) => void;
 }

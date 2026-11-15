@@ -84,6 +84,16 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
   const displayedCause = liveDetail?.cause_of_deactivation || artifact.whyAbandoned;
   const rawModel3dUrl = liveDetail?.model_3d_url || artifact.model3dUrl;
   const effectiveModel3dUrl = resolveGlbModelUrl(artifact.id, rawModel3dUrl);
+  const effectiveLandingDate =
+    liveDetail?.landing_date ||
+    (liveDetail?.mission as any)?.landing_date ||
+    (artifact.landingDate && artifact.landingDate !== 'Historical'
+      ? artifact.landingDate
+      : artifact.id.includes('apollo-11')
+      ? '1969-07-20'
+      : artifact.id.includes('apollo-13')
+      ? '1970-04-14'
+      : '1969-07-20');
   const effectiveWaypoints =
     liveWaypoints.length > 0
       ? liveWaypoints.map((w) => ({
@@ -162,7 +172,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
         <div className="dossier-metrics-bar">
           <div className="dossier-metric-cell">
             <div className="dossier-metric-label">LANDING DATE</div>
-            <div className="dossier-metric-val">{artifact.landingDate}</div>
+            <div className="dossier-metric-val">{effectiveLandingDate}</div>
           </div>
           <div className="dossier-metric-divider" />
           <div className="dossier-metric-cell">
@@ -342,13 +352,17 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
               <p className="dossier-brief">{artifact.brief}</p>
 
               <div className="coords-box">
-                <span>
-                  LANDING COORDINATES: {artifact.lat.toFixed(4)}° {artifact.lat >= 0 ? 'N' : 'S'},{' '}
-                  {artifact.lon.toFixed(4)}° {artifact.lon >= 0 ? 'E' : 'W'}
-                </span>
-                <span style={{ color: 'var(--text-dim)' }}>
-                  PLANETARY REGISTRY: {planet.telemetry.designation}
-                </span>
+                <div className="coords-row">
+                  <span className="coords-label">LANDING COORDINATES:</span>
+                  <span className="coords-val">
+                    {artifact.lat.toFixed(4)}° {artifact.lat >= 0 ? 'N' : 'S'},{' '}
+                    {artifact.lon.toFixed(4)}° {artifact.lon >= 0 ? 'E' : 'W'}
+                  </span>
+                </div>
+                <div className="coords-row">
+                  <span className="coords-label">PLANETARY REGISTRY:</span>
+                  <span className="coords-val">{planet.telemetry.designation}</span>
+                </div>
               </div>
             </div>
 
@@ -977,7 +991,7 @@ export const DossierPage: React.FC<DossierPageProps> = ({ artifact, planet, onBa
                     Landing Date:
                   </span>
                   <span style={{ color: '#fff', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>
-                    {artifact.landingDate}
+                    {effectiveLandingDate}
                   </span>
                 </div>
 

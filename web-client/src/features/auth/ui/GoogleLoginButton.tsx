@@ -1,4 +1,4 @@
-﻿import { API_URL } from '@/shared/config/env';
+import { API_URL } from '@/shared/config/env';
 import { getCsrfToken } from '@/shared/lib';
 import { Button, type ButtonProps } from '@chakra-ui/react';
 import type React from 'react';

@@ -133,7 +133,8 @@ export const AstroGuessrGame: React.FC<AstroGuessrGameProps> = ({ onExit, onOpen
             nasaIdOrPia={phase === 'revealed' ? currentRound.artifact.nssdcaId : undefined}
             credit={phase === 'revealed' ? currentRound.credit : undefined}
             planetTheme={currentRound.planetId}
-            showHeadingCompass={true}
+            showHeadingCompass={false}
+            showTopHud={false}
           />
         </div>
 

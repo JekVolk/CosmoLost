@@ -75,6 +75,47 @@ function getLocalCommunityPublications(): CommunityPublication[] {
   ];
 }
 
+export function getKnownLandingDate(id: string): string {
+  const lower = id.toLowerCase();
+  if (lower.includes('apollo-11') || lower.includes('eagle')) return '1969-07-20';
+  if (lower.includes('apollo-12')) return '1969-11-19';
+  if (lower.includes('apollo-13')) return '1970-04-14';
+  if (lower.includes('apollo-14')) return '1971-02-05';
+  if (lower.includes('apollo-15')) return '1971-07-30';
+  if (lower.includes('apollo-16')) return '1972-04-21';
+  if (lower.includes('apollo-17')) return '1972-12-11';
+  if (lower.includes('luna-2')) return '1959-09-14';
+  if (lower.includes('luna-9')) return '1966-02-03';
+  if (lower.includes('luna-13')) return '1966-12-24';
+  if (lower.includes('luna-16')) return '1970-09-20';
+  if (lower.includes('luna-17') || lower.includes('lunokhod-1')) return '1970-11-17';
+  if (lower.includes('luna-20')) return '1972-02-21';
+  if (lower.includes('luna-21') || lower.includes('lunokhod-2')) return '1973-01-15';
+  if (lower.includes('luna-24')) return '1976-08-18';
+  if (lower.includes('surveyor-1')) return '1966-06-02';
+  if (lower.includes('surveyor-3')) return '1967-04-20';
+  if (lower.includes('surveyor-5')) return '1967-09-11';
+  if (lower.includes('surveyor-6')) return '1967-11-10';
+  if (lower.includes('surveyor-7')) return '1968-01-10';
+  if (lower.includes('change-3') || lower.includes("chang'e-3") || lower.includes('yutu')) return '2013-12-14';
+  if (lower.includes('change-4') || lower.includes("chang'e-4")) return '2019-01-03';
+  if (lower.includes('change-5') || lower.includes("chang'e-5")) return '2020-12-01';
+  if (lower.includes('chandrayaan-2')) return '2019-09-06';
+  if (lower.includes('chandrayaan-3')) return '2023-08-23';
+  if (lower.includes('beresheet')) return '2019-04-11';
+  if (lower.includes('curiosity')) return '2012-08-06';
+  if (lower.includes('perseverance') || lower.includes('ingenuity')) return '2021-02-18';
+  if (lower.includes('opportunity')) return '2004-01-25';
+  if (lower.includes('spirit')) return '2004-01-04';
+  if (lower.includes('insight')) return '2018-11-26';
+  if (lower.includes('viking-1')) return '1976-07-20';
+  if (lower.includes('viking-2')) return '1976-09-03';
+  if (lower.includes('pathfinder') || lower.includes('sojourner')) return '1997-07-04';
+  if (lower.includes('phoenix')) return '2008-05-25';
+  if (lower.includes('zhurong') || lower.includes('tianwen')) return '2021-05-14';
+  return '1969-07-20';
+}
+
 export function apiArtifactSummaryToSpaceArtifact(
   summary: ArtifactSummary,
   bodyId: PlanetId,
@@ -147,7 +188,13 @@ export function apiArtifactSummaryToSpaceArtifact(
     lon: summary.coordinates.longitude,
     locationName: summary.coordinates.location_name,
     massKg: summary.mass_kg || match?.massKg || undefined,
-    landingDate: summary.landing_date || summary.launch_date || match?.landingDate || 'Historical',
+    landingDate:
+      summary.landing_date ||
+      (summary as any).mission?.landing_date ||
+      summary.launch_date ||
+      (summary as any).mission?.launch_date ||
+      match?.landingDate ||
+      getKnownLandingDate(summary.id),
     lastContactDate: match?.lastContactDate,
     operationalDays: match?.operationalDays,
     distanceTraveledKm: match?.distanceTraveledKm,
@@ -184,10 +231,19 @@ export function apiArtifactDetailToSpaceArtifact(
     (a) => a.id === detail.id || a.name.toLowerCase() === detail.name.toLowerCase(),
   );
 
+  const effectiveLandingDate =
+    (detail as any).landing_date ||
+    (detail as any).mission?.landing_date ||
+    (detail as any).launch_date ||
+    (detail as any).mission?.launch_date ||
+    match?.landingDate ||
+    getKnownLandingDate(detail.id);
+
   const summaryArt = apiArtifactSummaryToSpaceArtifact(
     {
       ...detail,
-      mission_name: detail.mission.name,
+      landing_date: effectiveLandingDate,
+      mission_name: detail.mission?.name || (detail as any).mission_name || '',
       cluster_info: { is_clustered: false, cluster_count: 1 },
       preview_image_url: detail.media?.[0]?.media_url || match?.imageUrl || '',
       cosmolost_url: `https://cosmolost.lihtar.org/?artifact=${detail.id}&planet=${bodyId}`,
@@ -197,6 +253,7 @@ export function apiArtifactDetailToSpaceArtifact(
 
   return {
     ...summaryArt,
+    landingDate: effectiveLandingDate,
     firstPersonMonologue: detail.first_person_monologue || match?.firstPersonMonologue,
     whyAbandoned: detail.cause_of_deactivation || match?.whyAbandoned || 'Mission finished.',
     imageUrl: detail.media?.[0]?.media_url || match?.imageUrl,

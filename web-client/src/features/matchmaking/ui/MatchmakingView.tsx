@@ -17,22 +17,22 @@ export const MatchmakingView: React.FC<{
       {isSearching ? (
         <VStack gap={4}>
           <Text fontSize="lg" color="cyan.400">
-            Пошук опонента на орбіті...
+            Searching for opponent in orbit...
           </Text>
           <Text fontSize="sm" color="gray.400">
-            Підключення бота через 8 сек, якщо кімната порожня
+            Autonomous bot engages in 8s if room is empty
           </Text>
           <Button colorPalette="red" variant="subtle" onClick={onCancel}>
-            Скасувати
+            Cancel
           </Button>
         </VStack>
       ) : (
         <VStack gap={4}>
           <Text fontSize="xl" fontWeight="bold">
-            Готові до дедуктивної дуелі?
+            Ready for a deductive duel?
           </Text>
           <Button colorPalette="cyan" size="lg" onClick={onStart}>
-            Розпочати бій (1 Скринька)
+            Start Battle (1 Crate)
           </Button>
         </VStack>
       )}
